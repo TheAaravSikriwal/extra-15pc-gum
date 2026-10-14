@@ -165,8 +165,11 @@ Each one goes sim first, then real.
 6. GPS-free flight (#24)
 7. The LLM mission assistant (#26): plan, checker, my approval, then flight
 8. The Meshtastic relay (#30), with a range test against a ground mesh
+9. Soar mode (#31): parking in rising air, holding position in a breeze, and riding the wind on routes. Sim first, with a rising-air field added to Gazebo.
 
 ## Phase 8: Module C (claws)
+
+This only happens if we come up with a unique claw on an actual arm. That gets talked through when the time comes.
 
 1. **Sim:** grab and release, a sudden mass change, perching.
 2. **Make them:** design and print the claws.

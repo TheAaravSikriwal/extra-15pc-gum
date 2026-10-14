@@ -181,6 +181,9 @@ These get filled in properly when I get close to them.
   - the Meshtastic docs ([meshtastic.org](https://meshtastic.org)), on LoRa settings and range
   - the Wi-Fi Alliance's pages on Wi-Fi HaLow ([wi-fi.org](https://www.wi-fi.org))
   - *The ARRL Antenna Book* (ARRL), for antennas and propagation
+- **Soaring and descending** (soar mode, #31, Phase 7): where rising air comes from (slope lift, thermals), how a rotor's power changes when the air moves up through it, and the vortex ring state.
+  - the FAA's *Glider Flying Handbook* (free on [faa.gov](https://www.faa.gov)), the parts on soaring weather, slope lift and thermals
+  - Leishman's *Principles of Helicopter Aerodynamics* (topic 2), the parts on descending flight and the vortex ring state
 
 ---
 

@@ -242,7 +242,7 @@ Base is always on: frame, motors, ESC, battery, flight controller, receiver, ran
 |---|---|---|
 | **V: Vision & nav** | GPS + compass, camera(s), companion computer, HaLow video link | GPS and camera go together, because mapping, safe-spot landing and GPS-free flight all need both |
 | **P: Parachute** | The chute and its ejector | The flight controller or the safety monitor can fire it. See the parachute rule below |
-| **C: Claws** | Claws + servos | Works without V, but you'll want the camera to see what you're grabbing |
+| **C: Claws** | Claws + servos | Only if we come up with a unique claw on an actual arm. That conversation waits until Phase 8; for now the drone just needs to fly. Works without V, but you'll want the camera to see what you're grabbing |
 
 - **The parachute rule:** the firmware checks whether P is fitted, and won't fly autonomous missions or go above about 30 m without it. The chute needs about 10 m to open anyway, so there's no point carrying it for low hover tests.
 - **A standard module mount (#17):** one mechanical interface, and one connector carrying power and a data bus.
@@ -335,13 +335,19 @@ Parts so far:
 
 - **#2 Wrist gesture control:** fly by tilting an ESP32 + IMU wristband.
 - **#7 3D mapping runs:** fly a GPS grid taking photos, and turn them into a 3D model with OpenDroneMap. The nearest-safe-spot landing depends on this.
-- **#8 Perching claws:** grab a branch or a railing, motors off, camera still rolling. This is module C.
+- **#8 Perching:** hanging from or sitting on a surface that isn't a prepared landing spot (a branch, a railing, a ledge, a roof), motors off, camera still rolling. It's the biggest power saver there is, since the motors are off. Hanging needs a grabber, which is module C, and the claws only happen if we come up with a unique claw on an actual arm (talked through in Phase 8). Sitting on a flat ledge or roof just needs a good landing.
 - **#10 Wind sensing:** work out the wind from how hard it leans to hold position. Software only. It feeds a "turn back now" battery warning and smarter landing choices.
 - **#11 Change detection:** compare two mapping runs and flag what moved, so the safe spots stay safe.
 - **#21 Self-tuning:** tunes its own PID in flight, and re-tunes when the payload changes. Runs on the flight controller.
 - **#24 GPS-free flight:** navigates with the camera and IMU, so it can still get home if GPS drops. Runs on the companion computer.
 - **#26 Plain-English missions:** the laptop LLM turns what I say into checked plans that I approve.
 - **#30 Meshtastic relay:** a small LoRa mesh node riding on the drone. Radios like this need line of sight, so trees and hills break up a ground mesh; a node in the air works like a temporary cell tower and stitches it back together. It doesn't talk to the flight controller at all, just 5 V and an antenna, and with a GPS of its own and a small battery it doubles as a lost-drone finder. LoRa is far too slow for video (a few kbps at most), so video goes over HaLow.
+- **#31 Soar mode:** when the drone is waiting (watching something, or between mapping legs), it uses the air instead of fighting it, like a kestrel hanging still over a hillside. Three parts that work together:
+  - **Rising air.** Wind hitting a slope or a building deflects upward, and sunny ground makes thermals. Parking in it cuts the power to hold altitude by very roughly 10–15% per 1 m/s of updraft. Typical slope lift and thermals are 1–3 m/s.
+  - **Holding position in a breeze.** Hovering still in a 5–10 m/s breeze costs less than hovering in calm air, for the same reason cruising beats hovering (the props keep getting fresh air). So when it waits, it prefers breezy open air over sheltered calm spots.
+  - **Riding the wind on routes.** Upwind legs low, where the wind is weaker, and downwind legs higher.
+
+  It finds lift by comparing the throttle it needs to hold altitude against what its weight predicts, which is the same estimate wind sensing (#10) uses, and the laptop keeps a map of where lift turned up before. One safety limit: it won't sit in rising air faster than about 2 m/s. Holding still in rising air is the same as sinking into your own prop wash, and around 6 m/s for this drone that's the vortex ring state, where quads shake and lose control. It also stays under the loaded profile's altitude ceiling, so a thermal can't carry it past it. Software only.
 
 ## Ideas pool
 
@@ -356,7 +362,7 @@ Everything that came up while brainstorming, so nothing gets lost.
 | 5 | Free-fall detection + parachute | Locked in (module P) |
 | 6 | Thermal vision overlay | Not picked |
 | 7 | 3D mapping runs | Shortlist (needed for safe-spot landing) |
-| 8 | Perching claws | Shortlist (module C) |
+| 8 | Perching (hanging needs claws, module C, and only with a unique claw on an actual arm) | Shortlist |
 | 9 | Follow the wristband | Maybe |
 | 10 | Wind sensing + "turn back now" battery warning | Shortlist |
 | 11 | Change detection between mapping runs | Shortlist |
@@ -379,6 +385,14 @@ Everything that came up while brainstorming, so nothing gets lost.
 | 28 | Sensor pucks: drops little sensor beacons, collects them later with the claws | Maybe |
 | 29 | Toroidal props: looped propellers that are meant to be quieter | Maybe |
 | 30 | Meshtastic relay node: the drone as a temporary cell tower for a ground mesh, plus a lost-drone finder | Shortlist |
+| 31 | Soar mode: park in rising air, hold position in a breeze, ride the wind on routes | Shortlist |
+| 32 | Solar panel on top, trickle charging while perched (about 10 W in full sun, roughly 5% of the pack per hour). In flight it about cancels its own weight. | Maybe |
+| 33 | Flying-squirrel membrane: unfolds between the arms with the motors off and glides, possibly spiraling down to land, with the props spun up at the last moment | Maybe: being discussed as a landing method (see the notes) |
+| 34 | Spiral descent: comes down in a helix on low throttle instead of straight down, then straightens up for the last few meters | Maybe: suggested as the props-on way to get the same spiral |
+| 35 | Recharging from the props on the way down | Dropped: under 0.5% of the pack from 120 m, and fast descents are the most unstable part of quad flight |
+| 36 | Lifting body: shape the body to make lift in forward flight | Left to the design hunt, which already varies body shape and motor tilt. Rough numbers say it's about a wash. |
+| 37 | Albatross-style soaring, using the wind gradient | Dropped: needs real wings |
+| 38 | Helium assist | Dropped: about 1 m³ of helium per kg of lift, far too much drag for 80 km/h |
 
 ## Notes
 
@@ -389,8 +403,17 @@ Everything that came up while brainstorming, so nothing gets lost.
   3. cutting weight ruthlessly
   4. efficient firmware: clean filtering, an eco cruise speed
   5. landing or perching to wait with the motors off
+  6. soar mode (#31): using rising air and breezes while it waits
 
   A 7" on Li-ion might manage 20–30 minutes, and 8–10" more than that.
+- **Saving power without wings (2026-10-14):** nothing stays up for free unless the air is giving it energy. A wingless quad drops at roughly parachute speed the moment its motors stop. So the passive options are taking energy from the air (soar mode, #31), stopping but staying up high (perching, #8), or trading height for time (gliding), which barely helps. The props already are the wings: a rotor is a spinning wing, and big slow props are an efficient one.
+- **The flying-squirrel landing (#33), still being discussed:** glide down in a spiral with the props off, then spin them up at the last moment. The concerns so far:
+  - the frame only fits about 0.1 m² of membrane, so it would glide at about 18 m/s while sinking about 7 m/s, and a banked spiral at that speed is around 90 m across, not a tight funnel
+  - the membrane has to fold away before the motors restart (it sits under the props), and then it has to go from a fast glide to a hover in a second or two, close to the ground
+  - in the emergencies where a parachute matters (dead motors, dead power, crashed firmware), the restart at the bottom is exactly what can't happen
+  - a normal powered descent from 120 m only costs about 1% of the pack, and the membrane and its fold mechanism would cost more than that on every flight
+
+  The spiral descent (#34) gets the same look with the props on low.
 - **Legal (US):**
   - Over 250 g means FAA registration, Remote ID and the TRUST test. This is recreational flying only.
   - Near airports a lot of the airspace is controlled, so I'll need LAANC authorization there.
@@ -406,6 +429,8 @@ Everything that came up while brainstorming, so nothing gets lost.
 - Which H743 board. It needs PX4 support for the baseline flight, and SWD pads.
 - How many clean shadow-mode flights before the safety monitor's automatic triggers go live (picked from the Phase 4 logs)
 - Whether to get Part 107 (before Phase 3)
+- Landing from height: the flying-squirrel membrane (#33), the spiral descent (#34), or neither
+- Whether Max (with C) should still size the motors while the claws are uncertain, or Mission plus a margin (bring up in the sizing model discussion)
 - Data/video link to the laptop: HaLow is the lead option, confirmed in Phase 6 (the control link is decided: 2.4 GHz ExpressLRS)
 - Where the Meshtastic relay (#30) lives: in V, in Base, or as its own little module
 - Exactly what goes in the `us-recreational` limits profile, checked against the current FAA and FCC rules before Phase 3
