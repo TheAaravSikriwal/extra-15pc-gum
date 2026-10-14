@@ -2,7 +2,7 @@
 
 A long-range quadcopter built from scratch and in public. It runs **my own flight firmware** on off-the-shelf parts, and every part choice is proven in simulation before anything is bought.
 
-> **Status:** planning done, simulation design in progress. See [STATUS.md](STATUS.md) for where things stand right now.
+> **Status:** Phase 1, simulating the design. See [STATUS.md](STATUS.md) for where things stand right now, and the [roadmap](docs/roadmap.md) for where it's heading (a living plan that will change as we go).
 
 ## What it will do
 
@@ -15,7 +15,12 @@ A long-range quadcopter built from scratch and in public. It runs **my own fligh
 - **Tune itself:** a self-tuning controller that re-tunes when the payload changes
 - **Take plain-English missions:** an LLM on the laptop turns commands into flight plans, which are checked and approved before they fly. The LLM never controls the motors.
 
-Shortlisted extras: wrist-gesture control, perching claws, wind sensing, and change detection between mapping runs.
+**Modular:** the airframe is built for the full load but flies bare first. Modules attach and detach depending on the day's job:
+- **V:** vision & nav (GPS + camera)
+- **P:** parachute
+- **C:** claws
+
+Shortlisted extras: wrist-gesture control, wind sensing, and change detection between mapping runs.
 
 ## How it's being built
 
@@ -48,6 +53,7 @@ FLIGHT CONTROLLER   sensors · PID · motors · failsafes · self-tuning
 ## Repo guide
 
 - [STATUS.md](STATUS.md): current phase, next steps, open questions
+- [docs/roadmap.md](docs/roadmap.md): the phases from simulation to the last module
 - [docs/decisions.md](docs/decisions.md): every decision so far, and why
 - [docs/log/](docs/log/): dated build-log entries
 

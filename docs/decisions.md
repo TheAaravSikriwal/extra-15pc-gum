@@ -94,12 +94,33 @@ Every feature gets tested in a simulator before it flies, for cost and for caree
 - Kill switch on the radio
 - Geofence: a boundary it won't cross
 
-### Modular design: build for the full load, fly it bare first
-- The airframe (frame, motors, ESC, battery) is **sized and built for the heaviest configuration**: camera, GPS, parachute, claws, plus a grabbed object.
-- The add-ons are **modules**, attached only once the drone flies well and each one is actually needed. Testing starts with the bare drone.
-- **A standard module mount (#17):** one mechanical interface, plus a connector carrying power and a data bus. The firmware detects which module is fitted. Bus choice is still open (a simple serial link vs. DroneCAN, the industry standard for drone peripherals; the H743 has CAN hardware).
+### Modular design (locked 2026-10-13)
+- The airframe (frame, motors, ESC, battery) is **sized and built for the heaviest configuration**, then flown bare first. Modules attach and detach depending on what the drone is doing that day.
+- **Base (always fitted):** frame, motors, ESC, battery, flight controller, receiver, rangefinder. It flies on its own.
+
+| Module | Contents | Notes |
+|---|---|---|
+| **V: Vision & nav** | GPS + compass, camera(s), companion computer, video link | GPS and camera go together: mapping, safe-spot landing and GPS-free flight all use both |
+| **P: Parachute** | Parachute + independent Teensy 4.1 monitor | See the parachute rule below |
+| **C: Claws** | Claws + servos | Works without V, but the camera helps you see what you're grabbing |
+
+- **Parachute rule:** the firmware detects whether P is fitted, and refuses autonomous missions and flights above about 30 m without it. (The chute needs about 10 m to open, so low hover tests gain nothing from it.)
+- **A standard module mount (#17):** one mechanical interface, plus a connector carrying power and a data bus. The firmware detects which modules are fitted and loads a matching tuning profile; the self-tuning controller (#21) then fine-tunes in flight. Bus choice is still open (a simple serial link vs. DroneCAN, the industry standard for drone peripherals; the H743 has CAN hardware).
 - **Ballast stand-ins:** before a module exists, weights bolted to its mount point let flights at full weight be tested early.
-- **Simulation:** every configuration (bare → camera → GPS + parachute → full with claws) is simulated, and each must meet its targets.
+
+### Target specs (locked 2026-10-13)
+The simulation checks **all 8 module combinations**. Three setups have explicit targets, and every other combination must fall between Base and Max.
+
+| Setup | Modules | Flight time | Other targets |
+|---|---|---|---|
+| **Base** | none | ≥ 30 min | Thrust-to-weight ≥ 4:1 |
+| **Mission** | V + P | ≥ 25 min | Top speed ≥ 80 km/h; holds position in 10 m/s wind |
+| **Max** | V + P + C, carrying 250 g | ≥ 20 min | Thrust-to-weight ≥ 3:1; total weight ≤ 2.5 kg |
+
+Every setup must also land with **≥ 20% battery left**. Flight times are cruising, not hovering. These targets can be revised if the simulation shows they're unrealistic.
+
+### Roadmap
+See [roadmap.md](roadmap.md) for the phases, from simulation to the last module. It's the plan we're following, and it will change as we go.
 
 ## Hardware architecture (draft)
 

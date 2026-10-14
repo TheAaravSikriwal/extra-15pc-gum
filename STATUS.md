@@ -1,34 +1,34 @@
 # Status
 
 **Last updated:** 2026-10-13 (laptop)
-**Current phase:** 0 — Planning → designing the simulation
+**Current phase:** 1 — Simulate the design (writing the detailed Phase 1 design)
 
 ## Where we are
 
-Planning is done: the goals, features, safety architecture, flight controller choice and simulation-first approach are all recorded in [docs/decisions.md](docs/decisions.md). We're now designing the simulation, which is four layers: sizing model, CAD, Gazebo + PX4, then my own firmware in the sim. Gazebo + PX4 has been chosen as the simulator.
+Planning is done and locked: the modules (Base + V, P, C), the target specs, the parachute rule and the [roadmap](docs/roadmap.md). Everything is in [docs/decisions.md](docs/decisions.md). The roadmap is a living plan and will change as we go.
 
 ## Next up
 
-1. **Set the target specs.** These are the pass/fail numbers the simulation checks against: flight time, thrust-to-weight, top speed, wind tolerance, payload, and maximum weight.
-2. **Finish the simulation design.** How the layers connect, the parts file, the test scenarios. Write it up as a spec in `docs/`.
-3. **Write the implementation plan** for the simulation work.
-4. **Set up the PC:** Ubuntu 24.04 (Linux side of the dual boot), clone this repo, install the toolchain.
-5. **Build layer 1:** the sizing model.
+1. **Detailed Phase 1 design:** the parts file, the sizing model, the CAD workflow, Gazebo model generation, and the test scenarios. Written up as a spec in `docs/superpowers/specs/`.
+2. **Implementation plan** for Phase 1.
+3. **Sizing model** (Phase 1.2): runs on the laptop, no GPU needed.
+4. **Ubuntu 24.04 setup script** (Phase 1.1): Gazebo Harmonic + PX4 + Python, tested in the laptop's WSL so the PC setup is one command.
+5. **Set up the PC:** Linux side of the dual boot, clone the repo, run the setup script.
 
 ## Open questions
 
-- Target specs (see item 1 above)
-- Exact prop size: 8, 9 or 10"
-- Companion computer (Pi 5 or Jetson). Not needed until hardware stage 2.
+- Exact prop size: 8, 9 or 10" (the sizing model will decide)
+- Module bus: simple serial vs. DroneCAN
+- Companion computer (Pi 5 or Jetson). Decided in Phase 6.
 - Data/video link to the laptop
 - Camera type
-- Final pick of the shortlisted extras
+- Which H743 flight controller board (it must be one PX4 supports, for the baseline flight)
 
 ## Machines
 
 | Machine | Setup | Role | State |
 |---|---|---|---|
-| Laptop | Windows 11 + WSL2 Ubuntu 24.04, Core Ultra 7 155U, 16 GB, Intel graphics | Planning, docs, light work, field ground station | Repo created; sim toolchain not installed |
+| Laptop | Windows 11 + WSL2 Ubuntu 24.04, Core Ultra 7 155U, 16 GB, Intel graphics | Planning, docs, sizing model, CAD, field ground station | Repo cloned. Sim toolchain not installed. `git push` needs `env -u GH_TOKEN` until the fine-grained token is given access to this repo. |
 | PC | Dual boot. **Ubuntu 24.04 for the sim**, i7, 32 GB DDR5, RTX 3060 | Main simulation machine | Not set up yet |
 
 ## Switching machines
