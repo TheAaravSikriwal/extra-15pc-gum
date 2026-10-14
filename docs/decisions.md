@@ -94,6 +94,13 @@ Every feature gets tested in a simulator before it flies, for cost and for caree
 - Kill switch on the radio
 - Geofence: a boundary it won't cross
 
+### Modular design: build for the full load, fly it bare first
+- The airframe (frame, motors, ESC, battery) is **sized and built for the heaviest configuration**: camera, GPS, parachute, claws, plus a grabbed object.
+- The add-ons are **modules**, attached only once the drone flies well and each one is actually needed. Testing starts with the bare drone.
+- **A standard module mount (#17):** one mechanical interface, plus a connector carrying power and a data bus. The firmware detects which module is fitted. Bus choice is still open (a simple serial link vs. DroneCAN, the industry standard for drone peripherals; the H743 has CAN hardware).
+- **Ballast stand-ins:** before a module exists, weights bolted to its mount point let flights at full weight be tested early.
+- **Simulation:** every configuration (bare → camera → GPS + parachute → full with claws) is simulated, and each must meet its targets.
+
 ## Hardware architecture (draft)
 
 Three layers. Each layer stays safe if the one above it fails.
@@ -103,7 +110,7 @@ Three layers. Each layer stays safe if the one above it fails.
 3. **Laptop ground station:** telemetry, map, the LLM assistant (#26), mission approval, 3D map processing, safe-spot finding, change detection (#11).
 
 **Draft parts list:**
-- **Frame:** 8–10" carbon-fibre X frame, bought. 3D-printed arms flex too much at this size.
+- **Frame:** 8–10" carbon-fibre X frame, bought, with a standard module mount. 3D-printed arms flex too much at this size.
 - **Motors:** low-KV, 6S, chosen from thrust tables once the prop size is set.
 - **ESC:** 4-in-1, 6S, with bidirectional DShot (per-motor RPM feedback, useful for filtering and #21). AM32 is open-source ESC firmware.
 - **Battery:** 6S2P Li-ion from 21700 high-drain cells (~9 Ah, ~850–900 g).
@@ -155,7 +162,7 @@ Three layers. Each layer stays safe if the one above it fails.
 | 14 | Payload winch | New |
 | 15 | Amphibious (float landing gear) | New |
 | 16 | Repeat-shot time-lapse | New |
-| 17 | Modular payload bay | New |
+| 17 | Modular payload bay | **Base spec** (standard module mount; see "Modular design") |
 | 18 | VTOL quadplane (adds a wing) | Dropped: too complex; a long-range quad was chosen instead |
 | 19 | Listening post: microphones locate sounds while perched with motors off | New |
 | 20 | Sniffer drone: follows a gas or smoke plume to its source | New |
