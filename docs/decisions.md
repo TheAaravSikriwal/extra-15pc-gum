@@ -123,7 +123,7 @@ I'm new to a lot of this, CFD especially. Tutorials and studying happen on my ow
 ### My machines
 
 - **Laptop:** Lenovo, Core Ultra 7 155U, 16 GB, Intel integrated graphics, WSL2 Ubuntu 24.04 (capped at about 7.6 GB of RAM). Gazebo runs, but scenes have to stay simple. No NVIDIA GPU, so no Isaac Sim and no decent local LLM.
-- **PC:** dual boot, i7, 32 GB DDR5, RTX 3060. The sim lives on its Ubuntu 24.04 side. **It's the main machine from 2026-10-14**, set up with [setup-pc.md](setup-pc.md). The laptop is for docs, light work and the field.
+- **PC:** dual boot, Ryzen 7 9800X3D, 32 GB DDR5, RTX 3060. The sim lives on its Ubuntu 24.04 side. **It's the main machine from 2026-10-14**, set up with [setup-pc.md](setup-pc.md). The laptop is for docs, light work and the field.
 - Every machine runs the same checks (`scripts/check-machine.sh` and `scripts/setup-dev.sh`), and the results are logged in [machines/](machines/).
 
 ### Build stages
@@ -190,7 +190,7 @@ If the link drops, I lose the LLM, but nothing depends on it.
 The rules that don't bend:
 
 - The LLM never touches the motors. It writes a plan (waypoints and actions), and that's all.
-- A plain, deterministic checker validates every plan: geofence, 400 ft ceiling, battery reserve, speed limits.
+- A plain, deterministic checker validates every plan against the limits profile that's loaded: geofence, altitude ceiling, battery reserve, speed limits.
 - I approve the plan before it goes to the drone. Simple stuff like "land" or "come back" maps straight onto the landing modes.
 - The flight controller flies the plan and can override it at any time. My transmitter and kill switch always win.
 - If the companion computer crashes or freezes, the flight controller notices the missing heartbeat and holds position or comes home.
@@ -199,7 +199,26 @@ The rules that don't bend:
 
 - Pre-arm checks: sensors healthy, battery OK, GPS lock when it's needed
 - A kill switch on the radio
-- A geofence
+- A geofence: whatever I draw for the day, or none
+
+### Government rules are settings, not caps (decided 2026-10-14)
+
+I want the drone to be able to do everything its hardware can do, and then I tune it down if I want to. So rules that come from the government (the FAA's 400 ft ceiling, Remote ID, airspace, FCC limits on radio power) get taken into account when planning, but they don't get baked into the design as hard limits.
+
+- **Hardware is sized for what's physically possible.** For a drone this size the law barely touches the hardware anyway. The one exception is Remote ID: Base gets a mount and a 5 V plug for a broadcast module, and I decide whether to fit it. The firmware doesn't refuse to arm without it.
+- **The legal numbers live in a limits profile.** Two to start, switched from the ground station:
+
+  | Profile | What it sets |
+  |---|---|
+  | `us-recreational` | 400 ft ceiling, Remote ID expected, radios on their US (FCC) power and frequency settings |
+  | `max` | Only physical limits: what the battery, motors and radios can actually do |
+
+- **The plan checker runs either way.** It's just as strict; it checks against whichever profile is loaded.
+- **I always know which one is on.** The active profile shows on the ground station and gets written into every flight log.
+- **Radio transmit power is a setting per radio.** The firmware doesn't cap it below what the hardware can do.
+- **Planning still names the rule.** When a plan runs into a regulation, the notes say what the rule is and what it means for me, and then the design carries on around what the hardware can do.
+
+What this doesn't touch: the engineering safety rules. My transmitter and kill switch always win, the LLM never commands the motors, and the failsafes stay as designed. The parachute rule (no autonomous missions or flights above about 30 m without P) is my own rule, not the government's, so it stays too.
 
 ### Modular design (locked 2026-10-13)
 
@@ -261,8 +280,8 @@ Parts so far:
 - **Barometer:** on the flight controller board.
 - **GPS + compass:** a u-blox M10 module with compass, up on a mast away from the power wires.
 - **Rangefinder:** downward lidar (TF-Luna or TFmini-S).
-- **Control link:** an ExpressLRS receiver and a handheld transmitter. Its protocol (CRSF) is well documented and easy to parse.
-- **Data/video link to the laptop:** still open. Probably a separate Wi-Fi-based link from the companion computer. If it speaks MAVLink, existing ground station software works while I build my own.
+- **Control link:** an ExpressLRS receiver and a handheld transmitter, on 2.4 GHz. HaLow and Meshtastic (below) both use 902–928 MHz in the US, and so does 900 MHz ExpressLRS, so the control link stays off that band. Its protocol (CRSF) is well documented and easy to parse.
+- **Data/video link to the laptop:** the lead option (2026-10-14) is Wi-Fi HaLow (802.11ah), which is Wi-Fi on 900 MHz. It has a lot more range than normal Wi-Fi, with a few Mbps up close dropping to hundreds of kbps far out. It carries normal IP traffic, so MAVLink telemetry and real compressed video can share one link from the companion computer, and existing ground station software works while I build my own. The same video could go into ATAK too (the free civilian version runs on Android). One catch: the Pi 5 has no hardware H.264 encoder, so video encoding runs on its CPU, which counts when picking Pi vs Jetson. Confirmed in Phase 6.
 - **Power:** a dedicated 5 V / 5 A+ supply for the companion computer, and a current sensor (usually on the ESC).
 - **First thing I'll build:** a thrust stand (load cell, HX711 amplifier, current sensor) to measure how efficient the motors and props really are, and feed that back into the sim.
 
@@ -276,6 +295,7 @@ Parts so far:
 - **#21 Self-tuning:** tunes its own PID in flight, and re-tunes when the payload changes. Runs on the flight controller.
 - **#24 GPS-free flight:** navigates with the camera and IMU, so it can still get home if GPS drops. Runs on the companion computer.
 - **#26 Plain-English missions:** the laptop LLM turns what I say into checked plans that I approve.
+- **#30 Meshtastic relay:** a small LoRa mesh node riding on the drone. Radios like this need line of sight, so trees and hills break up a ground mesh; a node in the air works like a temporary cell tower and stitches it back together. It doesn't talk to the flight controller at all, just 5 V and an antenna, and with a GPS of its own and a small battery it doubles as a lost-drone finder. LoRa is far too slow for video (a few kbps at most), so video goes over HaLow.
 
 ## Ideas pool
 
@@ -312,6 +332,7 @@ Everything that came up while brainstorming, so nothing gets lost.
 | 27 | Charging dock: lands on a pad, recharges, takes off again | Maybe |
 | 28 | Sensor pucks: drops little sensor beacons, collects them later with the claws | Maybe |
 | 29 | Toroidal props: looped propellers that are meant to be quieter | Maybe |
+| 30 | Meshtastic relay node: the drone as a temporary cell tower for a ground mesh, plus a lost-drone finder | Shortlist |
 
 ## Notes
 
@@ -327,6 +348,7 @@ Everything that came up while brainstorming, so nothing gets lost.
 - **Legal (US):**
   - Over 250 g means FAA registration, Remote ID and the TRUST test. This is recreational flying only.
   - Near airports a lot of the airspace is controlled, so I'll need LAANC authorization there.
+  - How these show up in the design: see "Government rules are settings, not caps" above.
 
 ## Still open
 
@@ -334,7 +356,9 @@ Everything that came up while brainstorming, so nothing gets lost.
 - Exact prop size: 8, 9 or 10". The sizing model decides.
 - Which open-source flight code to start from (the chip is decided: STM32H743)
 - Which H743 board. It needs PX4 support for the baseline flight.
-- Data/video link to the laptop (the control link is decided: ExpressLRS)
+- Data/video link to the laptop: HaLow is the lead option, confirmed in Phase 6 (the control link is decided: 2.4 GHz ExpressLRS)
+- Where the Meshtastic relay (#30) lives: in V, in Base, or as its own little module
+- Exactly what goes in the `us-recreational` limits profile, checked against the current FAA and FCC rules before Phase 3
 - Camera: FPV video, stills for mapping, or both
 - Module bus: serial or DroneCAN
 - What "unique" is allowed to mean for the design hunt (decided after the baseline works)

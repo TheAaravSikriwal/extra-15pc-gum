@@ -52,7 +52,7 @@ I post this whole project on LinkedIn (mostly) and Instagram (sometimes), so any
 
 ## Machines
 
-- **PC (the main machine from 2026-10-14):** dual boot; all work happens on **native Ubuntu 24.04**. It has an RTX 3060, an i7 and 32 GB.
+- **PC (the main machine from 2026-10-14):** dual boot; all work happens on **native Ubuntu 24.04**. It has an RTX 3060, a Ryzen 7 9800X3D and 32 GB.
   - The repo is at `~/extra-15pc-gum`, cloned from GitHub, not OneDrive.
   - The venv is `.venv` inside the repo, created by `scripts/setup-dev.sh`.
   - First-time setup steps are in `docs/setup-pc.md`.
@@ -75,9 +75,15 @@ Notes on how I like to work, so a fresh session on either machine picks up the s
 - I'm posting this publicly, so think about how it'll look and read, not just whether it works.
 - The process: talk it through, write a spec, write an implementation plan, then build test-first. Nothing gets built before its design is agreed.
 
+## Government rules are settings, not caps
+
+When planning, take the rules into account (the FAA's altitude ceiling, Remote ID, airspace, FCC radio power) and tell me what they mean for what we're doing. Don't build them in as hard limits, though. Design for what the hardware can physically do, and put the legal numbers in a limits profile I can switch on. I'll tune it down when I want to. The details are in `docs/decisions.md`, under "Government rules are settings, not caps".
+
 ## Safety rules (these don't bend)
 
-- The LLM runs on the laptop and **never commands the motors**. It writes structured plans; a deterministic checker validates them (geofence, 400 ft ceiling, battery reserve, speed limits); I approve them; the flight controller flies them.
+These are engineering safety, not government rules, so they stay the same whichever limits profile is loaded.
+
+- The LLM runs on the laptop and **never commands the motors**. It writes structured plans; a deterministic checker validates them against the active limits profile (geofence, altitude ceiling, battery reserve, speed limits); I approve them; the flight controller flies them.
 - The flight controller never depends on the companion computer or the laptop. If the companion computer goes quiet, that's a failsafe.
 - My RC transmitter and kill switch override everything.
 - The parachute can also be fired by an independent monitor (a Teensy 4.1 with its own IMU), and the motors cut before it deploys.

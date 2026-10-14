@@ -2,7 +2,7 @@
 
 This plan is going to change. It's the route I'm following today, not a promise. Sim results, test flights, broken parts and new ideas will all reshape it, and that's fine. I can't plan for everything, but I can be prepared. When something changes, I update this file and write down why in [decisions.md](decisions.md).
 
-**Last revised:** 2026-10-13
+**Last revised:** 2026-10-14 (limits profiles, HaLow, the Meshtastic relay; a full revision is coming next)
 
 ## The short version
 
@@ -59,7 +59,7 @@ Every step exports visuals in the project's look, sized for LinkedIn and Instagr
 1. **Architecture:** flight logic kept separate from the hardware drivers, so the same code runs on the PC and on the H743.
 2. **Warm-up (optional):** dRehmFlight on the Teensy with an IMU breakout, so I can watch a working flight controller before writing my own.
 3. **Flight modes, in order:** rate mode, then self-level, then altitude hold. Each one runs the same tests as PX4 so I can compare them directly.
-4. **Arming and failsafes:** pre-arm checks, the kill switch, and lost-link and low-battery behavior.
+4. **Arming and failsafes:** pre-arm checks, the kill switch, lost-link and low-battery behavior, and the limits profiles (see [decisions.md](decisions.md)).
 5. **Ground station v1** on the laptop: live telemetry and live PID tuning. It speaks MAVLink, so QGroundControl works from day one.
 6. **Hardware-in-the-loop:** the same firmware running on the real Nucleo chip, with the sim feeding it sensor data.
 
@@ -75,7 +75,8 @@ Props stay off the whole time.
 4. **Legal stuff:**
    - FAA registration
    - TRUST certificate
-   - a Remote ID plan
+   - a Remote ID plan (Base has a mount and plug for a broadcast module)
+   - fill in the `us-recreational` limits profile from the current FAA and FCC rules
    - find a field, and check the airspace and LAANC
 
 **Done when:** Base passes every bench check on my firmware.
@@ -102,7 +103,7 @@ Props stay off the whole time.
 ## Phase 6: Module V (vision & nav)
 
 1. **Sim first:** GPS position hold, back to start, land here, and waypoints, all on my firmware.
-2. **Pick the hardware:** the companion computer (Pi 5 or Jetson), camera and video link, based on what the sim says.
+2. **Pick the hardware:** the companion computer (Pi 5 or Jetson), camera and video link (HaLow is the lead option), based on what the sim says.
 3. **Build V** onto the mount, with module detection.
 4. **Real flights, in order:** position hold, then the landing modes, then waypoints.
 5. **Ground station v2:** map, mission planning, video.
@@ -120,6 +121,7 @@ Each one goes sim first, then real.
 5. Self-tuning (#21), with a profile for each module combination
 6. GPS-free flight (#24)
 7. The LLM mission assistant (#26): plan, checker, my approval, then flight
+8. The Meshtastic relay (#30), with a range test against a ground mesh
 
 ## Phase 8: Module C (claws)
 
