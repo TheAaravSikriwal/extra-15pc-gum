@@ -1,0 +1,36 @@
+# Secrets and local machine settings
+.env
+.env.*
+*.local.*
+.claude/settings.local.json
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.ipynb_checkpoints/
+
+# Build output
+build/
+dist/
+*.o
+*.elf
+*.hex
+
+# Flight and simulation logs (may contain GPS positions; scrub before sharing)
+*.ulg
+*.bin
+*.tlog
+sim/output/
+
+# Videos go to the posting platform, not the repo
+*.mp4
+*.mov
+*.mkv
+
+# OS and editor clutter
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
