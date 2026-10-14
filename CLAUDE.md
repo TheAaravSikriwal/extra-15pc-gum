@@ -38,7 +38,7 @@ I'm learning a lot of this as I go: CFD, control, sensor fusion, embedded. I stu
 - No secrets: API keys, tokens, `.env` files.
 - No home or launch GPS coordinates, ever. Scrub flight logs, maps and screenshots first. Raw flight logs (`*.ulg`, `*.bin`) are gitignored.
 - No videos in the repo. They go wherever I'm posting.
-- CAD and mesh files go through Git LFS (see `.gitattributes`).
+- Generated meshes and STEP files don't get committed. They're build outputs of the CAD code. Curated ones (the baseline, a v2 winner) go through Git LFS (see `.gitattributes`), and hero STEP files go on a GitHub Release.
 - Respect the licenses of any code we reuse. This repo is GPL-3.0.
 - FluidX3D code never goes in this repo. Its license isn't GPL compatible, and it requires publishing any modified source whose results we post. My FluidX3D setup lives in its own public fork, marked as modified.
 
@@ -85,5 +85,7 @@ These are engineering safety, not government rules, so they stay the same whiche
 
 - The LLM runs on the laptop and **never commands the motors**. It writes structured plans; a deterministic checker validates them against the active limits profile (geofence, altitude ceiling, battery reserve, speed limits); I approve them; the flight controller flies them.
 - The flight controller never depends on the companion computer or the laptop. If the companion computer goes quiet, that's a failsafe.
-- My RC transmitter and kill switch override everything.
-- The parachute can also be fired by an independent monitor (a Teensy 4.1 with its own IMU), and the motors cut before it deploys.
+- My RC transmitter and kill switch override everything. The kill switch reaches the motors through two separate boards: the flight controller, and the safety monitor.
+- The safety monitor (a Teensy 4.1 with its own IMU) lives in Base, not in a module. It cuts the motors by blocking the ESC signal lines, never by switching the main power, and if it loses power the drone keeps flying. Its automatic triggers stay in shadow mode (logging only) until they've shown zero false triggers.
+- The parachute can be fired by the flight controller or the safety monitor, and the motors cut before it deploys.
+- A hung CPU means the motors stop, not the motors stuck at the last throttle: a hardware watchdog, and fresh DShot frames every loop.

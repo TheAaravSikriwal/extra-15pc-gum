@@ -20,22 +20,21 @@ I want a fairly big, fairly fast quadcopter with a camera and GPS, running fligh
 
 ### Simulate first, then buy
 
-Nothing gets bought until it has flown in simulation. The loop is:
+Nothing big gets bought until it has flown in simulation. The one exception (revised 2026-10-14) is small test parts that make the simulation more accurate, like a motor, a few props and the ESC for the thrust stand. Most of those end up on the drone anyway. The loop is:
 1. pick parts and a shape
-2. run the sizing model
+2. run the sizing model, with measured thrust data as soon as the thrust stand has some
 3. build it in CAD
-4. put it in a virtual wind tunnel
-5. fly it in Gazebo
-6. check it against the targets
-7. improve it and go again
+4. fly it in Gazebo
+5. check it against the targets
+6. improve it and go again
 
-It only gets priced once it passes.
+It only gets priced once it passes. The virtual wind tunnel runs alongside the loop instead of inside it: its numbers sharpen the sizing model and Gazebo whenever they arrive, but the baseline doesn't wait for them.
 
 Five layers:
 
 1. Sizing model (my own Python tool)
 2. CAD, written as code (build123d), by Claude
-3. Aerodynamics: CFD, the digital version of a wind tunnel
+3. Aerodynamics: CFD, the digital version of a wind tunnel (runs alongside, see below)
 4. Flight sim: Gazebo Harmonic + PX4, flown by proven firmware first
 5. My own firmware flying the same Gazebo sim
 
@@ -57,8 +56,8 @@ Claude writes all the CAD as Python code with build123d, reading from the parts 
 
 It happens in two steps:
 
-1. **Baseline first.** A plain, simple X quad, run through every layer until the whole pipeline works end to end.
-2. **Then the automation.** Build a design, test it, read the results, improve it, repeat, hunting for a drone design that's actually unique. The fast sizing model filters thousands of candidates; only the promising ones get the slow CFD and Gazebo runs.
+1. **Baseline first.** A plain, simple X quad, run through sizing, CAD and Gazebo until the pipeline works end to end. This is the one I buy, build and fly (decided 2026-10-14).
+2. **Then the automation.** Build a design, test it, read the results, improve it, repeat, hunting for a drone design that's actually unique. The fast sizing model filters thousands of candidates; only the promising ones get the slow CFD and Gazebo runs. It runs alongside everything else, and whatever it finds becomes v2.
 
 What counts as "unique" (stay a quad, or open it up to other layouts) gets decided once the baseline works, since leaving the quad layout would change the firmware too. One knock-on effect: a unique layout probably means a custom frame, either CNC-cut carbon plates from my own files or carbon tubes with printed joints, instead of a bought one.
 
@@ -83,6 +82,7 @@ I want to see the air moving around the drone, like smoke in a wind tunnel, and 
 - **Visuals:** ParaView renders the streamlines, smoke-style traces and pressure maps.
 - **Keeping it honest:** first check OpenFOAM against shapes with known drag, then against published drone data, then against my own flight logs once I have them.
 - **Where it runs:** the PC. The laptop only manages coarse test runs.
+- **When it runs (decided 2026-10-14):** alongside the phases, never blocking one. At a 10 m/s cruise, drag is roughly 10% of the power, so even a 30% drag error moves flight time by about 3%. That's well inside the uncertainty in manufacturer thrust data. Drag matters more for the 80 km/h top speed, and that number gets rechecked whenever the CFD results arrive.
 
 ### Visuals are part of the output (decided 2026-10-13)
 
@@ -171,7 +171,7 @@ It also lands on its own when things go wrong:
 
 - It fires on free fall or loss of control, detected from the accelerometer and attitude. I can also fire it by hand.
 - The motors cut before it deploys, or the props eat the lines.
-- A separate monitor can fire it as well as the main flight controller. That's my spare Teensy 4.1 with its own IMU, so if my firmware crashes, the parachute still works.
+- The safety monitor in Base (below) can fire it as well as the main flight controller, so if my firmware crashes, the parachute still works.
 - It needs about 10 m to open, so it won't save a crash from low down.
 - It adds roughly 100–150 g.
 
@@ -197,9 +197,21 @@ The rules that don't bend:
 
 ### Safety basics
 
-- Pre-arm checks: sensors healthy, battery OK, GPS lock when it's needed
-- A kill switch on the radio
-- A geofence: whatever I draw for the day, or none
+- Pre-arm checks: sensors healthy, battery OK, GPS lock when it's needed, and a live safety monitor
+- A kill switch on the radio, reaching the motors through two separate boards (see the safety monitor below)
+- A geofence: whatever I draw for the day, or none. The flight controller enforces it itself, not just the plan checker.
+- A hung CPU means the motors stop, not the motors stuck at the last throttle: a hardware watchdog, and DShot frames sent fresh every loop instead of from a free-running DMA loop that keeps resending the last one.
+- The low-battery failsafe counts mAh used, with voltage as a backup. Li-ion's flat curve and sag make voltage a bad fuel gauge.
+
+### The safety monitor (decided 2026-10-14)
+
+The Teensy 4.1 used to live in module P, which wouldn't be built until Phase 5. That meant the first flights of brand-new firmware would have a kill switch running inside that same firmware. So it moved into Base.
+
+- It has its own IMU, and it listens to the same receiver as the flight controller (the receiver's output wire splits to both). The kill switch reaches the motors through two separate boards running separate code. A second receiver would add more independence, but the thing I'm protecting against is my firmware, not the receiver.
+- It cuts the motors by blocking the four ESC signal lines with an analog switch, not by switching the main power. A switch in a ~100 A power line is a new way to drop a healthy drone, and ESCs stop the motors when their signal disappears (to be confirmed on the bench). It has to pass signals both ways, because bidirectional DShot sends RPM back on the same wire.
+- It fails in the useful direction. If the Teensy loses power, the switch passes signals and the drone keeps flying on the flight controller. The flight controller watches the Teensy's heartbeat, warns me if it goes quiet, and won't arm without it.
+- The automatic triggers (free fall, tumbling, the flight controller going quiet) start in shadow mode: they log what they would have done, and do nothing. They go live in Phase 5, after enough flights with zero false triggers. A fast descent at low throttle looks a lot like free fall to an accelerometer, so this matters. The 4.1's SD card handles the logging.
+- When P is fitted, it can fire the chute too, after cutting the motors.
 
 ### Government rules are settings, not caps (decided 2026-10-14)
 
@@ -224,12 +236,12 @@ What this doesn't touch: the engineering safety rules. My transmitter and kill s
 
 The frame, motors, ESC and battery are sized for the heaviest setup, but the drone flies bare first. Modules go on and off depending on what I'm doing that day.
 
-Base is always on: frame, motors, ESC, battery, flight controller, receiver, rangefinder. It flies by itself.
+Base is always on: frame, motors, ESC, battery, flight controller, receiver, rangefinder, the safety monitor, and a mount and plug for a Remote ID module. It flies by itself.
 
 | Module | What's in it | Notes |
 |---|---|---|
-| **V: Vision & nav** | GPS + compass, camera(s), companion computer, video link | GPS and camera go together, because mapping, safe-spot landing and GPS-free flight all need both |
-| **P: Parachute** | The chute + the independent Teensy 4.1 monitor | See the parachute rule below |
+| **V: Vision & nav** | GPS + compass, camera(s), companion computer, HaLow video link | GPS and camera go together, because mapping, safe-spot landing and GPS-free flight all need both |
+| **P: Parachute** | The chute and its ejector | The flight controller or the safety monitor can fire it. See the parachute rule below |
 | **C: Claws** | Claws + servos | Works without V, but you'll want the camera to see what you're grabbing |
 
 - **The parachute rule:** the firmware checks whether P is fitted, and won't fly autonomous missions or go above about 30 m without it. The chute needs about 10 m to open anyway, so there's no point carrying it for low hover tests.
@@ -238,43 +250,76 @@ Base is always on: frame, motors, ESC, battery, flight controller, receiver, ran
   - The bus is still open: plain serial, or DroneCAN (the industry standard for drone add-ons; the H743 has CAN hardware).
 - **Ballast:** until a module exists, I bolt weights to its mount so I can still test at full weight.
 
-### Target specs (locked 2026-10-13)
+### Target specs (locked 2026-10-13, revised 2026-10-14)
 
 The sim checks all eight module combinations. Base and Max are the extremes, and anything in between has to land between them.
 
-| Setup | Modules | Flight time | Other targets |
-|---|---|---|---|
-| **Base** | none | ≥ 30 min | Thrust-to-weight ≥ 4:1 |
-| **Mission** | V + P | ≥ 25 min | Top speed ≥ 80 km/h; holds position in 10 m/s wind |
-| **Max** | V + P + C, carrying 250 g | ≥ 20 min | Thrust-to-weight ≥ 3:1; total weight ≤ 2.5 kg |
+| Setup | Modules | Cruise time | Hover time | Other |
+|---|---|---|---|---|
+| **Base** | none | ≥ 30 min | ≥ 25 min | |
+| **Mission** | V + P | ≥ 25 min | ≥ 21 min | Top speed ≥ 80 km/h; holds position in 10 m/s wind |
+| **Max** | V + P + C, carrying 250 g | ≥ 20 min | ≥ 17 min | Total weight ≤ 2.5 kg |
 
-Every setup has to land with at least 20% battery left, and flight times mean cruising, not hovering. If the sim says these numbers are unrealistic, I'll change them and explain why here. The machine-readable version is [design/targets.yaml](../design/targets.yaml).
+For every setup:
+- Thrust-to-weight of at least 2:1 at the 20% reserve, at full throttle, under load.
+- Full-throttle current stays inside the pack's continuous rating.
+- It lands with at least 20% of the battery left, counted in mAh.
+- Cruise means 10 m/s for now. The sizing model works out which speed actually uses the least power, and that replaces 10 m/s if it's very different.
+
+What changed on 2026-10-14, and why:
+- **Hover times got added.** Base has no GPS, so its cruise time can't be measured until Phase 6. Hover time can be measured in Phase 4. A quad uses a bit less power at a gentle cruise than in a hover, because moving forward keeps feeding the props fresh air, so the hover targets sit about 15% under the cruise ones. The sizing model checks that ratio.
+- **One thrust-to-weight rule replaced 4:1 for Base and 3:1 for Max.** The old ones didn't say when they're measured, and Base's 4:1 never limited anything, because the motors are sized for Max. Motor test data is usually measured on a bench supply at full 6S voltage, and full-throttle thrust drops roughly with the square of the voltage. A rough estimate says a Li-ion pack at 20%, under full load, leaves each motor with about 55–60% of its datasheet thrust. So 2:1 at the reserve works out to about 3.5:1 on the datasheet. The sizing model reports both.
+
+If the sim says these numbers are unrealistic, I'll change them and explain why here. The machine-readable version is [design/targets.yaml](../design/targets.yaml).
+
+### Mass budget (2026-10-14)
+
+Rough numbers until the sizing model and the CAD replace them.
+
+| Part | Estimate |
+|---|---|
+| Battery (6S2P 21700 Li-ion, about 9 Ah) | 850–900 g |
+| Frame and module mount | 250–350 g |
+| Motors (4) | 240–360 g |
+| Props (4) | 40–70 g |
+| ESC | 20–35 g |
+| Flight controller, receiver, rangefinder, wiring | 60–90 g |
+| Safety monitor (Teensy, IMU, signal switch) | 15–30 g |
+| Remote ID module, when fitted | 15–40 g |
+| **Base** | **about 1.5–1.9 kg** |
+| V | 200–300 g |
+| P | 120–200 g |
+| C, plus the 250 g it's holding | 350–450 g |
+| **Max** | **about 2.15–2.8 kg** |
+
+Max only makes 2.5 kg if most parts land at the light end. Checking that is the sizing model's first job. If it doesn't fit, the options are raising the cap (it's my own target, not a law) or a lighter payload.
 
 ### Roadmap
 
-The phases live in [roadmap.md](roadmap.md). It's the plan I'm following, and it will change.
+The phases live in [roadmap.md](roadmap.md). It's the plan I'm following, and it will change. The full revision on 2026-10-14, with every change tagged R1 to R7 and the reason for each, is in [specs/2026-10-14-plan-revision.md](specs/2026-10-14-plan-revision.md).
 
 ## Hardware (draft)
 
-Three layers, and each one has to stay safe if the one above it dies:
+Three layers, plus a safety monitor underneath them all. Each one has to stay safe if the one above it dies:
 
 1. **Flight controller:** the hard real-time stuff. It reads the sensors, runs the PID loops, drives the motors, and handles the failsafes, the parachute and self-tuning (#21). It doesn't depend on anything above it.
 2. **Companion computer** (Pi 5 or Jetson Orin Nano): cameras, GPS-free navigation (#24), and photos for mapping. It sends targets down to the flight controller.
 3. **Laptop:** telemetry, the map, the LLM (#26), mission approval, 3D map processing, safe spots, and change detection (#11).
+4. **Safety monitor:** the Teensy in Base, independent of all three (see above).
 
 Parts so far:
 
 - **Frame:** for the baseline, an 8–10" carbon X frame with the module mount, bought. Printed arms would flex too much at this size. If the design hunt finds something unique, the frame goes custom (see above).
 - **Motors:** low-KV, 6S, picked from thrust data once the prop size is settled.
 - **ESC:** 4-in-1, 6S, with bidirectional DShot, so I get RPM from every motor. That's great for filtering and for #21. AM32 is open-source ESC firmware, which is a nice bonus.
-- **Battery:** 6S2P Li-ion from 21700 high-drain cells, around 9 Ah and 850–900 g.
-- **Flight controller (decided):** a Nucleo-H743 on the bench, which gives me a proper debugger, every pin broken out, and hardware-in-the-loop testing. An off-the-shelf STM32H743 flight controller board goes in the drone. Same chip, same firmware.
-- **Teensy 4.1:** I already have one lying around. Its jobs, in order:
-  1. Run the thrust stand: read the load cell, current and voltage, drive the ESC, and log to its SD card.
+- **Battery:** 6S2P Li-ion from 21700 high-drain cells, around 9 Ah and 850–900 g. The sizing model also tries 6S3P, in case the extra cells earn their weight.
+- **Flight controller (decided):** a Nucleo-H743 on the bench, which gives me a proper debugger, every pin broken out, and hardware-in-the-loop testing. An off-the-shelf STM32H743 flight controller board goes in the drone. Same chip, same firmware. The board has to be one PX4 supports, with SWD pads I can get a debugger onto.
+- **Teensy 4.1:** I already have one lying around, and I'm buying a second (about $30) in Phase 2 so each can keep its own job:
+  1. Run the thrust stand (from Phase 1): read the load cell, current and voltage, drive the ESC, and log to its SD card.
   2. Desk sandbox: dRehmFlight with a cheap IMU and no motors, so I can watch a complete flight controller work before I write mine.
-  3. Be the independent parachute monitor on the drone. It has its own IMU and watches for free fall, tumbling, or the main flight controller going quiet. Then it cuts the motors and fires the chute. The motor-cut circuit still needs designing.
+  3. Be the safety monitor in Base (the second Teensy): its own IMU, listening to the receiver, cutting the motors on the ESC signal lines, and firing the chute when P is fitted.
 
-  It could also be a hardware-in-the-loop bridge, pretending to be the GPS, receiver and rangefinder for the sim. A second Teensy is about $30 if I want both. It's no good for the wristband, though: no wireless. That's an ESP32 job.
+  It could also be a hardware-in-the-loop bridge, pretending to be the GPS, receiver and rangefinder for the sim. It's no good for the wristband, though: no wireless. That's an ESP32 job.
 - **Companion computer:** not needed until stage 2. A Pi 5 is probably enough now that the LLM is on the laptop; a Jetson if #24 needs more.
 - **IMU:** ICM-42688-P (it's on most modern flight controller boards anyway).
 - **Barometer:** on the flight controller board.
@@ -282,8 +327,9 @@ Parts so far:
 - **Rangefinder:** downward lidar (TF-Luna or TFmini-S).
 - **Control link:** an ExpressLRS receiver and a handheld transmitter, on 2.4 GHz. HaLow and Meshtastic (below) both use 902–928 MHz in the US, and so does 900 MHz ExpressLRS, so the control link stays off that band. Its protocol (CRSF) is well documented and easy to parse.
 - **Data/video link to the laptop:** the lead option (2026-10-14) is Wi-Fi HaLow (802.11ah), which is Wi-Fi on 900 MHz. It has a lot more range than normal Wi-Fi, with a few Mbps up close dropping to hundreds of kbps far out. It carries normal IP traffic, so MAVLink telemetry and real compressed video can share one link from the companion computer, and existing ground station software works while I build my own. The same video could go into ATAK too (the free civilian version runs on Android). One catch: the Pi 5 has no hardware H.264 encoder, so video encoding runs on its CPU, which counts when picking Pi vs Jetson. Confirmed in Phase 6.
+- **Remote ID:** a broadcast module on a mount and 5 V plug in Base. Whether it's fitted is up to me (see the limits profiles).
 - **Power:** a dedicated 5 V / 5 A+ supply for the companion computer, and a current sensor (usually on the ESC).
-- **First thing I'll build:** a thrust stand (load cell, HX711 amplifier, current sensor) to measure how efficient the motors and props really are, and feed that back into the sim.
+- **First thing I'll build:** a thrust stand (load cell, HX711 amplifier, current sensor) to measure how efficient the motors and props really are, and feed that back into the sim. It happens in Phase 1, as soon as the sizing model has a shortlist, running off a real 6S pack so the voltage sag gets measured too.
 
 ## Shortlist (not final)
 
@@ -336,7 +382,7 @@ Everything that came up while brainstorming, so nothing gets lost.
 
 ## Notes
 
-- **Weight:** camera, GPS, parachute, claws, rangefinder and companion computer probably add up to 1–1.4 kg before the heavier Li-ion pack goes on. That's why it's 8–10" props.
+- **Weight:** see the mass budget above. The modules plus the heavier Li-ion pack are why it's 8–10" props.
 - **Making a quad fly longer**, biggest lever first:
   1. bigger, slower props on low-KV motors
   2. Li-ion instead of LiPo
@@ -354,8 +400,12 @@ Everything that came up while brainstorming, so nothing gets lost.
 
 - Final pick of the extras
 - Exact prop size: 8, 9 or 10". The sizing model decides.
+- Cell type, and 6S2P vs 6S3P. The sizing model decides.
+- Cruise speed: 10 m/s until the sizing model says otherwise
 - Which open-source flight code to start from (the chip is decided: STM32H743)
-- Which H743 board. It needs PX4 support for the baseline flight.
+- Which H743 board. It needs PX4 support for the baseline flight, and SWD pads.
+- How many clean shadow-mode flights before the safety monitor's automatic triggers go live (picked from the Phase 4 logs)
+- Whether to get Part 107 (before Phase 3)
 - Data/video link to the laptop: HaLow is the lead option, confirmed in Phase 6 (the control link is decided: 2.4 GHz ExpressLRS)
 - Where the Meshtastic relay (#30) lives: in V, in Base, or as its own little module
 - Exactly what goes in the `us-recreational` limits profile, checked against the current FAA and FCC rules before Phase 3

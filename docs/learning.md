@@ -177,6 +177,10 @@ These get filled in properly when I get close to them.
   - the OpenDroneMap docs
 - **Surviving a motor failure** (idea #23): Mark W. Mueller and Raffaello D'Andrea, "Stability and control of a quadrocopter despite the complete loss of one, two, or three propellers," *IEEE ICRA*, 2014.
 - **LLMs that plan missions** (Phase 7): tool use, structured output, and validating what a model hands back.
+- **Radio links** (Phases 6–7, for HaLow and the Meshtastic relay): link budgets, why these radios need line of sight, Fresnel zones, antennas, and why the control link stays off the 900 MHz band.
+  - the Meshtastic docs ([meshtastic.org](https://meshtastic.org)), on LoRa settings and range
+  - the Wi-Fi Alliance's pages on Wi-Fi HaLow ([wi-fi.org](https://www.wi-fi.org))
+  - *The ARRL Antenna Book* (ARRL), for antennas and propagation
 
 ---
 

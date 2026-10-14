@@ -21,21 +21,21 @@ The frame is built to carry everything, but it flies bare first. After that I bo
 
 | | Module | What's in it |
 |---|---|---|
-| **V** | Vision & nav | GPS, camera, companion computer |
-| **P** | Parachute | The chute, plus the independent monitor that fires it |
+| **V** | Vision & nav | GPS, camera, companion computer, long-range video link |
+| **P** | Parachute | The chute and its ejector |
 | **C** | Claws | Grabby bits. Coming eventually. |
 
 ## How I'm building it
 
-Simulate first, buy later. Every design has to get through five layers before any money changes hands:
+Simulate first, buy later. Five layers:
 
-1. **Sizing model.** Will it lift, and for how long? (Python)
+1. **Sizing model.** Will it lift, and for how long? (Python, with real numbers from a thrust stand)
 2. **CAD, as code.** Does it all fit, and where does it balance? (build123d)
 3. **Virtual wind tunnel.** What does the air actually do around it? (OpenFOAM, plus FluidX3D for the pretty spinning-prop runs)
 4. **Flight sim.** Can the airframe fly? PX4 flies it in Gazebo to find out.
 5. **My firmware in the sim.** Can *my* code fly it?
 
-The first design is a plain X quad, just to prove the pipeline works. After that, an automated loop builds, tests and improves designs, hunting for one that's actually unique. Whatever wins gets priced, and then it gets bought.
+The first design is a plain X quad. It has to pass the sizing model, the CAD and the flight sim before any real money changes hands, and then it's the one I build and fly. The wind tunnel runs alongside and keeps sharpening the numbers. So does an automated loop that builds, tests and improves designs, hunting for one that's actually unique. Whatever it finds becomes v2.
 
 ## How it fits together
 
@@ -46,7 +46,7 @@ COMPANION COMPUTER  cameras · GPS-free navigation
    │
 FLIGHT CONTROLLER   sensors · PID · motors · failsafes · self-tuning
    │                (my RC transmitter plugs in here and always wins)
-4-in-1 ESC → 4 motors          + independent parachute monitor
+4-in-1 ESC → 4 motors          + independent safety monitor (kill switch, parachute)
 ```
 
 Each layer has to stay safe if the one above it dies.

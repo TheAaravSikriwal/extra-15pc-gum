@@ -1,25 +1,30 @@
-# What every setup has to hit. Locked 2026-10-13 (see docs/decisions.md).
+# What every setup has to hit. Revised 2026-10-14 (see docs/decisions.md).
 # The sim checks all 8 module combinations. Base and Max are the extremes,
 # and every combination in between has to land between them.
 
-reserve_battery_fraction: 0.20 # land with at least 20% left, every setup
-flight_time_means: cruise      # cruising, not hovering
+reserve_battery_fraction: 0.20 # land with at least 20% left, counted in mAh used
+cruise_speed_ms: 10            # for now; the sizing model's least-power speed replaces it
+
+every_setup:
+  min_thrust_to_weight: 2.0           # at the 20% reserve, full throttle, under load
+  current_within_battery_rating: true # full-throttle draw inside the pack's continuous rating
 
 setups:
   base:
     modules: []
-    min_flight_time_min: 30
-    min_thrust_to_weight: 4.0
+    min_cruise_time_min: 30
+    min_hover_time_min: 25
 
   mission:
     modules: [V, P]
-    min_flight_time_min: 25
+    min_cruise_time_min: 25
+    min_hover_time_min: 21
     min_top_speed_kmh: 80
     hold_position_in_wind_ms: 10
 
   max:
     modules: [V, P, C]
     payload_g: 250 # whatever the claws are holding
-    min_flight_time_min: 20
-    min_thrust_to_weight: 3.0
+    min_cruise_time_min: 20
+    min_hover_time_min: 17
     max_takeoff_weight_g: 2500

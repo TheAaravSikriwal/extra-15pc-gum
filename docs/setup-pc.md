@@ -70,7 +70,7 @@ scripts/check-machine.sh pc
 scripts/setup-dev.sh
 ```
 
-It should end with `8 passed` and `All good.` That's the same result as the laptop, and the same as GitHub Actions.
+It should end with `12 passed` and `All good.` That's the same result GitHub Actions gets.
 
 ## 6. Log it and push
 

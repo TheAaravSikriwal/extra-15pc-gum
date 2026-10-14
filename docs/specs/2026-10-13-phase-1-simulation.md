@@ -1,36 +1,38 @@
 # Phase 1: Simulating the design
 
-*Written 2026-10-13, before any code. Revised the same day to add code CAD, aerodynamics, the design hunt, and visuals. Like everything else here, it will change once real numbers show up.*
+*Written 2026-10-13, before any code. Revised the same day to add code CAD, aerodynamics, the design hunt, and visuals. Revised again on 2026-10-14 by the [full plan revision](2026-10-14-plan-revision.md): the wind tunnel and the design hunt run alongside instead of blocking, a thrust stand joins Phase 1, and the targets changed. Like everything else here, it will change once real numbers show up.*
 
-This is how I'm going to prove the drone works, and then find a better one, before buying a single part.
+This is how I'm going to prove the drone works before buying anything big, while the search for a better one runs alongside.
 
 ## What Phase 1 has to produce
 
-1. **A baseline X quad** that passes every target in simulation, across all eight module combinations. The point is to prove the whole pipeline works end to end.
-2. **A unique design**, found by an automated build-test-improve loop, that beats the baseline.
-3. **A priced parts list** for whichever design wins.
-4. **Visuals worth posting** from every layer along the way.
+1. **A baseline X quad** that passes every target in sizing, CAD and Gazebo, across all eight module combinations, using measured thrust data. The point is to prove the pipeline works end to end, and this is the drone I build and fly.
+2. **A priced parts list** for the baseline.
+3. **Visuals worth posting** from every layer along the way.
 
-Nothing gets ordered before item 3 exists.
+Nothing big gets ordered before item 2 exists. The thrust-stand parts are the exception, since they make the simulation more accurate, and most of them end up on the drone anyway.
 
-The targets are locked in [decisions.md](../decisions.md) and live in machine-readable form in [design/targets.yaml](../../design/targets.yaml):
+Running alongside, and not needed for Phase 1 to finish: the wind tunnel layer, and the design hunt for v2.
 
-| Setup | Modules | Flight time | Other targets |
-|---|---|---|---|
-| Base | none | ≥ 30 min | Thrust-to-weight ≥ 4:1 |
-| Mission | V + P | ≥ 25 min | Top speed ≥ 80 km/h; holds position in 10 m/s wind |
-| Max | V + P + C, carrying 250 g | ≥ 20 min | Thrust-to-weight ≥ 3:1; total weight ≤ 2.5 kg |
+The targets are in [decisions.md](../decisions.md) and live in machine-readable form in [design/targets.yaml](../../design/targets.yaml):
 
-Every setup lands with at least 20% battery left, and flight time means cruising, not hovering. The other five combinations have to land somewhere between Base and Max.
+| Setup | Modules | Cruise time | Hover time | Other |
+|---|---|---|---|---|
+| Base | none | ≥ 30 min | ≥ 25 min | |
+| Mission | V + P | ≥ 25 min | ≥ 21 min | Top speed ≥ 80 km/h; holds position in 10 m/s wind |
+| Max | V + P + C, carrying 250 g | ≥ 20 min | ≥ 17 min | Total weight ≤ 2.5 kg |
+
+For every setup: thrust-to-weight of at least 2:1 at the 20% reserve, at full throttle, under load; full-throttle current inside the pack's continuous rating; at least 20% of the battery left on landing, counted in mAh; and cruise means 10 m/s for now. The other five combinations have to land somewhere between Base and Max.
 
 ## The five layers
 
 ```
-parts + shape → 1 sizing → 2 CAD → 3 aero (CFD) → 4 Gazebo + PX4 → pass/fail → improve → repeat
-                                                        └→ 5 my firmware (Phase 2)
+parts + shape → 1 sizing → 2 CAD → 4 Gazebo + PX4 → pass/fail → improve → repeat
+                  ↑                      └→ 5 my firmware (Phase 2)
+     thrust stand data, and 3 aero (CFD) whenever it has numbers
 ```
 
-Layers 1 and 2 take seconds, so they run constantly. Layers 3 and 4 take hours or minutes, so they confirm (or embarrass) what the first two say. Layer 5 is Phase 2, but it reuses everything built here.
+Layers 1 and 2 take seconds, so they run constantly. Layer 4 takes minutes, so it confirms (or embarrasses) what the first two say. Layer 3 takes an hour or two per case, so it runs alongside and feeds its numbers back whenever they're ready. Layer 5 is Phase 2, but it reuses everything built here.
 
 ## Layer 1: Parts files and the sizing model
 
@@ -55,9 +57,11 @@ Swapping a part means changing one name in `build.yaml`.
 
 For each of the eight module combinations:
 
-- Total weight, center of gravity and inertia. These are rough estimates at first; the CAD layer replaces them with exact numbers.
-- Thrust-to-weight, plus hover throttle, current and power from the thrust tables, scaled to the battery's voltage
-- Cruise flight time, from a forward-flight power model plus a Li-ion battery model: usable capacity, voltage sag, and the 20% reserve
+- Total weight, center of gravity and inertia. These start from the mass budget in [decisions.md](../decisions.md); the CAD layer replaces them with exact numbers.
+- Thrust-to-weight at full charge and at the 20% reserve, both under load, plus hover throttle, current and power from the thrust tables, scaled to the battery's voltage
+- Whether full-throttle current stays inside the pack's continuous rating
+- Hover and cruise flight times (cruise at 10 m/s for now), from a forward-flight power model plus a Li-ion battery model: usable capacity, voltage sag, and the 20% reserve counted in mAh
+- The speed that uses the least power, to replace the 10 m/s placeholder
 - A top-speed estimate, and a check that it can hold position in a 10 m/s wind
 
 Drag starts as a guess from frontal area. The aero layer replaces it with real CFD numbers, and the downwash loss from CFD gets taken off the thrust.
@@ -66,33 +70,45 @@ Drag starts as a guess from frontal area. The aero layer replaces it with real C
 
 - **A report:** pass/fail for every combination against every target, with margins. It's Markdown, so it reads fine on GitHub.
 - **A data file for the other layers:** mass, inertia and motor constants, so everything downstream uses the same numbers.
-- **Sweep mode:** it tries every motor × prop × battery in the catalog and ranks them by whether they pass and by how much.
+- **Sweep mode:** it tries every motor × prop × battery in the catalog (including 6S3P packs) and ranks them by whether they pass and by how much.
 - **Charts** in the project's visual style (see Visuals).
 
 ### Known limits
 
-Manufacturer thrust data is usually optimistic, so I'm treating flight times as ±15–20% until the Phase 3 thrust stand gives me real measurements.
+Manufacturer thrust data is usually optimistic, so I'm treating flight times as ±15–20% until the thrust stand (below) gives me real measurements. That now happens in Phase 1, not Phase 3.
 
 ### To settle before building it
 
 These are what the sizing model discussion is for:
 
-- the exact math for cruise power and the battery model, and what I validate them against
-- what cruise speed "flight time" actually means
-- the catalog file format, and which real parts to seed it with
+- the exact math for hover power, cruise power and the battery model, and what I validate them against
+- how to find the least-power speed that replaces the 10 m/s cruise placeholder
+- how to model voltage sag well enough to get thrust-to-weight at the reserve right
+- the catalog file format, which real parts to seed it with, and how measured thrust-stand data sits next to the manufacturer's
 - what the report looks like
 - where the code lives and how it's packaged
+
+## The thrust stand (bought in Phase 1)
+
+Once the sizing model has a shortlist, I buy one motor, two or three props, the 4-in-1 ESC, a load cell with an HX711 amplifier, and a current sensor. Most of that ends up on the drone.
+
+- The Teensy drives the ESC and logs thrust, current, voltage and RPM (from bidirectional DShot) across the throttle range, to its SD card.
+- It runs off a real 6S pack instead of a bench supply, so the voltage sag gets measured, not guessed.
+- The measured data goes into the catalog next to the manufacturer's, and the sizing model uses the measured numbers when it has them.
+- The stand gets bolted down, and nobody stands in line with the prop.
 
 ## Layer 2: CAD, written as code (`cad/`)
 
 Claude writes the CAD in Python with build123d. It reads `build.yaml` and builds every part as a simple but correctly sized solid:
 - the frame plates and arms, from the frame parameters
 - motors, prop disks, and the battery pack, sized from its cell layout
-- the flight controller stack
-- the module mount, and the V, P and C module boxes
+- the flight controller stack and the safety monitor
+- the module mount, the Remote ID mount, and the V, P and C module boxes
+- every antenna: ExpressLRS, HaLow, GPS, and the Meshtastic relay
 
 **What it checks:**
 - prop-to-prop and prop-to-frame clearance
+- prop-to-antenna clearance (in the HaLow video I watched, a prop cut straight through an antenna connector)
 - that everything fits on the mount
 - that the center of gravity sits close enough to the center of thrust
 
@@ -106,7 +122,9 @@ The baseline is a plain X, modeled after a real 8–10" frame. If a real frame's
 
 ## Layer 3: Aerodynamics (`aero/`)
 
-The virtual wind tunnel. It's tiered by how much detail is needed.
+The virtual wind tunnel. It runs alongside the rest of Phase 1 and the phases after it, instead of inside the loop. At a 10 m/s cruise, drag is roughly 10% of the power, so even a 30% drag error moves flight time by about 3%, which is well inside the thrust data's uncertainty. Its numbers still go back into the sizing model and Gazebo whenever they're ready, and the targets get rechecked.
+
+It's tiered by how much detail is needed.
 
 ### Everyday runs: OpenFOAM
 
@@ -140,16 +158,17 @@ The fallback is OpenFOAM with rotating meshes: slower, but one tool.
 
 ## Layer 4: Gazebo + PX4 (`sim/`)
 
-- **A generator** turns `build.yaml`, the sizing output, the CAD mass properties and the aero tables into a Gazebo model and matching PX4 airframe settings for each module combination. It's modeled on PX4's stock quad (the x500).
+- **A generator** turns `build.yaml`, the sizing output, the CAD mass properties and the aero tables (once they exist; frontal-area guesses until then) into a Gazebo model and matching PX4 airframe settings for each module combination. It's modeled on PX4's stock quad (the x500).
 - **Scenario scripts** fly PX4 through the same tests every time:
   - hover, and the response to sudden stick inputs
   - a top-speed run
   - 10 m/s wind
-  - full endurance
+  - hover and cruise endurance
   - failsafes: lost link, low battery
   - a parachute drop
   - a payload grab
-- **Flight time:** Gazebo doesn't model electrical power, so I log the rotor speeds, turn them into current using the thrust data, and run that through the same battery model as layer 1. That way every layer agrees on what a battery is.
+- **False-trigger replay:** every scenario's IMU data gets run through the safety monitor's trigger logic (free fall, tumbling), counting how often it would have fired on a healthy drone. That's the first look at false triggers, long before any real flight.
+- **Flight time:** Gazebo doesn't model electrical power, so I log the rotor speeds, turn them into current using the thrust data, and run that through the same battery model as layer 1. That way every layer agrees on what a battery is, and the reserve is counted in mAh everywhere.
 - **Rough edges, on purpose:** the payload grab uses Gazebo's attach/detach joints, and the parachute is a simple drag model. Good enough to test the logic, not the aerodynamics.
 - **Results** come out in the same pass/fail format, and runs get recorded as clips for posts.
 
@@ -157,9 +176,9 @@ The fallback is OpenFOAM with rotating meshes: slower, but one tool.
 
 This is Phase 2, but Phase 1 leaves room for it. The same Gazebo models and scenarios get reused, so my firmware gets compared directly against PX4 on identical tests.
 
-## After the baseline: the design hunt (`explore/`)
+## Alongside: the design hunt (`explore/`)
 
-Once the baseline X passes end to end, the automation takes over: build, test, read the results, improve, repeat.
+Once the baseline X passes end to end, the automation starts: build, test, read the results, improve, repeat. It runs alongside the later phases and never holds them up. The plain X is what gets built and flown first, and whatever the hunt finds becomes v2 (Phase 10 in the roadmap).
 
 1. **Propose:** an optimizer picks a new design from a parameter space. The parameters could include:
    - arm geometry
@@ -203,7 +222,7 @@ Everything here gets posted, mostly on LinkedIn and sometimes on Instagram, so e
 
 - **Sizing, CAD and quick renders:** either machine.
 - **OpenFOAM, FluidX3D, Blender hero renders, and Gazebo + PX4:** the PC, on native Ubuntu 24.04. The laptop's WSL is only for small test cases.
-- **`scripts/setup-ubuntu.sh`:** safe to rerun. It pins the versions of PX4, Gazebo Harmonic, OpenFOAM, ParaView, Blender and the Python packages, so both machines match.
+- **`scripts/setup-ubuntu.sh`:** safe to rerun, and it pins versions so both machines match. It comes in two halves: Gazebo Harmonic, PX4 and the Python packages first, then OpenFOAM, ParaView and Blender when the CFD work starts.
 - **GitHub Actions:** reruns the lint and tests on every push, and later the sizing report too.
 
 ## Repo layout
@@ -211,7 +230,7 @@ Everything here gets posted, mostly on LinkedIn and sometimes on Instagram, so e
 ```
 design/    targets.yaml · catalog/ · build.yaml
 sizing/    the sizing model
-cad/       the CAD code and what it exports (meshes through LFS)
+cad/       the CAD code (generated meshes stay out of git; curated ones go through LFS)
 aero/      OpenFOAM cases, scripts, post-processing
 sim/       Gazebo model generator, PX4 airframe, worlds, scenarios
 explore/   the design hunt
@@ -223,7 +242,7 @@ docs/      decisions, roadmap, specs, log, generated reports
 
 ## How I'll know the tools themselves work
 
-- **Sizing model:** unit tests with hand-checked numbers, plus a sanity check against a published long-range build with known flight times.
+- **Sizing model:** unit tests with hand-checked numbers, a sanity check against a published long-range build with known flight times, and then my own thrust-stand data.
 - **CAD:** tests that the total mass matches the parts list, the clearances hold, and the exports are valid.
 - **Aero:** the sphere and cylinder checks above, before any drone runs.
 - **Generator:** every generated model has to pass Gazebo's own model check.
@@ -231,6 +250,6 @@ docs/      decisions, roadmap, specs, log, generated reports
 
 ## Not in Phase 1
 
-My own firmware (Phase 2), buying anything, the ground station, and the LLM.
+My own firmware (Phase 2), buying anything beyond the thrust-stand parts, the ground station, and the LLM.
 
-Phase 2 can start as soon as the baseline passes, while the design hunt keeps running alongside it.
+Phase 2 doesn't have to wait for the baseline. It can start as soon as Gazebo works, flying PX4's stock x500, and switches to my design once the baseline passes. The wind tunnel and the design hunt keep running alongside.
