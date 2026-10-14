@@ -11,6 +11,7 @@ Extra 15pc Gum is a long-range quadcopter with my own flight firmware, built sim
    - Update `STATUS.md`: date and machine, current phase, what's next, open questions.
    - Add to the log in `docs/log/YYYY-MM-DD-<topic>.md`: what got done, what got decided, what broke, what's next. These become my posts, so write them so someone outside the project can follow along.
    - Put any new decision in `docs/decisions.md`. If the plan changed, update `docs/roadmap.md` too.
+   - Keep the plan in `README.md` live. When a step or phase finishes, set its status, write its outcome in a line (with a link to the log entry or the result), and mark the next one "Up next". If the plan itself changed, change the tables to match.
    - Commit and push. I've asked for the repo to stay current this way.
 
 ## Voice
@@ -70,6 +71,7 @@ Notes on how I like to work, so a fresh session on either machine picks up the s
 
 - Give me options with a clear recommendation and the reason for it. Put the recommended option first.
 - Show me the full picture (the whole plan, the pros and cons) before asking me to lock something in.
+- Write plans and reviews out in the chat. Don't send me Markdown files to open; they open in VS Code.
 - One question at a time. I often answer in free text and add new ideas halfway through. Fold them in rather than restarting.
 - Log and push decisions as we go. This repo is my memory between machines, and nothing from a chat carries over unless it's written here.
 - I'm posting this publicly, so think about how it'll look and read, not just whether it works.

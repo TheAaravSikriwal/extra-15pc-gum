@@ -6,7 +6,7 @@
 
 ## Right now
 
-Planning is done, and the full plan revision is confirmed (2026-10-14). The live plan is the [roadmap](docs/roadmap.md) and [docs/decisions.md](docs/decisions.md). What changed and why, tagged R1 to R7, is in [docs/specs/2026-10-14-plan-revision.md](docs/specs/2026-10-14-plan-revision.md). The Phase 1 design is in [docs/specs/2026-10-13-phase-1-simulation.md](docs/specs/2026-10-13-phase-1-simulation.md). It covers:
+Planning is done, and the full plan revision is confirmed (2026-10-14). The [README](README.md#the-plan) has the live plan, with each step's outcome filled in as it finishes. The live plan is the [roadmap](docs/roadmap.md) and [docs/decisions.md](docs/decisions.md). What changed and why, tagged R1 to R7, is in [docs/specs/2026-10-14-plan-revision.md](docs/specs/2026-10-14-plan-revision.md). The Phase 1 design is in [docs/specs/2026-10-13-phase-1-simulation.md](docs/specs/2026-10-13-phase-1-simulation.md). It covers:
 - the sizing model
 - a thrust stand, bought as soon as the sizing model has a shortlist
 - CAD written as code (by Claude)
