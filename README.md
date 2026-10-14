@@ -27,14 +27,15 @@ The frame is built to carry everything, but it flies bare first. After that I bo
 
 ## How I'm building it
 
-Simulate first, buy later. Every part choice has to get through four layers before any money changes hands:
+Simulate first, buy later. Every design has to get through five layers before any money changes hands:
 
 1. **Sizing model.** Will it lift, and for how long? (Python)
-2. **CAD mock-up.** Does it all fit, and where does it balance? (Onshape)
-3. **Physics sim.** Can the airframe actually fly? PX4 flies it in Gazebo to find out.
-4. **My firmware in the sim.** Can *my* code fly it?
+2. **CAD, as code.** Does it all fit, and where does it balance? (build123d)
+3. **Virtual wind tunnel.** What does the air actually do around it? (OpenFOAM, plus FluidX3D for the pretty spinning-prop runs)
+4. **Flight sim.** Can the airframe fly? PX4 flies it in Gazebo to find out.
+5. **My firmware in the sim.** Can *my* code fly it?
 
-If something fails, I swap the part and go again. Once it all passes, it gets priced, and then it gets bought.
+The first design is a plain X quad, just to prove the pipeline works. After that, an automated loop builds, tests and improves designs, hunting for one that's actually unique. Whatever wins gets priced, and then it gets bought.
 
 ## How it fits together
 

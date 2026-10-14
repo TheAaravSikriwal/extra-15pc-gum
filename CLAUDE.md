@@ -32,6 +32,15 @@ Everything here is written as me (Aarav), in the first person, and it's going on
 - No videos in the repo. They go wherever I'm posting.
 - CAD and mesh files go through Git LFS (see `.gitattributes`).
 - Respect the licenses of any code we reuse. This repo is GPL-3.0.
+- FluidX3D code never goes in this repo. Its license isn't GPL compatible, and it requires publishing any modified source whose results we post. My FluidX3D setup lives in its own public fork, marked as modified.
+
+## Visuals
+
+I post this whole project on LinkedIn (mostly) and Instagram (sometimes), so anything visual has to look good to strangers scrolling by.
+
+- Use the project's visual style (colors, background, type) from `docs/decisions.md` for every render, chart, CFD image and clip.
+- Export in the platform sizes: 4:5 (1080×1350), 1:1 (1080×1080), 9:16 (1080×1920), 16:9 (1920×1080). PDF carousels for LinkedIn.
+- Curated, compressed stills go in `media/`. Raw renders and videos don't go in the repo.
 
 ## Machines
 

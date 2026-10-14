@@ -14,20 +14,30 @@ I want a fairly big, fairly fast quadcopter with a camera and GPS, running fligh
 - **Building in public:** I'm posting the whole process. That means:
   - respecting the licenses of any code I reuse (a lot of flight code is GPL)
   - scrubbing home and launch GPS coordinates from anything I post
-  - making the CAD and sim produce stuff worth showing
-  - checking the FAA's Part 107 rules if I ever monetize it
+  - making the CAD and sim produce stuff worth showing, for the repo and then my portfolio
+- **Not monetizing any of it.** This is purely for learning, and because it's a really cool project. That keeps me under the FAA's recreational rules.
 - **What I know going in:** soldering, embedded programming, and flying RC.
 
 ### Simulate first, then buy
 
-Nothing gets bought until it has flown in simulation. The loop is: pick parts, run the sizing model, put them in CAD, fly them in Gazebo, check against the targets, swap parts, repeat. It only gets priced once it passes.
+Nothing gets bought until it has flown in simulation. The loop is:
+1. pick parts and a shape
+2. run the sizing model
+3. build it in CAD
+4. put it in a virtual wind tunnel
+5. fly it in Gazebo
+6. check it against the targets
+7. improve it and go again
 
-All four layers are happening:
+It only gets priced once it passes.
+
+Five layers:
 
 1. Sizing model (my own Python tool)
-2. CAD mock-up (Onshape, public documents)
-3. Physics sim: Gazebo Harmonic + PX4, flown by proven firmware first
-4. My own firmware flying the same Gazebo sim
+2. CAD, written as code (build123d), by Claude
+3. Aerodynamics: CFD, the digital version of a wind tunnel
+4. Flight sim: Gazebo Harmonic + PX4, flown by proven firmware first
+5. My own firmware flying the same Gazebo sim
 
 This is partly about money and partly about my career, because simulation is a skill I want. I'll test two ways:
 - **Software-in-the-loop:** the flight code is compiled for the PC and flies in the sim.
@@ -36,6 +46,66 @@ This is partly about money and partly about my career, because simulation is a s
 Both only work if the flight logic stays separate from the hardware drivers, so the same code runs everywhere.
 
 The simulator is Gazebo Harmonic + PX4 on Ubuntu 24.04: native on the PC, WSL2 on the laptop. It's what the industry actually uses.
+
+### CAD in code, then hunt for a unique design (decided 2026-10-13)
+
+Claude writes all the CAD as Python code with build123d, reading from the parts files. Change a part and the model rebuilds itself. It spits out:
+- the center of gravity and inertia
+- meshes for the sim and for CFD
+- STEP files
+- renders
+
+It happens in two steps:
+
+1. **Baseline first.** A plain, simple X quad, run through every layer until the whole pipeline works end to end.
+2. **Then the automation.** Build a design, test it, read the results, improve it, repeat, hunting for a drone design that's actually unique. The fast sizing model filters thousands of candidates; only the promising ones get the slow CFD and Gazebo runs.
+
+What counts as "unique" (stay a quad, or open it up to other layouts) gets decided once the baseline works, since leaving the quad layout would change the firmware too. One knock-on effect: a unique layout probably means a custom frame, either CNC-cut carbon plates from my own files or carbon tubes with printed joints, instead of a bought one.
+
+### Aerodynamics (decided 2026-10-13)
+
+I want to see the air moving around the drone, like smoke in a wind tunnel, and I want the numbers that come with it. This is CFD, and it's its own layer between CAD and Gazebo. It tiers by how much detail it needs:
+
+- **Everyday runs: OpenFOAM.**
+  - The props are modeled as disks pushing air.
+  - The runs cover:
+    - drag at different speeds and tilts
+    - how much the prop wash pushing down on the frame and modules costs in thrust
+    - ground effect
+    - crosswind
+  - About an hour or two per run on the PC.
+  - The results replace the guessed drag in the sizing model and feed Gazebo's wind and drag.
+  - It's open source and the industry standard.
+- **Showcase runs: FluidX3D on the RTX 3060.**
+  - Fully spinning props, for the realistic tip-vortex visuals.
+  - Its license allows personal and educational use, but if I publish results from a modified copy, I have to publish the modified source too. That doesn't mix with this repo's GPL, so my FluidX3D setup lives in a separate public fork, clearly marked as modified.
+  - The fallback is OpenFOAM with rotating meshes, which is slower but one tool.
+- **Visuals:** ParaView renders the streamlines, smoke-style traces and pressure maps.
+- **Keeping it honest:** first check OpenFOAM against shapes with known drag, then against published drone data, then against my own flight logs once I have them.
+- **Where it runs:** the PC. The laptop only manages coarse test runs.
+
+### Visuals are part of the output (decided 2026-10-13)
+
+I'm posting the whole process, mostly on LinkedIn and sometimes on Instagram, so it has to look good to people scrolling past, not just to me.
+
+- Every layer produces shareable visuals as a normal output:
+  - CAD renders
+  - CFD flow images and animations
+  - sizing charts
+  - Gazebo flight clips
+- One consistent look across everything (colors, background, type), so the posts feel like one project.
+- Exports in the sizes the platforms want:
+
+  | Format | Size |
+  |---|---|
+  | 4:5 portrait | 1080×1350 (works on both platforms) |
+  | 1:1 square | 1080×1080 |
+  | 9:16 vertical | 1080×1920 (Reels and Stories) |
+  | 16:9 | 1920×1080 (video) |
+
+  Plus PDF carousels for LinkedIn.
+- Blender, scripted from Python and rendering on the RTX 3060, does the hero shots and turntables of the CAD model.
+- Curated, compressed stills live in the repo. Raw renders and videos stay out of it and go straight to the posts.
 
 ### My machines
 
@@ -161,7 +231,7 @@ Three layers, and each one has to stay safe if the one above it dies:
 
 Parts so far:
 
-- **Frame:** an 8–10" carbon X frame, bought, with the module mount. Printed arms would flex too much at this size.
+- **Frame:** for the baseline, an 8–10" carbon X frame with the module mount, bought. Printed arms would flex too much at this size. If the design hunt finds something unique, the frame goes custom (see above).
 - **Motors:** low-KV, 6S, picked from thrust data once the prop size is settled.
 - **ESC:** 4-in-1, 6S, with bidirectional DShot, so I get RPM from every motor. That's great for filtering and for #21. AM32 is open-source ESC firmware, which is a nice bonus.
 - **Battery:** 6S2P Li-ion from 21700 high-drain cells, around 9 Ah and 850–900 g.
@@ -241,7 +311,7 @@ Everything that came up while brainstorming, so nothing gets lost.
 
   A 7" on Li-ion might manage 20–30 minutes, and 8–10" more than that.
 - **Legal (US):**
-  - Over 250 g means FAA registration, Remote ID and the TRUST test.
+  - Over 250 g means FAA registration, Remote ID and the TRUST test. This is recreational flying only.
   - Near airports a lot of the airspace is controlled, so I'll need LAANC authorization there.
 
 ## Still open
@@ -253,3 +323,5 @@ Everything that came up while brainstorming, so nothing gets lost.
 - Data/video link to the laptop (the control link is decided: ExpressLRS)
 - Camera: FPV video, stills for mapping, or both
 - Module bus: serial or DroneCAN
+- What "unique" is allowed to mean for the design hunt (decided after the baseline works)
+- The visual look for posts

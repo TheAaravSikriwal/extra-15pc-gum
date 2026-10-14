@@ -9,7 +9,7 @@ This plan is going to change. It's the route I'm following today, not a promise.
 | Phase | What it's for | Done when | What I buy |
 |---|---|---|---|
 | **0. Planning** (done) | Figure out what I'm building | Decisions written down | Nothing |
-| **1. Simulate the design** | Prove the parts can hit the targets | Every module combination passes in sim, and the parts list has a price | Nothing |
+| **1. Simulate the design** | Prove a baseline X works, then hunt for a unique design | The winning design passes every module combination in sim, and its parts list has a price | Nothing |
 | **2. My firmware in sim** | Write the flight code and prove it | My firmware flies Base through every test, in sim and on the real chip | Nucleo-H743 (~$30), an IMU breakout (~$10) |
 | **3. Bench build** | Build the Base drone, props off | Every bench check passes on my firmware | Base parts (most of the money) |
 | **4. First flights** | Fly Base for real | Stable hover and altitude hold, flight time confirmed, sim matches reality | Props, spares |
@@ -27,13 +27,18 @@ Why P before V: under the parachute rule, autonomous GPS missions and anything a
 
 Mostly on the PC. The sizing and CAD work runs fine on the laptop too. The detailed design is in [specs/2026-10-13-phase-1-simulation.md](specs/2026-10-13-phase-1-simulation.md).
 
-1. **Setup script:** one command that installs Gazebo Harmonic, PX4 and the Python tools on Ubuntu 24.04, on both the PC and the laptop's WSL.
+1. **Setup script:** one command that installs Gazebo Harmonic, PX4, OpenFOAM, ParaView, Blender and the Python tools on Ubuntu 24.04, on both the PC and the laptop's WSL.
 2. **Sizing model:** the parts files plus the calculator. Iterate motors, props and batteries until Base, Mission and Max all pass on paper.
-3. **CAD mock-up in Onshape:**
-   - Model the frame, every part, the module mount, and modules V, P and C.
-   - Check it all fits and see where the center of gravity ends up.
-   - Export the mass and inertia numbers.
-4. **Gazebo model, flown by PX4:** every module combination goes through the same tests:
+3. **CAD in code (baseline X):** Claude builds the drone in build123d, straight from the parts files. That covers:
+   - every part, the module mount, and modules V, P and C
+   - clearance checks
+   - real center of gravity and inertia
+   - meshes, STEP files, and renders
+4. **Aerodynamics:**
+   - Prove OpenFOAM on a sphere and a cylinder first.
+   - Then run the drone with its props as disks: drag at speed and tilt, prop wash on the modules, ground effect, crosswind.
+   - Feed the results back into the sizing model and Gazebo.
+5. **Gazebo model, flown by PX4:** every module combination goes through the same tests:
    - hover, and how it reacts to sudden stick inputs
    - a top-speed run
    - 10 m/s wind
@@ -41,10 +46,13 @@ Mostly on the PC. The sizing and CAD work runs fine on the laptop too. The detai
    - failsafes (lost link, low battery)
    - a parachute drop
    - a payload grab (sudden mass change)
-5. **Iterate:** swap parts and rerun until everything passes.
-6. **Price it:** if it's over budget, swap parts and simulate again.
+6. **Baseline passes end to end.** Tag it. Phase 2 can start here.
+7. **The design hunt:** an automated loop builds, tests and improves designs, looking for one that's actually unique and beats the baseline. The fast layers filter thousands of candidates, and the best go through CFD and Gazebo. A few showcase runs with spinning props (FluidX3D) produce the hero visuals.
+8. **Price the winner:** if it's over budget, adjust and simulate again.
 
-**Done when:** I have a priced parts list that passes everything. I'll order the Base parts here so they show up during Phase 2.
+Every step exports visuals in the project's look, sized for LinkedIn and Instagram.
+
+**Done when:** I have a priced parts list for a design that passes everything. I'll order the Base parts here so they show up during Phase 2.
 
 ## Phase 2: My firmware in simulation
 
