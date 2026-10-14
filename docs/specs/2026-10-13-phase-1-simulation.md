@@ -179,7 +179,12 @@ Once the baseline X passes end to end, the automation takes over: build, test, r
 
 Everything here gets posted, mostly on LinkedIn and sometimes on Instagram, so every layer exports visuals as a normal output, not an extra step.
 
-- **One look across everything:** colors, background and type stay the same, so the posts read as one project. The style gets locked in [decisions.md](../decisions.md).
+- **One look across everything:** the "wind tunnel" style in [style.md](../style.md). That means black backgrounds, a spearmint accent, turbo for CFD color fields, and a color bar with units on every CFD image.
+- **What the CFD images show:**
+  - surface pressure (where the air hits hardest)
+  - streamlines colored by speed
+  - prop wash
+  - a chart of which part costs the most drag
 - **Export sizes:**
 
   | Format | Size |
@@ -191,6 +196,7 @@ Everything here gets posted, mostly on LinkedIn and sometimes on Instagram, so e
 
   Plus PDF carousels for LinkedIn.
 - **Tools:** Blender (scripted, rendering on the RTX 3060) for CAD hero shots and turntables, ParaView for CFD, ffmpeg to cut clips to size, and charts styled to match.
+- **Scripts read the style from `media/style.yaml`,** so every chart and render matches without anyone thinking about it.
 - **Storage:** curated, compressed stills go in `media/`. Raw renders and videos stay out of the repo and go straight to the posts.
 
 ## Where things run

@@ -1,0 +1,29 @@
+# The project's visual style, for scripts. The human version is docs/style.md.
+
+colors:
+  background: "#0B0B0B" # tunnel black
+  text: "#F4F4F2"       # chalk
+  accent: "#3DDC97"     # spearmint, the project's color
+  pop: "#E64FA0"        # magenta, once per image at most
+  muted: "#B4B2A9"      # fog
+  lines: "#2C2C2A"      # graphite
+
+data:
+  field_colormap: turbo # CFD pressure, velocity, anything continuous
+  pass: "#3DDC97"
+  fail: "#E64FA0"
+
+fonts:
+  headline: Space Grotesk
+  body: Inter
+  numbers: JetBrains Mono
+
+sizes:                  # width x height in pixels
+  portrait: [1080, 1350]
+  square: [1080, 1080]
+  vertical: [1080, 1920]
+  wide: [1920, 1080]
+
+layout:
+  margin_px: 64         # on a 1080 px wide image
+  credit: "Extra 15pc Gum · github.com/TheAaravSikriwal/extra-15pc-gum"

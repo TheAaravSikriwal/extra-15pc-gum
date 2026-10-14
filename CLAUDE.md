@@ -25,6 +25,14 @@ Everything here is written as me (Aarav), in the first person, and it's going on
 - American spelling.
 - Commit messages are short and plain: what changed and why.
 
+## Learning vs. building
+
+I'm learning a lot of this as I go: CFD, control, sensor fusion, embedded. I study offline and build online, and the two stay separate.
+
+- Tutorials are mine to do on my own. They go in `docs/learning.md`, not in the build plan or the roadmap.
+- When a new concept comes up while building, add it to `docs/learning.md`: which topic, why it matters here, and a couple of good resources (videos, articles, books or papers). Only list resources you're confident exist. Never make up a citation.
+- When explaining something new during a session, keep it plain and short, and point at the learning file for the deep version.
+
 ## Public repo rules
 
 - No secrets: API keys, tokens, `.env` files.
@@ -38,7 +46,7 @@ Everything here is written as me (Aarav), in the first person, and it's going on
 
 I post this whole project on LinkedIn (mostly) and Instagram (sometimes), so anything visual has to look good to strangers scrolling by.
 
-- Use the project's visual style (colors, background, type) from `docs/decisions.md` for every render, chart, CFD image and clip.
+- Use the project's visual style from `docs/style.md` (scripts read `media/style.yaml`) for every render, chart, CFD image and clip. Black background, spearmint accent, turbo for CFD fields.
 - Export in the platform sizes: 4:5 (1080×1350), 1:1 (1080×1080), 9:16 (1080×1920), 16:9 (1920×1080). PDF carousels for LinkedIn.
 - Curated, compressed stills go in `media/`. Raw renders and videos don't go in the repo.
 

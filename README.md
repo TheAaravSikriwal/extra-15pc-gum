@@ -56,6 +56,8 @@ Each layer has to stay safe if the one above it dies.
 - [STATUS.md](STATUS.md): what I'm doing right now
 - [docs/roadmap.md](docs/roadmap.md): the plan, phase by phase
 - [docs/decisions.md](docs/decisions.md): every decision so far, and why
+- [docs/learning.md](docs/learning.md): everything I'm learning along the way, with the resources I'm using
+- [docs/style.md](docs/style.md): how everything is supposed to look
 - [docs/specs/](docs/specs/): detailed designs, written before I build things
 - [docs/log/](docs/log/): the build log, roughly one entry per session
 

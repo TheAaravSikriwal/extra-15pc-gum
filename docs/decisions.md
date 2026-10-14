@@ -93,7 +93,15 @@ I'm posting the whole process, mostly on LinkedIn and sometimes on Instagram, so
   - CFD flow images and animations
   - sizing charts
   - Gazebo flight clips
-- One consistent look across everything (colors, background, type), so the posts feel like one project.
+- **One consistent look across everything (locked 2026-10-13): "wind tunnel."** The details are in [style.md](style.md).
+  - black background, chalk text, spearmint accent, magenta for the one thing that has to pop
+  - turbo for CFD color fields
+  - Space Grotesk, Inter and JetBrains Mono for type
+- **What the CFD images show:**
+  - surface pressure, so you can see where the air hits hardest
+  - streamlines colored by speed
+  - prop wash
+  - a "which part costs the most drag" chart, which is also the most useful one for the design hunt
 - Exports in the sizes the platforms want:
 
   | Format | Size |
@@ -106,6 +114,11 @@ I'm posting the whole process, mostly on LinkedIn and sometimes on Instagram, so
   Plus PDF carousels for LinkedIn.
 - Blender, scripted from Python and rendering on the RTX 3060, does the hero shots and turntables of the CAD model.
 - Curated, compressed stills live in the repo. Raw renders and videos stay out of it and go straight to the posts.
+
+
+### Learning (decided 2026-10-13)
+
+I'm new to a lot of this, CFD especially. Tutorials and studying happen on my own time, offline, and building happens online. They don't get mixed. Everything I should learn, with resources, lives in [learning.md](learning.md), and it grows as new topics come up.
 
 ### My machines
 
@@ -324,4 +337,4 @@ Everything that came up while brainstorming, so nothing gets lost.
 - Camera: FPV video, stills for mapping, or both
 - Module bus: serial or DroneCAN
 - What "unique" is allowed to mean for the design hunt (decided after the baseline works)
-- The visual look for posts
+- Which OpenFOAM: the Foundation release (openfoam.org) or ESI's (openfoam.com). Both have the tutorials I need. Decided when writing the setup script.

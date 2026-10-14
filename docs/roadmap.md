@@ -137,4 +137,5 @@ Wrist gesture control (#2) first, then whatever else from the ideas pool in [dec
 
 - Every phase gets build-log entries in [log/](log/) for the posts.
 - [STATUS.md](../STATUS.md) always shows the current phase and what's next.
+- Tutorials and studying aren't in this roadmap. They live in [learning.md](learning.md), on my own time.
 - When the plan changes, update the "Last revised" date up top and write the reason in [decisions.md](decisions.md).
