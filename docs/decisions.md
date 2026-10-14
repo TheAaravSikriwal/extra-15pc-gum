@@ -1,115 +1,143 @@
-# Extra 15pc Gum — Decisions Log
+# Decisions
 
-Running record of what's been decided while planning. Started 2026-10-13.
+Every call I've made on this project, and why. Started 2026-10-13. When something changes, it changes here first.
 
-## Project goal
+## The idea
 
-Build a fairly large, fast quadcopter with a camera and GPS, running **my own flight firmware**, to learn by building.
+I want a fairly big, fairly fast quadcopter with a camera and GPS, running flight firmware I wrote myself. The point is to learn by building it.
 
-- **Hardware:** off-the-shelf modules and breakout boards (MCU dev board, IMU breakout, ESCs, motors, radio receiver) wired together. **No custom PCB** — too slow to wait on fab/shipping.
-- **Firmware:** my own, but starting from open-source flight-controller code and adapting it to this drone is fine. PID and control theory learned along the way.
-- **Airframe:** quadcopter with **8–10" props on low-KV motors and a Li-ion pack**, built for long flights (roughly 25–40 min cruising). Quadplane dropped to keep it simpler.
-- **Budget:** about $1,000 total, but **set aside for now**. Pricing comes after the simulation work.
-- **Public build log:** the whole process will be posted online. So:
-  - Respect the licences of any reused code (many flight-control projects are GPL).
-  - Strip home and launch GPS coordinates from any logs or maps before posting them.
-  - Have the CAD and simulation produce shareable visuals.
-  - If the content will be monetised, check the FAA's Part 107 rules.
-- **Next step: simulate first, then buy.** Design loop: pick candidate parts → sizing model → CAD mock-up → physics sim → check against the target specs → swap parts → repeat. Price it once the specs are met.
-- **Simulation layers (all four chosen):**
-  1. Sizing model (my own Python tool)
-  2. 3D CAD mock-up (Onshape, public documents)
-  3. Physics sim: **Gazebo Harmonic + PX4** (decided), flown by proven firmware
-  4. My own firmware in the same Gazebo sim
-- **Dev laptop:** Lenovo with an Intel Core Ultra 7 155U, 16 GB RAM and integrated Intel graphics (no NVIDIA GPU), 155 GB free. WSL2 Ubuntu 24.04 with WSLg is already installed (WSL is capped at ~7.6 GB of RAM).
-  - No NVIDIA GPU rules out Isaac Sim.
-  - Gazebo will run, but scenes need to stay simple.
-  - The laptop LLM should be a cloud model; a strong local model won't run on this hardware.
-- **Name & repo:** Extra 15pc Gum, a public GitHub repo (`extra-15pc-gum`) under GPL-3.0. The repo is the single source of truth across machines; see `STATUS.md`.
-- **Main sim machine (PC):** dual boot. The simulation runs on native Ubuntu 24.04, with an i7, 32 GB DDR5 and an RTX 3060.
-- **Experience:** soldering, embedded programming, flown RC aircraft.
-- **Staged build:**
-  1. Get it flying on my own firmware (rate mode → self-level → altitude hold)
-  2. Add the camera
-  3. Add GPS (position hold, return-to-launch, waypoints)
+- **Hardware:** parts I can order. Dev boards, breakout boards, ESCs, motors, a receiver. No custom PCB, because I don't want to sit around waiting on fab and shipping.
+- **Firmware:** mine. Starting from open-source flight code and adapting it is fine. I'll pick up PID and control theory as I go.
+- **Airframe:** a quad on 8–10" props with low-KV motors and a Li-ion pack, built to fly long (roughly 25–40 minutes cruising). I looked at a VTOL quadplane and dropped it. Way too much complexity for a first build.
+- **Budget:** around $1,000, but parked for now. Pricing happens after the simulation work, not before.
+- **Name and home:** Extra 15pc Gum, in a public GitHub repo (`extra-15pc-gum`) under GPL-3.0. The repo is how I move between machines, and [STATUS.md](../STATUS.md) always says where I am.
+- **Building in public:** I'm posting the whole process. That means:
+  - respecting the licenses of any code I reuse (a lot of flight code is GPL)
+  - scrubbing home and launch GPS coordinates from anything I post
+  - making the CAD and sim produce stuff worth showing
+  - checking the FAA's Part 107 rules if I ever monetize it
+- **What I know going in:** soldering, embedded programming, and flying RC.
 
-## Base spec (decided)
+### Simulate first, then buy
+
+Nothing gets bought until it has flown in simulation. The loop is: pick parts, run the sizing model, put them in CAD, fly them in Gazebo, check against the targets, swap parts, repeat. It only gets priced once it passes.
+
+All four layers are happening:
+
+1. Sizing model (my own Python tool)
+2. CAD mock-up (Onshape, public documents)
+3. Physics sim: Gazebo Harmonic + PX4, flown by proven firmware first
+4. My own firmware flying the same Gazebo sim
+
+This is partly about money and partly about my career, because simulation is a skill I want. I'll test two ways:
+- **Software-in-the-loop:** the flight code is compiled for the PC and flies in the sim.
+- **Hardware-in-the-loop:** the real chip runs the code while the sim feeds it fake sensor data.
+
+Both only work if the flight logic stays separate from the hardware drivers, so the same code runs everywhere.
+
+The simulator is Gazebo Harmonic + PX4 on Ubuntu 24.04: native on the PC, WSL2 on the laptop. It's what the industry actually uses.
+
+### My machines
+
+- **Laptop:** Lenovo, Core Ultra 7 155U, 16 GB, Intel integrated graphics, WSL2 Ubuntu 24.04 (capped at about 7.6 GB of RAM). Gazebo runs, but scenes have to stay simple. No NVIDIA GPU, so no Isaac Sim and no decent local LLM.
+- **PC:** dual boot, i7, 32 GB DDR5, RTX 3060. The sim lives on its Ubuntu 24.04 side.
+
+### Build stages
+
+1. Get it flying on my firmware: rate mode, then self-level, then altitude hold.
+2. Add the camera.
+3. Add GPS: position hold, return to launch, waypoints.
+
+The [roadmap](roadmap.md) breaks this down much further.
+
+## What's locked in
 
 ### Laptop ground station
-Runs on a laptop, not on the drone. Live telemetry output is required from day one: attitude, motor outputs, battery, GPS, link quality, flight logs, and live PID tuning. Not counted as an "extra" — it's core.
+
+It lives on the laptop, not the drone, with live telemetry from day one: attitude, motor outputs, battery, GPS, link quality, logs, and PID tuning while it flies. This isn't an extra. It's how I'm going to get the thing flying at all.
 
 ### Smart landing
-The pilot chooses where it lands:
 
-| Mode | Behaviour | Needs |
+I pick where it lands:
+
+| Mode | What it does | Needs |
 |---|---|---|
-| Land now | Descends and lands where it is | Stage 1 + rangefinder |
-| Back to start | Returns to the takeoff point and lands | GPS + compass |
-| Land here | Pilot clicks a spot on the ground-station map | GPS + compass |
-| Nearest safe spot | Flies to the closest safe landing zone found by a 3D mapping run of the area (#7) | GPS + 3D map of the area |
+| Land now | Comes down right where it is | Stage 1 + rangefinder |
+| Back to start | Flies back to where it took off and lands | GPS + compass |
+| Land here | Lands on a spot I click on the map | GPS + compass |
+| Nearest safe spot | Flies to the closest safe landing zone from a 3D map of the area (#7) | GPS + a 3D map of the area |
 
-**Safe-spot detection (laptop side):** from the 3D map, find areas that are flat (low slope), smooth, and have a clear radius free of trees, buildings and wires. Upload them to the drone as a list of GPS points. If the area hasn't been mapped, fall back to "Back to start".
+Finding safe spots happens on the laptop. From the 3D map, look for ground that's flat, smooth, and clear of trees, buildings and wires for a decent radius. Those become a list of GPS points sent to the drone. If I haven't mapped the area, it falls back to back to start.
 
-**Automatic triggers (failsafes):**
-- Radio link lost → Back to start
-- Battery low → Back to start or nearest safe spot, whichever it can reach
-- Battery critical → Land now
-- GPS lost → self-level and land now (or hand control back to the pilot)
-- Out of control or in free fall → parachute
+It also lands on its own when things go wrong:
 
-**Hardware this adds:**
-- Downward lidar rangefinder (e.g. TF-Luna / TFmini-S) for the last few metres and a soft touchdown. GPS and barometer aren't precise enough near the ground.
-- Optional: RTK GPS for landings accurate to centimetres. Standard GPS is accurate to about 1–3 m.
-- Optional: a downward camera check before the final descent, to abort if the spot is now occupied (the 3D map is only a snapshot).
+- Lost radio link: back to start
+- Low battery: back to start or the nearest safe spot, whichever it can reach
+- Critical battery: land now
+- Lost GPS: level itself and land, or hand control back to me
+- Out of control or falling: parachute
 
-### Parachute (#5)
-- Free-fall or loss-of-control detection from the accelerometer and attitude; can also be triggered manually.
-- **Cut the motors before deploying**, so the props don't shred the lines.
-- Triggered by an **independent monitor** (the spare Teensy 4.1 with its own IMU) as well as by the main flight controller, so it still works if the main firmware crashes.
-- Needs height to open (roughly 10 m or more), so it won't save low-altitude crashes.
-- Adds about 100–150 g.
+**Extra hardware this needs:** a downward lidar (TF-Luna or TFmini-S) for the last few meters, because GPS and the barometer aren't precise enough near the ground.
 
-### AI assistant (LLM on the laptop)
-The LLM runs **on the laptop, not the drone**. That means no power or weight cost on the drone, and a much more capable model: either a large local model or a cloud model. It handles plain-English missions (#26). It can also read photos and 3D maps, explain change-detection results, and read flight logs to help diagnose wobbles and tuning problems.
-- **If the link drops,** the LLM is unavailable, but nothing depends on it: the failsafes and landing modes all run on the drone.
-- **Local or cloud model:** leaning cloud, because the laptop has no discrete GPU. Cloud needs internet in the field (e.g. a phone hotspot).
-- The drone's companion computer is still needed for GPS-free navigation (#24) and the cameras, but it can be lighter now that it isn't running an LLM.
+**Maybe later:**
+- RTK GPS for landings accurate to the centimeter (normal GPS is good to about 1–3 m).
+- A quick camera check before touchdown, in case someone has parked on my safe spot since I mapped it.
 
-**Safety architecture (non-negotiable):**
-- The LLM never touches the motors. It outputs a structured plan (waypoints and actions).
-- A deterministic checker validates every plan: geofence, max 400 ft, battery reserve, speed limits.
-- The pilot approves the plan before it's sent to the drone. Simple commands ("land", "come back") map onto the existing landing modes.
-- The flight controller executes the plan and can override it at any time. The RC transmitter and the kill switch always win.
-- If the companion computer crashes or freezes, the flight controller treats the lost heartbeat as a failsafe and holds position or returns to start.
+### Parachute
 
-### Simulation-first testing
-Every feature gets tested in a simulator before it flies, for cost and for career reasons.
-- **Software-in-the-loop (SITL):** the flight code is compiled for the PC and flown in a physics simulator.
-- **Hardware-in-the-loop (HIL):** the real microcontroller runs the flight code while the simulator feeds it fake sensor data.
-- **Design consequence:** the flight code must be kept separate from the hardware drivers, so the same control code runs on the PC and on the drone.
-- **Simulator (decided): Gazebo Harmonic + PX4** on Ubuntu 24.04 (native on the PC, WSL2 on the laptop). It is the industry standard, which helps the career goal.
+- It fires on free fall or loss of control, detected from the accelerometer and attitude. I can also fire it by hand.
+- The motors cut before it deploys, or the props eat the lines.
+- A separate monitor can fire it as well as the main flight controller. That's my spare Teensy 4.1 with its own IMU, so if my firmware crashes, the parachute still works.
+- It needs about 10 m to open, so it won't save a crash from low down.
+- It adds roughly 100–150 g.
 
-### Required safety basics
-- Pre-arm checks (sensors healthy, battery OK, GPS lock when needed)
-- Kill switch on the radio
-- Geofence: a boundary it won't cross
+### The LLM lives on the laptop
+
+I wanted an LLM in the loop, and it makes far more sense on the laptop than on the drone: no extra weight, no power draw, and a much smarter model. It'll probably be a cloud model, since this laptop can't run a good local one.
+
+What it does:
+- turns plain-English missions into flight plans (#26)
+- looks at photos and 3D maps
+- explains what changed between mapping runs
+- reads flight logs when something wobbles
+
+If the link drops, I lose the LLM, but nothing depends on it.
+
+The rules that don't bend:
+
+- The LLM never touches the motors. It writes a plan (waypoints and actions), and that's all.
+- A plain, deterministic checker validates every plan: geofence, 400 ft ceiling, battery reserve, speed limits.
+- I approve the plan before it goes to the drone. Simple stuff like "land" or "come back" maps straight onto the landing modes.
+- The flight controller flies the plan and can override it at any time. My transmitter and kill switch always win.
+- If the companion computer crashes or freezes, the flight controller notices the missing heartbeat and holds position or comes home.
+
+### Safety basics
+
+- Pre-arm checks: sensors healthy, battery OK, GPS lock when it's needed
+- A kill switch on the radio
+- A geofence
 
 ### Modular design (locked 2026-10-13)
-- The airframe (frame, motors, ESC, battery) is **sized and built for the heaviest configuration**, then flown bare first. Modules attach and detach depending on what the drone is doing that day.
-- **Base (always fitted):** frame, motors, ESC, battery, flight controller, receiver, rangefinder. It flies on its own.
 
-| Module | Contents | Notes |
+The frame, motors, ESC and battery are sized for the heaviest setup, but the drone flies bare first. Modules go on and off depending on what I'm doing that day.
+
+Base is always on: frame, motors, ESC, battery, flight controller, receiver, rangefinder. It flies by itself.
+
+| Module | What's in it | Notes |
 |---|---|---|
-| **V: Vision & nav** | GPS + compass, camera(s), companion computer, video link | GPS and camera go together: mapping, safe-spot landing and GPS-free flight all use both |
-| **P: Parachute** | Parachute + independent Teensy 4.1 monitor | See the parachute rule below |
-| **C: Claws** | Claws + servos | Works without V, but the camera helps you see what you're grabbing |
+| **V: Vision & nav** | GPS + compass, camera(s), companion computer, video link | GPS and camera go together, because mapping, safe-spot landing and GPS-free flight all need both |
+| **P: Parachute** | The chute + the independent Teensy 4.1 monitor | See the parachute rule below |
+| **C: Claws** | Claws + servos | Works without V, but you'll want the camera to see what you're grabbing |
 
-- **Parachute rule:** the firmware detects whether P is fitted, and refuses autonomous missions and flights above about 30 m without it. (The chute needs about 10 m to open, so low hover tests gain nothing from it.)
-- **A standard module mount (#17):** one mechanical interface, plus a connector carrying power and a data bus. The firmware detects which modules are fitted and loads a matching tuning profile; the self-tuning controller (#21) then fine-tunes in flight. Bus choice is still open (a simple serial link vs. DroneCAN, the industry standard for drone peripherals; the H743 has CAN hardware).
-- **Ballast stand-ins:** before a module exists, weights bolted to its mount point let flights at full weight be tested early.
+- **The parachute rule:** the firmware checks whether P is fitted, and won't fly autonomous missions or go above about 30 m without it. The chute needs about 10 m to open anyway, so there's no point carrying it for low hover tests.
+- **A standard module mount (#17):** one mechanical interface, and one connector carrying power and a data bus.
+  - The firmware sees which modules are on and loads a tuning profile to match. The self-tuning controller (#21) then fine-tunes in flight.
+  - The bus is still open: plain serial, or DroneCAN (the industry standard for drone add-ons; the H743 has CAN hardware).
+- **Ballast:** until a module exists, I bolt weights to its mount so I can still test at full weight.
 
 ### Target specs (locked 2026-10-13)
-The simulation checks **all 8 module combinations**. Three setups have explicit targets, and every other combination must fall between Base and Max.
+
+The sim checks all eight module combinations. Base and Max are the extremes, and anything in between has to land between them.
 
 | Setup | Modules | Flight time | Other targets |
 |---|---|---|---|
@@ -117,96 +145,111 @@ The simulation checks **all 8 module combinations**. Three setups have explicit 
 | **Mission** | V + P | ≥ 25 min | Top speed ≥ 80 km/h; holds position in 10 m/s wind |
 | **Max** | V + P + C, carrying 250 g | ≥ 20 min | Thrust-to-weight ≥ 3:1; total weight ≤ 2.5 kg |
 
-Every setup must also land with **≥ 20% battery left**. Flight times are cruising, not hovering. These targets can be revised if the simulation shows they're unrealistic.
+Every setup has to land with at least 20% battery left, and flight times mean cruising, not hovering. If the sim says these numbers are unrealistic, I'll change them and explain why here. The machine-readable version is [design/targets.yaml](../design/targets.yaml).
 
 ### Roadmap
-See [roadmap.md](roadmap.md) for the phases, from simulation to the last module. It's the plan we're following, and it will change as we go.
 
-## Hardware architecture (draft)
+The phases live in [roadmap.md](roadmap.md). It's the plan I'm following, and it will change.
 
-Three layers. Each layer stays safe if the one above it fails.
+## Hardware (draft)
 
-1. **Flight controller (microcontroller):** hard real-time work. Reads the sensors, runs the PID loops, drives the motors, runs the failsafes and the parachute, and does the self-tuning (#21). Never depends on the layers above.
-2. **Companion computer (Raspberry Pi 5 or Jetson Orin Nano):** cameras, GPS-free navigation (#24), photo capture for mapping. Sends targets to the flight controller.
-3. **Laptop ground station:** telemetry, map, the LLM assistant (#26), mission approval, 3D map processing, safe-spot finding, change detection (#11).
+Three layers, and each one has to stay safe if the one above it dies:
 
-**Draft parts list:**
-- **Frame:** 8–10" carbon-fibre X frame, bought, with a standard module mount. 3D-printed arms flex too much at this size.
-- **Motors:** low-KV, 6S, chosen from thrust tables once the prop size is set.
-- **ESC:** 4-in-1, 6S, with bidirectional DShot (per-motor RPM feedback, useful for filtering and #21). AM32 is open-source ESC firmware.
-- **Battery:** 6S2P Li-ion from 21700 high-drain cells (~9 Ah, ~850–900 g).
-- **Flight controller (decided): the combo.** A Nucleo-H743 dev board on the bench (debugger, every pin, hardware-in-the-loop testing) plus an off-the-shelf STM32H743 flight controller board in the drone. Same chip, so the same firmware runs on both.
-- **Teensy 4.1 (already owned).** Uses, in order:
-  1. **Thrust-stand controller** (the first build): reads the load cell, current and voltage, drives the ESC, logs to its SD card.
-  2. **Desk sandbox:** run dRehmFlight with a cheap IMU breakout and no motors, to see a complete flight controller working before writing one.
-  3. **Independent parachute monitor on the drone:** has its own IMU, watches for free fall or tumbling and for a heartbeat from the main flight controller, and fires the parachute and cuts the motors even if the main firmware hangs. The motor-cut circuit is still to be designed.
-  - Alternative later role: a hardware-in-the-loop bridge (pretends to be the GPS, receiver and rangefinder for the simulator). A second Teensy (~$30) would let it do both.
-  - Not suited to the wristband (#2): it has no wireless. Use an ESP32 there.
-- **Companion computer:** not needed until stage 2, so decide then. A Pi 5 is likely enough now that the LLM is on the laptop; go to a Jetson if #24 needs more compute.
-- **IMU:** ICM-42688-P (built into most modern flight controller boards; breakout boards exist).
-- **Barometer:** usually on the flight controller board.
-- **GPS + compass:** u-blox M10 module with compass, on a mast away from power wires.
+1. **Flight controller:** the hard real-time stuff. It reads the sensors, runs the PID loops, drives the motors, and handles the failsafes, the parachute and self-tuning (#21). It doesn't depend on anything above it.
+2. **Companion computer** (Pi 5 or Jetson Orin Nano): cameras, GPS-free navigation (#24), and photos for mapping. It sends targets down to the flight controller.
+3. **Laptop:** telemetry, the map, the LLM (#26), mission approval, 3D map processing, safe spots, and change detection (#11).
+
+Parts so far:
+
+- **Frame:** an 8–10" carbon X frame, bought, with the module mount. Printed arms would flex too much at this size.
+- **Motors:** low-KV, 6S, picked from thrust data once the prop size is settled.
+- **ESC:** 4-in-1, 6S, with bidirectional DShot, so I get RPM from every motor. That's great for filtering and for #21. AM32 is open-source ESC firmware, which is a nice bonus.
+- **Battery:** 6S2P Li-ion from 21700 high-drain cells, around 9 Ah and 850–900 g.
+- **Flight controller (decided):** a Nucleo-H743 on the bench, which gives me a proper debugger, every pin broken out, and hardware-in-the-loop testing. An off-the-shelf STM32H743 flight controller board goes in the drone. Same chip, same firmware.
+- **Teensy 4.1:** I already have one lying around. Its jobs, in order:
+  1. Run the thrust stand: read the load cell, current and voltage, drive the ESC, and log to its SD card.
+  2. Desk sandbox: dRehmFlight with a cheap IMU and no motors, so I can watch a complete flight controller work before I write mine.
+  3. Be the independent parachute monitor on the drone. It has its own IMU and watches for free fall, tumbling, or the main flight controller going quiet. Then it cuts the motors and fires the chute. The motor-cut circuit still needs designing.
+
+  It could also be a hardware-in-the-loop bridge, pretending to be the GPS, receiver and rangefinder for the sim. A second Teensy is about $30 if I want both. It's no good for the wristband, though: no wireless. That's an ESP32 job.
+- **Companion computer:** not needed until stage 2. A Pi 5 is probably enough now that the LLM is on the laptop; a Jetson if #24 needs more.
+- **IMU:** ICM-42688-P (it's on most modern flight controller boards anyway).
+- **Barometer:** on the flight controller board.
+- **GPS + compass:** a u-blox M10 module with compass, up on a mast away from the power wires.
 - **Rangefinder:** downward lidar (TF-Luna or TFmini-S).
-- **Control link:** ExpressLRS receiver plus a handheld transmitter. Its protocol (CRSF) is well documented and easy to parse.
-- **Data/video link to the laptop:** to decide. Likely a separate high-bandwidth Wi-Fi-based link from the companion computer. Speaking MAVLink lets existing ground-station tools work while the custom one is built.
-- **Power:** a separate 5 V / 5 A+ supply for the companion computer, and a current sensor (usually on the ESC).
-- **First thing to build:** a thrust stand (load cell + HX711 + current sensor) to measure motor and prop efficiency and feed real data into the simulator.
+- **Control link:** an ExpressLRS receiver and a handheld transmitter. Its protocol (CRSF) is well documented and easy to parse.
+- **Data/video link to the laptop:** still open. Probably a separate Wi-Fi-based link from the companion computer. If it speaks MAVLink, existing ground station software works while I build my own.
+- **Power:** a dedicated 5 V / 5 A+ supply for the companion computer, and a current sensor (usually on the ESC).
+- **First thing I'll build:** a thrust stand (load cell, HX711 amplifier, current sensor) to measure how efficient the motors and props really are, and feed that back into the sim.
 
 ## Shortlist (not final)
 
-- **#2 Wrist gesture control:** fly by tilting an ESP32 + IMU wristband
-- **#7 3D mapping run:** fly a GPS grid taking photos, then build a 3D model with OpenDroneMap. *The "nearest safe spot" landing mode depends on this.*
-- **#8 Perching claws:** servo talons grab a branch or rail, the motors stop, and the camera keeps recording
-- **#10 Wind sensing:** works out wind from how hard it leans to hold position (software only); powers a live "turn back now" battery warning and smarter landing choices
-- **#11 Change detection:** compares two mapping runs and flags what changed, so safe landing spots stay up to date
-- **#21 Self-tuning controller:** tunes its own PID in flight and re-tunes when the payload changes (runs on the flight controller)
-- **#24 GPS-free flight:** navigates with the camera and IMU, so it gets home if GPS drops (runs on the companion computer)
-- **#26 Plain-English missions:** the laptop LLM turns commands into checked, pilot-approved plans
+- **#2 Wrist gesture control:** fly by tilting an ESP32 + IMU wristband.
+- **#7 3D mapping runs:** fly a GPS grid taking photos, and turn them into a 3D model with OpenDroneMap. The nearest-safe-spot landing depends on this.
+- **#8 Perching claws:** grab a branch or a railing, motors off, camera still rolling. This is module C.
+- **#10 Wind sensing:** work out the wind from how hard it leans to hold position. Software only. It feeds a "turn back now" battery warning and smarter landing choices.
+- **#11 Change detection:** compare two mapping runs and flag what moved, so the safe spots stay safe.
+- **#21 Self-tuning:** tunes its own PID in flight, and re-tunes when the payload changes. Runs on the flight controller.
+- **#24 GPS-free flight:** navigates with the camera and IMU, so it can still get home if GPS drops. Runs on the companion computer.
+- **#26 Plain-English missions:** the laptop LLM turns what I say into checked plans that I approve.
 
 ## Ideas pool
+
+Everything that came up while brainstorming, so nothing gets lost.
 
 | # | Idea | Status |
 |---|---|---|
 | 1 | Tilt-rotor flight (camera stays level without a gimbal) | Not picked |
-| 2 | Wrist gesture control | **Shortlist** |
-| 3 | Precision landing on a printed marker | Replaced by smart landing (base spec) |
-| 4 | Web ground station | **Base spec** (laptop) |
-| 5 | Free-fall detection + parachute | **Base spec** |
+| 2 | Wrist gesture control | Shortlist |
+| 3 | Precision landing on a printed marker | Replaced by smart landing |
+| 4 | Web ground station | Locked in (laptop) |
+| 5 | Free-fall detection + parachute | Locked in (module P) |
 | 6 | Thermal vision overlay | Not picked |
-| 7 | 3D mapping run | **Shortlist** (needed for safe-spot landing) |
-| 8 | Perching claws | **Shortlist** |
-| 9 | Follow the wristband | New |
-| 10 | Wind sensing + "turn back now" battery warning | **Shortlist** |
-| 11 | Change detection between mapping runs | **Shortlist** |
-| 12 | AR overlay on live video | New |
-| 13 | Laser "measure anything" | New |
-| 14 | Payload winch | New |
-| 15 | Amphibious (float landing gear) | New |
-| 16 | Repeat-shot time-lapse | New |
-| 17 | Modular payload bay | **Base spec** (standard module mount; see "Modular design") |
-| 18 | VTOL quadplane (adds a wing) | Dropped: too complex; a long-range quad was chosen instead |
-| 19 | Listening post: microphones locate sounds while perched with motors off | New |
-| 20 | Sniffer drone: follows a gas or smoke plume to its source | New |
-| 21 | Self-tuning controller: tunes its own PID in flight and re-tunes when the payload changes | **Shortlist** |
-| 22 | Neural-network controller trained in the simulator, run on the real drone | New |
-| 23 | Motor-failure survival: spins and lands on 3 motors before resorting to the parachute | New |
-| 24 | GPS-free flight: navigates by camera, gets home if GPS drops | **Shortlist** |
-| 25 | Haptic wristband: vibrates for obstacles, battery and direction home | New |
-| 26 | Plain-English missions via an LLM on the laptop (pilot approves before it flies) | **Shortlist** |
-| 27 | Charging dock: lands on a pad, recharges, takes off again | New |
-| 28 | Sensor pucks: drops small sensor beacons and collects them later with the claws | New |
-| 29 | Toroidal props: looped propellers designed to be quieter | New |
+| 7 | 3D mapping runs | Shortlist (needed for safe-spot landing) |
+| 8 | Perching claws | Shortlist (module C) |
+| 9 | Follow the wristband | Maybe |
+| 10 | Wind sensing + "turn back now" battery warning | Shortlist |
+| 11 | Change detection between mapping runs | Shortlist |
+| 12 | AR overlay on live video | Maybe |
+| 13 | Laser "measure anything" | Maybe |
+| 14 | Payload winch | Maybe |
+| 15 | Amphibious (float landing gear) | Maybe |
+| 16 | Repeat-shot time-lapse | Maybe |
+| 17 | Modular payload bay | Locked in (the module mount) |
+| 18 | VTOL quadplane (adds a wing) | Dropped: too complex, went long-range quad instead |
+| 19 | Listening post: microphones locate sounds while perched with motors off | Maybe |
+| 20 | Sniffer drone: follows a gas or smoke plume to its source | Maybe |
+| 21 | Self-tuning controller | Shortlist |
+| 22 | Neural-network controller trained in the sim, run on the real drone | Maybe |
+| 23 | Motor-failure survival: spins and lands on 3 motors before the parachute | Maybe |
+| 24 | GPS-free flight | Shortlist |
+| 25 | Haptic wristband: buzzes for obstacles, battery and direction home | Maybe |
+| 26 | Plain-English missions via the laptop LLM | Shortlist |
+| 27 | Charging dock: lands on a pad, recharges, takes off again | Maybe |
+| 28 | Sensor pucks: drops little sensor beacons, collects them later with the claws | Maybe |
+| 29 | Toroidal props: looped propellers that are meant to be quieter | Maybe |
 
-## Early notes
+## Notes
 
-- **Weight:** camera + GPS + parachute + claws + rangefinder + onboard computer probably puts the all-up weight around 1–1.4 kg, plus a heavier Li-ion pack. **Decided: 8–10" props with Li-ion** for flight time.
-- **Quad endurance levers (biggest first):** bigger, slower props on low-KV motors; Li-ion packs instead of LiPo; weight discipline; firmware efficiency (clean filtering, an "eco cruise" speed); landing or perching to wait with the motors off. A 7" quad with Li-ion could manage roughly 20–30 min, and an 8–10" more.
-- **Legal (US):** over 250 g, so it needs FAA registration and Remote ID, plus the TRUST test. Near airports much of the airspace is controlled, so LAANC authorisation is needed there.
+- **Weight:** camera, GPS, parachute, claws, rangefinder and companion computer probably add up to 1–1.4 kg before the heavier Li-ion pack goes on. That's why it's 8–10" props.
+- **Making a quad fly longer**, biggest lever first:
+  1. bigger, slower props on low-KV motors
+  2. Li-ion instead of LiPo
+  3. cutting weight ruthlessly
+  4. efficient firmware: clean filtering, an eco cruise speed
+  5. landing or perching to wait with the motors off
 
-## Still to decide
+  A 7" on Li-ion might manage 20–30 minutes, and 8–10" more than that.
+- **Legal (US):**
+  - Over 250 g means FAA registration, Remote ID and the TRUST test.
+  - Near airports a lot of the airspace is controlled, so I'll need LAANC authorization there.
 
-- Final pick of extra features
-- **Target specs** (the pass/fail numbers for the sim): flight time, thrust-to-weight, top speed, wind tolerance, payload, maximum weight. Also the exact prop size (8, 9 or 10").
-- Which open-source flight code to start from (the microcontroller is decided: STM32H743)
+## Still open
+
+- Final pick of the extras
+- Exact prop size: 8, 9 or 10". The sizing model decides.
+- Which open-source flight code to start from (the chip is decided: STM32H743)
+- Which H743 board. It needs PX4 support for the baseline flight.
 - Data/video link to the laptop (the control link is decided: ExpressLRS)
-- Camera type (FPV video vs. stills for mapping vs. both)
+- Camera: FPV video, stills for mapping, or both
+- Module bus: serial or DroneCAN

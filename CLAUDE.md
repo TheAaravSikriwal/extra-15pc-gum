@@ -1,33 +1,50 @@
 # CLAUDE.md
 
-Extra 15pc Gum: a long-range quadcopter with custom flight firmware, built simulation-first and in public. The owner works on two machines (a laptop and a PC), and this repo is how work moves between them.
+Notes for Claude sessions working on this repo. If you're a human reading this: hi. This is how I keep my AI pair-programmer on the same page between my laptop and my PC.
+
+Extra 15pc Gum is a long-range quadcopter with my own flight firmware, built simulation-first and in public. I work on two machines, and this repo is how the work moves between them.
 
 ## Every session
 
-1. **Start:** run `git pull`, then read `STATUS.md` (where we are) and `docs/decisions.md` (what's decided and why). Don't re-open a settled decision unless the owner asks.
-2. **End, or at any meaningful checkpoint:**
-   - Update `STATUS.md`: last updated (date and machine), current phase, next up, open questions.
-   - Add or extend a log entry in `docs/log/YYYY-MM-DD-<topic>.md`: what was done, what was decided, what broke, what's next. These entries become the online posts, so write them so someone outside the project can follow.
-   - Record any new decision in `docs/decisions.md`.
-   - Commit and push. The owner has asked for the repo to be kept up to date this way.
+1. **Start:** `git pull`, then read `STATUS.md` (where we are) and `docs/decisions.md` (what's decided and why). Don't reopen a settled decision unless I bring it up.
+2. **End, or at any real checkpoint:**
+   - Update `STATUS.md`: date and machine, current phase, what's next, open questions.
+   - Add to the log in `docs/log/YYYY-MM-DD-<topic>.md`: what got done, what got decided, what broke, what's next. These become my posts, so write them so someone outside the project can follow along.
+   - Put any new decision in `docs/decisions.md`. If the plan changed, update `docs/roadmap.md` too.
+   - Commit and push. I've asked for the repo to stay current this way.
+
+## Voice
+
+Everything here is written as me (Aarav), in the first person, and it's going online. It should sound like a person, not a press release.
+
+- Write like you're explaining the project to a friend who builds stuff. Plain words, short sentences. A joke is fine if it actually lands.
+- No hype or filler. Skip words like robust, seamless, leverage, cutting-edge, delve and "it's worth noting".
+- Go easy on bold, headers and bullet lists. Paragraphs are fine. Tables are great for numbers.
+- No em dashes. No emoji.
+- Be honest about what's unknown or didn't work. Failures are content.
+- American spelling.
+- Commit messages are short and plain: what changed and why.
 
 ## Public repo rules
 
-- Never commit secrets: API keys, tokens, `.env` files.
-- Never commit home or launch GPS coordinates. Scrub flight logs, maps and screenshots first. Raw flight logs (`*.ulg`, `*.bin`) are gitignored.
-- No videos in the repo; they go to the posting platform.
+- No secrets: API keys, tokens, `.env` files.
+- No home or launch GPS coordinates, ever. Scrub flight logs, maps and screenshots first. Raw flight logs (`*.ulg`, `*.bin`) are gitignored.
+- No videos in the repo. They go wherever I'm posting.
 - CAD and mesh files go through Git LFS (see `.gitattributes`).
-- Respect the licences of reused code. This repo is GPL-3.0.
+- Respect the licenses of any code we reuse. This repo is GPL-3.0.
 
 ## Machines
 
-- **Laptop:** Windows 11 + WSL2 Ubuntu 24.04, Intel integrated graphics, 16 GB. The repo lives in OneDrive on the Windows side. Heavy builds (PX4) go in the WSL home folder, not under `/mnt/c`.
-- **PC:** dual boot. Simulation runs on **native Ubuntu 24.04**, with an RTX 3060 and 32 GB. Clone the repo from GitHub into a Linux folder, not OneDrive.
-- Both machines use Ubuntu 24.04 for the toolchain, so setup scripts must work on both native Linux and WSL2.
+- **Laptop:** Windows 11 + WSL2 Ubuntu 24.04, Intel integrated graphics, 16 GB. The repo lives in OneDrive on the Windows side, so anything bulky stays out of it:
+  - The Python venv is at `%USERPROFILE%\.venvs\extra-15pc-gum`.
+  - PX4 builds go in the WSL home folder, not under `/mnt/c`.
+  - `git push` needs `env -u GH_TOKEN git push` until my fine-grained token gets access to this repo.
+- **PC:** dual boot. The sim runs on **native Ubuntu 24.04**, with an RTX 3060 and 32 GB. The repo is cloned into a Linux folder from GitHub, not OneDrive.
+- Both run Ubuntu 24.04 for the toolchain, so setup scripts have to work on native Linux and on WSL2.
 
-## Non-negotiable safety architecture
+## Safety rules (these don't bend)
 
-- The LLM runs on the laptop and **never commands the motors**. It outputs structured plans; a deterministic checker validates them (geofence, ≤400 ft, battery reserve, speed limits); the pilot approves them; the flight controller executes them.
-- The flight controller never depends on the companion computer or the laptop. If the companion computer stops responding, that triggers a failsafe.
-- The RC transmitter and kill switch always override everything.
-- The parachute is also fired by an independent monitor (a Teensy 4.1 with its own IMU), and the motors are cut before it deploys.
+- The LLM runs on the laptop and **never commands the motors**. It writes structured plans; a deterministic checker validates them (geofence, 400 ft ceiling, battery reserve, speed limits); I approve them; the flight controller flies them.
+- The flight controller never depends on the companion computer or the laptop. If the companion computer goes quiet, that's a failsafe.
+- My RC transmitter and kill switch override everything.
+- The parachute can also be fired by an independent monitor (a Teensy 4.1 with its own IMU), and the motors cut before it deploys.

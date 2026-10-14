@@ -1,4 +1,4 @@
-# Normalise line endings so Windows and Linux machines don't fight
+# Same line endings everywhere, so Windows and Linux stop fighting
 * text=auto eol=lf
 *.ps1 text eol=crlf
 *.bat text eol=crlf
