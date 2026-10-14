@@ -49,7 +49,6 @@ The look is locked in [docs/style.md](docs/style.md).
 - Exactly what goes in the `us-recreational` limits profile, and whether to get Part 107 (before Phase 3)
 - How many clean shadow-mode flights before the safety monitor's automatic triggers go live
 - What "unique" is allowed to mean in the design hunt
-- Landing from height: a flying-squirrel glide membrane (#33), a spiral descent on low throttle (#34), or neither. Soar mode (#31) is decided and on the shortlist for Phase 7.
 - Whether Max (with the claws) should still size the motors while the claws are uncertain (for the sizing model discussion)
 
 ## Machines

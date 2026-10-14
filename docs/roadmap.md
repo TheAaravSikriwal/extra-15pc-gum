@@ -78,7 +78,7 @@ These start whenever there's time, and never hold up a phase.
 
 ## Phase 2: My firmware in simulation
 
-1. **Architecture:** flight logic kept separate from the hardware drivers, so the same code runs on the PC and on the H743. A hardware watchdog and fresh DShot frames every loop from day one, so a hung CPU means the motors stop.
+1. **Architecture:** flight logic kept separate from the hardware drivers, so the same code runs on the PC and on the H743. A hardware watchdog and fresh DShot frames every loop from day one, so a hung CPU means the motors stop. Flight modes are separate pieces on top of the same controller, and the landing sequence has a swappable descent part, so later modes like the spiral descent (#34) drop in without rework.
 2. **Warm-up (optional):** dRehmFlight on the Teensy with an IMU breakout, so I can watch a working flight controller before writing my own.
 3. **Flight modes, in order:** rate mode, then self-level, then altitude hold. Each one runs the same tests as PX4 so I can compare them directly.
 4. **Arming, failsafes and limits:**
@@ -166,6 +166,7 @@ Each one goes sim first, then real.
 7. The LLM mission assistant (#26): plan, checker, my approval, then flight
 8. The Meshtastic relay (#30), with a range test against a ground mesh
 9. Soar mode (#31): parking in rising air, holding position in a breeze, and riding the wind on routes. Sim first, with a rising-air field added to Gazebo.
+10. Spiral descent (#34): coming down from height in a GPS-centered helix on low throttle. The sim checks the path; real flights check whether it beats a straight descent.
 
 ## Phase 8: Module C (claws)
 
