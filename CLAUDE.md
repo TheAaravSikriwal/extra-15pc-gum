@@ -52,12 +52,28 @@ I post this whole project on LinkedIn (mostly) and Instagram (sometimes), so any
 
 ## Machines
 
-- **Laptop:** Windows 11 + WSL2 Ubuntu 24.04, Intel integrated graphics, 16 GB. The repo lives in OneDrive on the Windows side, so anything bulky stays out of it:
-  - The Python venv is at `%USERPROFILE%\.venvs\extra-15pc-gum`.
+- **PC (the main machine from 2026-10-14):** dual boot; all work happens on **native Ubuntu 24.04**. It has an RTX 3060, an i7 and 32 GB.
+  - The repo is at `~/extra-15pc-gum`, cloned from GitHub, not OneDrive.
+  - The venv is `.venv` inside the repo, created by `scripts/setup-dev.sh`.
+  - First-time setup steps are in `docs/setup-pc.md`.
+- **Laptop (secondary):** Windows 11 + WSL2 Ubuntu 24.04, Intel integrated graphics, 16 GB. The repo lives in OneDrive on the Windows side, so anything bulky stays out of it:
+  - The venv is at `%USERPROFILE%\.venvs\extra-15pc-gum`, made by `scripts\setup-dev.ps1`.
   - PX4 builds go in the WSL home folder, not under `/mnt/c`.
   - `git push` needs `env -u GH_TOKEN git push` until my fine-grained token gets access to this repo.
-- **PC:** dual boot. The sim runs on **native Ubuntu 24.04**, with an RTX 3060 and 32 GB. The repo is cloned into a Linux folder from GitHub, not OneDrive.
-- Both run Ubuntu 24.04 for the toolchain, so setup scripts have to work on native Linux and on WSL2.
+- Both run Ubuntu 24.04 for the toolchain, so scripts have to work on native Linux and on WSL2.
+- **Checking a machine:** `scripts/check-machine.sh <name>` is read-only and writes `docs/machines/<name>.md`. Rerun it and commit the result whenever a machine's tools change.
+- **The checks that have to pass on every machine:** `scripts/setup-dev.sh` (or `setup-dev.ps1` on Windows), which runs the same lint and tests as CI.
+
+## Working with me
+
+Notes on how I like to work, so a fresh session on either machine picks up the same way.
+
+- Give me options with a clear recommendation and the reason for it. Put the recommended option first.
+- Show me the full picture (the whole plan, the pros and cons) before asking me to lock something in.
+- One question at a time. I often answer in free text and add new ideas halfway through. Fold them in rather than restarting.
+- Log and push decisions as we go. This repo is my memory between machines, and nothing from a chat carries over unless it's written here.
+- I'm posting this publicly, so think about how it'll look and read, not just whether it works.
+- The process: talk it through, write a spec, write an implementation plan, then build test-first. Nothing gets built before its design is agreed.
 
 ## Safety rules (these don't bend)
 

@@ -40,6 +40,11 @@ How much thrust a prop makes and what it costs in power, momentum theory, motor 
 
 Pressure, drag, lift, the boundary layer, wakes, and the Reynolds number: what all those colors in CFD images are actually showing.
 
+The quick version, from a session:
+- **Paint on the surface is pressure.** Red is where air slams into the object and pushes back. Blue is where air rushes past and sucks on it.
+- **More drag:** a big red front plus a big blue, swirly wake behind it.
+- **The lines are the path the air takes,** colored by speed. Smooth lines mean the air slides past cleanly. A tangled mess behind the object is the wake, and wasted energy.
+
 - [ ] **Watch:** Fluid Mechanics 101 (Aidan Wimshurst, YouTube). Explains fluid and CFD ideas visually and clearly.
 - [ ] **Read:** NASA Glenn Research Center, *Beginner's Guide to Aeronautics* (free on the NASA Glenn website). Short pages on drag, lift and pressure.
 - [ ] **Read, later:** E. L. Houghton and P. W. Carpenter, *Aerodynamics for Engineering Students* (Butterworth-Heinemann). The textbook version.

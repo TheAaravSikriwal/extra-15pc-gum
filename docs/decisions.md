@@ -123,7 +123,8 @@ I'm new to a lot of this, CFD especially. Tutorials and studying happen on my ow
 ### My machines
 
 - **Laptop:** Lenovo, Core Ultra 7 155U, 16 GB, Intel integrated graphics, WSL2 Ubuntu 24.04 (capped at about 7.6 GB of RAM). Gazebo runs, but scenes have to stay simple. No NVIDIA GPU, so no Isaac Sim and no decent local LLM.
-- **PC:** dual boot, i7, 32 GB DDR5, RTX 3060. The sim lives on its Ubuntu 24.04 side.
+- **PC:** dual boot, i7, 32 GB DDR5, RTX 3060. The sim lives on its Ubuntu 24.04 side. **It's the main machine from 2026-10-14**, set up with [setup-pc.md](setup-pc.md). The laptop is for docs, light work and the field.
+- Every machine runs the same checks (`scripts/check-machine.sh` and `scripts/setup-dev.sh`), and the results are logged in [machines/](machines/).
 
 ### Build stages
 
