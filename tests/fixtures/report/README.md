@@ -257,6 +257,7 @@ Cruise minutes as extra grams go on:
 ## What this can't tell you
 
 - Manufacturer thrust data runs optimistic. The pessimistic numbers allow for that, but only a thrust stand can say by how much.
+- Cruise is the shakiest number here. The honesty check ([validation.md](validation.md)) flew a published long-range build through the model, and its cruise time came out much longer than the measured one, most likely because the drag of the props at speed isn't modeled yet. Trust the hover numbers more than the cruise ones for now.
 - Drag is a guess from frontal area until the wind tunnel side track has real numbers.
 - Coming straight down fast (the vortex ring state), cold weather and aging cells aren't modeled.
 - The ESC's limits, wiring losses and heat get checked in the electrical step.

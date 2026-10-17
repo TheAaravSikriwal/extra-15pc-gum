@@ -33,6 +33,22 @@ def _pair(check) -> str:
     return with_unit(f"{nominal} / {pessimistic}", check.unit)
 
 
+def _hover_below_the_table(design: DesignResult) -> str | None:
+    """A warning when the sizing case hovers below the thrust table's first row, where the
+    power gets scaled with momentum theory instead of read from a measured point."""
+    first = design.build.thrust_table.rows[0]
+    hover = units.kg_to_g(design.sizing.mass.total) / rotor.MOTORS
+    if hover >= first.thrust_g:
+        return None
+    return (
+        f"- {design.targets.sizing_case} hovers at {hover:.0f} g per motor, below the thrust "
+        f"table's first row ({first.thrust_g:.0f} g at {first.throttle_pct:g}% throttle). Down "
+        "there the hover power is scaled from that row with momentum theory instead of read from "
+        "a measured point, and that tends to come out a little low on power, so a little long on "
+        "flight time."
+    )
+
+
 def _verdict_sentence(design: DesignResult) -> str:
     required = [r for r in design.setups if r.setup.required]
     names = ", ".join(r.setup.name for r in required)
@@ -247,6 +263,15 @@ def render(design: DesignResult, sweep=None, margin=None, made_up=False, generat
         "",
         "- Manufacturer thrust data runs optimistic. The pessimistic numbers allow for that, but "
         "only a thrust stand can say by how much.",
+    ]
+    below = _hover_below_the_table(design)
+    if below:
+        lines.append(below)
+    lines += [
+        "- Cruise is the shakiest number here. The honesty check ([validation.md](validation.md)) "
+        "flew a published long-range build through the model, and its cruise time came out much "
+        "longer than the measured one, most likely because the drag of the props at speed isn't "
+        "modeled yet. Trust the hover numbers more than the cruise ones for now.",
         "- Drag is a guess from frontal area until the wind tunnel side track has real numbers.",
         "- Coming straight down fast (the vortex ring state), cold weather and aging cells aren't "
         "modeled.",

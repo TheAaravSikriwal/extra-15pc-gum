@@ -9,6 +9,7 @@ import pytest
 from pcs14.catalog import load_catalog
 from pcs14.design import load_build, load_targets
 from pcs14.report import fmt_value, write_report
+from pcs14.report.markdown import render
 from pcs14.sizing.checks import evaluate
 from pcs14.sizing.sweep import margin_curve, sweep
 
@@ -85,3 +86,22 @@ def test_the_data_file_matches_the_results(report, results):
 def test_made_up_reports_cant_go_in_docs_reports(results):
     with pytest.raises(ValueError, match="made-up"):
         write_report(ROOT / "docs" / "reports" / "sizing", **results, made_up=True)
+
+
+def test_the_report_says_when_hover_is_below_the_thrust_table(results):
+    design = results["design"]
+    assert "below the thrust table's first row" not in render(design)
+
+    # The same motor, but its table starts at 50% throttle, above where the drone hovers.
+    motor = design.build.motor
+    table = motor.thrust_tables[0]
+    short = table.model_copy(update={"rows": [r for r in table.rows if r.throttle_pct >= 50]})
+    build = design.build.variant(motor=motor.model_copy(update={"thrust_tables": [short]}))
+    text = render(evaluate(build, design.targets))
+    assert "mission hovers at" in text
+    assert "below the thrust table's first row (900 g at 50% throttle)" in text
+
+
+def test_the_report_points_at_the_honesty_check(report):
+    text = (report / "README.md").read_text(encoding="utf-8")
+    assert "[validation.md](validation.md)" in text
