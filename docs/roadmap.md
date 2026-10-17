@@ -33,6 +33,7 @@ Nothing gets bought by default, and nothing flies. Two optional purchases are wo
 | **Structure** | Step 2 | Stress and vibration in the frame, arms and module mount |
 | **Aero** | Step 2 | The virtual wind tunnel: drag, prop wash, ground effect |
 | **Design hunt** | Step 4 | Searching for a better, unique design: the v2 research |
+| **Project site** | Step 1 | One rich, animated website pulling from every simulation: the drone in 3D, a live spec sheet, a page per step, and every individual sim |
 | **Visuals** | Every step | Renders, charts and clips for the posts |
 
 **Setup comes first:** WSL2 on the PC, with [setup-pc.md](setup-pc.md).
@@ -189,14 +190,15 @@ Each one gets proven in sim, and whatever the sim can't show goes on the unprove
    - FluidX3D for the spinning-prop showcase visuals
    - the results feed back into the sizing model and Gazebo, and the targets get rechecked
 3. **The design hunt,** once the baseline passes in Gazebo: an automated loop builds, tests and improves designs, looking for one that's actually unique and beats the baseline. Whatever it finds becomes the v2 research.
-4. **Visuals,** from every step, in the project's look.
+4. **Visuals,** from every step, in the project's look. Every test is visible, not just its verdict: each one streams into the Rerun viewer as it runs and stays there to replay.
+5. **The project site,** starting with the sizing model and growing with every step: the drone in 3D (exploded views, modules switching on and off, clickable parts), a live spec sheet, a page per step that explains it and shows its results, and links into every individual sim. The details are in [decisions.md](decisions.md), under "The project site".
 
 ## Tools, and where they run
 
 | Where | Tools |
 |---|---|
 | WSL2 Ubuntu 24.04 (both machines) | The Python code (sizing model, CAD in build123d, WireViz), Gazebo + PX4, OpenFOAM, my firmware in the sim, OpenDroneMap |
-| Windows on the PC | KiCad with ngspice, FreeCAD with CalculiX, Blender on the RTX 3060, ParaView, FluidX3D |
+| Windows on the PC | KiCad with ngspice, FreeCAD with CalculiX, Blender on the RTX 3060, ParaView, FluidX3D, the Rerun viewer |
 | Windows on the laptop | The ground station, and object detection with OpenVINO |
 
 The PC's native Ubuntu side stays as a fallback for really big wind tunnel runs, or if Gazebo's graphics struggle under WSL.

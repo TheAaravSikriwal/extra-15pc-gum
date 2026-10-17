@@ -83,7 +83,7 @@ Where everything runs:
 | Where | Tools |
 |---|---|
 | WSL2 Ubuntu 24.04 (both machines) | The Python code (sizing model, CAD in build123d, WireViz), Gazebo + PX4, OpenFOAM, my firmware in the sim, OpenDroneMap |
-| Windows on the PC | KiCad with ngspice, FreeCAD with CalculiX, Blender on the RTX 3060, ParaView, FluidX3D |
+| Windows on the PC | KiCad with ngspice, FreeCAD with CalculiX, Blender on the RTX 3060, ParaView, FluidX3D, the Rerun viewer |
 | Windows on the laptop | The ground station, and object detection with OpenVINO |
 
 ### CAD in code, then hunt for a unique design (decided 2026-10-13)
@@ -169,7 +169,21 @@ Visuals matter most while the design is being worked out, not just for posts. So
 | Flight sim | A clip and telemetry plots for every scenario |
 | My firmware | Its plots laid over PX4's on the same test |
 
-Each step has two outputs: a Markdown report with charts for the repo and the posts, and an interactive view for me to explore the results and watch the tests as they happen. Both read the same data file.
+Each step has three outputs, all reading the same data files:
+- **a Markdown report** with charts, for the repo and the posts
+- **Rerun recordings.** Every test streams into the Rerun viewer as it runs, on a timeline I can scrub, and stays there to replay later. Rerun is free, open source and made for robotics, and the same viewer handles plots, the 3D drone and flight replays.
+- **pages on the project site** (below)
+
+### The project site (decided 2026-10-17)
+
+One website that pulls from every simulation, for looking at the drone and learning from it. It should feel rich and animated:
+- **The drone in 3D,** straight from the CAD. It turns slowly with the props spinning, comes apart into an exploded view and back together, and switches modules V, P and C on and off, with the weight, flight times and verdicts updating as it does. Any part can be clicked for its specs, price and source.
+- **A live spec sheet:** weight, flight times, thrust-to-weight and top speed for every setup, colored pass, marginal or fail, always from the latest runs.
+- **A page per step:** what the step does, in plain words, linked to the matching topic in learning.md; the results as interactive charts; animated replays of the tests; and links into every individual sim, so nothing hides behind a summary.
+- **The unproven list,** front and center.
+- **The project's look:** black, spearmint and magenta, with the same fonts as the posts.
+
+It's built from the data files every step writes, so it grows as the steps finish, starting with the sizing model. The individual sims stay available on their own too: the Rerun recordings, the reports in `docs/reports/`, and the clips. Where it's hosted and what it's built with get settled in its own spec.
 
 
 ### Learning (decided 2026-10-13)
