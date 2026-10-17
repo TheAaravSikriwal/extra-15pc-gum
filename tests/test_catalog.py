@@ -11,11 +11,6 @@ FIXTURES = Path(__file__).parent / "fixtures" / "catalog"
 
 
 @pytest.fixture
-def catalog():
-    return load_catalog(FIXTURES, allow_made_up=True)
-
-
-@pytest.fixture
 def scratch(tmp_path):
     """A copy of the made-up catalog that a test can break."""
     copy = tmp_path / "catalog"

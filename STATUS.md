@@ -1,7 +1,7 @@
 # Status
 
 **Last updated:** 2026-10-17, on the PC's Windows side
-**Step:** 1c, building the sizing model ([the plan](docs/plans/2026-10-17-sizing-model.md)): task 4 of 15 done, the targets and build file; next is task 5, the mass budget
+**Step:** 1c, building the sizing model ([the plan](docs/plans/2026-10-17-sizing-model.md)): task 5 of 15 done, the mass budget; next is task 6, the battery model
 **Main machine:** the PC, with WSL2 Ubuntu 24.04 for the Linux tools
 
 ## Right now

@@ -13,16 +13,6 @@ FIXTURES = Path(__file__).parent / "fixtures"
 TARGETS = ROOT / "design" / "targets.yaml"
 
 
-@pytest.fixture
-def catalog():
-    return load_catalog(FIXTURES / "catalog", allow_made_up=True)
-
-
-@pytest.fixture
-def targets():
-    return load_targets(TARGETS)
-
-
 def test_targets_come_out_metric(targets):
     assert targets.reserve_fraction == 0.20
     assert targets.cruise_speed == 10
