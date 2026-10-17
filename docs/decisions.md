@@ -155,6 +155,22 @@ I'm posting the whole process, mostly on LinkedIn and sometimes on Instagram, so
 - Blender, scripted from Python and rendering on the RTX 3060, does the hero shots and turntables of the CAD model.
 - Curated, compressed stills live in the repo. Raw renders and videos stay out of it and go straight to the posts.
 
+### Every test is visible (decided 2026-10-17)
+
+Visuals matter most while the design is being worked out, not just for posts. So every simulated test, in every step, leaves something to look at, not just a pass/fail line:
+
+| Step | What I get to see |
+|---|---|
+| Sizing | Every simulated flight on a timeline: voltage, charge, current and thrust headroom, with the reserve line, plus the sweep filling in as it runs |
+| CAD | The assembly in 3D, with collisions and tight clearances highlighted |
+| Electrical | Current, voltage drop and heat per wire and part, in every setup |
+| Structure | Stress maps and the arms' vibration shapes |
+| Aero | Streamlines and pressure on the body |
+| Flight sim | A clip and telemetry plots for every scenario |
+| My firmware | Its plots laid over PX4's on the same test |
+
+Each step has two outputs: a Markdown report with charts for the repo and the posts, and an interactive view for me to explore the results and watch the tests as they happen. Both read the same data file.
+
 
 ### Learning (decided 2026-10-13)
 

@@ -24,8 +24,8 @@ Where to look:
 ## Up next
 
 1. **Set up WSL2 on the PC** with [docs/setup-pc.md](docs/setup-pc.md). The `wsl --install` step needs an admin PowerShell and one reboot. Then commit `docs/machines/pc.md`.
-2. **Step 1a: talk through the sizing model.** Started 2026-10-17, and it doesn't need WSL. Settled so far: hover and cruise power (the least-power speed falls out of it) and the battery model with sag, the catalog format, and which parts go in first, in the spec under "Settled in the sizing model talk". Still to settle:
-   - what the report looks like
+2. **Step 1a: talk through the sizing model.** Started 2026-10-17, and it doesn't need WSL. Settled so far: hover and cruise power (the least-power speed falls out of it), the battery model with sag, the catalog format, which parts go in first, and the report (Markdown for the repo, an interactive dashboard for me), in the spec under "Settled in the sizing model talk". Still to settle:
+   - how the interactive dashboard gets built, so every test is visible as it runs
    - how the code is packaged
 3. **Step 1b: update the spec** with the answers, then **write the implementation plan** for the sizing model.
 4. **Step 1c: build it**, test-first. Its first job is the mass budget: does Max fit under 2.5 kg?
