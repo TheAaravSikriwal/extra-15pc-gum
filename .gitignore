@@ -26,6 +26,10 @@ dist/
 *.tlog
 sim/output/
 
+# Rerun recordings and other generated run output
+*.rrd
+outputs/
+
 # Videos go to the posting platform, not the repo
 *.mp4
 *.mov
