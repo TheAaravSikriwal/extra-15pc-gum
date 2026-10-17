@@ -24,8 +24,9 @@ Where to look:
 ## Up next
 
 1. **Set up WSL2 on the PC** with [docs/setup-pc.md](docs/setup-pc.md). The `wsl --install` step needs an admin PowerShell and one reboot. Then commit `docs/machines/pc.md`.
-2. **Step 1a: talk through the sizing model.** Started 2026-10-17, and it doesn't need WSL. Settled so far: hover and cruise power (the least-power speed falls out of it), the battery model with sag, the catalog format, which parts go in first, and the outputs (a Markdown report, Rerun replays of every test, and the project site), in the spec under "Settled in the sizing model talk". Still to settle:
-   - how the code is packaged
+2. **Step 1a: talk through the sizing model.** Started 2026-10-17, and it doesn't need WSL. Settled so far: hover and cruise power (the least-power speed falls out of it), the battery model with sag, the catalog format, which parts go in first, the outputs (a Markdown report, Rerun replays of every test, and the project site), and the code as one package called 14 pcs left, in the spec under "Settled in the sizing model talk". Still to settle:
+   - how the code spells the package name (Python names can't start with a number)
+   - whether Max (with the claws) should still size the motors while the claws are uncertain
 3. **Step 1b: update the spec** with the answers, then **write the implementation plan** for the sizing model.
 4. **Step 1c: build it**, test-first. Its first job is the mass budget: does Max fit under 2.5 kg?
 5. **Step 1d: pick the parts** from the sweep, with uncertainty bands.
@@ -35,7 +36,6 @@ Where to look:
 
 - Prop size, cell type, and 6S2P vs 6S3P. The sizing model gets to decide.
 - Cruise speed: 10 m/s until the sizing model says otherwise
-- Whether Max (with the claws) should still size the motors while the claws are uncertain (for the sizing model discussion)
 - How modules talk to the flight controller: plain serial or DroneCAN (step 3)
 - Which H743 flight controller board. It has to be one PX4 supports, with SWD pads.
 - Which OpenFOAM: the Foundation release or ESI's. Decided when writing the CFD half of the setup script.

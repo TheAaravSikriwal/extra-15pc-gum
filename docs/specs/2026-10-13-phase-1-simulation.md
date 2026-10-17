@@ -81,7 +81,8 @@ Manufacturer thrust data is usually optimistic, so I'm treating flight times as 
 
 These are what the sizing model discussion is for. Once one is settled, it moves to the next section.
 
-- where the code lives and how it's packaged
+- how the code spells the package name (Python names can't start with a number)
+- whether Max (with the claws) should still size the motors while the claws are uncertain, or Mission plus a margin
 
 ### Settled in the sizing model talk
 
@@ -127,6 +128,14 @@ The exact part numbers get researched and filled in during step 1c, and the list
 - **Rerun, for watching every test.** Each simulated flight streams into the Rerun viewer as it runs: voltage, charge, current and thrust headroom on a timeline I can scrub, with the reserve line, plus the sweep filling in candidate by candidate. Every run is saved as a recording to replay later.
 - **The project site's first pages,** generated on every run: the live spec sheet, the verdicts, a sweep explorer where hovering over any candidate shows its numbers, part-by-part comparisons, and animated replays of the flights. See "The project site" in decisions.md.
 - **Why this one:** a web app with sliders is one tool, but its timelines are weaker, there's no 3D path for later steps, and it needs a server running. A results page alone only shows tests after they finish.
+
+**How the code is organized (2026-10-17).** One Python package for the whole project, called **14 pcs left**, since the pack of gum is down a piece.
+- One part per layer: the catalog (loading and checking the parts files), sizing (the rotor model, the battery model, the flight stepper and the sweep), the report, and viz (streaming tests to Rerun). Later layers (CAD, electrical, the Gazebo generator, the site) slot in beside them.
+- A command-line tool to run it: size, sweep, report.
+- Standard metric units inside (meters, kilograms, seconds, newtons, watts), converted only where data comes in or goes out. That prevents the classic grams-versus-kilograms bug.
+- The top-level folders (`aero/`, `sim/` and the rest) keep the non-Python files, like OpenFOAM cases and Gazebo worlds.
+- Python names can't start with a number, so the code's own spelling of the name is still being picked.
+- **Why this one:** every piece gets tested once and reused everywhere. Separate scripts per layer would copy the catalog loader and battery model into every layer, and notebooks are hard to test and rerun. Notebooks can still be a learning companion that reads from the package.
 
 ## The thrust stand (optional)
 

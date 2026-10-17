@@ -46,7 +46,7 @@ This is the live version. When a step finishes, its outcome goes here, with a li
 
 | Part | What happens | Status | Outcome |
 |---|---|---|---|
-| 1a. Talk | Settle the power and battery math, the sag model, the parts catalog and the report | In progress | Settled so far: real thrust tables for hover, a fitted forward-flight model for cruise, a battery model with sag, the parts catalog format, a data-first rule for which parts go in, and the outputs: a Markdown report, live Rerun replays of every test, and the project site ([spec](docs/specs/2026-10-13-phase-1-simulation.md#settled-in-the-sizing-model-talk)) |
+| 1a. Talk | Settle the power and battery math, the sag model, the parts catalog and the report | In progress | Settled so far: real thrust tables for hover, a fitted forward-flight model for cruise, a battery model with sag, the parts catalog format, a data-first rule for which parts go in, the outputs: a Markdown report, live Rerun replays of every test, and the project site, and the code as one package called 14 pcs left ([spec](docs/specs/2026-10-13-phase-1-simulation.md#settled-in-the-sizing-model-talk)) |
 | 1b. Plan | Update the spec, then write the implementation plan | Not started | |
 | 1c. Build | Test-first, in Python. The first answer: does the fully loaded drone fit under 2.5 kg? | Not started | |
 | 1d. Pick the parts | Run the sweep and choose real parts, with uncertainty bands | Not started | |
