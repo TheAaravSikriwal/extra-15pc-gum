@@ -57,6 +57,31 @@ Instead of buying parts and building it, I'm designing the whole drone in simula
 - **Why, probably:** in forward flight the props themselves add drag that grows with speed, which a frontal-area estimate leaves out. The test also had 15-20 mph wind, normal FPV flying instead of a steady cruise, and no published landing voltage. It can't just be a bigger frontal drag area, because that drone reaches 110 km/h, which a 540 cm2 drag area wouldn't allow.
 - **What it means:** the cruise numbers in the sizing report are probably optimistic, possibly by up to 2x, and the hover numbers are the ones to trust for now. Fixing it means modeling rotor drag properly and the wind tunnel side track. A thrust stand, and one real GPS-logged flight, would settle it.
 
+### The first real sweep (2026-10-17)
+
+The catalog has real motors and props now. Three researchers went through more than 50 motors with published 6S tables, from Emax, Hobbywing, T-Motor, Flash Hobby, BrotherHobby, iFlight, GEPRC, AxisFlying and RCINPOWER. Six made it in, picked for clean, smooth tables at 6S with an rpm column, on 8 to 10 inch tri-blades whose weight the prop maker publishes:
+
+| Motor | Mass | Props it's tested on |
+|---|---|---|
+| Emax E3 2814 850KV | 82 g | HQ 9x5x3, Gemfan 1050 |
+| Emax E3 3115 900KV | 108 g | HQ 9x5x3, HQ 10x5x3, Gemfan 1050 |
+| Hobbywing XRotor 3110 900KV | 89 g | HQ 8x4.5x3, 9x4x3, 9x5x3 |
+| Hobbywing XRotor 3115 900KV | 125 g | HQ 9x4x3, 9x5x3, 10x4.5x3, 10x5x3 |
+| Flash Hobby Mars M2814 730KV | 87 g | HQ LR10x5x3, Gemfan 1050 |
+| T-Motor Velox V3115 900KV | 113.1 g | HQ 9x5x3, HQ 10x5x3 |
+
+I checked the Emax, T-Motor and Flash Hobby tables against the makers' pages by eye. T-Motor's own page has a typo (408.08 A at 60% throttle, next to 582 W at 24 V), so that one row is left out. Many BrotherHobby and iFlight tables are lumpy (currents that jump or go backwards between rows), so they wait, and so does every table whose prop has no published weight.
+
+What the sweep found, trying 192 builds:
+
+- **One rule shapes the whole result: full throttle has to fit the pack's continuous rating.** All 96 of the 6S2P builds fail it: flat out, they pull 105 A or more even after the pack sags, and the best 6S2P pack is rated for 90 A. For 32 of them it's the only check they miss. With 6S3P (135 A), 14 builds pass every required target and 2 more are marginal.
+- **Under today's rules, the pick is Flash Hobby Mars M2814 730KV motors, HQ LR10x5x3 props and a 6S3P Molicel P42A pack** on the Nazgul XL10 frame. With Mission's loadout and the 200 g margin: 2678 g, 32.9 min hover (28.1 pessimistic), T/W 2.35 at the reserve, 118 A flat out. It wins because it's the lowest-current motor in the catalog, which is exactly what that rule rewards.
+- **The extra cells cost 400 g, and that's what sinks Max.** Max weighs 2878 g against its 2500 g limit. With the current rule switched off, 111 builds pass, and the light 6S2P ones keep Max close to 2500 g.
+- **The pick's hover sits below its table.** Flash Hobby's table starts at 50% throttle (1047 g), and Mission hovers at 670 g per motor, so the model scales the power down from that first row. Checked on an Emax table that goes lower, that reads 3 to 10% low on power. The pessimistic numbers cover it, and the report says so.
+- **The growth margin stays 200 g for now.** The final pick waits on the question below.
+
+Open question: should full throttle have to fit the pack's continuous rating, or should my firmware cap the current at the rating instead? A cap costs punch on a fresh pack, but at the 20% reserve, where thrust-to-weight is checked, the sagging pack already keeps the draw near the rating.
+
 ### Simulate everything
 
 The loop is:
@@ -525,8 +550,8 @@ Everything that came up while brainstorming, so nothing gets lost.
 ## Still open
 
 - Final pick of the extras
-- Exact prop size: 8, 9 or 10". The sizing model decides.
-- Cell type, and 6S2P vs 6S3P. The sizing model decides.
+- Exact prop size, cell type, and 6S2P vs 6S3P. The first real sweep says 10", P42A and 6S3P under today's rules, but that hangs on the next question.
+- Whether full throttle has to fit the pack's continuous rating, or the firmware caps the current instead (step 1d, see "The first real sweep")
 - Cruise speed: 10 m/s until the sizing model says otherwise
 - Which open-source flight code to start from (the chip is decided: STM32H743)
 - Which H743 board. It needs PX4 support for the baseline flight, and SWD pads.

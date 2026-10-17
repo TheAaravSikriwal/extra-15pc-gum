@@ -34,6 +34,12 @@ How much thrust a prop makes and what it costs in power, momentum theory, motor 
 - [ ] **Watch:** Joshua Bardwell (YouTube) on motors, props and Li-ion packs for long-range builds. The practical, real-world side.
 - [ ] **Read, if I go deep on the battery model:** Gregory L. Plett, *Battery Management Systems, Vol. 1: Battery Modeling* (Artech House, 2015). There's also his Battery Management Systems course on Coursera (University of Colorado Boulder).
 
+The quick version of two things the first real sweep ran into (2026-10-17):
+- **A cell's continuous current rating** is how hard you can pull on it without cooking it. Put cells in parallel and the ratings add up: one P42A is rated for 45 A, so 6S2P is 90 A and 6S3P is 135 A. Big motors flat out can pull more than that, even after the pack sags under the load. The fixes are more cells in parallel (heavier), or firmware that caps the current (less punch on a full pack).
+- **Reading below a thrust table's first row** means guessing. Momentum theory says power goes as thrust to the 1.5, but real motors waste a bit more at light load, so that guess reads a few percent low on power.
+
+- [ ] **Read:** HKJ's battery tests ([lygte-info.dk](https://lygte-info.dk)), the discharge curves at different currents for any 18650 or 21700 cell. Watching the curves drop as the current goes up is the fastest way to get a feel for sag and current ratings.
+
 ## 3. Aerodynamics basics
 
 *Needed for the aero side track (the wind tunnel).*
