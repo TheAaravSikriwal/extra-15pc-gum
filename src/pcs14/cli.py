@@ -1,8 +1,24 @@
-"""The `pcs14` command. The size, sweep and report commands arrive with task 14 of the plan."""
+"""The `pcs14` command.
+
+    pcs14 size     evaluate one build: every setup, every check, every flight
+    pcs14 sweep    try every build the catalog allows, and rank them
+    pcs14 report   write the full sizing report: Markdown, charts and the data file
+
+Every run saves a Rerun recording to outputs/rerun/ (or wherever --record says), and --live
+opens the viewer and streams into it as the run happens.
+"""
 
 import argparse
+import sys
+from datetime import date, datetime
+from pathlib import Path
 
-from pcs14 import __version__
+from pcs14 import __version__, units
+from pcs14.catalog import CatalogError, load_catalog
+from pcs14.design import DesignError, load_build, load_targets
+from pcs14.report.formatting import fmt_value
+
+RECORDINGS = Path("outputs") / "rerun"
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -11,11 +27,180 @@ def build_parser() -> argparse.ArgumentParser:
         description="14 pcs left: design and simulation tools for the Extra 15pc Gum drone.",
     )
     parser.add_argument("--version", action="version", version=f"pcs14 {__version__}")
+    commands = parser.add_subparsers(dest="command")
+
+    def add(name: str, help_text: str) -> argparse.ArgumentParser:
+        sub = commands.add_parser(name, help=help_text, description=help_text)
+        sub.add_argument("--catalog", type=Path, default=Path("design/catalog"))
+        sub.add_argument("--build", type=Path, default=Path("design/build.yaml"))
+        sub.add_argument("--targets", type=Path, default=Path("design/targets.yaml"))
+        sub.add_argument(
+            "--allow-made-up",
+            action="store_true",
+            help="let the made-up test parts in (their results are stamped as made up)",
+        )
+        sub.add_argument("--live", action="store_true", help="open the Rerun viewer and stream")
+        sub.add_argument("--record", type=Path, help="where to save the Rerun recording")
+        sub.add_argument("--no-record", action="store_true", help="don't save a recording")
+        return sub
+
+    add("size", "Evaluate one build: every setup, every check, every flight.")
+    add("sweep", "Try every build the catalog allows, and rank them.")
+    report = add("report", "Write the sizing report: Markdown, charts and the data file.")
+    report.add_argument("--out", type=Path, help="report folder (default: docs/reports/sizing)")
+    report.add_argument(
+        "--grams",
+        type=int,
+        nargs=3,
+        metavar=("FROM", "TO", "STEP"),
+        default=(0, 600, 100),
+        help="extra grams for the margin chart",
+    )
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
-    parser.parse_args(argv)
-    parser.print_help()
+    args = parser.parse_args(argv)
+    if args.command is None:
+        parser.print_help()
+        return 0
+    try:
+        return COMMANDS[args.command](args)
+    except (CatalogError, DesignError, ValueError) as error:
+        print(f"pcs14 {args.command}: {error}", file=sys.stderr)
+        return 2
+
+
+def _load(args):
+    catalog = load_catalog(args.catalog, allow_made_up=args.allow_made_up)
+    build = load_build(args.build, catalog)
+    targets = load_targets(args.targets)
+    return catalog, build, targets
+
+
+def _recorder(args):
+    if args.no_record and not args.live:
+        return None
+    from pcs14.viz import Recorder
+
+    path = None
+    if not args.no_record:
+        stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+        path = args.record or RECORDINGS / f"{args.command}-{stamp}.rrd"
+    recorder = Recorder(path=path, live=args.live)
+    if path is not None:
+        print(f"Recording to {path}")
+    return recorder
+
+
+def _made_up_line(args) -> str:
+    return (
+        "MADE-UP TEST PARTS: these numbers say nothing about a real drone.\n"
+        if (args.allow_made_up)
+        else ""
+    )
+
+
+def _summary(design, made_up: str) -> str:
+    targets = design.targets
+    cruise = f"Cruise time at {targets.cruise_speed:g} m/s"
+    lines = [
+        made_up + f"Build: {design.build.label}",
+        "",
+        f"{'setup':<10}{'weight':>9}{'hover':>10}{'cruise':>10}{'T/W at reserve':>16}  verdict",
+    ]
+    for result in design.setups:
+
+        def shown(name, unit, result=result):
+            return _shown(result, name, unit)
+
+        optional = "" if result.setup.required else " (optional)"
+        lines.append(
+            f" {result.setup.name:<9}{units.kg_to_g(result.mass.total):>7.0f} g"
+            f"{shown('Hover time', 'min'):>7} min{shown(cruise, 'min'):>7} min"
+            f"{shown('Thrust-to-weight at the reserve', ':1'):>14}:1  {result.verdict}{optional}"
+        )
+    lines += ["", f"Verdict: {design.verdict} (sized for {targets.sizing_case})"]
+    return "\n".join(lines)
+
+
+def _shown(result, name: str, unit: str) -> str:
+    found = [c for c in result.checks if c.name == name]
+    if not found:
+        return "-"
+    return fmt_value(found[0].nominal, unit, found[0].higher_is_better)
+
+
+def run_size(args) -> int:
+    from pcs14.sizing.checks import evaluate
+
+    _, build, targets = _load(args)
+    recorder = _recorder(args)
+    design = evaluate(build, targets, recorder=recorder)
+    text = _summary(design, _made_up_line(args))
+    print(text)
+    if recorder is not None:
+        recorder.log_summary(f"```\n{text}\n```")
+        recorder.close()
     return 0
+
+
+def run_sweep(args) -> int:
+    from pcs14.sizing.sweep import sweep
+
+    catalog, build, targets = _load(args)
+    recorder = _recorder(args)
+    result = sweep(build, catalog, targets, recorder=recorder)
+    lines = [
+        _made_up_line(args) + f"{len(result.ranked)} builds tried, {len(result.skipped)} skipped",
+        "",
+        f"{'rank':>4}  {'verdict':<9}{'margin':>8}{'cruise':>10}  build",
+    ]
+    for rank, candidate in enumerate(result.ranked, start=1):
+        lines.append(
+            f"{rank:>4}  {candidate.verdict:<9}{candidate.tightest_margin * 100:>+7.0f}%"
+            f"{fmt_value(candidate.sizing_cruise_minutes, 'min', True):>6} min  "
+            f"{candidate.build.label}, {candidate.build.frame.model}"
+        )
+    for label, reason in result.skipped:
+        lines.append(f"   skipped  {label}: {reason}")
+    text = "\n".join(lines)
+    print(text)
+    if recorder is not None:
+        recorder.log_summary(f"```\n{text}\n```")
+        recorder.close()
+    return 0
+
+
+def run_report(args) -> int:
+    from pcs14.report import write_report
+    from pcs14.sizing.checks import evaluate
+    from pcs14.sizing.sweep import margin_curve, sweep
+
+    catalog, build, targets = _load(args)
+    out = args.out or Path("docs/reports/sizing")
+    start, stop, step = args.grams
+    recorder = _recorder(args)
+    swept = sweep(build, catalog, targets, recorder=recorder)
+    best = swept.best.build if swept.ranked else build
+    design = evaluate(best, targets, recorder=recorder)
+    margin = margin_curve(best, targets, grams=range(start, stop + 1, step))
+    written = write_report(
+        out,
+        design,
+        swept,
+        margin,
+        made_up=args.allow_made_up,
+        generated=date.today().isoformat(),
+    )
+    text = _summary(design, _made_up_line(args))
+    print(text)
+    print(f"\nReport written to {written}")
+    if recorder is not None:
+        recorder.log_summary(f"```\n{text}\n```")
+        recorder.close()
+    return 0
+
+
+COMMANDS = {"size": run_size, "sweep": run_sweep, "report": run_report}
