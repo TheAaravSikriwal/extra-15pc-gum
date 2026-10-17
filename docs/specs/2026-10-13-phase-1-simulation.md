@@ -1,18 +1,18 @@
-# Phase 1: Simulating the design
+# Simulating the baseline: sizing, CAD and the flight sim
 
-*Written 2026-10-13, before any code. Revised the same day to add code CAD, aerodynamics, the design hunt, and visuals. Revised again on 2026-10-14 by the [full plan revision](2026-10-14-plan-revision.md): the wind tunnel and the design hunt run alongside instead of blocking, a thrust stand joins Phase 1, and the targets changed. Like everything else here, it will change once real numbers show up.*
+*Written 2026-10-13, before any code. Revised the same day to add code CAD, aerodynamics, the design hunt, and visuals. Revised again on 2026-10-14 by the [full plan revision](2026-10-14-plan-revision.md): the wind tunnel and the design hunt run alongside instead of blocking, a thrust stand joins Phase 1, and the targets changed. Revised again on 2026-10-17, when the project became a research project: this spec now covers steps 1 (sizing and parts), 2 (CAD) and 4 (flight sim) of the [roadmap](../roadmap.md), plus the aero and design-hunt side tracks. Electrical, structure and the build package get their own specs. Like everything else here, it will change once real numbers show up.*
 
-This is how I'm going to prove the drone works before buying anything big, while the search for a better one runs alongside.
+This is how I'm going to prove the drone works, entirely in simulation and with real, orderable parts, while the search for a better one runs alongside.
 
-## What Phase 1 has to produce
+## What these steps have to produce
 
-1. **A baseline X quad** that passes every target in sizing, CAD and Gazebo, across all eight module combinations, using measured thrust data. The point is to prove the pipeline works end to end, and this is the drone I build and fly.
-2. **A priced parts list** for the baseline.
+1. **A baseline X quad** that passes every target in sizing, CAD and Gazebo, across all eight module combinations, using real parts' data (measured, if the optional thrust stand happens). The point is to prove the pipeline works end to end, and this is the drone the research is built around.
+2. **A priced parts list** for the baseline, which goes into the build package.
 3. **Visuals worth posting** from every layer along the way.
 
-Nothing big gets ordered before item 2 exists. The thrust-stand parts are the exception, since they make the simulation more accurate, and most of them end up on the drone anyway.
+Nothing gets ordered by default. The thrust stand is optional: it makes the simulation more accurate, and most of its parts would end up on the drone if I build it.
 
-Running alongside, and not needed for Phase 1 to finish: the wind tunnel layer, and the design hunt for v2.
+Running alongside, and not needed for these steps to finish: the wind tunnel layer, and the design hunt for v2.
 
 The targets are in [decisions.md](../decisions.md) and live in machine-readable form in [design/targets.yaml](../../design/targets.yaml):
 
@@ -28,11 +28,11 @@ For every setup: thrust-to-weight of at least 2:1 at the 20% reserve, at full th
 
 ```
 parts + shape → 1 sizing → 2 CAD → 4 Gazebo + PX4 → pass/fail → improve → repeat
-                  ↑                      └→ 5 my firmware (Phase 2)
+                  ↑                      └→ 5 my firmware (step 5)
      thrust stand data, and 3 aero (CFD) whenever it has numbers
 ```
 
-Layers 1 and 2 take seconds, so they run constantly. Layer 4 takes minutes, so it confirms (or embarrasses) what the first two say. Layer 3 takes an hour or two per case, so it runs alongside and feeds its numbers back whenever they're ready. Layer 5 is Phase 2, but it reuses everything built here.
+Layers 1 and 2 take seconds, so they run constantly. Layer 4 takes minutes, so it confirms (or embarrasses) what the first two say. Layer 3 takes an hour or two per case, so it runs alongside and feeds its numbers back whenever they're ready. Layer 5 is step 5 of the roadmap, but it reuses everything built here.
 
 ## Layer 1: Parts files and the sizing model
 
@@ -75,7 +75,7 @@ Drag starts as a guess from frontal area. The aero layer replaces it with real C
 
 ### Known limits
 
-Manufacturer thrust data is usually optimistic, so I'm treating flight times as ±15–20% until the thrust stand (below) gives me real measurements. That now happens in Phase 1, not Phase 3.
+Manufacturer thrust data is usually optimistic, so I'm treating flight times as ±15–20% until the thrust stand (below) gives me real measurements. If I do the optional thrust stand, that happens in step 1.
 
 ### To settle before building it
 
@@ -88,9 +88,9 @@ These are what the sizing model discussion is for:
 - what the report looks like
 - where the code lives and how it's packaged
 
-## The thrust stand (bought in Phase 1)
+## The thrust stand (optional)
 
-Once the sizing model has a shortlist, I buy one motor, two or three props, the 4-in-1 ESC, a load cell with an HX711 amplifier, and a current sensor. Most of that ends up on the drone.
+If I do it: once the sizing model has a shortlist, I buy one motor, two or three props, the 4-in-1 ESC, a load cell with an HX711 amplifier, and a current sensor, roughly $100–200. Most of that would end up on the drone if I build it.
 
 - The Teensy drives the ESC and logs thrust, current, voltage and RPM (from bidirectional DShot) across the throttle range, to its SD card.
 - It runs off a real 6S pack instead of a bench supply, so the voltage sag gets measured, not guessed.
@@ -122,7 +122,7 @@ The baseline is a plain X, modeled after a real 8–10" frame. If a real frame's
 
 ## Layer 3: Aerodynamics (`aero/`)
 
-The virtual wind tunnel. It runs alongside the rest of Phase 1 and the phases after it, instead of inside the loop. At a 10 m/s cruise, drag is roughly 10% of the power, so even a 30% drag error moves flight time by about 3%, which is well inside the thrust data's uncertainty. Its numbers still go back into the sizing model and Gazebo whenever they're ready, and the targets get rechecked.
+The virtual wind tunnel. It runs as a side track, instead of inside the loop. At a 10 m/s cruise, drag is roughly 10% of the power, so even a 30% drag error moves flight time by about 3%, which is well inside the thrust data's uncertainty. Its numbers still go back into the sizing model and Gazebo whenever they're ready, and the targets get rechecked.
 
 It's tiered by how much detail is needed.
 
@@ -174,11 +174,11 @@ The fallback is OpenFOAM with rotating meshes: slower, but one tool.
 
 ## Layer 5: My firmware in the sim
 
-This is Phase 2, but Phase 1 leaves room for it. The same Gazebo models and scenarios get reused, so my firmware gets compared directly against PX4 on identical tests.
+This is step 5, but these steps leave room for it. The same Gazebo models and scenarios get reused, so my firmware gets compared directly against PX4 on identical tests.
 
 ## Alongside: the design hunt (`explore/`)
 
-Once the baseline X passes end to end, the automation starts: build, test, read the results, improve, repeat. It runs alongside the later phases and never holds them up. The plain X is what gets built and flown first, and whatever the hunt finds becomes v2 (Phase 10 in the roadmap).
+Once the baseline X passes end to end, the automation starts: build, test, read the results, improve, repeat. It runs alongside the later steps and never holds them up. The plain X is what the research is built around, and whatever the hunt finds becomes the v2 research.
 
 1. **Propose:** an optimizer picks a new design from a parameter space. The parameters could include:
    - arm geometry
@@ -221,8 +221,9 @@ Everything here gets posted, mostly on LinkedIn and sometimes on Instagram, so e
 ## Where things run
 
 - **Sizing, CAD and quick renders:** either machine.
-- **OpenFOAM, FluidX3D, Blender hero renders, and Gazebo + PX4:** the PC, on native Ubuntu 24.04. The laptop's WSL is only for small test cases.
-- **`scripts/setup-ubuntu.sh`:** safe to rerun, and it pins versions so both machines match. It comes in two halves: Gazebo Harmonic, PX4 and the Python packages first, then OpenFOAM, ParaView and Blender when the CFD work starts.
+- **Gazebo + PX4 and OpenFOAM:** the PC, in WSL2 Ubuntu 24.04. The native Ubuntu side of the dual boot is a fallback for really big runs. The laptop's WSL is only for small test cases.
+- **FluidX3D and Blender hero renders:** the PC's Windows side, on the RTX 3060.
+- **`scripts/setup-ubuntu.sh`:** safe to rerun, and it pins versions so both machines match. It runs inside WSL2 and comes in two halves: Gazebo Harmonic, PX4 and the Python packages first, then OpenFOAM when the CFD work starts. The Windows tools (KiCad, FreeCAD, Blender, ParaView) get their own script, `scripts/setup-windows.ps1`.
 - **GitHub Actions:** reruns the lint and tests on every push, and later the sizing report too.
 
 ## Repo layout
@@ -235,7 +236,7 @@ aero/      OpenFOAM cases, scripts, post-processing
 sim/       Gazebo model generator, PX4 airframe, worlds, scenarios
 explore/   the design hunt
 media/     curated images for posts
-scripts/   setup-ubuntu.sh
+scripts/   setup-ubuntu.sh (WSL2) · setup-windows.ps1
 tests/     tests for all of the above
 docs/      decisions, roadmap, specs, log, generated reports
 ```
@@ -248,8 +249,8 @@ docs/      decisions, roadmap, specs, log, generated reports
 - **Generator:** every generated model has to pass Gazebo's own model check.
 - **Scenarios:** a smoke test that flies PX4's stock quad through them before my design goes anywhere near them.
 
-## Not in Phase 1
+## Not in these steps
 
-My own firmware (Phase 2), buying anything beyond the thrust-stand parts, the ground station, and the LLM.
+My own firmware (step 5), buying anything (the thrust stand is optional), the electrical design (step 3), the ground station, and the LLM.
 
-Phase 2 doesn't have to wait for the baseline. It can start as soon as Gazebo works, flying PX4's stock x500, and switches to my design once the baseline passes. The wind tunnel and the design hunt keep running alongside.
+My firmware doesn't have to wait for the baseline. It can start as soon as Gazebo works, flying PX4's stock x500, and switches to my design once the baseline passes. The wind tunnel and the design hunt keep running alongside.

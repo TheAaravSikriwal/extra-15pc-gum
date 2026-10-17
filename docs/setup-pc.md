@@ -1,105 +1,108 @@
 # Setting up the PC
 
-The PC is the main machine from 2026-10-14 on. Everything happens on its **Ubuntu 24.04** side. This gets it from nothing to the exact state the laptop was in: repo cloned, same checks passing, ready to build.
+The PC is the main machine. Since 2026-10-17 everything happens from its **Windows** side:
+- the Linux tools (Gazebo, PX4, OpenFOAM, the Python code) run in **WSL2 Ubuntu 24.04**
+- the Windows tools (KiCad, FreeCAD, Blender, ParaView) run natively
 
-It takes about 15 minutes. Every command runs in a terminal on the Ubuntu side.
+The native Ubuntu side of the dual boot stays as a fallback (see the bottom).
 
-## 1. Update and install the basics
+It takes about 20 minutes, plus one reboot.
+
+## 1. Turn on WSL2
+
+Open PowerShell as administrator and run:
+
+```powershell
+wsl --install -d Ubuntu-24.04
+```
+
+Reboot when it asks. Ubuntu then opens on its own and asks for a username and password. Those are just for Ubuntu.
+
+## 2. Give WSL more memory (optional, for the wind tunnel)
+
+WSL gets half the PC's RAM by default (16 GB). For big OpenFOAM runs, give it more by creating `%UserProfile%\.wslconfig` with:
+
+```ini
+[wsl2]
+memory=24GB
+```
+
+Then run `wsl --shutdown` in PowerShell. It applies the next time Ubuntu starts.
+
+## 3. Install the basics inside Ubuntu
+
+In the Ubuntu terminal:
 
 ```bash
 sudo apt update && sudo apt upgrade -y
-sudo apt install -y git git-lfs gh python3-venv mesa-utils pciutils
+sudo apt install -y git git-lfs python3-venv mesa-utils pciutils
 ```
 
-`mesa-utils` and `pciutils` are only there so the machine check can see the graphics card properly.
+`mesa-utils` and `pciutils` are only there so the machine check can see the graphics properly.
 
-## 2. Make sure the RTX 3060 is working
+## 4. Check the GPU
 
 ```bash
 nvidia-smi
 ```
 
-If that shows the RTX 3060, skip ahead. If it says command not found, or can't find a GPU, install Ubuntu's recommended NVIDIA driver and reboot:
+It should show the RTX 3060. WSL borrows the Windows NVIDIA driver, so **never install an NVIDIA driver inside Ubuntu**. If the card doesn't show up, update the driver on the Windows side.
+
+## 5. The repo
+
+On the PC, the repo lives on the Windows side at `C:\dr\extra-15pc-gum`. The short path matters, because Windows' path-length limit breaks deeper folders. From Ubuntu, it's the same folder at `/mnt/c/dr/extra-15pc-gum`.
+
+- **Run git from Windows** (or from the Claude session), not from inside Ubuntu, so the two sides don't fight over file permissions.
+- **Heavy stuff lives in the Ubuntu home folder,** not under `/mnt/c`, because WSL reads Windows files slowly. That covers PX4's source and builds, OpenFOAM runs, and the Linux Python venv. Results that belong in the repo get copied back.
+- **Pushing from Windows:** if `git push` hangs on Git's credential manager, push through the GitHub CLI's login instead:
+
+  ```bash
+  git -c credential.helper= -c "credential.helper=!gh auth git-credential" push
+  ```
+
+  Running `gh auth setup-git` once in Git Bash makes that the default for GitHub.
+
+## 6. Run the same checks the laptop ran
+
+In Ubuntu:
 
 ```bash
-sudo ubuntu-drivers install
-sudo reboot
-```
-
-Gazebo doesn't strictly need it, but FluidX3D, Blender's GPU rendering and smooth Gazebo graphics all do.
-
-## 3. Git identity and GitHub login
-
-Use the same name as on the laptop, so the commit history matches:
-
-```bash
-git config --global user.name "Aarav Sikriwal"
-git config --global user.email "the same email you use on the laptop"
-```
-
-Then log in to GitHub and let git use that login:
-
-```bash
-gh auth login
-gh auth setup-git
-```
-
-In `gh auth login`, pick GitHub.com, HTTPS, and log in with the browser. This avoids the fine-grained token problem the laptop has.
-
-## 4. Clone the repo
-
-Clone it into a normal Linux folder. Don't use OneDrive. If the PC's Windows side shows a synced OneDrive copy of the repo, ignore it; the Linux clone is the real one.
-
-```bash
-git clone https://github.com/TheAaravSikriwal/extra-15pc-gum.git ~/extra-15pc-gum
-cd ~/extra-15pc-gum
-git lfs install
-```
-
-## 5. Run the same checks the laptop ran
-
-**The machine check** is read-only. It records what the PC has in `docs/machines/pc.md`:
-
-```bash
+cd /mnt/c/dr/extra-15pc-gum
 scripts/check-machine.sh pc
+VENV=~/.venvs/extra-15pc-gum scripts/setup-dev.sh
 ```
 
-**The dev setup** creates the Python venv in `.venv`, installs the dev tools, and runs the same lint and tests that CI runs. It asks for your sudo password only if something's missing.
+The machine check is read-only and writes `docs/machines/pc.md`. The dev setup makes the Python venv in the Ubuntu home folder, installs the dev tools, and runs the same lint and tests as CI. It asks for your Ubuntu password only if something's missing, and it should end with `12 passed` and `All good.`
 
-```bash
-scripts/setup-dev.sh
-```
+## 7. Log it and push
 
-It should end with `12 passed` and `All good.` That's the same result GitHub Actions gets.
-
-## 6. Log it and push
+From Windows:
 
 ```bash
 git add docs/machines/pc.md
-git commit -m "Log the PC's setup"
+git commit -m "Log the PC's WSL2 setup"
 git push
 ```
 
-## 7. Pick up where the laptop left off
+## 8. Later: the Windows tools
 
-Install the Claude Code CLI following Anthropic's Claude Code docs. Then start it inside the repo:
+KiCad (with ngspice), FreeCAD (with CalculiX), Blender and ParaView install on the Windows side. `scripts/setup-windows.ps1` will install them at pinned versions. It gets written when the CAD or electrical step needs them.
 
-```bash
-cd ~/extra-15pc-gum
-claude
-```
+## Picking up where things left off
 
-It reads `CLAUDE.md` automatically, which tells it to pull, then read `STATUS.md` and `docs/decisions.md` before doing anything. A good first message: *"Read STATUS.md. We're on the PC now. Let's start the sizing model discussion."*
+A Claude session on this folder reads `CLAUDE.md` automatically, which says to pull, then read `STATUS.md` and `docs/decisions.md` before doing anything.
 
 ## What's not installed yet
 
-The simulation toolchain (Gazebo, PX4, OpenFOAM, ParaView, Blender) comes from `scripts/setup-ubuntu.sh`, which hasn't been written yet. It's on the list in `STATUS.md`.
+The simulation toolchain inside WSL (Gazebo, PX4, OpenFOAM) comes from `scripts/setup-ubuntu.sh`, which hasn't been written yet. It's on the list in `STATUS.md`.
+
+## Fallback: the native Ubuntu side
+
+If WSL's graphics struggle with Gazebo, or a wind tunnel run needs all 32 GB, boot into the Ubuntu side and do steps 3, 4 and 6 there, with three differences:
+- If `nvidia-smi` fails, install Ubuntu's recommended driver with `sudo ubuntu-drivers install` and reboot.
+- Set the same git name and email as Windows, then log in with `gh auth login` and `gh auth setup-git`.
+- Clone the repo into the Linux home folder: `git clone https://github.com/TheAaravSikriwal/extra-15pc-gum.git ~/extra-15pc-gum`.
 
 ## Day to day
 
-Pull when you sit down, push when you get up:
-
-```bash
-git pull
-git push
-```
+Pull when you sit down, push when you get up.

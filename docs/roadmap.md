@@ -1,194 +1,210 @@
 # Roadmap
 
-This plan is going to change. It's the route I'm following today, not a promise. Sim results, test flights, broken parts and new ideas will all reshape it, and that's fine. I can't plan for everything, but I can be prepared. When something changes, I update this file and write down why in [decisions.md](decisions.md).
+This plan is going to change. It's the route I'm following today, not a promise. Sim results, new ideas and things I learn along the way will all reshape it, and that's fine. I can't plan for everything, but I can be prepared. When something changes, I update this file and write down why in [decisions.md](decisions.md).
 
-**Last revised:** 2026-10-14, the full plan revision. What changed and why is in [specs/2026-10-14-plan-revision.md](specs/2026-10-14-plan-revision.md).
+**Last revised:** 2026-10-17. It's a research project now: the goal is a virtual drone complete enough to build one day. The reasons are in [decisions.md](decisions.md), under "A research project, build-ready". The earlier revision (2026-10-14, tagged R1 to R7) is in [specs/2026-10-14-plan-revision.md](specs/2026-10-14-plan-revision.md).
+
+## What done looks like
+
+Someone could order the parts list, follow the assembly and wiring guides, flash my firmware, and run the bench and first-flight test plans. They'd also get an honest list of what the simulations couldn't prove, with the first thing to measure for each.
+
+Nothing gets bought by default, and nothing flies. Two optional purchases are worth knowing about: a thrust stand (roughly $100–200), which is the one measurement that makes the whole simulation more believable, and a Nucleo-H743 (about $30), which runs my firmware on the real chip while the sim feeds it sensor data.
 
 ## The short version
 
-| Phase | What it's for | Done when | What I buy |
-|---|---|---|---|
-| **0. Planning** (done) | Figure out what I'm building | Decisions written down | Nothing |
-| **1. Simulate the baseline** | Prove the plain X works, with real thrust data | The baseline passes sizing, CAD and Gazebo for all eight combinations, and has a price | Thrust-stand parts, most of which end up on the drone |
-| **2. My firmware in sim** | Write the flight code and the safety monitor, and prove them | My firmware flies Base in sim and on the real chip, and the safety monitor works in hardware-in-the-loop | Nucleo-H743 (~$30), an IMU breakout (~$10), a second Teensy 4.1 (~$30) |
-| **3. Bench build** | Build Base, props off | Every bench check passes on my firmware, and it boots and arms on PX4 | Base parts (most of the money), a Remote ID module |
-| **4. First flights** | Fly Base for real | Stable on my firmware, hover times measured | Props, spares |
-| **5. Module P** | Parachute | The chute deploys reliably, the automatic triggers are live, and the rule is enforced | P parts |
-| **6. Module V** | GPS, camera, companion computer, HaLow | GPS hold, every landing mode, video on the laptop, cruise times measured | V parts |
-| **7. Smart features** | Mapping, safe spots, the LLM, self-tuning, the Meshtastic relay | Each one proven in sim, then for real | Not much |
-| **8. Module C** | Claws | Grabs and carries 250 g, and perches | C parts |
-| **9. Extras** | Wristband and whatever else makes the cut | Decided when I get there | Per extra |
-| **10. v2** | Build what the design hunt found, if it's worth building | Decided when there's a winner | Per design |
+**The main line.** Each step feeds the next.
 
-Spending is spread out. Before Phase 1 passes, the only purchases are thrust-stand parts, because they make the simulation more accurate. Each module only gets bought when its phase comes up.
+| Step | What it's for | Done when |
+|---|---|---|
+| **0. Planning** (done) | Figure out what I'm designing | Decisions written down, reviewed and revised |
+| **1. Sizing and parts** | Pick real, orderable parts that hit the targets | Every setup passes on paper with real parts, with uncertainty bands |
+| **2. The virtual drone (CAD)** | Every part modeled and connected | The full assembly has zero collisions, and its mass properties are back in the sizing model |
+| **3. Electrical design** | Every wire, pin and connector | Every connection is specified, and every current, voltage and temperature is inside its rating |
+| **4. Flight sim (PX4)** | Prove the airframe flies | The baseline passes every scenario in all eight module combinations |
+| **5. My firmware** | My own flight code and the safety monitor | Both pass the same tests as PX4 |
+| **6. Modules in sim** | P, V, and C if it happens | Each module passes its tests in every combination it's part of |
+| **7. Smart features in sim** | Everything from mapping to soar mode | Each one works in sim, and its limits are written down |
+| **8. Build package** | Make it buildable | Someone could build it from the docs alone |
 
-**Running alongside, never blocking a phase:** the CFD wind tunnel, the design hunt, the FluidX3D showcase runs and the Blender renders. Whenever they produce numbers, those go back into the sizing model and Gazebo, and the targets get rechecked.
+**Side tracks.** They start once their inputs exist and feed their numbers back into the main line, but never hold it up.
 
-Why P before V: under the parachute rule, autonomous GPS missions and anything above about 30 m need the parachute fitted, so it has to exist first.
+| Track | Starts after | What it's for |
+|---|---|---|
+| **Structure** | Step 2 | Stress and vibration in the frame, arms and module mount |
+| **Aero** | Step 2 | The virtual wind tunnel: drag, prop wash, ground effect |
+| **Design hunt** | Step 4 | Searching for a better, unique design: the v2 research |
+| **Visuals** | Every step | Renders, charts and clips for the posts |
 
-## Phase 1: Simulate the baseline
+**Setup comes first:** WSL2 on the PC, with [setup-pc.md](setup-pc.md).
 
-Mostly on the PC. The sizing and CAD work runs fine on the laptop too. The detailed design is in [specs/2026-10-13-phase-1-simulation.md](specs/2026-10-13-phase-1-simulation.md).
+## Step 1: Sizing and parts
 
-1. **Setup script, first half:** Gazebo Harmonic, PX4 and the Python tools on Ubuntu 24.04. OpenFOAM, ParaView and Blender come in the second half, when the CFD work starts.
-2. **Sizing model:**
-   - the parts catalog
+The detailed design is in [specs/2026-10-13-phase-1-simulation.md](specs/2026-10-13-phase-1-simulation.md).
+
+1. **The parts catalog:** real, orderable parts, each with a part number, a price, dimensions, mass, and the manufacturer's thrust test data for motors and props. It starts with 3–4 candidates for each motor, prop and battery.
+2. **The sizing model:**
    - the targets and the mass budget
    - a battery model with sag
    - thrust-to-weight at full charge and at the reserve
    - the current check
-   - a sweep over motors, props and batteries, including 6S3P packs in case the extra cells earn their weight
-3. **Thrust stand:** once the sizing model has a shortlist, I buy one motor, two or three props, the 4-in-1 ESC, a load cell with an HX711 amplifier, and a current sensor.
-   - The Teensy logs thrust, current, voltage and RPM across the throttle range.
-   - It runs off a real 6S pack, so the sag gets measured, not guessed.
-   - The measured data replaces the manufacturer's in the catalog.
-   - The stand gets bolted down, and nobody stands in line with the prop.
-4. **CAD in code (baseline X):** Claude builds the drone in build123d, straight from the parts files. That covers:
-   - every part, the module mount, the safety monitor, the Remote ID mount, and modules V, P and C
-   - clearance checks, including every antenna (ExpressLRS, HaLow, GPS, Meshtastic)
-   - real center of gravity and inertia
-   - meshes, STEP files, and renders
-5. **Gazebo model, flown by PX4:** every module combination goes through the same tests:
-   - hover, and how it reacts to sudden stick inputs
+   - hover and cruise times, and the speed that uses the least power
+   - top speed, and holding position in a 10 m/s wind
+   - a sweep over motors, props and batteries, including 6S3P packs
+3. **Uncertainty bands:** manufacturer thrust data runs optimistic, so every result carries ±15–20% unless it comes from a thrust stand.
+4. **The thrust stand (optional):** one motor, a few props and the ESC on a load cell, logged by my Teensy and running off a real 6S pack. Its data replaces the manufacturer's in the catalog.
+
+**Done when:** every setup passes on paper with real parts, the margins and uncertainty bands are in the report, and the parts are picked.
+
+## Step 2: The virtual drone (CAD)
+
+Claude writes the CAD in build123d, reading the catalog and `design/build.yaml`. Change a part and the model rebuilds itself.
+
+1. **Every part from real dimensions:** manufacturer 3D files where they exist, datasheet drawings where they don't.
+2. **Everything connected:** mounting holes, bolts and standoffs, the flight controller stack, the module mount and modules V, P and C, every connector, every antenna, and the routes the wires take. The wire lengths feed step 3.
+3. **Checks:**
+   - nothing collides
+   - prop-to-frame, prop-to-prop and prop-to-antenna clearance
+   - everything fits on the mount
+   - the center of gravity sits close enough to the center of thrust
+4. **What comes out:** mass properties for every module combination (replacing the sizing model's estimates), a STEP assembly, meshes for Gazebo and the wind tunnel, exploded views, and renders.
+
+**Done when:** the full assembly has zero collisions, and its mass properties are back in the sizing model.
+
+## Step 3: Electrical design
+
+No custom PCB: everything is off-the-shelf boards and breakouts.
+
+1. **A system schematic** in KiCad, and wiring harness diagrams generated from code with WireViz.
+2. **A pin map:**
+   - the flight controller: four bidirectional DShot outputs on timers, serial ports for the receiver, GPS, safety monitor and companion computer, SPI for the IMU
+   - the Teensy: the receiver feed, its own IMU, the signal switch, the chute trigger, the heartbeat
+3. **Power:** the battery connector, the ESC, 5 V supplies for the flight controller and the companion computer, the current sensor, a fuse, wire gauges and connector ratings.
+4. **Checks:**
+   - voltage drop, using wire lengths from the CAD
+   - peak and continuous currents in every setup
+   - rough heat in the ESC and motors
+   - the power budget for every module combination
+5. **Circuit sim (ngspice):** the safety monitor's signal switch passes bidirectional DShot cleanly, and still passes signals with the Teensy unpowered.
+
+**Done when:** every connection is specified, and every current, voltage and temperature is inside its rating with margin.
+
+## Step 4: Flight sim (PX4)
+
+Gazebo Harmonic and PX4, in WSL2.
+
+1. **A generator** turns `build.yaml`, the sizing output, the CAD mass properties and the aero tables (frontal-area guesses until the aero track delivers) into a Gazebo model and PX4 settings for each module combination.
+2. **Scenarios**, the same every time:
+   - hover, and the response to sudden stick inputs
    - a top-speed run
    - 10 m/s wind
-   - hover and cruise endurance on a battery model
-   - failsafes (lost link, low battery)
-   - a parachute drop
-   - a payload grab (sudden mass change)
+   - hover and cruise endurance on the battery model
+   - failsafes: lost link, low battery
+   - a parachute drop and a payload grab
+   - failure injection: a dead motor, a failed sensor, a sagging battery
    - every scenario's IMU data replayed through the safety monitor's trigger logic, counting false triggers
-6. **The baseline passes.** Tag it, price it, and order the Base parts.
+3. **Results** come out as pass/fail reports, with clips for the posts.
 
-Every step exports visuals in the project's look, sized for LinkedIn and Instagram.
+**Done when:** the baseline passes every scenario in all eight module combinations on PX4.
 
-My firmware doesn't have to wait for step 6. Phase 2 can start as soon as Gazebo works, flying PX4's stock x500, and switches to my design once it passes.
+## Step 5: My firmware
 
-**Done when:** I have a priced parts list for the plain X that passes sizing (with measured thrust data), CAD and Gazebo, across all eight module combinations.
-
-## Running alongside: the wind tunnel and the design hunt
-
-These start whenever there's time, and never hold up a phase.
-
-1. **Aerodynamics:**
-   - Prove OpenFOAM on a sphere and a cylinder first.
-   - Then run the drone with its props as disks: drag at speed and tilt, prop wash on the modules, ground effect, crosswind.
-   - Feed the results back into the sizing model and Gazebo, and recheck the targets.
-2. **The design hunt:** an automated loop builds, tests and improves designs, looking for one that's actually unique and beats the baseline. The fast layers filter thousands of candidates, and the best go through CFD and Gazebo. Whatever it finds becomes v2 (Phase 10).
-3. **Showcase visuals:** spinning-prop runs in FluidX3D and Blender hero renders.
-
-## Phase 2: My firmware in simulation
-
-1. **Architecture:** flight logic kept separate from the hardware drivers, so the same code runs on the PC and on the H743. A hardware watchdog and fresh DShot frames every loop from day one, so a hung CPU means the motors stop. Flight modes are separate pieces on top of the same controller, and the landing sequence has a swappable descent part, so later modes like the spiral descent (#34) drop in without rework.
-2. **Warm-up (optional):** dRehmFlight on the Teensy with an IMU breakout, so I can watch a working flight controller before writing my own.
-3. **Flight modes, in order:** rate mode, then self-level, then altitude hold. Each one runs the same tests as PX4 so I can compare them directly.
+1. **Architecture:**
+   - flight logic separate from the hardware drivers, so the same code runs in the sim and on the H743
+   - a hardware watchdog and fresh DShot frames every loop, so a hung CPU means the motors stop
+   - flight modes as separate pieces on top of the same controller, and a landing sequence with a swappable descent part, so later modes like the spiral descent (#34) drop in without rework
+2. **Warm-up (optional):** dRehmFlight on my Teensy with a cheap IMU breakout (about $10).
+3. **Flight modes, in order:** rate mode, then self-level, then altitude hold, then position modes. Each one runs the same tests as PX4.
 4. **Arming, failsafes and limits:**
    - pre-arm checks, including a live safety monitor
    - the kill switch
    - lost link
    - low battery, counted in mAh
    - the geofence, enforced on the flight controller
-   - the limits profiles (see [decisions.md](decisions.md))
-5. **Safety monitor firmware:** on a second Teensy 4.1, so the first one can stay on the thrust stand.
-   - the kill switch from the receiver
-   - the flight controller's heartbeat
-   - the automatic triggers, in shadow mode
-   - tested in hardware-in-the-loop with sim IMU data and a simulated kill switch
-6. **Ground station v1** on the laptop: live telemetry, live PID tuning, and the active limits profile always on screen. It speaks MAVLink, so QGroundControl works from day one.
-7. **Hardware-in-the-loop:** the same firmware running on the real Nucleo chip, with the sim feeding it sensor data.
+   - the limits profiles
+5. **Safety monitor firmware:** its own program with its own simulated IMU and the receiver feed. It handles the kill switch and the heartbeat, and runs its automatic triggers in shadow mode.
+6. **Ground station v1** on the laptop: live telemetry, live PID tuning, and the active limits profile always on screen. It speaks MAVLink, so QGroundControl works too.
+7. **Hardware-in-the-loop (optional):** the same firmware on a Nucleo-H743, fed by the sim.
 
-**Done when:** my firmware flies Base in sim and on the real chip, and the safety monitor's kill path works in hardware-in-the-loop.
+**Done when:** my firmware and the safety monitor pass the same tests as PX4.
 
-## Phase 3: Bench build
+## Step 6: Modules in sim
 
-Props stay off the whole time.
+1. **P (parachute):**
+   - deployment, with a simple drag model
+   - the opening jolt, which feeds the structure track
+   - motor-cut timing
+   - the false-trigger replay
+   - the parachute rule enforced in the firmware
+2. **V (vision & nav):**
+   - a simulated camera and GPS
+   - HaLow modeled as a link, with range against bitrate and dropouts
+   - video to the laptop
+   - the companion computer's jobs, which settle Pi 5 vs Jetson
+3. **C (claws):** only if a unique claw on an actual arm comes up. Grab and release, a sudden mass change, perching.
 
-1. **Thrust-stand the other three motors,** so I know all four match.
-2. **Build Base:**
-   - the ESC, motors, flight controller, receiver and rangefinder
-   - the power wiring and the module mount
-   - the safety monitor and its signal switch
-   - the Remote ID mount
-3. **Bench checks:** motor order and direction, sensor readings, ESC telemetry and failsafes, plus:
-   - the kill switch through both paths
-   - what the ESC does when its signal disappears, and how fast
-   - that the signal switch passes signals with the Teensy unpowered
-   - that the receiver feeds both boards cleanly
-4. **Rules, taken into account (they're settings, not caps):**
-   - FAA registration and the TRUST certificate
-   - the Remote ID module
-   - fill in the `us-recreational` limits profile from the current FAA and FCC rules
-   - decide on Part 107 (the project is partly for my career, and the recreational rules cover flying strictly for fun)
-   - find a field, and check the airspace and LAANC
+**Done when:** each module passes its tests in every combination it's part of.
 
-**Done when:** Base passes every bench check on my firmware, and boots and arms on PX4.
+## Step 7: Smart features in sim
 
-## Phase 4: First flights
+Each one gets proven in sim, and whatever the sim can't show goes on the unproven list.
 
-1. **PX4 first:** fly the real airframe on PX4. Hover, simple maneuvers, and a first hover-endurance run. If something's wrong with the hardware, I find out before my firmware is in the picture.
-2. **Match the sim to reality** using the PX4 logs. It's the cleanest comparison, since the sim flies PX4 too. That makes every later phase's sim more believable.
-3. **My firmware, tethered:** first flights tied to a test rig.
-4. **Free flight:** low, in an open field. Self-level first, then altitude hold, then rate mode. The kill switch works through both paths, and the automatic triggers stay in shadow mode, logging.
-5. **Hover endurance:** with ballast standing in for V, P and C, checked against the hover targets.
+1. Landing modes: land now, back to start, land here
+2. Mapping runs (#7) on simulated camera images, processed in OpenDroneMap
+3. Safe-spot detection and the nearest-safe-spot landing
+4. Change detection (#11), in a sim world where things move
+5. Wind sensing (#10) and the "turn back now" battery warning
+6. Self-tuning (#21), with a profile for each module combination
+7. GPS-free flight (#24), on the simulated camera
+8. Plain-English missions (#26), end to end: the plan, the checker, my approval, then the flight
+9. Object detection on the laptop (#39), on the simulated camera and on recorded video
+10. The Meshtastic relay (#30), as a link model
+11. Soar mode (#31), with a rising-air field added to Gazebo
+12. The spiral descent (#34). The sim checks the path only, since Gazebo doesn't model the vortex ring state.
 
-**Done when:** it flies stably on my firmware and the hover times are measured. If they miss, the targets change here, with the reason written down.
+**Done when:** each one works in sim, and its limits are on the unproven list.
 
-## Phase 5: Module P (parachute)
+## Step 8: The build package
 
-1. **Sim:** free-fall detection, the motor cut, and how the chute deploys.
-2. **Build:** the chute and its ejector. The safety monitor is already on the drone.
-3. **Drop tests:** with a dummy weight, long before it goes anywhere near the drone.
-4. **Automatic triggers go live,** once the shadow-mode logs show enough flights with zero false triggers. The exact number gets picked from the Phase 4 logs.
-5. **Enforce the rule:** no autonomous missions or flights above about 30 m without P fitted.
+1. **The parts list:** part numbers, supplier links, prices, and a fallback part for each
+2. **The assembly guide:** exploded views rendered from the CAD
+3. **The wiring guide:** generated from the wiring diagrams
+4. **The firmware:** build steps and configuration
+5. **Test plans:** bench checks with the props off, then first flights (PX4 first, then my firmware, tethered first)
+6. **The legal checklist:** FAA registration, the TRUST certificate, Remote ID, the `us-recreational` profile, and whether to get Part 107
+7. **The unproven list,** each item with the first thing to measure (see [decisions.md](decisions.md))
 
-**Done when:** the chute deploys reliably, the automatic triggers are live, and the firmware enforces the rule.
+**Done when:** someone could build it from the docs alone.
 
-## Phase 6: Module V (vision & nav)
+## Side tracks
 
-1. **Sim first:** GPS position hold, back to start, land here, and waypoints, all on my firmware.
-2. **Pick the hardware:** the companion computer (Pi 5 or Jetson), camera and video link (HaLow is the lead option), based on what the sim says.
-3. **Build V** onto the mount, with module detection.
-4. **Real flights, in order:** position hold, then the landing modes, then waypoints.
-5. **Cruise endurance** at 10 m/s, now that GPS can hold the speed, checked against the cruise targets.
-6. **Ground station v2:** map, mission planning, and video over HaLow. ATAK can show the same video if I want it.
+1. **Structure** (FreeCAD with CalculiX), once the CAD exists:
+   - the arms under full thrust
+   - the arms' vibration frequencies against the props' rotation speeds, which matters a lot for gyro noise
+   - a rough drop-impact check
+   - the parachute's opening jolt on the mount
+   - module mount loads
+2. **Aero** (OpenFOAM), once the CAD exists:
+   - prove it on a sphere and a cylinder first
+   - then drag tables, prop wash on the frame and modules, ground effect and crosswind
+   - FluidX3D for the spinning-prop showcase visuals
+   - the results feed back into the sizing model and Gazebo, and the targets get rechecked
+3. **The design hunt,** once the baseline passes in Gazebo: an automated loop builds, tests and improves designs, looking for one that's actually unique and beats the baseline. Whatever it finds becomes the v2 research.
+4. **Visuals,** from every step, in the project's look.
 
-**Done when:** GPS hold, every landing mode, and video on the laptop all work, and the cruise times are measured.
+## Tools, and where they run
 
-## Phase 7: Smart features
+| Where | Tools |
+|---|---|
+| WSL2 Ubuntu 24.04 (both machines) | The Python code (sizing model, CAD in build123d, WireViz), Gazebo + PX4, OpenFOAM, my firmware in the sim, OpenDroneMap |
+| Windows on the PC | KiCad with ngspice, FreeCAD with CalculiX, Blender on the RTX 3060, ParaView, FluidX3D |
+| Windows on the laptop | The ground station, and object detection with OpenVINO |
 
-Each one goes sim first, then real.
-
-1. Mapping runs (#7), processed in OpenDroneMap
-2. Safe-spot detection and the "nearest safe spot" landing mode
-3. Change detection (#11)
-4. Wind sensing (#10) and the "turn back now" battery warning
-5. Self-tuning (#21), with a profile for each module combination
-6. GPS-free flight (#24)
-7. The LLM mission assistant (#26): plan, checker, my approval, then flight
-8. The Meshtastic relay (#30), with a range test against a ground mesh
-9. Soar mode (#31): parking in rising air, holding position in a breeze, and riding the wind on routes. Sim first, with a rising-air field added to Gazebo.
-10. Spiral descent (#34): coming down from height in a GPS-centered helix on low throttle. The sim checks the path; real flights check whether it beats a straight descent.
-
-## Phase 8: Module C (claws)
-
-This only happens if we come up with a unique claw on an actual arm. That gets talked through when the time comes.
-
-1. **Sim:** grab and release, a sudden mass change, perching.
-2. **Make them:** design and print the claws.
-3. **Tests, in order:** grip tests on the bench, then flying with empty claws, then grabbing 250 g, then perching.
-
-**Done when:** it grabs and carries 250 g, and perches.
-
-## Phase 9: Extras
-
-Wrist gesture control (#2) first, then whatever else from the ideas pool in [decisions.md](decisions.md) still sounds fun.
-
-## Phase 10: v2
-
-If the design hunt finds something that's actually better and actually unique, it gets its own build: priced, simulated against the same targets, and flown on the same firmware. If leaving the quad layout means changing the firmware, that work is part of this phase.
+The PC's native Ubuntu side stays as a fallback for really big wind tunnel runs, or if Gazebo's graphics struggle under WSL.
 
 ## The whole way through
 
-- Every phase gets build-log entries in [log/](log/) for the posts.
-- [STATUS.md](../STATUS.md) always shows the current phase and what's next.
+- The live plan, with each step's outcome, is in the [README](../README.md#the-plan).
+- Every step gets build-log entries in [log/](log/) for the posts.
+- [STATUS.md](../STATUS.md) always shows the current step and what's next.
 - Tutorials and studying aren't in this roadmap. They live in [learning.md](learning.md), on my own time.
 - When the plan changes, update the "Last revised" date up top and write the reason in [decisions.md](decisions.md).

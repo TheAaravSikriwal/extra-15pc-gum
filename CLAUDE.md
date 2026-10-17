@@ -2,7 +2,7 @@
 
 Notes for Claude sessions working on this repo. If you're a human reading this: hi. This is how I keep my AI pair-programmer on the same page between my laptop and my PC.
 
-Extra 15pc Gum is a long-range quadcopter with my own flight firmware, built simulation-first and in public. I work on two machines, and this repo is how the work moves between them.
+Extra 15pc Gum is a long-range quadcopter with my own flight firmware. Since 2026-10-17 it's a research project: every real part modeled, connected and simulated, down to the wiring, complete enough that I could build it one day, and all of it in public. Nothing gets bought by default. I work on two machines, and this repo is how the work moves between them.
 
 ## Every session
 
@@ -53,15 +53,17 @@ I post this whole project on LinkedIn (mostly) and Instagram (sometimes), so any
 
 ## Machines
 
-- **PC (the main machine from 2026-10-14):** dual boot; all work happens on **native Ubuntu 24.04**. It has an RTX 3060, a Ryzen 7 9800X3D and 32 GB.
-  - The repo is at `~/extra-15pc-gum`, cloned from GitHub, not OneDrive.
-  - The venv is `.venv` inside the repo, created by `scripts/setup-dev.sh`.
+- **PC (the main machine):** Windows 11 with **WSL2 Ubuntu 24.04** for the Linux tools (decided 2026-10-17). It has an RTX 3060, a Ryzen 7 9800X3D and 32 GB. It's dual boot, and the native Ubuntu side is only a fallback.
+  - The repo is at `C:\dr\extra-15pc-gum` (a short path, because Windows' path-length limit breaks deeper folders). From WSL it's `/mnt/c/dr/extra-15pc-gum`.
+  - Run git from Windows, not from inside WSL. If `git push` hangs on Git's credential manager, use `git -c credential.helper= -c "credential.helper=!gh auth git-credential" push`.
+  - Heavy work (PX4 builds, OpenFOAM runs, the Linux venv at `~/.venvs/extra-15pc-gum`) lives in the WSL home folder, not under `/mnt/c`.
+  - Linux commands can be run from Windows with `wsl -d Ubuntu-24.04 -- bash -lc "..."`.
   - First-time setup steps are in `docs/setup-pc.md`.
 - **Laptop (secondary):** Windows 11 + WSL2 Ubuntu 24.04, Intel integrated graphics, 16 GB. The repo lives in OneDrive on the Windows side, so anything bulky stays out of it:
   - The venv is at `%USERPROFILE%\.venvs\extra-15pc-gum`, made by `scripts\setup-dev.ps1`.
   - PX4 builds go in the WSL home folder, not under `/mnt/c`.
   - `git push` needs `env -u GH_TOKEN git push` until my fine-grained token gets access to this repo.
-- Both run Ubuntu 24.04 for the toolchain, so scripts have to work on native Linux and on WSL2.
+- Both machines run the Linux tools in WSL2 Ubuntu 24.04, and the Windows tools (KiCad, FreeCAD, Blender, ParaView) natively. Scripts still have to work on native Linux too, for the PC's fallback.
 - **Checking a machine:** `scripts/check-machine.sh <name>` is read-only and writes `docs/machines/<name>.md`. Rerun it and commit the result whenever a machine's tools change.
 - **The checks that have to pass on every machine:** `scripts/setup-dev.sh` (or `setup-dev.ps1` on Windows), which runs the same lint and tests as CI.
 

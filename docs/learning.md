@@ -13,7 +13,7 @@ How it works:
 
 ## 1. How a quadcopter flies
 
-*Needed now (Phase 1), and it never stops mattering.*
+*Needed now (step 1), and it never stops mattering.*
 
 How four props make a drone go up, tilt, move and turn: thrust, torque, why yaw comes from spinning two props faster than the other two, and what "motor mixing" means.
 
@@ -36,7 +36,7 @@ How much thrust a prop makes and what it costs in power, momentum theory, motor 
 
 ## 3. Aerodynamics basics
 
-*Needed for the wind tunnel layer (Phase 1).*
+*Needed for the aero side track (the wind tunnel).*
 
 Pressure, drag, lift, the boundary layer, wakes, and the Reynolds number: what all those colors in CFD images are actually showing.
 
@@ -51,7 +51,7 @@ The quick version, from a session:
 
 ## 4. CFD (the virtual wind tunnel)
 
-*Needed for the wind tunnel layer (Phase 1).*
+*Needed for the aero side track (the wind tunnel).*
 
 How CFD works: meshes, solvers, boundary conditions, turbulence models (what RANS and k-omega SST mean), convergence, how to tell a good result from garbage, and how props get faked as "actuator disks."
 
@@ -95,7 +95,7 @@ How build123d builds solids from code: sketches, extrusions, positions, assembli
 
 ## 8. Flight simulation
 
-*Needed for Phase 1 (PX4 flies the design) and Phase 2 (my firmware does).*
+*Needed for step 4 (PX4 flies the design) and step 5 (my firmware does).*
 
 What Gazebo actually simulates, how PX4 runs inside a simulator (SITL), what MAVLink is, and how ground stations talk to drones.
 
@@ -107,7 +107,7 @@ What Gazebo actually simulates, how PX4 runs inside a simulator (SITL), what MAV
 
 ## 9. Control systems and PID
 
-*Needed for Phase 2: writing my own flight controller.*
+*Needed for step 5: writing my own flight controller.*
 
 Feedback loops, PID (what each term does, and why the D term hates noise), cascaded loops (rate inside angle inside position), and stability.
 
@@ -118,7 +118,7 @@ Feedback loops, PID (what each term does, and why the D term hates noise), casca
 
 ## 10. Sensor fusion and state estimation
 
-*Needed for Phase 2: the drone has to know which way is up.*
+*Needed for step 5: the drone has to know which way is up.*
 
 What an IMU measures, why gyros drift and accelerometers are noisy, complementary filters, the Madgwick and Mahony filters, and Kalman filters (and the extended kind).
 
@@ -130,7 +130,7 @@ What an IMU measures, why gyros drift and accelerometers are noisy, complementar
 
 ## 11. Embedded firmware on the STM32
 
-*Needed for Phase 2 and the bench build.*
+*Needed for step 5, and for anything that gets built.*
 
 Timers, interrupts, DMA, SPI (talking to the IMU), UART (talking to the receiver over CRSF), generating DShot for the ESC, and keeping a control loop on schedule.
 
@@ -138,12 +138,12 @@ Timers, interrupts, DMA, SPI (talking to the IMU), UART (talking to the receiver
 - [ ] **Read:** Elecia White, *Making Embedded Systems* (O'Reilly).
 - [ ] **Read:** ST's RM0433 reference manual for the STM32H743. Not cover to cover; it's what I look things up in.
 - [ ] **Read:** the dRehmFlight source ([github.com/nickrehm/dRehmFlight](https://github.com/nickrehm/dRehmFlight)). A whole flight controller in one readable file.
-- [ ] **Do:** run dRehmFlight on the Teensy 4.1 with an IMU breakout and no motors (the Phase 2 warm-up).
+- [ ] **Do:** run dRehmFlight on the Teensy 4.1 with an IMU breakout and no motors (the optional warm-up in step 5).
 - [ ] **Read:** ExpressLRS docs ([expresslrs.org](https://expresslrs.org)) on the CRSF protocol.
 
 ## 12. Building and soldering
 
-*Needed for the bench build (Phase 3).*
+*Needed if I build it one day.*
 
 Soldering to ESCs and flight controllers, power wiring, keeping noise out of the gyro, and setting up ExpressLRS.
 
@@ -153,7 +153,7 @@ Soldering to ESCs and flight controllers, power wiring, keeping noise out of the
 
 ## 13. Rules and flying safely
 
-*Needed before the first flight (Phase 3).*
+*Needed if I build it one day. It's the build package's legal checklist.*
 
 - [ ] **Do:** the FAA's TRUST test (free, online).
 - [ ] **Read:** the FAA's recreational flyer rules and the Remote ID rules ([faa.gov/uas](https://www.faa.gov/uas)).
@@ -161,27 +161,54 @@ Soldering to ESCs and flight controllers, power wiring, keeping noise out of the
 
 ## 14. Design optimization
 
-*Needed for the design hunt (end of Phase 1).*
+*Needed for the design hunt side track.*
 
 How an automated loop actually searches for better designs: design spaces, objective functions, constraints, evolutionary algorithms, Bayesian optimization, and multi-fidelity (cheap checks first, expensive ones only for the best candidates).
 
 - [ ] **Read:** Mykel J. Kochenderfer and Tim A. Wheeler, *Algorithms for Optimization* (MIT Press, 2019). There's a free PDF from the authors.
 - [ ] **Read:** Peter I. Frazier, "A Tutorial on Bayesian Optimization" (arXiv, 2018).
 
+## 15. Electrical design
+
+*Needed for step 3: every wire, pin and connector.*
+
+Power distribution, wire gauges and voltage drop, connectors and their current ratings, how a flight controller's timers and serial ports get assigned, reading and drawing schematics, and simulating a small circuit.
+
+- [ ] **Read:** Paul Horowitz and Winfield Hill, *The Art of Electronics*, 3rd ed. (Cambridge University Press, 2015). The reference. Dip in when something needs it.
+- [ ] **Do:** the KiCad getting-started guide ([docs.kicad.org](https://docs.kicad.org)), then draw the drone's system schematic.
+- [ ] **Read:** the ngspice manual ([ngspice.sourceforge.io](https://ngspice.sourceforge.io)), for simulating the safety monitor's signal switch.
+- [ ] **Read:** the WireViz README ([github.com/wireviz/WireViz](https://github.com/wireviz/WireViz)), which turns a text file into a wiring diagram.
+- [ ] **Read:** Oscar Liang's guides on power and flight controller wiring ([oscarliang.com](https://oscarliang.com)).
+
+## 16. Structure: stress and vibration
+
+*Needed for the structure side track.*
+
+How parts bend and break, what a finite element model actually is, and why vibration frequencies matter: if an arm's natural frequency lands near the props' rotation speed, the gyro sees noise the filters have to fight.
+
+- [ ] **Read:** R. C. Hibbeler, *Mechanics of Materials* (Pearson). Stress, strain and bending.
+- [ ] **Read:** Daryl L. Logan, *A First Course in the Finite Element Method* (Cengage). What the FEA software is doing under the hood.
+- [ ] **Read:** Singiresu S. Rao, *Mechanical Vibrations* (Pearson). Natural frequencies and resonance.
+- [ ] **Do:** the FreeCAD FEM workbench tutorials on the FreeCAD wiki ([wiki.freecad.org](https://wiki.freecad.org)), which run CalculiX underneath.
+
 ## Coming up later
 
 These get filled in properly when I get close to them.
 
-- **Visual navigation and mapping** (Phases 6–7):
+- **Visual navigation and mapping** (steps 6–7):
   - Davide Scaramuzza and Friedrich Fraundorfer, "Visual Odometry: Part I," *IEEE Robotics & Automation Magazine*, 2011
   - the OpenDroneMap docs
 - **Surviving a motor failure** (idea #23): Mark W. Mueller and Raffaello D'Andrea, "Stability and control of a quadrocopter despite the complete loss of one, two, or three propellers," *IEEE ICRA*, 2014.
-- **LLMs that plan missions** (Phase 7): tool use, structured output, and validating what a model hands back.
-- **Radio links** (Phases 6–7, for HaLow and the Meshtastic relay): link budgets, why these radios need line of sight, Fresnel zones, antennas, and why the control link stays off the 900 MHz band.
+- **LLMs that plan missions** (step 7): tool use, structured output, and validating what a model hands back.
+- **Radio links** (steps 6–7, for HaLow and the Meshtastic relay): link budgets, why these radios need line of sight, Fresnel zones, antennas, and why the control link stays off the 900 MHz band.
   - the Meshtastic docs ([meshtastic.org](https://meshtastic.org)), on LoRa settings and range
   - the Wi-Fi Alliance's pages on Wi-Fi HaLow ([wi-fi.org](https://www.wi-fi.org))
   - *The ARRL Antenna Book* (ARRL), for antennas and propagation
-- **Soaring and descending** (soar mode, #31, Phase 7): where rising air comes from (slope lift, thermals), how a rotor's power changes when the air moves up through it, and the vortex ring state.
+- **Object detection** (#39, step 7): how detectors like YOLO work, training them on aerial images, and running models on the laptop's NPU.
+  - the Ultralytics docs ([docs.ultralytics.com](https://docs.ultralytics.com))
+  - the OpenVINO docs ([docs.openvino.ai](https://docs.openvino.ai))
+  - the VisDrone dataset ([github.com/VisDrone/VisDrone-Dataset](https://github.com/VisDrone/VisDrone-Dataset))
+- **Soaring and descending** (soar mode, #31, step 7): where rising air comes from (slope lift, thermals), how a rotor's power changes when the air moves up through it, and the vortex ring state.
   - the FAA's *Glider Flying Handbook* (free on [faa.gov](https://www.faa.gov)), the parts on soaring weather, slope lift and thermals
   - Leishman's *Principles of Helicopter Aerodynamics* (topic 2), the parts on descending flight and the vortex ring state
 

@@ -4,12 +4,12 @@ Every call I've made on this project, and why. Started 2026-10-13. When somethin
 
 ## The idea
 
-I want a fairly big, fairly fast quadcopter with a camera and GPS, running flight firmware I wrote myself. The point is to learn by building it.
+I want a fairly big, fairly fast quadcopter with a camera and GPS, running flight firmware I wrote myself. The point is to learn by designing it, completely enough that I could build it one day. Since 2026-10-17 it's a research project: every real part modeled, connected and simulated, with nothing bought by default (see "A research project, build-ready" below).
 
 - **Hardware:** parts I can order. Dev boards, breakout boards, ESCs, motors, a receiver. No custom PCB, because I don't want to sit around waiting on fab and shipping.
 - **Firmware:** mine. Starting from open-source flight code and adapting it is fine. I'll pick up PID and control theory as I go.
 - **Airframe:** a quad on 8–10" props with low-KV motors and a Li-ion pack, built to fly long (roughly 25–40 minutes cruising). I looked at a VTOL quadplane and dropped it. Way too much complexity for a first build.
-- **Budget:** around $1,000, but parked for now. Pricing happens after the simulation work, not before.
+- **Budget:** the research costs nothing by default. A real build would be around $1,000, and the build package prices it properly.
 - **Name and home:** Extra 15pc Gum, in a public GitHub repo (`extra-15pc-gum`) under GPL-3.0. The repo is how I move between machines, and [STATUS.md](../STATUS.md) always says where I am.
 - **Building in public:** I'm posting the whole process. That means:
   - respecting the licenses of any code I reuse (a lot of flight code is GPL)
@@ -18,33 +18,73 @@ I want a fairly big, fairly fast quadcopter with a camera and GPS, running fligh
 - **Not monetizing any of it.** This is purely for learning, and because it's a really cool project. That keeps me under the FAA's recreational rules.
 - **What I know going in:** soldering, embedded programming, and flying RC.
 
-### Simulate first, then buy
+### A research project, build-ready (decided 2026-10-17)
 
-Nothing big gets bought until it has flown in simulation. The one exception (revised 2026-10-14) is small test parts that make the simulation more accurate, like a motor, a few props and the ESC for the thrust stand. Most of those end up on the drone anyway. The loop is:
-1. pick parts and a shape
-2. run the sizing model, with measured thrust data as soon as the thrust stand has some
-3. build it in CAD
-4. fly it in Gazebo
-5. check it against the targets
-6. improve it and go again
+Instead of buying parts and building it, I'm designing the whole drone in simulation, in depth: every real part modeled, connected to the parts around it, and tested. It's more of a research project now, but the research has to be good enough that I could build the drone from it one day.
 
-It only gets priced once it passes. The virtual wind tunnel runs alongside the loop instead of inside it: its numbers sharpen the sizing model and Gazebo whenever they arrive, but the baseline doesn't wait for them.
+**What done means:** someone could order the parts list, follow the assembly and wiring guides, flash my firmware, and run the bench and first-flight test plans. They'd also get an honest list of what the simulations couldn't prove, with the first thing to measure for each.
 
-Five layers:
+**What stays the same:** the targets, the modules, the whole safety design (it gets designed and simulated, just not built), my own firmware, the limits profiles, the posts, and the process (talk it through, spec, plan, test-first).
+
+**What changes:**
+- Nothing gets bought by default, and nothing flies. The FAA registration, Remote ID and the Part 107 question move into a checklist in the build package.
+- Two new layers: electrical (every wire and pin) and structure (stress and vibration).
+- The old bench-build and first-flight phases become written test procedures in the build package.
+- The phases became steps: sizing and parts, CAD, electrical, flight sim, my firmware, modules, smart features, and the build package, with structure, aero and the design hunt as side tracks. The details are in [roadmap.md](roadmap.md).
+
+**Two optional purchases:** a thrust stand (roughly $100–200), the one measurement that makes the whole simulation more believable, with parts that carry over to a build; and a Nucleo-H743 (about $30), which runs my firmware on the real chip while the sim feeds it sensor data. Both are off by default.
+
+**The unproven list.** Simulation can't prove everything, so the build package says what's still unknown and what to measure first:
+
+| What sim can't prove | First thing to measure when built |
+|---|---|
+| Real thrust and efficiency (manufacturer data runs ±15–20%) | One motor and prop on a thrust stand |
+| Vibration reaching the IMU, and the filtering it needs | A gyro log with the props spinning |
+| Motor and ESC heat in real air | Temperatures after a full hover |
+| The vortex ring state (Gazebo doesn't model it) | Careful descent tests |
+| Li-ion in the cold, and as it ages | A pack discharge test |
+| Real radio range with trees and terrain | A walk-out range test |
+| Compass interference from the power wires | Compass readings against throttle |
+| Solder joints, connectors and tolerances | The bench checks |
+
+### Simulate everything
+
+The loop is:
+1. pick real parts and a shape
+2. run the sizing model
+3. build it in CAD, with every part connected
+4. design the wiring, and check the currents, voltages and heat
+5. fly it in Gazebo, on PX4 and then on my firmware
+6. check it against the targets
+7. improve it and go again
+
+The structure analysis and the virtual wind tunnel run alongside the loop instead of inside it: their numbers sharpen everything else whenever they arrive.
+
+The layers:
 
 1. Sizing model (my own Python tool)
 2. CAD, written as code (build123d), by Claude
-3. Aerodynamics: CFD, the digital version of a wind tunnel (runs alongside, see below)
-4. Flight sim: Gazebo Harmonic + PX4, flown by proven firmware first
-5. My own firmware flying the same Gazebo sim
+3. Electrical: wiring diagrams from code (WireViz), schematics (KiCad), circuit simulation (ngspice)
+4. Structure: stress and vibration (FreeCAD with CalculiX), alongside
+5. Aerodynamics: CFD, the digital version of a wind tunnel (alongside, see below)
+6. Flight sim: Gazebo Harmonic + PX4, flown by proven firmware first
+7. My own firmware flying the same Gazebo sim
 
 This is partly about money and partly about my career, because simulation is a skill I want. I'll test two ways:
 - **Software-in-the-loop:** the flight code is compiled for the PC and flies in the sim.
-- **Hardware-in-the-loop:** the real chip runs the code while the sim feeds it fake sensor data.
+- **Hardware-in-the-loop (optional, with a $30 Nucleo-H743):** the real chip runs the code while the sim feeds it fake sensor data.
 
 Both only work if the flight logic stays separate from the hardware drivers, so the same code runs everywhere.
 
-The simulator is Gazebo Harmonic + PX4 on Ubuntu 24.04: native on the PC, WSL2 on the laptop. It's what the industry actually uses.
+The simulator is Gazebo Harmonic + PX4, which is what the industry actually uses. It runs on Ubuntu 24.04 under WSL2 on both machines (decided 2026-10-17), so I never have to reboot to switch. The PC's native Ubuntu side stays as a fallback for really big wind tunnel runs, or if Gazebo's graphics struggle under WSL.
+
+Where everything runs:
+
+| Where | Tools |
+|---|---|
+| WSL2 Ubuntu 24.04 (both machines) | The Python code (sizing model, CAD in build123d, WireViz), Gazebo + PX4, OpenFOAM, my firmware in the sim, OpenDroneMap |
+| Windows on the PC | KiCad with ngspice, FreeCAD with CalculiX, Blender on the RTX 3060, ParaView, FluidX3D |
+| Windows on the laptop | The ground station, and object detection with OpenVINO |
 
 ### CAD in code, then hunt for a unique design (decided 2026-10-13)
 
@@ -56,7 +96,7 @@ Claude writes all the CAD as Python code with build123d, reading from the parts 
 
 It happens in two steps:
 
-1. **Baseline first.** A plain, simple X quad, run through sizing, CAD and Gazebo until the pipeline works end to end. This is the one I buy, build and fly (decided 2026-10-14).
+1. **Baseline first.** A plain, simple X quad, run through sizing, CAD and Gazebo until the pipeline works end to end. This is the one the research is built around, and the one the build package describes.
 2. **Then the automation.** Build a design, test it, read the results, improve it, repeat, hunting for a drone design that's actually unique. The fast sizing model filters thousands of candidates; only the promising ones get the slow CFD and Gazebo runs. It runs alongside everything else, and whatever it finds becomes v2.
 
 What counts as "unique" (stay a quad, or open it up to other layouts) gets decided once the baseline works, since leaving the quad layout would change the firmware too. One knock-on effect: a unique layout probably means a custom frame, either CNC-cut carbon plates from my own files or carbon tubes with printed joints, instead of a bought one.
@@ -80,9 +120,9 @@ I want to see the air moving around the drone, like smoke in a wind tunnel, and 
   - Its license allows personal and educational use, but if I publish results from a modified copy, I have to publish the modified source too. That doesn't mix with this repo's GPL, so my FluidX3D setup lives in a separate public fork, clearly marked as modified.
   - The fallback is OpenFOAM with rotating meshes, which is slower but one tool.
 - **Visuals:** ParaView renders the streamlines, smoke-style traces and pressure maps.
-- **Keeping it honest:** first check OpenFOAM against shapes with known drag, then against published drone data, then against my own flight logs once I have them.
+- **Keeping it honest:** first check OpenFOAM against shapes with known drag, then against published drone data, and against my own flight logs if I ever build it.
 - **Where it runs:** the PC. The laptop only manages coarse test runs.
-- **When it runs (decided 2026-10-14):** alongside the phases, never blocking one. At a 10 m/s cruise, drag is roughly 10% of the power, so even a 30% drag error moves flight time by about 3%. That's well inside the uncertainty in manufacturer thrust data. Drag matters more for the 80 km/h top speed, and that number gets rechecked whenever the CFD results arrive.
+- **When it runs (decided 2026-10-14, still true for the research):** as a side track, never blocking the main line. At a 10 m/s cruise, drag is roughly 10% of the power, so even a 30% drag error moves flight time by about 3%. That's well inside the uncertainty in manufacturer thrust data. Drag matters more for the 80 km/h top speed, and that number gets rechecked whenever the CFD results arrive.
 
 ### Visuals are part of the output (decided 2026-10-13)
 
@@ -123,10 +163,10 @@ I'm new to a lot of this, CFD especially. Tutorials and studying happen on my ow
 ### My machines
 
 - **Laptop:** Lenovo, Core Ultra 7 155U, 16 GB, Intel integrated graphics, WSL2 Ubuntu 24.04 (capped at about 7.6 GB of RAM). Gazebo runs, but scenes have to stay simple. No NVIDIA GPU, so no Isaac Sim and no decent local LLM.
-- **PC:** dual boot, Ryzen 7 9800X3D, 32 GB DDR5, RTX 3060. The sim lives on its Ubuntu 24.04 side. **It's the main machine from 2026-10-14**, set up with [setup-pc.md](setup-pc.md). The laptop is for docs, light work and the field.
+- **PC:** dual boot, Ryzen 7 9800X3D, 32 GB DDR5, RTX 3060. The Linux tools run in WSL2 Ubuntu 24.04 on its Windows side (decided 2026-10-17), and the native Ubuntu side is a fallback. **It's the main machine from 2026-10-14**, set up with [setup-pc.md](setup-pc.md). The laptop is for docs, light work and the ground station.
 - Every machine runs the same checks (`scripts/check-machine.sh` and `scripts/setup-dev.sh`), and the results are logged in [machines/](machines/).
 
-### Build stages
+### Firmware stages
 
 1. Get it flying on my firmware: rate mode, then self-level, then altitude hold.
 2. Add the camera.
@@ -181,7 +221,7 @@ I wanted an LLM in the loop, and it makes far more sense on the laptop than on t
 
 What it does:
 - turns plain-English missions into flight plans (#26)
-- looks at photos and 3D maps
+- looks at photos and 3D maps, and works with the object detector (#39)
 - explains what changed between mapping runs
 - reads flight logs when something wobbles
 
@@ -205,12 +245,12 @@ The rules that don't bend:
 
 ### The safety monitor (decided 2026-10-14)
 
-The Teensy 4.1 used to live in module P, which wouldn't be built until Phase 5. That meant the first flights of brand-new firmware would have a kill switch running inside that same firmware. So it moved into Base.
+The Teensy 4.1 used to live in module P, which would have come late. That meant the first flights of brand-new firmware would have a kill switch running inside that same firmware. So it moved into Base. In the research it's designed, wired and simulated like everything else.
 
 - It has its own IMU, and it listens to the same receiver as the flight controller (the receiver's output wire splits to both). The kill switch reaches the motors through two separate boards running separate code. A second receiver would add more independence, but the thing I'm protecting against is my firmware, not the receiver.
-- It cuts the motors by blocking the four ESC signal lines with an analog switch, not by switching the main power. A switch in a ~100 A power line is a new way to drop a healthy drone, and ESCs stop the motors when their signal disappears (to be confirmed on the bench). It has to pass signals both ways, because bidirectional DShot sends RPM back on the same wire.
+- It cuts the motors by blocking the four ESC signal lines with an analog switch, not by switching the main power. A switch in a ~100 A power line is a new way to drop a healthy drone, and ESCs stop the motors when their signal disappears (simulated in step 3, and on the bench checklist if it gets built). It has to pass signals both ways, because bidirectional DShot sends RPM back on the same wire.
 - It fails in the useful direction. If the Teensy loses power, the switch passes signals and the drone keeps flying on the flight controller. The flight controller watches the Teensy's heartbeat, warns me if it goes quiet, and won't arm without it.
-- The automatic triggers (free fall, tumbling, the flight controller going quiet) start in shadow mode: they log what they would have done, and do nothing. They go live in Phase 5, after enough flights with zero false triggers. A fast descent at low throttle looks a lot like free fall to an accelerometer, so this matters. The 4.1's SD card handles the logging.
+- The automatic triggers (free fall, tumbling, the flight controller going quiet) start in shadow mode: they log what they would have done, and do nothing. In the sim they go live in step 6, once the false-trigger replay shows zero false triggers; on a real drone, only after enough real flights with none. A fast descent at low throttle looks a lot like free fall to an accelerometer, so this matters. The 4.1's SD card handles the logging.
 - When P is fitted, it can fire the chute too, after cutting the motors.
 
 ### Government rules are settings, not caps (decided 2026-10-14)
@@ -242,13 +282,13 @@ Base is always on: frame, motors, ESC, battery, flight controller, receiver, ran
 |---|---|---|
 | **V: Vision & nav** | GPS + compass, camera(s), companion computer, HaLow video link | GPS and camera go together, because mapping, safe-spot landing and GPS-free flight all need both |
 | **P: Parachute** | The chute and its ejector | The flight controller or the safety monitor can fire it. See the parachute rule below |
-| **C: Claws** | Claws + servos | Only if we come up with a unique claw on an actual arm. That conversation waits until Phase 8; for now the drone just needs to fly. Works without V, but you'll want the camera to see what you're grabbing |
+| **C: Claws** | Claws + servos | Only if we come up with a unique claw on an actual arm. That conversation waits until the modules step; for now the drone just needs to work. Works without V, but you'll want the camera to see what you're grabbing |
 
 - **The parachute rule:** the firmware checks whether P is fitted, and won't fly autonomous missions or go above about 30 m without it. The chute needs about 10 m to open anyway, so there's no point carrying it for low hover tests.
 - **A standard module mount (#17):** one mechanical interface, and one connector carrying power and a data bus.
   - The firmware sees which modules are on and loads a tuning profile to match. The self-tuning controller (#21) then fine-tunes in flight.
   - The bus is still open: plain serial, or DroneCAN (the industry standard for drone add-ons; the H743 has CAN hardware).
-- **Ballast:** until a module exists, I bolt weights to its mount so I can still test at full weight.
+- **Ballast:** until a module exists, the sim (and one day the real drone) carries weights on its mount, so it can still be tested at full weight.
 
 ### Target specs (locked 2026-10-13, revised 2026-10-14)
 
@@ -267,7 +307,7 @@ For every setup:
 - Cruise means 10 m/s for now. The sizing model works out which speed actually uses the least power, and that replaces 10 m/s if it's very different.
 
 What changed on 2026-10-14, and why:
-- **Hover times got added.** Base has no GPS, so its cruise time can't be measured until Phase 6. Hover time can be measured in Phase 4. A quad uses a bit less power at a gentle cruise than in a hover, because moving forward keeps feeding the props fresh air, so the hover targets sit about 15% under the cruise ones. The sizing model checks that ratio.
+- **Hover times got added.** Base has no GPS, so on a real build its cruise time can't be measured until V is fitted, but hover time can be measured on the first flights. The sim checks both. A quad uses a bit less power at a gentle cruise than in a hover, because moving forward keeps feeding the props fresh air, so the hover targets sit about 15% under the cruise ones. The sizing model checks that ratio.
 - **One thrust-to-weight rule replaced 4:1 for Base and 3:1 for Max.** The old ones didn't say when they're measured, and Base's 4:1 never limited anything, because the motors are sized for Max. Motor test data is usually measured on a bench supply at full 6S voltage, and full-throttle thrust drops roughly with the square of the voltage. A rough estimate says a Li-ion pack at 20%, under full load, leaves each motor with about 55–60% of its datasheet thrust. So 2:1 at the reserve works out to about 3.5:1 on the datasheet. The sizing model reports both.
 
 If the sim says these numbers are unrealistic, I'll change them and explain why here. The machine-readable version is [design/targets.yaml](../design/targets.yaml).
@@ -296,7 +336,7 @@ Max only makes 2.5 kg if most parts land at the light end. Checking that is the 
 
 ### Roadmap
 
-The phases live in [roadmap.md](roadmap.md). It's the plan I'm following, and it will change. The full revision on 2026-10-14, with every change tagged R1 to R7 and the reason for each, is in [specs/2026-10-14-plan-revision.md](specs/2026-10-14-plan-revision.md).
+The steps live in [roadmap.md](roadmap.md), and the live plan with each step's outcome is in the [README](../README.md#the-plan). It's the plan I'm following, and it will change. The full revision on 2026-10-14, with every change tagged R1 to R7 and the reason for each, is in [specs/2026-10-14-plan-revision.md](specs/2026-10-14-plan-revision.md).
 
 ## Hardware (draft)
 
@@ -309,33 +349,33 @@ Three layers, plus a safety monitor underneath them all. Each one has to stay sa
 
 Parts so far:
 
-- **Frame:** for the baseline, an 8–10" carbon X frame with the module mount, bought. Printed arms would flex too much at this size. If the design hunt finds something unique, the frame goes custom (see above).
+- **Frame:** for the baseline, a real, orderable 8–10" carbon X frame with the module mount. Printed arms would flex too much at this size. If the design hunt finds something unique, the frame goes custom (see above).
 - **Motors:** low-KV, 6S, picked from thrust data once the prop size is settled.
 - **ESC:** 4-in-1, 6S, with bidirectional DShot, so I get RPM from every motor. That's great for filtering and for #21. AM32 is open-source ESC firmware, which is a nice bonus.
 - **Battery:** 6S2P Li-ion from 21700 high-drain cells, around 9 Ah and 850–900 g. The sizing model also tries 6S3P, in case the extra cells earn their weight.
-- **Flight controller (decided):** a Nucleo-H743 on the bench, which gives me a proper debugger, every pin broken out, and hardware-in-the-loop testing. An off-the-shelf STM32H743 flight controller board goes in the drone. Same chip, same firmware. The board has to be one PX4 supports, with SWD pads I can get a debugger onto.
-- **Teensy 4.1:** I already have one lying around, and I'm buying a second (about $30) in Phase 2 so each can keep its own job:
-  1. Run the thrust stand (from Phase 1): read the load cell, current and voltage, drive the ESC, and log to its SD card.
+- **Flight controller (decided):** an off-the-shelf STM32H743 flight controller board in the drone, and optionally a Nucleo-H743 on the desk, which gives me a proper debugger, every pin broken out, and hardware-in-the-loop testing. Same chip, same firmware. The board has to be one PX4 supports, with SWD pads I can get a debugger onto.
+- **Teensy 4.1:** I already have one lying around. A build would need a second (about $30) so each can keep its own job:
+  1. Run the thrust stand (optional, in step 1): read the load cell, current and voltage, drive the ESC, and log to its SD card.
   2. Desk sandbox: dRehmFlight with a cheap IMU and no motors, so I can watch a complete flight controller work before I write mine.
   3. Be the safety monitor in Base (the second Teensy): its own IMU, listening to the receiver, cutting the motors on the ESC signal lines, and firing the chute when P is fitted.
 
   It could also be a hardware-in-the-loop bridge, pretending to be the GPS, receiver and rangefinder for the sim. It's no good for the wristband, though: no wireless. That's an ESP32 job.
-- **Companion computer:** not needed until stage 2. A Pi 5 is probably enough now that the LLM is on the laptop; a Jetson if #24 needs more.
+- **Companion computer:** part of module V. A Pi 5 is probably enough now that the LLM and object detection (#39) are on the laptop. The only vision job that has to stay on board is GPS-free flight (#24), because it has to work when the link drops; a Jetson only if #24 needs more. Settled in step 6.
 - **IMU:** ICM-42688-P (it's on most modern flight controller boards anyway).
 - **Barometer:** on the flight controller board.
 - **GPS + compass:** a u-blox M10 module with compass, up on a mast away from the power wires.
 - **Rangefinder:** downward lidar (TF-Luna or TFmini-S).
 - **Control link:** an ExpressLRS receiver and a handheld transmitter, on 2.4 GHz. HaLow and Meshtastic (below) both use 902–928 MHz in the US, and so does 900 MHz ExpressLRS, so the control link stays off that band. Its protocol (CRSF) is well documented and easy to parse.
-- **Data/video link to the laptop:** the lead option (2026-10-14) is Wi-Fi HaLow (802.11ah), which is Wi-Fi on 900 MHz. It has a lot more range than normal Wi-Fi, with a few Mbps up close dropping to hundreds of kbps far out. It carries normal IP traffic, so MAVLink telemetry and real compressed video can share one link from the companion computer, and existing ground station software works while I build my own. The same video could go into ATAK too (the free civilian version runs on Android). One catch: the Pi 5 has no hardware H.264 encoder, so video encoding runs on its CPU, which counts when picking Pi vs Jetson. Confirmed in Phase 6.
+- **Data/video link to the laptop:** the lead option (2026-10-14) is Wi-Fi HaLow (802.11ah), which is Wi-Fi on 900 MHz. It has a lot more range than normal Wi-Fi, with a few Mbps up close dropping to hundreds of kbps far out. It carries normal IP traffic, so MAVLink telemetry and real compressed video can share one link from the companion computer, and existing ground station software works while I build my own. The same video could go into ATAK too (the free civilian version runs on Android). One catch: the Pi 5 has no hardware H.264 encoder, so video encoding runs on its CPU, which counts when picking Pi vs Jetson. Confirmed in step 6.
 - **Remote ID:** a broadcast module on a mount and 5 V plug in Base. Whether it's fitted is up to me (see the limits profiles).
 - **Power:** a dedicated 5 V / 5 A+ supply for the companion computer, and a current sensor (usually on the ESC).
-- **First thing I'll build:** a thrust stand (load cell, HX711 amplifier, current sensor) to measure how efficient the motors and props really are, and feed that back into the sim. It happens in Phase 1, as soon as the sizing model has a shortlist, running off a real 6S pack so the voltage sag gets measured too.
+- **Thrust stand (optional):** a load cell, an HX711 amplifier and a current sensor, to measure how efficient the motors and props really are, and feed that back into the sim. If I do it, it happens in step 1, as soon as the sizing model has a shortlist, running off a real 6S pack so the voltage sag gets measured too. It's the single measurement that makes the whole simulation more believable.
 
 ## Shortlist (not final)
 
 - **#2 Wrist gesture control:** fly by tilting an ESP32 + IMU wristband.
 - **#7 3D mapping runs:** fly a GPS grid taking photos, and turn them into a 3D model with OpenDroneMap. The nearest-safe-spot landing depends on this.
-- **#8 Perching:** hanging from or sitting on a surface that isn't a prepared landing spot (a branch, a railing, a ledge, a roof), motors off, camera still rolling. It's the biggest power saver there is, since the motors are off. Hanging needs a grabber, which is module C, and the claws only happen if we come up with a unique claw on an actual arm (talked through in Phase 8). Sitting on a flat ledge or roof just needs a good landing.
+- **#8 Perching:** hanging from or sitting on a surface that isn't a prepared landing spot (a branch, a railing, a ledge, a roof), motors off, camera still rolling. It's the biggest power saver there is, since the motors are off. Hanging needs a grabber, which is module C, and the claws only happen if we come up with a unique claw on an actual arm (talked through in the modules step). Sitting on a flat ledge or roof just needs a good landing.
 - **#10 Wind sensing:** work out the wind from how hard it leans to hold position. Software only. It feeds a "turn back now" battery warning and smarter landing choices.
 - **#11 Change detection:** compare two mapping runs and flag what moved, so the safe spots stay safe.
 - **#21 Self-tuning:** tunes its own PID in flight, and re-tunes when the payload changes. Runs on the flight controller.
@@ -350,9 +390,22 @@ Parts so far:
   It finds lift by comparing the throttle it needs to hold altitude against what its weight predicts, which is the same estimate wind sensing (#10) uses, and the laptop keeps a map of where lift turned up before. One safety limit: it won't sit in rising air faster than about 2 m/s. Holding still in rising air is the same as sinking into your own prop wash, and around 6 m/s for this drone that's the vortex ring state, where quads shake and lose control. It also stays under the loaded profile's altitude ceiling, so a thermal can't carry it past it. Software only.
 - **#34 Spiral descent:** comes down from height in a helix on low throttle instead of straight down, then straightens up for the last few meters on the rangefinder. Coming straight down fast is what puts quads into the vortex ring state; moving forward on the way down keeps fresh air going through the props, so the descent is faster and smoother on less power. It's software only, so it can be added after Base is flying without changing anything on the drone:
   - **A rough version** flies a circle from a steady tilt and turn rate. The wind pushes the whole circle sideways, but it works any time after altitude hold does.
-  - **The proper version** keeps the spiral centered on the landing spot with GPS, so it lands in Phase 7, once module V is flying.
+  - **The proper version** keeps the spiral centered on the landing spot with GPS, so it comes in step 7, once module V works in the sim.
 
   The only thing it needs from the start is that the firmware's landing sequence has a swappable descent part, so the spiral drops in later without rework. One honest catch: as far as I know, Gazebo's standard rotor model doesn't simulate the vortex ring state, so the sim can check the path but only real flights will show the benefit.
+
+- **#39 Object detection on the laptop:** boxes and labels on the live video, like a street-camera demo, with all the understanding done on the laptop so the drone carries no AI hardware and spends no power on it. Two parts that work together:
+  - **A detector** (a small, fast model like the YOLO family) runs on every frame: it finds, labels and tracks objects, and it works offline in an empty field. The laptop has no NVIDIA GPU, but its integrated graphics and built-in NPU can run one through Intel's OpenVINO, which gets benchmarked first.
+  - **The LLM** answers questions about what the detector found, when asked: "is anyone near the landing spot?", "find my red backpack". Some detectors take any object name as text, so the LLM can turn a request into a search and the detector does the looking. The LLM needs internet if it's a cloud model.
+
+  The details that shape it:
+  - **The link sets the picture quality.** HaLow gives a few Mbps up close and hundreds of kbps far out, and small, far-away objects get lost in compression. So the drone sends low-bitrate live video for watching, plus full-resolution still frames on request when the laptop wants a closer look.
+  - **It's for looking, not steering.** Detections arrive a few hundred milliseconds late and stop when the link drops. Anything that ever steers the drone from detections needs its own safety design, like the LLM's checker.
+  - **Drones see the world from above,** and standard detectors are trained on street-level photos. Aerial datasets like VisDrone fix that; retraining happens on the PC's RTX 3060, and the laptop just runs the result.
+  - **Licenses:** the popular Ultralytics YOLO is AGPL-3.0, which works with this GPL-3.0 repo, and there are Apache-licensed alternatives. Picked in the spec.
+  - **Privacy:** following the limits-profile idea, rules about filming people are settings, not caps. Anything exported for posts gets faces and license plates blurred.
+
+  In the research it runs on the simulated camera and on recorded video (step 7), and the pipeline can be built and benchmarked on the laptop any time.
 
 ## Ideas pool
 
@@ -393,11 +446,12 @@ Everything that came up while brainstorming, so nothing gets lost.
 | 31 | Soar mode: park in rising air, hold position in a breeze, ride the wind on routes | Shortlist |
 | 32 | Solar panel on top, trickle charging while perched (about 10 W in full sun, roughly 5% of the pack per hour). In flight it about cancels its own weight. | Maybe |
 | 33 | Flying-squirrel membrane: unfolds between the arms with the motors off and glides, possibly spiraling down to land, with the props spun up at the last moment | Maybe. Not picked for landing (see the notes); the spiral descent (#34) does that job. It could come back as a gliding demo if v2 has much more glide area. |
-| 34 | Spiral descent: comes down in a helix on low throttle instead of straight down, then straightens up for the last few meters | Shortlist (Phase 7, software only) |
+| 34 | Spiral descent: comes down in a helix on low throttle instead of straight down, then straightens up for the last few meters | Shortlist (step 7, software only) |
 | 35 | Recharging from the props on the way down | Dropped: under 0.5% of the pack from 120 m, and fast descents are the most unstable part of quad flight |
 | 36 | Lifting body: shape the body to make lift in forward flight | Left to the design hunt, which already varies body shape and motor tilt. Rough numbers say it's about a wash. |
 | 37 | Albatross-style soaring, using the wind gradient | Dropped: needs real wings |
 | 38 | Helium assist | Dropped: about 1 m³ of helium per kg of lift, far too much drag for 80 km/h |
+| 39 | Object detection on the laptop: boxes and labels on the live video, with the LLM answering questions about them | Shortlist (step 7) |
 
 ## Notes
 
@@ -432,12 +486,12 @@ Everything that came up while brainstorming, so nothing gets lost.
 - Cruise speed: 10 m/s until the sizing model says otherwise
 - Which open-source flight code to start from (the chip is decided: STM32H743)
 - Which H743 board. It needs PX4 support for the baseline flight, and SWD pads.
-- How many clean shadow-mode flights before the safety monitor's automatic triggers go live (picked from the Phase 4 logs)
-- Whether to get Part 107 (before Phase 3)
+- How many clean shadow-mode flights a real build would need before the safety monitor's automatic triggers go live
+- Whether to get Part 107 (in the build package's legal checklist)
 - Whether Max (with C) should still size the motors while the claws are uncertain, or Mission plus a margin (bring up in the sizing model discussion)
-- Data/video link to the laptop: HaLow is the lead option, confirmed in Phase 6 (the control link is decided: 2.4 GHz ExpressLRS)
+- Data/video link to the laptop: HaLow is the lead option, confirmed in step 6 (the control link is decided: 2.4 GHz ExpressLRS)
 - Where the Meshtastic relay (#30) lives: in V, in Base, or as its own little module
-- Exactly what goes in the `us-recreational` limits profile, checked against the current FAA and FCC rules before Phase 3
+- Exactly what goes in the `us-recreational` limits profile, checked against the current FAA and FCC rules for the build package
 - Camera: FPV video, stills for mapping, or both
 - Module bus: serial or DroneCAN
 - What "unique" is allowed to mean for the design hunt (decided after the baseline works)
