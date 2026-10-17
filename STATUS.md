@@ -24,8 +24,8 @@ Where to look:
 ## Up next
 
 1. **Set up WSL2 on the PC** with [docs/setup-pc.md](docs/setup-pc.md). The `wsl --install` step needs an admin PowerShell and one reboot. Then commit `docs/machines/pc.md`.
-2. **Step 1a: talk through the sizing model.** Started 2026-10-17, and it doesn't need WSL. Settled so far: hover and cruise power (the least-power speed falls out of it) and the battery model with sag, in the spec under "Settled in the sizing model talk". Still to settle:
-   - the catalog format, which real parts to seed it with, and where measured thrust data would go
+2. **Step 1a: talk through the sizing model.** Started 2026-10-17, and it doesn't need WSL. Settled so far: hover and cruise power (the least-power speed falls out of it) and the battery model with sag, and the catalog format, in the spec under "Settled in the sizing model talk". Still to settle:
+   - which real parts to seed the catalog with
    - what the report looks like
    - how the code is packaged
 3. **Step 1b: update the spec** with the answers, then **write the implementation plan** for the sizing model.
