@@ -1,0 +1,40 @@
+# Researched 2026-10-17. The detail page also has a GF 9x4.5 table, left out until
+# that prop's weight is in.
+type: motor
+id: emax-e3-2814-850kv
+maker: Emax
+model: E3 2814 850KV
+link: https://emaxmodel.com/motor-detail-dark.html?motor=e3-2814
+price_usd: 37.99
+checked: 2026-10-17
+source: {kind: manufacturer, url: 'https://emaxmodel.com/motor-detail-dark.html?motor=e3-2814', checked: 2026-10-17, note: "82 g without the motor wires. 3-6S. 58.4 A peak and 1460 W on 6S. 61 mOhm. The price is from shop.emax-usa.com, where it showed as unavailable"}
+mass_g: 82
+kv: 850
+cells_min: 3
+cells_max: 6
+max_current_a: 58.4
+thrust_tables:
+  - prop: hq-9x5x3
+    voltage_v: 25
+    source: {kind: manufacturer, url: 'https://emaxmodel.com/motor-detail-dark.html?motor=e3-2814', checked: 2026-10-17, note: "Emax's load-test records, as printed on the motor's detail page. Exactly 25 V on every row, and the power column is always 25 times the current. A data file on the same site calls its contents 'Local demo data', but these tables match the top results on Emax's US shop"}
+    rows:
+      - {throttle_pct: 30, thrust_g: 386, current_a: 2.39, rpm: 5721, power_w: 59.75}
+      - {throttle_pct: 40, thrust_g: 668, current_a: 4.64, rpm: 7314, power_w: 116}
+      - {throttle_pct: 50, thrust_g: 1024, current_a: 8.1, rpm: 8882, power_w: 202.5}
+      - {throttle_pct: 60, thrust_g: 1420, current_a: 12.8, rpm: 10383, power_w: 320}
+      - {throttle_pct: 70, thrust_g: 1814, current_a: 18.7, rpm: 11687, power_w: 467.5}
+      - {throttle_pct: 80, thrust_g: 2247, current_a: 25.6, rpm: 12930, power_w: 640}
+      - {throttle_pct: 90, thrust_g: 2651, current_a: 33.9, rpm: 14116, power_w: 847.5}
+      - {throttle_pct: 100, thrust_g: 3220, current_a: 45.1, rpm: 15330, power_w: 1127.5}
+  - prop: gemfan-1050x3
+    voltage_v: 25
+    source: {kind: manufacturer, url: 'https://emaxmodel.com/motor-detail-dark.html?motor=e3-2814', checked: 2026-10-17, note: "Emax's load-test records, as printed on the motor's detail page. Exactly 25 V on every row, and the power column is always 25 times the current. A data file on the same site calls its contents 'Local demo data', but these tables match the top results on Emax's US shop"}
+    rows:
+      - {throttle_pct: 30, thrust_g: 545, current_a: 3.03, rpm: 5437, power_w: 75.75}
+      - {throttle_pct: 40, thrust_g: 934, current_a: 6.27, rpm: 6975, power_w: 156.75}
+      - {throttle_pct: 50, thrust_g: 1365, current_a: 10.8, rpm: 8354, power_w: 270}
+      - {throttle_pct: 60, thrust_g: 1853, current_a: 17.2, rpm: 9661, power_w: 430}
+      - {throttle_pct: 70, thrust_g: 2350, current_a: 24.8, rpm: 10813, power_w: 620}
+      - {throttle_pct: 80, thrust_g: 2820, current_a: 33.6, rpm: 11810, power_w: 840}
+      - {throttle_pct: 90, thrust_g: 3230, current_a: 43.7, rpm: 12758, power_w: 1092.5}
+      - {throttle_pct: 100, thrust_g: 3940, current_a: 58.4, rpm: 13780, power_w: 1460}

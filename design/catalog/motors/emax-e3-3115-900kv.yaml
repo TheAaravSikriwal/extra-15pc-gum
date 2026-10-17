@@ -1,0 +1,51 @@
+# Researched 2026-10-17.
+type: motor
+id: emax-e3-3115-900kv
+maker: Emax
+model: E3 3115 900KV
+link: https://emaxmodel.com/motor-detail-dark.html?motor=e3-3115
+price_usd: 49.89
+checked: 2026-10-17
+source: {kind: manufacturer, url: 'https://emaxmodel.com/motor-detail-dark.html?motor=e3-3115', checked: 2026-10-17, note: "108 g without the motor wires. 4-6S. 77 A peak and 1925 W on 6S. The price is from shop.emax-usa.com, where it showed as unavailable"}
+mass_g: 108
+kv: 900
+cells_min: 4
+cells_max: 6
+max_current_a: 77
+thrust_tables:
+  - prop: hq-9x5x3
+    voltage_v: 25
+    source: {kind: manufacturer, url: 'https://emaxmodel.com/motor-detail-dark.html?motor=e3-3115', checked: 2026-10-17, note: "Emax's load-test records, as printed on the motor's detail page. Exactly 25 V on every row, and the power column is always 25 times the current. A data file on the same site calls its contents 'Local demo data', but these tables match the top results on Emax's US shop"}
+    rows:
+      - {throttle_pct: 30, thrust_g: 456, current_a: 3.43, rpm: 5910, power_w: 85.75}
+      - {throttle_pct: 40, thrust_g: 820, current_a: 6.88, rpm: 7553, power_w: 172}
+      - {throttle_pct: 50, thrust_g: 1296, current_a: 12.5, rpm: 9217, power_w: 312.5}
+      - {throttle_pct: 60, thrust_g: 1837, current_a: 20.4, rpm: 10766, power_w: 510}
+      - {throttle_pct: 70, thrust_g: 2370, current_a: 30.5, rpm: 12241, power_w: 762.5}
+      - {throttle_pct: 80, thrust_g: 3028, current_a: 43.2, rpm: 13551, power_w: 1080}
+      - {throttle_pct: 90, thrust_g: 3567, current_a: 58.2, rpm: 14772, power_w: 1455}
+      - {throttle_pct: 100, thrust_g: 3980, current_a: 68.3, rpm: 15530, power_w: 1707.5}
+  - prop: gemfan-1050x3
+    voltage_v: 25
+    source: {kind: manufacturer, url: 'https://emaxmodel.com/motor-detail-dark.html?motor=e3-3115', checked: 2026-10-17, note: "Emax's load-test records, as printed on the motor's detail page. Exactly 25 V on every row, and the power column is always 25 times the current. A data file on the same site calls its contents 'Local demo data', but these tables match the top results on Emax's US shop"}
+    rows:
+      - {throttle_pct: 30, thrust_g: 550, current_a: 3.6, rpm: 5652, power_w: 90}
+      - {throttle_pct: 40, thrust_g: 1035, current_a: 7.72, rpm: 7365, power_w: 193}
+      - {throttle_pct: 50, thrust_g: 1576, current_a: 13.5, rpm: 8963, power_w: 337.5}
+      - {throttle_pct: 60, thrust_g: 2153, current_a: 21.5, rpm: 10415, power_w: 537.5}
+      - {throttle_pct: 70, thrust_g: 2718, current_a: 31.1, rpm: 11525, power_w: 777.5}
+      - {throttle_pct: 80, thrust_g: 3274, current_a: 42.4, rpm: 12637, power_w: 1060}
+      - {throttle_pct: 90, thrust_g: 3827, current_a: 55.6, rpm: 13668, power_w: 1390}
+      - {throttle_pct: 100, thrust_g: 4580, current_a: 73.4, rpm: 14820, power_w: 1835}
+  - prop: hq-10x5x3
+    voltage_v: 25
+    source: {kind: manufacturer, url: 'https://emaxmodel.com/motor-detail-dark.html?motor=e3-3115', checked: 2026-10-17, note: "Emax's load-test records, as printed on the motor's detail page. Exactly 25 V on every row, and the power column is always 25 times the current. A data file on the same site calls its contents 'Local demo data', but these tables match the top results on Emax's US shop"}
+    rows:
+      - {throttle_pct: 30, thrust_g: 628, current_a: 4.1, rpm: 5712, power_w: 102.5}
+      - {throttle_pct: 40, thrust_g: 1087, current_a: 8.53, rpm: 7294, power_w: 213.25}
+      - {throttle_pct: 50, thrust_g: 1596, current_a: 14.8, rpm: 8711, power_w: 370}
+      - {throttle_pct: 60, thrust_g: 2170, current_a: 23.4, rpm: 10078, power_w: 585}
+      - {throttle_pct: 70, thrust_g: 2774, current_a: 33.3, rpm: 11248, power_w: 832.5}
+      - {throttle_pct: 80, thrust_g: 3347, current_a: 45.6, rpm: 12276, power_w: 1140}
+      - {throttle_pct: 90, thrust_g: 3928, current_a: 59.7, rpm: 13235, power_w: 1492.5}
+      - {throttle_pct: 100, thrust_g: 4540, current_a: 76.4, rpm: 14210, power_w: 1910}

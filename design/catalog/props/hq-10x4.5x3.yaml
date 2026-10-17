@@ -1,0 +1,12 @@
+# Researched 2026-10-17.
+type: prop
+id: hq-10x4.5x3
+maker: HQProp
+model: MacroQuad 10x4.5x3
+link: https://www.hqprop.com/hq-macroquad-prop-10x45x32ccw2cw-black-glass-fiber-reinforced-nylon-p0361.html
+checked: 2026-10-17
+source: {kind: manufacturer, url: 'https://www.hqprop.com/hq-macroquad-prop-10x45x32ccw2cw-black-glass-fiber-reinforced-nylon-p0361.html', checked: 2026-10-17, note: "Glass fiber reinforced nylon. Weight from the spec image on HQ's page"}
+mass_g: 23.8
+diameter_in: 10
+pitch_in: 4.5
+blades: 3

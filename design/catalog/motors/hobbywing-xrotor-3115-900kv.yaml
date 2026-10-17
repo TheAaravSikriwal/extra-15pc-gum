@@ -1,0 +1,58 @@
+# Researched 2026-10-17.
+type: motor
+id: hobbywing-xrotor-3115-900kv
+maker: Hobbywing
+model: XRotor 3115 900KV
+link: https://hobbywing.com/en/products/xrotor3110
+checked: 2026-10-17
+source: {kind: manufacturer, url: 'https://www.hobbywing.com/en/uploads/file/20250207/b3367f67ec54b0ac2556316c345a9168.pdf', checked: 2026-10-17, note: "125 g; Hobbywing doesn't say whether that includes the wires. 4-6S. 81 A and 1940 W for 9 seconds. No price on the maker's site"}
+mass_g: 125
+kv: 900
+cells_min: 4
+cells_max: 6
+max_current_a: 81
+thrust_tables:
+  - prop: hq-9x4x3
+    voltage_v: 24
+    source: {kind: manufacturer, url: 'https://www.hobbywing.com/en/uploads/file/20250207/b3367f67ec54b0ac2556316c345a9168.pdf', checked: 2026-10-17, note: "Hobbywing's test PDF, which has the rows as text. 24 V on every row. Hobbywing also gives a 'recommended full load continuous running time' for each prop, as short as 9 seconds"}
+    rows:
+      - {throttle_pct: 40, thrust_g: 560, current_a: 3.3, rpm: 7382, power_w: 80}
+      - {throttle_pct: 50, thrust_g: 937, current_a: 7.4, rpm: 9556, power_w: 178}
+      - {throttle_pct: 60, thrust_g: 1274, current_a: 11.9, rpm: 11190, power_w: 286}
+      - {throttle_pct: 70, thrust_g: 1690, current_a: 17.2, rpm: 12749, power_w: 414}
+      - {throttle_pct: 80, thrust_g: 2327, current_a: 24.7, rpm: 14398, power_w: 594}
+      - {throttle_pct: 90, thrust_g: 3099, current_a: 35.5, rpm: 16069, power_w: 852}
+      - {throttle_pct: 100, thrust_g: 3432, current_a: 41.8, rpm: 16934, power_w: 1003}
+  - prop: hq-9x5x3
+    voltage_v: 24
+    source: {kind: manufacturer, url: 'https://www.hobbywing.com/en/uploads/file/20250207/b3367f67ec54b0ac2556316c345a9168.pdf', checked: 2026-10-17, note: "Hobbywing's test PDF, which has the rows as text. 24 V on every row. Hobbywing also gives a 'recommended full load continuous running time' for each prop, as short as 9 seconds"}
+    rows:
+      - {throttle_pct: 40, thrust_g: 784, current_a: 5.4, rpm: 7106, power_w: 129}
+      - {throttle_pct: 50, thrust_g: 1263, current_a: 11.1, rpm: 9016, power_w: 267}
+      - {throttle_pct: 60, thrust_g: 1736, current_a: 18.1, rpm: 10509, power_w: 435}
+      - {throttle_pct: 70, thrust_g: 2300, current_a: 27, rpm: 11932, power_w: 649}
+      - {throttle_pct: 80, thrust_g: 3062, current_a: 39, rpm: 13400, power_w: 935}
+      - {throttle_pct: 90, thrust_g: 3910, current_a: 54.3, rpm: 14738, power_w: 1304}
+      - {throttle_pct: 100, thrust_g: 4279, current_a: 64, rpm: 15438, power_w: 1535}
+  - prop: hq-10x4.5x3
+    voltage_v: 24
+    source: {kind: manufacturer, url: 'https://www.hobbywing.com/en/uploads/file/20250207/b3367f67ec54b0ac2556316c345a9168.pdf', checked: 2026-10-17, note: "Hobbywing's test PDF, which has the rows as text. 24 V on every row. Hobbywing also gives a 'recommended full load continuous running time' for each prop, as short as 9 seconds"}
+    rows:
+      - {throttle_pct: 40, thrust_g: 761, current_a: 5.1, rpm: 7052, power_w: 124}
+      - {throttle_pct: 50, thrust_g: 1336, current_a: 10.9, rpm: 9142, power_w: 262}
+      - {throttle_pct: 60, thrust_g: 1871, current_a: 17.5, rpm: 10582, power_w: 421}
+      - {throttle_pct: 70, thrust_g: 2451, current_a: 25.7, rpm: 11958, power_w: 617}
+      - {throttle_pct: 80, thrust_g: 3242, current_a: 37.2, rpm: 13565, power_w: 894}
+      - {throttle_pct: 90, thrust_g: 4181, current_a: 51.7, rpm: 14900, power_w: 1242}
+      - {throttle_pct: 100, thrust_g: 4648, current_a: 61.6, rpm: 15606, power_w: 1477}
+  - prop: hq-10x5x3
+    voltage_v: 24
+    source: {kind: manufacturer, url: 'https://www.hobbywing.com/en/uploads/file/20250207/b3367f67ec54b0ac2556316c345a9168.pdf', checked: 2026-10-17, note: "Hobbywing's test PDF, which has the rows as text. 24 V on every row. Hobbywing also gives a 'recommended full load continuous running time' for each prop, as short as 9 seconds"}
+    rows:
+      - {throttle_pct: 40, thrust_g: 1089, current_a: 7.5, rpm: 6999, power_w: 180}
+      - {throttle_pct: 50, thrust_g: 1728, current_a: 14.2, rpm: 8663, power_w: 341}
+      - {throttle_pct: 60, thrust_g: 2403, current_a: 23, rpm: 10072, power_w: 551}
+      - {throttle_pct: 70, thrust_g: 3152, current_a: 34.4, rpm: 11403, power_w: 825}
+      - {throttle_pct: 80, thrust_g: 4006, current_a: 49.9, rpm: 12713, power_w: 1197}
+      - {throttle_pct: 90, thrust_g: 4831, current_a: 69.8, rpm: 13779, power_w: 1674}
+      - {throttle_pct: 100, thrust_g: 5177, current_a: 80.9, rpm: 14171, power_w: 1940}

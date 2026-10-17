@@ -1,0 +1,12 @@
+# Researched 2026-10-17.
+type: prop
+id: hq-8x4.5x3
+maker: HQProp
+model: MacroQuad 8x4.5x3 V2
+link: https://www.hqprop.com/hq-macroquad-prop-8x45x3v22cw2ccw-black-glass-fiber-reinforced-nylon-p0516.html
+checked: 2026-10-17
+source: {kind: manufacturer, url: 'https://www.hqprop.com/hq-macroquad-prop-8x45x3v22cw2ccw-black-glass-fiber-reinforced-nylon-p0516.html', checked: 2026-10-17, note: "Glass fiber reinforced nylon. Weight from HQ's spec list"}
+mass_g: 13.2
+diameter_in: 8
+pitch_in: 4.5
+blades: 3

@@ -1,0 +1,34 @@
+# Researched 2026-10-17.
+type: motor
+id: flashhobby-mars-m2814-730kv
+maker: Flash Hobby
+model: Mars M2814 730KV
+link: https://www.flashhobby.com/mars-2814-brushless-motor.html
+checked: 2026-10-17
+source: {kind: manufacturer, url: 'https://www.flashhobby.com/mars-2814-brushless-motor.html', checked: 2026-10-17, note: "87 g with the cable. 3-6S. 41.81 A peak (the image says for 60 s), 1017 W. No price; the site only takes inquiries"}
+mass_g: 87
+kv: 730
+cells_min: 3
+cells_max: 6
+max_current_a: 41.81
+thrust_tables:
+  - prop: hq-lr10x5x3
+    voltage_v: 24.35
+    source: {kind: manufacturer, url: 'https://www.flashhobby.com/upload/488/image/20250402/m2814-730kv----02-703971.jpg', checked: 2026-10-17, note: "Transcribed from Flash Hobby's test image. The voltage falls about half a volt from 50% to 100% throttle, so this uses the full-throttle row's voltage. The image calls the motor 'Arthur M2814 / A2814'"}
+    rows:
+      - {throttle_pct: 50, thrust_g: 1047, current_a: 7.48, rpm: 7224, power_w: 184.9}
+      - {throttle_pct: 60, thrust_g: 1529, current_a: 13.88, rpm: 8689, power_w: 341.8}
+      - {throttle_pct: 70, thrust_g: 1924, current_a: 19.15, rpm: 9707, power_w: 470.4}
+      - {throttle_pct: 80, thrust_g: 2339, current_a: 26.37, rpm: 10618, power_w: 645.5}
+      - {throttle_pct: 90, thrust_g: 2705, current_a: 33.14, rpm: 11340, power_w: 809.9}
+      - {throttle_pct: 100, thrust_g: 2989, current_a: 40.69, rpm: 11953, power_w: 991}
+  - prop: gemfan-1050x3
+    voltage_v: 24.33
+    source: {kind: manufacturer, url: 'https://www.flashhobby.com/upload/488/image/20250402/m2814-730kv----02-703971.jpg', checked: 2026-10-17, note: "Transcribed from Flash Hobby's test image. The voltage falls about half a volt from 50% to 100% throttle, so this uses the full-throttle row's voltage. The image calls the motor 'Arthur M2814 / A2814'"}
+    rows:
+      - {throttle_pct: 50, thrust_g: 1095, current_a: 7.72, rpm: 7248, power_w: 191.8}
+      - {throttle_pct: 60, thrust_g: 1583, current_a: 14.48, rpm: 8649, power_w: 358.4}
+      - {throttle_pct: 70, thrust_g: 1979, current_a: 20.14, rpm: 9599, power_w: 496.6}
+      - {throttle_pct: 80, thrust_g: 2370, current_a: 26.77, rpm: 10479, power_w: 657.2}
+      - {throttle_pct: 90, thrust_g: 2709, current_a: 34.32, rpm: 11149, power_w: 839.1}
+      - {throttle_pct: 100, thrust_g: 2995, current_a: 41.81, rpm: 11630, power_w: 1017.3}

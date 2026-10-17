@@ -1,0 +1,42 @@
+# Researched 2026-10-17.
+type: motor
+id: tmotor-velox-v3115-900kv
+maker: T-Motor
+model: Velox V3115 900KV
+link: https://www.ligpower.com/product/V3115-fpv-motor.html
+price_usd: 49.9
+checked: 2026-10-17
+source: {kind: manufacturer, url: 'https://www.ligpower.com/product/V3115-fpv-motor.html', checked: 2026-10-17, note: "113.1 g with the cable. The page lists the V3115 family as 3-12S; the 900KV is tested on 4S and 6S here. Max current is the top row of its biggest table"}
+mass_g: 113.1
+kv: 900
+cells_min: 4
+cells_max: 6
+max_current_a: 83
+thrust_tables:
+  - prop: hq-9x5x3
+    voltage_v: 23
+    source: {kind: manufacturer, url: 'https://www.ligpower.com/product/V3115-fpv-motor.html', checked: 2026-10-17, note: "The Specifications tab on T-Motor's T-Hobby store. The voltage column is rounded to 24 V, then 23 V from 80% throttle; the power column works out to about 22.8 V at full throttle"}
+    rows:
+      - {throttle_pct: 10, thrust_g: 47, current_a: 0.5, rpm: 2132, power_w: 12}
+      - {throttle_pct: 20, thrust_g: 275, current_a: 1.81, rpm: 4318, power_w: 44}
+      - {throttle_pct: 30, thrust_g: 546, current_a: 3.88, rpm: 5834, power_w: 93}
+      - {throttle_pct: 40, thrust_g: 916, current_a: 7.39, rpm: 7389, power_w: 177}
+      - {throttle_pct: 50, thrust_g: 1384, current_a: 12.66, rpm: 8944, power_w: 302}
+      - {throttle_pct: 60, thrust_g: 1885, current_a: 20.68, rpm: 10366, power_w: 491}
+      - {throttle_pct: 70, thrust_g: 2454, current_a: 29.07, rpm: 11750, power_w: 686}
+      - {throttle_pct: 80, thrust_g: 3047, current_a: 41.09, rpm: 13043, power_w: 962}
+      - {throttle_pct: 90, thrust_g: 3626, current_a: 54.95, rpm: 14144, power_w: 1275}
+      - {throttle_pct: 100, thrust_g: 4199, current_a: 71.15, rpm: 15140, power_w: 1634}
+  - prop: hq-10x5x3
+    voltage_v: 23
+    source: {kind: manufacturer, url: 'https://www.ligpower.com/product/V3115-fpv-motor.html', checked: 2026-10-17, note: "The Specifications tab on T-Motor's T-Hobby store. The voltage column is rounded to 24 V, then 23 V from 80% throttle; the power column works out to about 22.8 V at full throttle. The 60% row is left out: it prints 408.08 A next to 582 W at 24 V, which would be about 24 A, so it's a typo on the page and it's not mine to fix"}
+    rows:
+      - {throttle_pct: 10, thrust_g: 28, current_a: 0.49, rpm: 1901, power_w: 12}
+      - {throttle_pct: 20, thrust_g: 282, current_a: 1.86, rpm: 3936, power_w: 45}
+      - {throttle_pct: 30, thrust_g: 619, current_a: 4.35, rpm: 5450, power_w: 104}
+      - {throttle_pct: 40, thrust_g: 1106, current_a: 9.22, rpm: 7048, power_w: 220}
+      - {throttle_pct: 50, thrust_g: 1663, current_a: 15.23, rpm: 8482, power_w: 363}
+      - {throttle_pct: 70, thrust_g: 2907, current_a: 35.77, rpm: 11009, power_w: 840}
+      - {throttle_pct: 80, thrust_g: 3439, current_a: 50.8, rpm: 11930, power_w: 1182}
+      - {throttle_pct: 90, thrust_g: 4107, current_a: 65.69, rpm: 12968, power_w: 1514}
+      - {throttle_pct: 100, thrust_g: 4605, current_a: 82.99, rpm: 13712, power_w: 1889}

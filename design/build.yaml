@@ -1,0 +1,37 @@
+# The build the report starts from. The sweep then tries every motor, prop, cell and pack
+# layout in the catalog against it. First real version 2026-10-17.
+motor: emax-e3-2814-850kv
+prop: gemfan-1050x3
+esc: holybro-tekko32-f4-50a
+frame: iflight-nazgul-xl10-v6
+pack:
+  cell: molicel-p42a
+  series: 6
+  parallel: 2
+  overhead_g: 60
+  wiring_mohm: 3
+  note: "Both pack numbers are estimates until the electrical step: 60 g of nickel strip, balance and power leads, an XT60 and wrap for a 6S2P 18650 pack, and 3 mOhm from battery to ESC"
+base:
+  - holybro-kakute-h7
+  - radiomaster-rp2-v2
+  - benewake-tf-luna
+  - pjrc-teensy-41
+  - safety-monitor-extras
+  - ruko-r111
+  - base-wiring
+  - module-mount
+modules:
+  V:
+    - matek-m10q-5883
+    - gps-mast
+    - rpi-camera-module-3
+    - rpi-5-4gb
+    - rpi-active-cooler
+    - heltec-ht-hc01p
+    - matek-bec12s-pro
+    - v-housing
+  P:
+    - fruity-chutes-harrier-40-42
+    - p-mount
+  C:
+    - claws-placeholder

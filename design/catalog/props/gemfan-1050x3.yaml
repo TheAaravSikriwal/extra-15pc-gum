@@ -1,0 +1,12 @@
+# Researched 2026-10-17.
+type: prop
+id: gemfan-1050x3
+maker: Gemfan
+model: 1050 3-blade
+link: https://www.gemfanhobby.com/1050-cinelifter-glass-fiber-nylon-3-blade.html
+checked: 2026-10-17
+source: {kind: manufacturer, url: 'https://www.gemfanhobby.com/1050-cinelifter-glass-fiber-nylon-3-blade.html', checked: 2026-10-17, note: "Glass fiber reinforced nylon. Gemfan lists it as approximately 16.8 g"}
+mass_g: 16.8
+diameter_in: 10
+pitch_in: 5
+blades: 3

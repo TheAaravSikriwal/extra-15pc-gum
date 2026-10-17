@@ -1,0 +1,12 @@
+# Researched 2026-10-17.
+type: prop
+id: hq-lr10x5x3
+maker: HQProp
+model: LR10x5x3 (long range)
+link: https://www.hqprop.com/hqprop-lr10x5x3-2ccw2cw-black-glass-fiber-reinforced-nylon-p0419.html
+checked: 2026-10-17
+source: {kind: manufacturer, url: 'https://www.hqprop.com/hqprop-lr10x5x3-2ccw2cw-black-glass-fiber-reinforced-nylon-p0419.html', checked: 2026-10-17, note: "Glass fiber reinforced nylon, the slimmer long-range blade. Weight from the spec image on HQ's page"}
+mass_g: 18.1
+diameter_in: 10
+pitch_in: 5
+blades: 3
