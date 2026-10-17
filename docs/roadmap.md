@@ -191,7 +191,7 @@ Each one gets proven in sim, and whatever the sim can't show goes on the unprove
    - the results feed back into the sizing model and Gazebo, and the targets get rechecked
 3. **The design hunt,** once the baseline passes in Gazebo: an automated loop builds, tests and improves designs, looking for one that's actually unique and beats the baseline. Whatever it finds becomes the v2 research.
 4. **Visuals,** from every step, in the project's look. Every test is visible, not just its verdict: each one streams into the Rerun viewer as it runs and stays there to replay.
-5. **The project site,** starting with the sizing model and growing with every step: the drone in 3D (exploded views, modules switching on and off, clickable parts), a live spec sheet, a page per step that explains it and shows its results, and links into every individual sim. The details are in [decisions.md](decisions.md), under "The project site".
+5. **The project site,** starting with the sizing model and growing with every step: the drone in 3D (exploded views, modules switching on and off, clickable parts), a live spec sheet, a page per step that explains it and shows its results, and links into every individual sim. It stays on my machine until the project is done, then joins my portfolio site. The details are in [decisions.md](decisions.md), under "The project site".
 
 ## Tools, and where they run
 

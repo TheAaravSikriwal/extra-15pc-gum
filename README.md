@@ -40,7 +40,7 @@ This is the live version. When a step finishes, its outcome goes here, with a li
 | Structure | Step 2 | Not started | |
 | Aero (the wind tunnel) | Step 2 | Not started | |
 | Design hunt (v2) | Step 4 | Not started | |
-| Project site | Step 1 | Not started | |
+| Project site | Step 1 | Not started | Stays on my machine until the project is done, then joins my portfolio site |
 
 ### Step 1, in detail
 

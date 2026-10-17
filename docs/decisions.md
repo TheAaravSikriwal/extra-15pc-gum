@@ -183,7 +183,9 @@ One website that pulls from every simulation, for looking at the drone and learn
 - **The unproven list,** front and center.
 - **The project's look:** black, spearmint and magenta, with the same fonts as the posts.
 
-It's built from the data files every step writes, so it grows as the steps finish, starting with the sizing model. The individual sims stay available on their own too: the Rerun recordings, the reports in `docs/reports/`, and the clips. Where it's hosted and what it's built with get settled in its own spec.
+It's built from the data files every step writes, so it grows as the steps finish, starting with the sizing model. The individual sims stay available on their own too: the Rerun recordings, the reports in `docs/reports/`, and the clips.
+
+**Where it lives (decided 2026-10-17):** on my machine while the research runs. It doesn't go live until the project is done, and then it joins my portfolio site, wearechintu.com, as another project. So it's built as a self-contained static site with relative links, which can drop into the portfolio wherever it ends up, with no server needed. Its code lives in this repo like everything else, but the built site isn't published anywhere until the end. What it's built with gets settled in its own spec.
 
 
 ### Learning (decided 2026-10-13)

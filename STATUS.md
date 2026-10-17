@@ -43,7 +43,7 @@ Where to look:
 - Where the Meshtastic relay (#30) lives: V, Base, or its own little module
 - Exactly what goes in the `us-recreational` limits profile, and whether to get Part 107 (for the build package)
 - What "unique" is allowed to mean in the design hunt
-- Where the project site is hosted (public or private) and what it's built with
+- What the project site is built with (it stays on my machine until the project is done, then joins my portfolio at wearechintu.com)
 
 ## Machines
 
