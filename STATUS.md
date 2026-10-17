@@ -1,7 +1,7 @@
 # Status
 
 **Last updated:** 2026-10-17, on the PC's Windows side
-**Step:** 1c, building the sizing model ([the plan](docs/plans/2026-10-17-sizing-model.md)): task 14 of 15 done, the command line; next is task 15, the honesty check
+**Step:** 1c, building the sizing model ([the plan](docs/plans/2026-10-17-sizing-model.md)): tasks 1 to 14 done, and task 15's code (the honesty check) is in. The research for step 1d (real parts) and for task 15's real cases is underway.
 **Main machine:** the PC, with WSL2 Ubuntu 24.04 for the Linux tools
 
 ## Right now
