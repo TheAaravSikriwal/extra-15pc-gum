@@ -34,7 +34,7 @@ fi
 echo "==> Python venv at ${venv/#$HOME/\~}"
 [ -x "$venv/bin/python" ] || python3 -m venv "$venv"
 "$venv/bin/python" -m pip install -q --upgrade pip
-"$venv/bin/python" -m pip install -q --group dev
+"$venv/bin/python" -m pip install -q --group dev -e .
 echo "    $("$venv/bin/python" --version), $("$venv/bin/python" -m pip --version | cut -d' ' -f1-2)"
 
 echo "==> Lint (same as CI)"

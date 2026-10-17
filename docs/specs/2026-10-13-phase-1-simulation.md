@@ -277,8 +277,9 @@ Everything here gets posted, mostly on LinkedIn and sometimes on Instagram, so e
 ## Repo layout
 
 ```
+src/pcs14/ the code (14 pcs left), one part per layer, starting with sizing
 design/    targets.yaml · catalog/ · build.yaml
-sizing/    the sizing model
+sizing/    a pointer to the sizing code and its reports
 cad/       the CAD code (generated meshes stay out of git; curated ones go through LFS)
 aero/      OpenFOAM cases, scripts, post-processing
 sim/       Gazebo model generator, PX4 airframe, worlds, scenarios
@@ -286,7 +287,7 @@ explore/   the design hunt
 media/     curated images for posts
 scripts/   setup-ubuntu.sh (WSL2) · setup-windows.ps1
 tests/     tests for all of the above
-docs/      decisions, roadmap, specs, log, generated reports
+docs/      decisions, roadmap, specs, plans, log, generated reports
 ```
 
 ## How I'll know the tools themselves work

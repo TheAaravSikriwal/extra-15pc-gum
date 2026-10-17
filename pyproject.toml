@@ -1,9 +1,17 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
 [project]
-name = "extra-15pc-gum"
-version = "0.0.0"
-description = "Sizing model and simulation tools for the Extra 15pc Gum drone"
+name = "pcs14"
+version = "0.1.0"
+description = "14 pcs left: the design and simulation tools for the Extra 15pc Gum drone"
 readme = "README.md"
 requires-python = ">=3.12"
+dependencies = []
+
+[project.scripts]
+pcs14 = "pcs14.cli:main"
 
 [dependency-groups]
 dev = [
@@ -12,12 +20,16 @@ dev = [
     "ruff>=0.6",
 ]
 
+[tool.hatch.build.targets.wheel]
+packages = ["src/pcs14"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 
 [tool.ruff]
 line-length = 100
 target-version = "py312"
+src = ["src", "tests"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]

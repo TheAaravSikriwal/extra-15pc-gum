@@ -17,7 +17,7 @@ Set-Location $repo
 Write-Host "==> Python venv at $venv"
 if (-not (Test-Path $py)) { python -m venv $venv }
 & $py -m pip install -q --upgrade pip
-& $py -m pip install -q --group dev
+& $py -m pip install -q --group dev -e .
 Write-Host "    $(& $py --version)"
 
 Write-Host "==> Lint (same as CI)"
