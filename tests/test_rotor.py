@@ -35,8 +35,15 @@ def test_power_between_rows(rotor):
     assert rotor.power_for_thrust(gf(554)) == pytest.approx(60 + 134 / 230 * 43.2)
 
 
-def test_below_the_first_row_heads_to_zero(rotor):
-    assert rotor.power_for_thrust(gf(110)) == pytest.approx(28.8 / 2)
+def test_below_the_first_row_power_follows_thrust_to_the_one_and_a_half(rotor):
+    # Momentum theory: at a fixed prop size, power goes as thrust^1.5. Half of the first
+    # row's 220 g takes 28.8 W x 0.5^1.5, not the 14.4 W a straight line would say.
+    assert rotor.power_for_thrust(gf(110)) == pytest.approx(28.8 * 0.5**1.5)
+
+
+def test_below_the_first_row_rpm_follows_the_square_root_of_thrust(rotor):
+    # Thrust goes as rpm^2, so a quarter of the first row's thrust needs half its rpm
+    assert rotor.rpm_for_thrust(gf(55)) == pytest.approx(4300 / 2)
 
 
 def test_more_thrust_than_the_table_has(rotor):

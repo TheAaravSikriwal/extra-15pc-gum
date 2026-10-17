@@ -83,13 +83,13 @@ class Rotor:
 
     def power_for_thrust(self, thrust: float) -> float | None:
         """Electrical watts for one motor to make `thrust` newtons, or None if it can't."""
-        return _interpolate(self._thrusts, [r.power for r in self.table.rows], thrust)
+        return _interpolate(self._thrusts, [r.power for r in self.table.rows], thrust, 1.5)
 
     def rpm_for_thrust(self, thrust: float) -> float | None:
         rpms = [r.rpm for r in self.table.rows]
         if any(rpm is None for rpm in rpms):
             return None
-        return _interpolate(self._thrusts, rpms, thrust)
+        return _interpolate(self._thrusts, rpms, thrust, 0.5)
 
     def full_throttle(self, pack: Pack, soc: float) -> FullThrottle:
         """All four motors flat out, on this pack at this state of charge."""
@@ -216,12 +216,15 @@ class PowerModel:
         return top
 
 
-def _interpolate(xs: list[float], ys: list[float], x: float) -> float | None:
-    """Straight lines between the table rows, heading to zero below the first row."""
+def _interpolate(xs: list[float], ys: list[float], x: float, below: float) -> float | None:
+    """Straight lines between the table rows. Below the first row, the value scales with
+    (thrust / first row's thrust) ** `below`: momentum theory says power goes as thrust^1.5
+    and rpm as thrust^0.5 for a fixed prop. Many tables start at 50% throttle, well above a
+    light drone's hover, so a straight line to zero there would overstate the power a lot."""
     if x > xs[-1]:
         return None
     if x <= xs[0]:
-        return ys[0] * x / xs[0]
+        return ys[0] * (x / xs[0]) ** below
     i = bisect.bisect_left(xs, x)
     fraction = (x - xs[i - 1]) / (xs[i] - xs[i - 1])
     return ys[i - 1] + fraction * (ys[i] - ys[i - 1])
