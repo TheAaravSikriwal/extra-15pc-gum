@@ -170,6 +170,28 @@ class OcvPoint(Strict):
     voltage_v: float = Field(gt=0)
 
 
+class DischargePoint(Strict):
+    capacity_mah: float = Field(ge=0)  # delivered so far
+    voltage_v: float = Field(gt=0)  # under load
+
+
+class DischargeTest(Strict):
+    """A measured discharge at a steady current, for checking the battery model against."""
+
+    current_a: float = Field(gt=0)
+    source: Source
+    points: list[DischargePoint] = Field(min_length=2)
+
+    @model_validator(mode="after")
+    def _runs_downhill(self):
+        for before, after in zip(self.points, self.points[1:], strict=False):
+            if after.capacity_mah <= before.capacity_mah:
+                raise ValueError("discharge points have to go in order of rising capacity")
+            if after.voltage_v > before.voltage_v:
+                raise ValueError("voltage can't rise during a steady discharge")
+        return self
+
+
 class Cell(Part):
     type: Literal["cell"]
     capacity_mah: float = Field(gt=0)
@@ -180,6 +202,7 @@ class Cell(Part):
     resistance_source: Source
     ocv_source: Source
     ocv_curve: list[OcvPoint] = Field(min_length=3)
+    discharge_tests: list[DischargeTest] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def _curve_runs_empty_to_full(self):
@@ -200,7 +223,12 @@ class Cell(Part):
         return self
 
     def sources(self) -> list[Source]:
-        return [self.source, self.resistance_source, self.ocv_source]
+        return [
+            self.source,
+            self.resistance_source,
+            self.ocv_source,
+            *(test.source for test in self.discharge_tests),
+        ]
 
     @property
     def capacity(self) -> float:

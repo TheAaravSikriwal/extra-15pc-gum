@@ -3,6 +3,7 @@
     pcs14 size     evaluate one build: every setup, every check, every flight
     pcs14 sweep    try every build the catalog allows, and rank them
     pcs14 report   write the full sizing report: Markdown, charts and the data file
+    pcs14 validate the honesty check: the model against published builds and cell curves
 
 Every run saves a Rerun recording to outputs/rerun/ (or wherever --record says), and --live
 opens the viewer and streams into it as the run happens.
@@ -56,6 +57,20 @@ def build_parser() -> argparse.ArgumentParser:
         default=(0, 600, 100),
         help="extra grams for the margin chart",
     )
+    validate = commands.add_parser(
+        "validate",
+        help="The honesty check: the model against published builds and cell curves.",
+    )
+    validate.add_argument("--catalog", type=Path, default=Path("design/validation/catalog"))
+    validate.add_argument("--cases", type=Path, default=Path("design/validation/cases"))
+    validate.add_argument(
+        "--cells",
+        type=Path,
+        default=Path("design/catalog"),
+        help="catalog whose cells get checked against their discharge tests",
+    )
+    validate.add_argument("--out", type=Path, default=Path("docs/reports/sizing"))
+    validate.add_argument("--allow-made-up", action="store_true")
     return parser
 
 
@@ -203,4 +218,34 @@ def run_report(args) -> int:
     return 0
 
 
-COMMANDS = {"size": run_size, "sweep": run_sweep, "report": run_report}
+def run_validate(args) -> int:
+    from pcs14.report.validation import write_validation
+    from pcs14.sizing.validate import compare_case, discharge_check, load_cases
+
+    catalog = load_catalog(args.catalog, allow_made_up=args.allow_made_up)
+    cases = load_cases(args.cases, catalog)
+    comparisons = [compare_case(case) for case in cases]
+    cells = load_catalog(args.cells, allow_made_up=args.allow_made_up).cells.values()
+    checks = [check for cell in cells for check in discharge_check(cell)]
+    for c in comparisons:
+        print(
+            f"{c.case.name}: measured {c.measured_minutes:.1f} min, model "
+            f"{c.predicted_minutes:.1f} / {c.predicted_pessimistic:.1f} min ({c.error * 100:+.0f}%)"
+        )
+    for check in checks:
+        print(
+            f"{check.cell.model} at {check.current:g} A: RMS {check.rms_error:.3f} V, "
+            f"mean {check.mean_error:+.3f} V"
+        )
+    out = write_validation(
+        args.out,
+        comparisons,
+        checks,
+        made_up=args.allow_made_up,
+        generated=date.today().isoformat(),
+    )
+    print(f"\nValidation written to {out / 'validation.md'}")
+    return 0
+
+
+COMMANDS = {"size": run_size, "sweep": run_sweep, "report": run_report, "validate": run_validate}

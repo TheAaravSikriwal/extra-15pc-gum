@@ -7,6 +7,7 @@ needs). The flight ends at the reserve, or earlier if the pack can't deliver the
 voltage drops below the cells' minimum, or full throttle can no longer hold the speed.
 """
 
+from collections.abc import Callable
 from dataclasses import dataclass
 
 from pcs14 import units
@@ -32,7 +33,7 @@ class Sample:
 class Flight:
     speed: float  # m/s
     samples: tuple[Sample, ...]
-    ended: str  # reserve, power, voltage or thrust
+    ended: str  # reserve, power, voltage, thrust, or stopped (by a stopping rule)
 
     @property
     def duration(self) -> float:
@@ -65,8 +66,14 @@ def thrust_to_weight(model: PowerModel, pack: Pack, soc: float) -> float:
 
 
 def fly(
-    model: PowerModel, pack: Pack, speed: float, reserve_fraction: float, dt: float = 5.0
+    model: PowerModel,
+    pack: Pack,
+    speed: float,
+    reserve_fraction: float,
+    dt: float = 5.0,
+    stop: Callable[[Sample], bool] | None = None,
 ) -> Flight:
+    """`stop` is an extra rule for ending the flight, like landing at a set voltage."""
     power = model.power(speed)
     needed = model.thrust_per_motor(speed)
     reserve = pack.soc_at_reserve(reserve_fraction)
@@ -100,6 +107,9 @@ def fly(
             break
         if soc <= reserve + 1e-12:
             ended = "reserve"
+            break
+        if stop is not None and stop(sample):
+            ended = "stopped"
             break
         step = dt
         after = pack.drain(soc, current, step)

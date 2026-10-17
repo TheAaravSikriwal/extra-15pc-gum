@@ -64,3 +64,21 @@ def test_made_up_parts_need_the_flag(capsys):
     args = [a for a in TEST_PARTS if a != "--allow-made-up"]
     assert main(["size", *args, "--no-record"]) == 2
     assert "made up" in capsys.readouterr().err
+
+
+def test_validate_runs_the_honesty_check(tmp_path, capsys):
+    args = [
+        "validate",
+        "--catalog",
+        str(FIXTURES / "catalog"),
+        "--cases",
+        str(FIXTURES / "validation"),
+        "--cells",
+        str(FIXTURES / "catalog"),
+        "--out",
+        str(tmp_path / "v"),
+        "--allow-made-up",
+    ]
+    assert main(args) == 0
+    assert "Testco hover test: measured 36.0 min" in capsys.readouterr().out
+    assert (tmp_path / "v" / "validation.md").is_file()
