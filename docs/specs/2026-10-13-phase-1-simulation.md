@@ -117,7 +117,7 @@ Tests check every file against a fixed format, so a typo can't slip through, and
 
 The exact part numbers get researched and filled in during step 1c, and the list gets a look before the sweep runs. **Why this one:** popular parts often lack the test data the model needs, and going wide means far more research for parts that mostly lose. The catalog widens later around whatever wins.
 
-**The report (2026-10-17): a Markdown report for the repo, plus Rerun and the project site for me.** Both read the same data file, and every test is visible, not just its verdict (see "Every test is visible" in decisions.md).
+**The report (2026-10-17): a Markdown report for the repo, plus Rerun and the project site for me.** They all read the same data file, and every test is visible, not just its verdict (see "Every test is visible" in decisions.md).
 - **The Markdown report** lives in `docs/reports/sizing/` and gets regenerated on every run:
   - a verdict table for every module combination against every target, with margins. Because of the ±15–20% uncertainty, each result gets one of three verdicts: *pass* (even with pessimistic data), *marginal* (passes only on the optimistic end), or *fail*. Spearmint for pass, magenta for fail, and the muted gray for marginal.
   - the mass budget, and which data source each part's numbers came from
