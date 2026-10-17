@@ -1,0 +1,17 @@
+# Made up for tests: a build made from the made-up test catalog.
+motor: testco-m2810-900kv
+prop: testco-p10x45
+esc: testco-e55-4in1
+frame: testco-x10
+pack:
+  cell: testco-c21700-45
+  series: 6
+  parallel: 2
+  overhead_g: 60
+  wiring_mohm: 3
+  note: Made up for tests
+base: [testco-fc, testco-rx, testco-lidar, testco-safety-monitor, testco-remote-id, testco-wiring]
+modules:
+  V: [testco-gps, testco-camera, testco-companion, testco-halow, testco-v-housing]
+  P: [testco-chute, testco-ejector]
+  C: [testco-claws]
