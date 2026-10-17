@@ -1,0 +1,14 @@
+# Researched 2026-10-17.
+type: frame
+id: iflight-chimera9-eco
+maker: iFlight
+model: Chimera9 ECO 9-inch frame
+link: https://shop.iflight.com/Chimera9-ECO-Frame-Kit-Pro2080
+price_usd: 99.99
+checked: 2026-10-17
+source: {kind: manufacturer, url: 'https://shop.iflight.com/Chimera9-ECO-Frame-Kit-Pro2080', checked: 2026-10-17, note: "377 g, 405 mm wheelbase, L360 x W235 x H34 mm, 6 mm arms, DeadCat. Max prop taken from its 9inch Long-Range description"}
+mass_g: 377
+max_prop_in: 9
+wheelbase_mm: 405
+drag_area_cm2: 113
+drag_source: {kind: estimate, checked: 2026-10-17, note: "Frontal area from the published size, times a drag coefficient of 1.0: body 34 x 100 mm, arms 6 x 235 mm, four motors about 35 x 25 mm, and a 6S2P 21700 pack end-on about 42 x 70 mm, about 0.0113 m2. The battery is counted here"}

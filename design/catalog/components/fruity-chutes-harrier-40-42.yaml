@@ -1,0 +1,13 @@
+# Researched 2026-10-17.
+type: component
+id: fruity-chutes-harrier-40-42
+maker: Fruity Chutes
+model: Harrier 40-42 parachute bundle
+price_usd: 507.81
+checked: 2026-10-17
+source: {kind: manufacturer, url: 'https://shop.fruitychutes.com/collections/harrier-launchers-1-27-kg-to-12-4-kg/products/harrier-40-42-drone-parachute-bundle-2-5kg-4-6m-s', checked: 2026-10-17, note: "Spring-ejected, servo-triggered. Rated 2.5 kg at 4.6 m/s, 5 kg max. The spec list says 154 g and the page intro says 128 g; 154 g is used. Quote only"}
+mass_g: 154
+power_w: 0.2
+power_source: {kind: estimate, checked: 2026-10-17, note: "A trigger servo holding position"}
+drag_area_cm2: 25
+drag_source: {kind: estimate, checked: 2026-10-17, note: "The 40 mm x 154 mm canister, mostly end-on, at a drag coefficient of 1.0 plus its mount"}

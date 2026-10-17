@@ -1,0 +1,15 @@
+# Researched 2026-10-17.
+type: esc
+id: holybro-tekko32-f4-50a
+maker: Holybro
+model: Tekko32 F4 4in1 50A (AM32)
+link: https://holybro.com/products/tekko32-f4-4in1-50a-esc
+price_usd: 62.99
+checked: 2026-10-17
+source: {kind: manufacturer, url: 'https://holybro.com/products/tekko32-f4-4in1-50a-esc', checked: 2026-10-17, note: "AM32 firmware; the AM32 README lists bidirectional DShot (https://github.com/am32-firmware/AM32), though Holybro's page doesn't say it"}
+mass_g: 13.8
+cells_min: 4
+cells_max: 6
+continuous_a_per_motor: 50
+burst_a_per_motor: 60
+bidirectional_dshot: true

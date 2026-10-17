@@ -1,0 +1,12 @@
+# Researched 2026-10-17.
+type: component
+id: benewake-tf-luna
+maker: Benewake
+model: TF-Luna lidar
+link: https://en.benewake.com/TFLuna/index.html
+price_usd: 24.9
+checked: 2026-10-17
+source: {kind: manufacturer, url: 'https://en.benewake.com/uploadfiles/2025/04/20250430174501874.pdf', checked: 2026-10-17, note: "Datasheet A05 gives under 5 g; 5 g is used. Range 0.2-8 m"}
+mass_g: 5
+power_w: 0.35
+power_source: {kind: manufacturer, url: 'https://en.benewake.com/TFLuna/index.html', checked: 2026-10-17, note: "0.35 W or less"}

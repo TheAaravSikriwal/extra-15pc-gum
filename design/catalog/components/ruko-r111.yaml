@@ -1,0 +1,9 @@
+# Researched 2026-10-17.
+type: component
+id: ruko-r111
+maker: Ruko
+model: R111 Remote ID broadcast module
+price_usd: 59.99
+checked: 2026-10-17
+source: {kind: manufacturer, url: 'https://ruko.net/blogs/ruko/introducing-ruko-r111-remote-id-module-enhancing-drone-safety-and-compliance', checked: 2026-10-17, note: "FAA-accepted broadcast module with its own battery (5 h or more), so it takes no power from the drone"}
+mass_g: 13.5

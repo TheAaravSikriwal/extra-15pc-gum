@@ -1,0 +1,12 @@
+# Researched 2026-10-17.
+type: component
+id: claws-placeholder
+maker: Various
+model: Claws and servos (placeholder)
+checked: 2026-10-17
+source: {kind: estimate, checked: 2026-10-17, note: "No claw design yet: the claws only happen with a unique claw on an actual arm. Two servos and a printed claw, about 150 g, as a placeholder so Max can still be checked"}
+mass_g: 150
+power_w: 2.0
+power_source: {kind: estimate, checked: 2026-10-17, note: "Two servos holding a grip"}
+drag_area_cm2: 40
+drag_source: {kind: estimate, checked: 2026-10-17, note: "A placeholder until there's a design"}

@@ -1,0 +1,8 @@
+# Researched 2026-10-17.
+type: component
+id: p-mount
+maker: Various
+model: Module P mount
+checked: 2026-10-17
+source: {kind: estimate, checked: 2026-10-17, note: "A printed mount for the parachute canister"}
+mass_g: 15

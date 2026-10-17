@@ -1,0 +1,11 @@
+# Researched 2026-10-17.
+type: component
+id: rpi-camera-module-3
+maker: Raspberry Pi
+model: Camera Module 3
+price_usd: 29.25
+checked: 2026-10-17
+source: {kind: manufacturer, url: 'https://github.com/raspberrypi/documentation/blob/master/documentation/asciidoc/accessories/camera/hardware_specification.adoc', checked: 2026-10-17}
+mass_g: 4
+power_w: 1.0
+power_source: {kind: estimate, checked: 2026-10-17, note: "Raspberry Pi publishes no draw for the Camera Module 3; around 1 W while streaming is assumed"}

@@ -1,0 +1,10 @@
+# Researched 2026-10-17.
+type: component
+id: safety-monitor-extras
+maker: Various
+model: Safety monitor IMU breakout and signal switch
+checked: 2026-10-17
+source: {kind: estimate, checked: 2026-10-17, note: "An ICM-42688-P breakout and a bus-switch breakout for the four ESC signal lines, about 2-3 g each. Gets real parts in the electrical step"}
+mass_g: 5
+power_w: 0.05
+power_source: {kind: estimate, checked: 2026-10-17, note: "An IMU and a bus switch draw a few milliamps"}

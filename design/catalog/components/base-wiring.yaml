@@ -1,0 +1,8 @@
+# Researched 2026-10-17.
+type: component
+id: base-wiring
+maker: Various
+model: Wiring, XT60 lead, battery strap and hardware
+checked: 2026-10-17
+source: {kind: estimate, checked: 2026-10-17, note: "Silicone power leads, an XT60 pigtail, signal wiring, a battery strap and screws. Worked out properly in the electrical step"}
+mass_g: 45

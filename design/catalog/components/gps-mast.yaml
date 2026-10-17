@@ -1,0 +1,10 @@
+# Researched 2026-10-17.
+type: component
+id: gps-mast
+maker: Various
+model: Folding GPS mast
+checked: 2026-10-17
+source: {kind: estimate, checked: 2026-10-17, note: "A carbon folding mast that keeps the compass away from the power wires"}
+mass_g: 10
+drag_area_cm2: 12
+drag_source: {kind: estimate, checked: 2026-10-17, note: "The GPS puck and mast, about 20 x 60 mm frontal, at a drag coefficient of 1.0"}

@@ -1,0 +1,11 @@
+# Researched 2026-10-17.
+type: component
+id: rpi-5-4gb
+maker: Raspberry Pi
+model: Raspberry Pi 5 (4 GB) companion computer
+price_usd: 110.0
+checked: 2026-10-17
+source: {kind: manufacturer, url: 'https://www.ldlc.com/en/product/PB00574323.html', checked: 2026-10-17, note: "Raspberry Pi publishes no mass; 46 g is a reseller figure. $110 list price from Raspberry Pi's product brief"}
+mass_g: 46
+power_w: 8.0
+power_source: {kind: independent_test, url: 'https://www.jeffgeerling.com/blog/2024/new-2gb-pi-5-has-33-smaller-die-30-idle-power-savings/', checked: 2026-10-17, note: "Jeff Geerling measured 3.3 W idle and 9.8 W under stress-ng on the 4 GB board. Software video encoding keeps the CPU busy, so 8 W is assumed"}

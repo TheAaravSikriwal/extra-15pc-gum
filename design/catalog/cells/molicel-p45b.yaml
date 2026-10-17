@@ -1,0 +1,44 @@
+# Researched 2026-10-17. Curve values were read off published charts; see each note.
+type: cell
+id: molicel-p45b
+maker: Molicel
+model: INR-21700-P45B
+link: https://www.molicel.com/product/inr-21700-p45b/
+price_usd: 7.49  # https://liionwholesale.com/products/molicel-npe-inr-21700-p45b-50a-4500mah-flat-top-21700-battery-authorized-distributor
+checked: 2026-10-17
+source: {kind: manufacturer, url: 'https://www.molicel.com/wp-content/uploads/INR21700P45B_1.4_Product-Data-Sheet-of-INR-21700-P45B-80109.pdf', checked: 2026-10-17, note: "Datasheet v1.4. Mass is the datasheet maximum; no measured mass found."}
+mass_g: 70
+capacity_mah: 4500
+max_continuous_a: 45
+min_voltage_v: 2.5
+max_voltage_v: 4.2
+internal_resistance_mohm: 15
+resistance_source: {kind: manufacturer, url: 'https://www.molicel.com/wp-content/uploads/INR21700P45B_1.4_Product-Data-Sheet-of-INR-21700-P45B-80109.pdf', checked: 2026-10-17, note: "DC at 50% charge, typical (the sheet gives no pulse conditions). Mooch measured 9.3 mOhm DC, but at full charge, where resistance is lowest (https://budgetlightforum.com/t/bench-test-results-molicel-p45b-50a-4500mah-21700/70213)."}
+ocv_source: {kind: manufacturer, url: 'https://www.molicel.com/wp-content/uploads/INR21700P45B_1.4_Product-Data-Sheet-of-INR-21700-P45B-80109.pdf', checked: 2026-10-17, note: "The datasheet's 0.2C (about 0.9 A) discharge to 2.5 V, read off the chart, used as the resting curve. No independent low-current curve was found. The chart's curve reaches about 4630 mAh; the rated 4500 mAh is used as the capacity to stay conservative."}
+ocv_curve:
+  - {soc: 0.0, voltage_v: 2.50}
+  - {soc: 0.1, voltage_v: 3.11}
+  - {soc: 0.2, voltage_v: 3.35}
+  - {soc: 0.3, voltage_v: 3.49}
+  - {soc: 0.4, voltage_v: 3.60}
+  - {soc: 0.5, voltage_v: 3.70}
+  - {soc: 0.6, voltage_v: 3.80}
+  - {soc: 0.7, voltage_v: 3.88}
+  - {soc: 0.8, voltage_v: 4.00}
+  - {soc: 0.9, voltage_v: 4.06}
+  - {soc: 1.0, voltage_v: 4.16}
+discharge_tests:
+  - current_a: 10
+    source: {kind: independent_test, url: 'https://i.imgur.com/5TmcfPp.jpg', checked: 2026-10-17, note: "Mooch's 10 A discharge (cell 1, tested 2022-01-29), read off his chart, which ends at 2.8 V"}
+    points:
+      - {capacity_mah: 0, voltage_v: 4.03}
+      - {capacity_mah: 420, voltage_v: 3.90}
+      - {capacity_mah: 840, voltage_v: 3.83}
+      - {capacity_mah: 1260, voltage_v: 3.73}
+      - {capacity_mah: 1680, voltage_v: 3.64}
+      - {capacity_mah: 2100, voltage_v: 3.56}
+      - {capacity_mah: 2520, voltage_v: 3.47}
+      - {capacity_mah: 2940, voltage_v: 3.39}
+      - {capacity_mah: 3360, voltage_v: 3.30}
+      - {capacity_mah: 3780, voltage_v: 3.12}
+      - {capacity_mah: 4200, voltage_v: 2.80}

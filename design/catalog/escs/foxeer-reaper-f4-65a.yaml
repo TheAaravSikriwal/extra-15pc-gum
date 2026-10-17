@@ -1,0 +1,15 @@
+# Researched 2026-10-17.
+type: esc
+id: foxeer-reaper-f4-65a
+maker: Foxeer
+model: Reaper F4 128K 65A BL32 4in1
+link: https://pyrodrone.com/products/foxeer-reaper-f4-128k-32bit-65a-3-8s-4in1-esc-30x30mm
+price_usd: 108.99
+checked: 2026-10-17
+source: {kind: manufacturer, url: 'https://pyrodrone.com/products/foxeer-reaper-f4-128k-32bit-65a-3-8s-4in1-esc-30x30mm', checked: 2026-10-17, note: "Foxeer's specs as listed by a reseller (out of stock on 2026-10-17). BLHeli_32 supports bidirectional DShot, but the page doesn't say it"}
+mass_g: 14.8
+cells_min: 3
+cells_max: 8
+continuous_a_per_motor: 65
+burst_a_per_motor: 100
+bidirectional_dshot: true

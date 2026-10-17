@@ -1,0 +1,44 @@
+# Researched 2026-10-17. Curve values were read off published charts; see each note.
+type: cell
+id: molicel-p42a
+maker: Molicel
+model: INR-21700-P42A
+link: https://www.molicel.com/product/inr-21700-p42a/
+price_usd: 5.99  # https://www.imrbatteries.com/products/molicel-p42a-21700-4200mah-45a-battery
+checked: 2026-10-17
+source: {kind: manufacturer, url: 'https://www.molicel.com/wp-content/uploads/INR21700P42A_1.7_Product-Data-Sheet-of-INR-21700-P42A-80092.pdf', checked: 2026-10-17, note: "Datasheet v1.7 for ratings. Mass is HKJ's measured 66.5 g (datasheet max 70 g), from https://lygte-info.dk/review/batteries2012/Molicel%20INR21700-P42A%204200mAh%20(Gray)%20UK.html"}
+mass_g: 66.5
+capacity_mah: 4031
+max_continuous_a: 45
+min_voltage_v: 2.8
+max_voltage_v: 4.2
+internal_resistance_mohm: 16
+resistance_source: {kind: manufacturer, url: 'https://www.molicel.com/wp-content/uploads/INR21700P42A_1.7_Product-Data-Sheet-of-INR-21700-P42A-80092.pdf', checked: 2026-10-17, note: "DC, 10 A for 1 s, typical. Independent: Mooch measured 17.9 mOhm DC (https://forum.esk8.news/t/the-battery-builders-club/720/21325) and HKJ calculated 0.02 ohm including his holder."}
+ocv_source: {kind: independent_test, url: 'https://lygte-info.dk/review/batteries2012/Molicel%20INR21700-P42A%204200mAh%20(Gray)%20UK.html', checked: 2026-10-17, note: "HKJ's 0.2 A discharge (cells A and B), read off his chart, used as the resting curve (at 0.2 A the sag is about 4 mV). It runs to 2.8 V, where he measured 4.031 Ah, so that's the capacity and minimum voltage here (the datasheet rates 4200 mAh to 2.5 V)."}
+ocv_curve:
+  - {soc: 0.0, voltage_v: 2.80}
+  - {soc: 0.1, voltage_v: 3.29}
+  - {soc: 0.2, voltage_v: 3.45}
+  - {soc: 0.3, voltage_v: 3.56}
+  - {soc: 0.4, voltage_v: 3.64}
+  - {soc: 0.5, voltage_v: 3.72}
+  - {soc: 0.6, voltage_v: 3.81}
+  - {soc: 0.7, voltage_v: 3.90}
+  - {soc: 0.8, voltage_v: 4.01}
+  - {soc: 0.9, voltage_v: 4.06}
+  - {soc: 1.0, voltage_v: 4.15}
+discharge_tests:
+  - current_a: 10
+    source: {kind: independent_test, url: 'https://lygte-info.dk/pic/Batteries2012/Molicel%20INR21700-P42A%204200mAh%20(Gray)/Molicel%20INR21700-P42A%204200mAh%20(Gray)-Capacity.png', checked: 2026-10-17, note: "HKJ's 10 A discharge to 2.8 V, read off the chart"}
+    points:
+      - {capacity_mah: 0, voltage_v: 3.99}
+      - {capacity_mah: 389, voltage_v: 3.88}
+      - {capacity_mah: 778, voltage_v: 3.83}
+      - {capacity_mah: 1167, voltage_v: 3.73}
+      - {capacity_mah: 1556, voltage_v: 3.66}
+      - {capacity_mah: 1945, voltage_v: 3.57}
+      - {capacity_mah: 2334, voltage_v: 3.48}
+      - {capacity_mah: 2723, voltage_v: 3.41}
+      - {capacity_mah: 3112, voltage_v: 3.33}
+      - {capacity_mah: 3501, voltage_v: 3.21}
+      - {capacity_mah: 3890, voltage_v: 2.80}

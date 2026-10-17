@@ -1,0 +1,11 @@
+# Researched 2026-10-17.
+type: component
+id: heltec-ht-hc01p
+maker: Heltec
+model: HT-HC01P Wi-Fi HaLow card with Pi HAT
+price_usd: 18.8
+checked: 2026-10-17
+source: {kind: estimate, url: 'https://heltec.org/project/ht-hc01p/', checked: 2026-10-17, note: "Heltec's 35 g figure sits next to shipping dimensions, so 15 g is assumed for the mini-PCIe card, HAT and antenna. Card $12.90, HAT $5.90"}
+mass_g: 15
+power_w: 0.7
+power_source: {kind: manufacturer, url: 'https://resource.heltec.cn/download/HT-HC01P/Datasheet/HT-HC01P.pdf', checked: 2026-10-17, note: "Transmitting at 21 dBm: 57 mA plus 152 mA at 3.3 V, about 0.69 W"}

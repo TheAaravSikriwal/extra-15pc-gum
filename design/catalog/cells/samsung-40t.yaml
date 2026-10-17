@@ -1,0 +1,44 @@
+# Researched 2026-10-17. Curve values were read off published charts; see each note.
+type: cell
+id: samsung-40t
+maker: Samsung SDI
+model: INR21700-40T
+link: https://www.18650batterystore.com/products/samsung-40t
+price_usd: 5.99  # https://www.18650batterystore.com/products/samsung-40t
+checked: 2026-10-17
+source: {kind: manufacturer, url: 'https://piekarz.pl/pdf/50840', checked: 2026-10-17, note: "Samsung's spec (Dec 2017) for ratings: 35 A continuous without a temperature cutoff. Mass is HKJ's measured 67.0 g. The store now sells the 40T5 revision."}
+mass_g: 67.0
+capacity_mah: 3896
+max_continuous_a: 35
+min_voltage_v: 2.8
+max_voltage_v: 4.2
+internal_resistance_mohm: 12.9
+resistance_source: {kind: independent_test, url: 'https://forum.esk8.news/t/mooch-s-bench-test-results-samsung-40t3-35a-4000mah-21700-latest-version-of-the-40t/50985', checked: 2026-10-17, note: "Mooch's DC measurement, average of 2 cells, for the 40T3 revision. Samsung's spec gives no DC figure (12 mOhm AC maximum)."}
+ocv_source: {kind: independent_test, url: 'https://lygte-info.dk/review/batteries2012/Samsung%20INR21700-40T%204000mAh%20(Cyan)%20UK.html', checked: 2026-10-17, note: "HKJ's 0.2 A discharge to 2.8 V, read off his chart, used as the resting curve. He measured 3.896 Ah, used as the capacity."}
+ocv_curve:
+  - {soc: 0.0, voltage_v: 2.80}
+  - {soc: 0.1, voltage_v: 3.18}
+  - {soc: 0.2, voltage_v: 3.38}
+  - {soc: 0.3, voltage_v: 3.51}
+  - {soc: 0.4, voltage_v: 3.63}
+  - {soc: 0.5, voltage_v: 3.72}
+  - {soc: 0.6, voltage_v: 3.80}
+  - {soc: 0.7, voltage_v: 3.90}
+  - {soc: 0.8, voltage_v: 4.00}
+  - {soc: 0.9, voltage_v: 4.06}
+  - {soc: 1.0, voltage_v: 4.15}
+discharge_tests:
+  - current_a: 10
+    source: {kind: independent_test, url: 'https://lygte-info.dk/pic/Batteries2012/Samsung%20INR21700-40T%204000mAh%20(Cyan)/Samsung%20INR21700-40T%204000mAh%20(Cyan)-Capacity.png', checked: 2026-10-17, note: "HKJ's 10 A discharge to 2.8 V, read off the chart (cell B)"}
+    points:
+      - {capacity_mah: 0, voltage_v: 4.03}
+      - {capacity_mah: 372, voltage_v: 3.89}
+      - {capacity_mah: 744, voltage_v: 3.83}
+      - {capacity_mah: 1116, voltage_v: 3.73}
+      - {capacity_mah: 1488, voltage_v: 3.66}
+      - {capacity_mah: 1860, voltage_v: 3.57}
+      - {capacity_mah: 2232, voltage_v: 3.49}
+      - {capacity_mah: 2604, voltage_v: 3.41}
+      - {capacity_mah: 2976, voltage_v: 3.30}
+      - {capacity_mah: 3348, voltage_v: 3.12}
+      - {capacity_mah: 3720, voltage_v: 2.80}

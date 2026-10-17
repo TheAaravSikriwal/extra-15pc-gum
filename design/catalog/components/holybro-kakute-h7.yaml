@@ -1,0 +1,12 @@
+# Researched 2026-10-17.
+type: component
+id: holybro-kakute-h7
+maker: Holybro
+model: Kakute H7 V1.5 flight controller
+link: https://holybro.com/products/kakute-h7
+price_usd: 85.0
+checked: 2026-10-17
+source: {kind: manufacturer, url: 'https://docs.px4.io/main/en/flight_controller/kakuteh7.html', checked: 2026-10-17, note: "STM32H743, PX4 manufacturer-supported (holybro_kakuteh7_default), SWD on test points 2 and 3. Mass from PX4's page and Holybro's"}
+mass_g: 8
+power_w: 1.0
+power_source: {kind: estimate, checked: 2026-10-17, note: "No published figure. H7 flight controllers with an IMU, baro and OSD draw roughly 0.2 A at 5 V"}

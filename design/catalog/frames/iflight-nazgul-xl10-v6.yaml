@@ -1,0 +1,14 @@
+# Researched 2026-10-17.
+type: frame
+id: iflight-nazgul-xl10-v6
+maker: iFlight
+model: Nazgul XL10 V6 10-inch frame
+link: https://shop.iflight.com/xl10-v6-10-inch-fpv-frame-Pro1967
+price_usd: 115.99
+checked: 2026-10-17
+source: {kind: manufacturer, url: 'https://shop.iflight.com/xl10-v6-10-inch-fpv-frame-Pro1967', checked: 2026-10-17, note: "343 +/- 5 g, 420 mm wheelbase, L297 x W297 x H35 mm, 7 mm arms. Max prop from ReadyMadeRC's listing (Maximum 10 inches)"}
+mass_g: 343
+max_prop_in: 10
+wheelbase_mm: 420
+drag_area_cm2: 120
+drag_source: {kind: estimate, checked: 2026-10-17, note: "Frontal area from the published size, times a drag coefficient of 1.0 for a blunt body: body 35 x 100 mm, arms 7 x 297 mm, four motors about 35 x 25 mm, and a 6S2P 21700 pack end-on about 42 x 70 mm, about 0.012 m2 in all. The battery is counted here. Replaced when the wind tunnel side track has real numbers"}

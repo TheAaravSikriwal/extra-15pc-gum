@@ -1,0 +1,10 @@
+# Researched 2026-10-17.
+type: component
+id: matek-bec12s-pro
+maker: Matek
+model: BEC12S-PRO 5 V 5 A supply for the Pi
+checked: 2026-10-17
+source: {kind: manufacturer, url: 'https://www.mateksys.com/?portfolio=bec12s-pro', checked: 2026-10-17, note: "9-55 V in, 5.2 V out, 5 A continuous, 88-96% efficient"}
+mass_g: 5
+power_w: 1.0
+power_source: {kind: estimate, checked: 2026-10-17, note: "Losses at about 10 W out and about 90% efficiency"}
