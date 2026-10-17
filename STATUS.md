@@ -1,7 +1,7 @@
 # Status
 
 **Last updated:** 2026-10-17, on the PC's Windows side
-**Step:** 1 (sizing and parts). 1a is done; 1b (the implementation plan) is next.
+**Step:** 1c, building the sizing model ([the plan](docs/plans/2026-10-17-sizing-model.md), task 1 of 15)
 **Main machine:** the PC, with WSL2 Ubuntu 24.04 for the Linux tools
 
 ## Right now
@@ -26,11 +26,10 @@ Where to look:
 ## Up next
 
 1. **Set up WSL2 on the PC** with [docs/setup-pc.md](docs/setup-pc.md). The `wsl --install` step needs an admin PowerShell and one reboot. Then commit `docs/machines/pc.md`.
-2. **Step 1b: write the implementation plan** for the sizing model, and get my OK on it. It doesn't need WSL: it's plain Python, and CI checks it on Linux.
-3. **Step 1c: build it**, test-first. Its first job is the mass budget for every setup.
-4. **Step 1d: research and add the real parts**, run the sweep, and pick the parts and the final growth margin, with uncertainty bands.
-5. **The project site's spec** (what it's built with), so its first pages can come with the sizing model.
-6. **Write the first half of `scripts/setup-ubuntu.sh`** (inside WSL2): Gazebo, PX4 and the Python tools, with pinned versions.
+2. **Step 1c: build the sizing model**, test-first, following [the plan](docs/plans/2026-10-17-sizing-model.md) (OK'd 2026-10-17). It doesn't need WSL: it's plain Python, and CI checks it on Linux. From task 10 on, every test flight plays in Rerun.
+3. **Step 1d: research and add the real parts**, run the sweep, and pick the parts and the final growth margin, with uncertainty bands.
+4. **The project site's spec** (what it's built with), so its first pages can come with the sizing model.
+5. **Write the first half of `scripts/setup-ubuntu.sh`** (inside WSL2): Gazebo, PX4 and the Python tools, with pinned versions.
 
 ## Still open
 

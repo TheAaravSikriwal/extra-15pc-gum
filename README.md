@@ -47,8 +47,8 @@ This is the live version. When a step finishes, its outcome goes here, with a li
 | Part | What happens | Status | Outcome |
 |---|---|---|---|
 | 1a. Talk | Settle the power and battery math, the sag model, the parts catalog and the report | Done, 2026-10-17 | Eight questions settled, from the power model to which setup sizes the drone ([log](docs/log/2026-10-17-sizing-model-talk.md), [spec](docs/specs/2026-10-13-phase-1-simulation.md#settled-in-the-sizing-model-talk)) |
-| 1b. Plan | Update the spec, then write the implementation plan | Up next | |
-| 1c. Build | Test-first, in Python. The first answer: does the fully loaded drone fit under 2.5 kg? | Not started | |
+| 1b. Plan | Update the spec, then write the implementation plan | Done, 2026-10-17 | 15 test-first tasks, with every flight streaming into Rerun from task 10 on ([plan](docs/plans/2026-10-17-sizing-model.md)) |
+| 1c. Build | Test-first, in Python. The first answer: the mass budget for every setup | In progress, task 1 of 15 | |
 | 1d. Pick the parts | Research and add the real parts, run the sweep, choose the parts and the growth margin, with uncertainty bands | Not started | |
 | Thrust stand | One motor and prop on a load cell, to replace the manufacturer's numbers | Optional | |
 
@@ -98,6 +98,7 @@ Each layer has to stay safe if the one above it dies.
 - [docs/learning.md](docs/learning.md): everything I'm learning along the way, with the resources I'm using
 - [docs/style.md](docs/style.md): how everything is supposed to look
 - [docs/specs/](docs/specs/): detailed designs, written before the work starts
+- [docs/plans/](docs/plans/): implementation plans, one per build step, task by task
 - [docs/setup-pc.md](docs/setup-pc.md) and [docs/machines/](docs/machines/): setting up a machine, and what each one has
 - [docs/log/](docs/log/): the build log, roughly one entry per session
 
