@@ -306,7 +306,7 @@ What this doesn't touch: the engineering safety rules. My transmitter and kill s
 
 ### Modular design (locked 2026-10-13)
 
-The frame, motors, ESC and battery are sized for the heaviest setup, but the drone flies bare first. Modules go on and off depending on what I'm doing that day.
+The frame, motors, ESC and battery are sized for Mission plus a growth margin (decided 2026-10-17, see the targets below), but the drone flies bare first. Modules go on and off depending on what I'm doing that day.
 
 Base is always on: frame, motors, ESC, battery, flight controller, receiver, rangefinder, the safety monitor, and a mount and plug for a Remote ID module. It flies by itself.
 
@@ -338,6 +338,8 @@ For every setup:
 - It lands with at least 20% of the battery left, counted in mAh.
 - Cruise means 10 m/s for now. The sizing model works out which speed actually uses the least power, and that replaces 10 m/s if it's very different.
 
+**Mission sizes the drone, not Max (decided 2026-10-17).** The claws only happen if a unique claw on an arm comes along, and sizing for Max meant every flight carried motors big enough for claws plus a payload. So the motors and battery get sized for Mission plus a growth margin, starting at 200 g, which leaves room for a light add-on like the Meshtastic relay or a solar panel. Max still gets checked and reported, but it doesn't have to pass. The report shows what each extra 100 g of margin costs in minutes of flight, and the final margin gets picked in step 1d with those numbers in front of me.
+
 What changed on 2026-10-14, and why:
 - **Hover times got added.** Base has no GPS, so on a real build its cruise time can't be measured until V is fitted, but hover time can be measured on the first flights. The sim checks both. A quad uses a bit less power at a gentle cruise than in a hover, because moving forward keeps feeding the props fresh air, so the hover targets sit about 15% under the cruise ones. The sizing model checks that ratio.
 - **One thrust-to-weight rule replaced 4:1 for Base and 3:1 for Max.** The old ones didn't say when they're measured, and Base's 4:1 never limited anything, because the motors are sized for Max. Motor test data is usually measured on a bench supply at full 6S voltage, and full-throttle thrust drops roughly with the square of the voltage. A rough estimate says a Li-ion pack at 20%, under full load, leaves each motor with about 55–60% of its datasheet thrust. So 2:1 at the reserve works out to about 3.5:1 on the datasheet. The sizing model reports both.
@@ -364,7 +366,7 @@ Rough numbers until the sizing model and the CAD replace them.
 | C, plus the 250 g it's holding | 350–450 g |
 | **Max** | **about 2.15–2.8 kg** |
 
-Max only makes 2.5 kg if most parts land at the light end. Checking that is the sizing model's first job. If it doesn't fit, the options are raising the cap (it's my own target, not a law) or a lighter payload.
+Max only makes 2.5 kg if most parts land at the light end. Since Mission sizes the drone now (see above), that's a check, not a requirement. If the claws ever happen and Max doesn't fit, the options are raising the cap (it's my own target, not a law), a lighter payload, or bigger motors.
 
 ### Roadmap
 
@@ -520,7 +522,7 @@ Everything that came up while brainstorming, so nothing gets lost.
 - Which H743 board. It needs PX4 support for the baseline flight, and SWD pads.
 - How many clean shadow-mode flights a real build would need before the safety monitor's automatic triggers go live
 - Whether to get Part 107 (in the build package's legal checklist)
-- Whether Max (with C) should still size the motors while the claws are uncertain, or Mission plus a margin (bring up in the sizing model discussion)
+- The final growth margin (picked in step 1d, from the minutes-per-100 g chart)
 - Data/video link to the laptop: HaLow is the lead option, confirmed in step 6 (the control link is decided: 2.4 GHz ExpressLRS)
 - Where the Meshtastic relay (#30) lives: in V, in Base, or as its own little module
 - Exactly what goes in the `us-recreational` limits profile, checked against the current FAA and FCC rules for the build package

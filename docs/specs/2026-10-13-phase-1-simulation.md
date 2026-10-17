@@ -77,11 +77,9 @@ Drag starts as a guess from frontal area. The aero layer replaces it with real C
 
 Manufacturer thrust data is usually optimistic, so I'm treating flight times as ±15–20% until the thrust stand (below) gives me real measurements. If I do the optional thrust stand, that happens in step 1.
 
-### To settle before building it
+### The sizing model talk
 
-These are what the sizing model discussion is for. Once one is settled, it moves to the next section.
-
-- whether Max (with the claws) should still size the motors while the claws are uncertain, or Mission plus a margin
+Everything got settled in the sizing model talk on 2026-10-17 (step 1a). The answers are below, and step 1b folds them into an implementation plan.
 
 ### Settled in the sizing model talk
 
@@ -135,6 +133,8 @@ The exact part numbers get researched and filled in during step 1c, and the list
 - The top-level folders (`aero/`, `sim/` and the rest) keep the non-Python files, like OpenFOAM cases and Gazebo worlds.
 - In the code it's spelled `pcs14`, because Python names can't start with a number (`from pcs14.sizing import battery`).
 - **Why this one:** every piece gets tested once and reused everywhere. Separate scripts per layer would copy the catalog loader and battery model into every layer, and notebooks are hard to test and rerun. Notebooks can still be a learning companion that reads from the package.
+
+**Which setup sizes the drone (2026-10-17): Mission, plus a growth margin.** The motors and battery get the lightest choice that passes every required target for Mission carrying an extra 200 g to start, which leaves room for a light add-on like the Meshtastic relay or a solar panel. Max is still checked and reported, but it doesn't have to pass while the claws are uncertain. The report includes a margin chart, showing what each extra 100 g costs in minutes of flight for every setup, and the final margin gets picked in step 1d. **Why this one:** sizing for Max meant every flight paid for claws that might never exist, and no margin at all would mean nothing heavier could ever be added without new motors.
 
 ## The thrust stand (optional)
 

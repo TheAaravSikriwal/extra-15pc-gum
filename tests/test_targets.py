@@ -52,3 +52,14 @@ def test_cruise_speed_is_positive():
 
 def test_reserve_is_a_fraction():
     assert 0 < load()["reserve_battery_fraction"] < 1
+
+
+def test_sizing_case_is_a_required_setup():
+    targets = load()
+    case = targets["sizing_case"]
+    assert case in targets["setups"]
+    assert targets["setups"][case].get("required", True) is True
+
+
+def test_growth_margin_is_not_negative():
+    assert load()["growth_margin_g"] >= 0

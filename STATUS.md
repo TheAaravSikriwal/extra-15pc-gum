@@ -1,7 +1,7 @@
 # Status
 
 **Last updated:** 2026-10-17, on the PC's Windows side
-**Step:** setup, then step 1 (sizing and parts)
+**Step:** 1 (sizing and parts). 1a is done; 1b (the implementation plan) is next.
 **Main machine:** the PC, with WSL2 Ubuntu 24.04 for the Linux tools
 
 ## Right now
@@ -17,24 +17,26 @@ Where to look:
 
 **The PC runs the Linux tools in WSL2 now** (decided 2026-10-17), so there's no rebooting into the Ubuntu side, and it matches the laptop. The native Ubuntu side is a fallback. WSL isn't installed on the PC yet; [docs/setup-pc.md](docs/setup-pc.md) walks through it.
 
-**Nothing has been built yet.** The repo has its folders, Python tooling, CI and two small test files (12 tests), and they pass on GitHub. The clean starting point is tagged `phase-1-start`.
+**Step 1a is done (2026-10-17).** The sizing model talk settled eight questions, all in the spec under "Settled in the sizing model talk": the power model, the battery model, the catalog format, which parts go in first, the outputs (a Markdown report, Rerun replays of every test, and the project site), the code as one package called 14 pcs left (`pcs14` in the code), and Mission plus a 200 g growth margin as the setup that sizes the drone. The [log](docs/log/2026-10-17-sizing-model-talk.md) has the story.
+
+**Nothing has been built yet.** The repo has its folders, Python tooling, CI and two small test files (14 tests), and they pass on GitHub. The clean starting point is tagged `phase-1-start`.
 
 **Offline?** Study from [docs/learning.md](docs/learning.md). Topics 1 and 2 (how quads fly; props, motors and batteries) are what the sizing model needs.
 
 ## Up next
 
 1. **Set up WSL2 on the PC** with [docs/setup-pc.md](docs/setup-pc.md). The `wsl --install` step needs an admin PowerShell and one reboot. Then commit `docs/machines/pc.md`.
-2. **Step 1a: talk through the sizing model.** Started 2026-10-17, and it doesn't need WSL. Settled so far: hover and cruise power (the least-power speed falls out of it), the battery model with sag, the catalog format, which parts go in first, the outputs (a Markdown report, Rerun replays of every test, and the project site), and the code as one package called 14 pcs left (`pcs14` in the code), in the spec under "Settled in the sizing model talk". Still to settle:
-   - whether Max (with the claws) should still size the motors while the claws are uncertain
-3. **Step 1b: update the spec** with the answers, then **write the implementation plan** for the sizing model.
-4. **Step 1c: build it**, test-first. Its first job is the mass budget: does Max fit under 2.5 kg?
-5. **Step 1d: pick the parts** from the sweep, with uncertainty bands.
+2. **Step 1b: write the implementation plan** for the sizing model, and get my OK on it. It doesn't need WSL: it's plain Python, and CI checks it on Linux.
+3. **Step 1c: build it**, test-first. Its first job is the mass budget for every setup.
+4. **Step 1d: research and add the real parts**, run the sweep, and pick the parts and the final growth margin, with uncertainty bands.
+5. **The project site's spec** (what it's built with), so its first pages can come with the sizing model.
 6. **Write the first half of `scripts/setup-ubuntu.sh`** (inside WSL2): Gazebo, PX4 and the Python tools, with pinned versions.
 
 ## Still open
 
 - Prop size, cell type, and 6S2P vs 6S3P. The sizing model gets to decide.
 - Cruise speed: 10 m/s until the sizing model says otherwise
+- The final growth margin (step 1d)
 - How modules talk to the flight controller: plain serial or DroneCAN (step 3)
 - Which H743 flight controller board. It has to be one PX4 supports, with SWD pads.
 - Which OpenFOAM: the Foundation release or ESI's. Decided when writing the CFD half of the setup script.

@@ -1,9 +1,12 @@
-# What every setup has to hit. Revised 2026-10-14 (see docs/decisions.md).
+# What every setup has to hit. Revised 2026-10-17 (see docs/decisions.md).
 # The sim checks all 8 module combinations. Base and Max are the extremes,
 # and every combination in between has to land between them.
 
 reserve_battery_fraction: 0.20 # land with at least 20% left, counted in mAh used
 cruise_speed_ms: 10            # for now; the sizing model's least-power speed replaces it
+
+sizing_case: mission # the setup the motors get sized for, carrying the growth margin
+growth_margin_g: 200 # room for a light add-on; the final number gets picked in step 1d
 
 every_setup:
   min_thrust_to_weight: 2.0           # at the 20% reserve, full throttle, under load
@@ -24,7 +27,8 @@ setups:
 
   max:
     modules: [V, P, C]
-    payload_g: 250 # whatever the claws are holding
+    required: false # checked and reported, but it doesn't have to pass while the claws are uncertain
+    payload_g: 250  # whatever the claws are holding
     min_cruise_time_min: 20
     min_hover_time_min: 17
     max_takeoff_weight_g: 2500

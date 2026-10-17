@@ -26,7 +26,7 @@ This is the live version. When a step finishes, its outcome goes here, with a li
 |---|---|---|---|
 | 0. Planning | Figure out what I'm designing | Done, 2026-10-17 | Decisions, targets and roadmap written, reviewed and revised ([log](docs/log/2026-10-14-plan-revision.md)), then turned into a research plan ([log](docs/log/2026-10-17-research-project.md)) |
 | Setup | WSL2 on the PC, with all checks passing | Up next | |
-| 1. Sizing and parts | Real, orderable parts that hit the targets | Up next | |
+| 1. Sizing and parts | Real, orderable parts that hit the targets | In progress | |
 | 2. The virtual drone (CAD) | Every part modeled and connected | Not started | |
 | 3. Electrical design | Every wire, pin and connector | Not started | |
 | 4. Flight sim (PX4) | Prove the airframe flies, in all eight module combinations | Not started | |
@@ -46,10 +46,10 @@ This is the live version. When a step finishes, its outcome goes here, with a li
 
 | Part | What happens | Status | Outcome |
 |---|---|---|---|
-| 1a. Talk | Settle the power and battery math, the sag model, the parts catalog and the report | In progress | Settled so far: real thrust tables for hover, a fitted forward-flight model for cruise, a battery model with sag, the parts catalog format, a data-first rule for which parts go in, the outputs: a Markdown report, live Rerun replays of every test, and the project site, and the code as one package called 14 pcs left, `pcs14` in the code ([spec](docs/specs/2026-10-13-phase-1-simulation.md#settled-in-the-sizing-model-talk)) |
-| 1b. Plan | Update the spec, then write the implementation plan | Not started | |
+| 1a. Talk | Settle the power and battery math, the sag model, the parts catalog and the report | Done, 2026-10-17 | Eight questions settled, from the power model to which setup sizes the drone ([log](docs/log/2026-10-17-sizing-model-talk.md), [spec](docs/specs/2026-10-13-phase-1-simulation.md#settled-in-the-sizing-model-talk)) |
+| 1b. Plan | Update the spec, then write the implementation plan | Up next | |
 | 1c. Build | Test-first, in Python. The first answer: does the fully loaded drone fit under 2.5 kg? | Not started | |
-| 1d. Pick the parts | Run the sweep and choose real parts, with uncertainty bands | Not started | |
+| 1d. Pick the parts | Research and add the real parts, run the sweep, choose the parts and the growth margin, with uncertainty bands | Not started | |
 | Thrust stand | One motor and prop on a load cell, to replace the manufacturer's numbers | Optional | |
 
 ## Modules
