@@ -1,0 +1,7 @@
+# Made up for tests. Not a real part, and its numbers never reach a real report.
+type: component
+id: testco-wiring
+maker: Testco
+model: wiring and connectors
+source: {kind: made_up, note: Invented for the pcs14 tests}
+mass_g: 45

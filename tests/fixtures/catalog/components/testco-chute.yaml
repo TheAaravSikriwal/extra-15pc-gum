@@ -1,0 +1,9 @@
+# Made up for tests. Not a real part, and its numbers never reach a real report.
+type: component
+id: testco-chute
+maker: Testco
+model: parachute
+source: {kind: made_up, note: Invented for the pcs14 tests}
+mass_g: 120
+drag_area_cm2: 40
+drag_source: {kind: made_up, note: Invented for the pcs14 tests}

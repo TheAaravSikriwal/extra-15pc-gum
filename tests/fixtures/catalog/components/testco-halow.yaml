@@ -1,0 +1,9 @@
+# Made up for tests. Not a real part, and its numbers never reach a real report.
+type: component
+id: testco-halow
+maker: Testco
+model: HaLow radio
+source: {kind: made_up, note: Invented for the pcs14 tests}
+mass_g: 15
+power_w: 2.0
+power_source: {kind: made_up, note: Invented for the pcs14 tests}

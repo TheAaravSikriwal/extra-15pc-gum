@@ -1,0 +1,12 @@
+# Made up for tests. Not a real part, and its numbers never reach a real report.
+type: esc
+id: testco-e55-4in1
+maker: Testco
+model: E55 4-in-1
+source: {kind: made_up, note: Invented for the pcs14 tests}
+mass_g: 25
+cells_min: 3
+cells_max: 6
+continuous_a_per_motor: 55
+burst_a_per_motor: 65
+bidirectional_dshot: true

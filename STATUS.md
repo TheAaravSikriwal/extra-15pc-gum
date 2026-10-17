@@ -1,7 +1,7 @@
 # Status
 
 **Last updated:** 2026-10-17, on the PC's Windows side
-**Step:** 1c, building the sizing model ([the plan](docs/plans/2026-10-17-sizing-model.md)): task 2 of 15 done, the unit conversions; next is task 3, the catalog format and loader
+**Step:** 1c, building the sizing model ([the plan](docs/plans/2026-10-17-sizing-model.md)): task 3 of 15 done, the catalog format and loader; next is task 4, the targets and build file
 **Main machine:** the PC, with WSL2 Ubuntu 24.04 for the Linux tools
 
 ## Right now

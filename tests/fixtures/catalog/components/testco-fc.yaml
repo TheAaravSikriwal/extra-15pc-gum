@@ -1,0 +1,9 @@
+# Made up for tests. Not a real part, and its numbers never reach a real report.
+type: component
+id: testco-fc
+maker: Testco
+model: H743 flight controller
+source: {kind: made_up, note: Invented for the pcs14 tests}
+mass_g: 12
+power_w: 1.0
+power_source: {kind: made_up, note: Invented for the pcs14 tests}

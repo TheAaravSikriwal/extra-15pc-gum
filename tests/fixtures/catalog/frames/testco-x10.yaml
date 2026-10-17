@@ -1,0 +1,11 @@
+# Made up for tests. Not a real part, and its numbers never reach a real report.
+type: frame
+id: testco-x10
+maker: Testco
+model: X10
+source: {kind: made_up, note: Invented for the pcs14 tests}
+mass_g: 300
+max_prop_in: 10
+wheelbase_mm: 450
+drag_area_cm2: 150
+drag_source: {kind: made_up, note: Invented frontal drag area for the pcs14 tests}

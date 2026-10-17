@@ -8,7 +8,10 @@ version = "0.1.0"
 description = "14 pcs left: the design and simulation tools for the Extra 15pc Gum drone"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "pydantic==2.13.5",
+    "pyyaml==6.0.3",
+]
 
 [project.scripts]
 pcs14 = "pcs14.cli:main"

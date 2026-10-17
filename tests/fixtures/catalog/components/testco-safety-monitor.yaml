@@ -1,0 +1,9 @@
+# Made up for tests. Not a real part, and its numbers never reach a real report.
+type: component
+id: testco-safety-monitor
+maker: Testco
+model: safety monitor
+source: {kind: made_up, note: Invented for the pcs14 tests}
+mass_g: 20
+power_w: 0.7
+power_source: {kind: made_up, note: Invented for the pcs14 tests}

@@ -40,7 +40,7 @@ Layers 1 and 2 take seconds, so they run constantly. Layer 4 takes minutes, so i
 
 One place describes the whole drone, and everything else reads from it.
 
-- **`catalog/`:** real, orderable candidate parts, one YAML file per part, in folders by type: `motors/`, `props/`, `cells/`, `escs/`, `frames/`, `modules/`. The format is under "Settled in the sizing model talk" below.
+- **`catalog/`:** real, orderable candidate parts, one YAML file per part, in folders by type: `motors/`, `props/`, `cells/`, `escs/`, `frames/`, `components/`. The format is under "Settled in the sizing model talk" below.
   - Every part has a mass, dimensions and a price, and every number has a source.
   - Motors carry thrust test data (throttle, thrust, current, RPM) for each prop and voltage they were tested with.
   - I'll start it off with 3–4 real candidates of each motor, prop and cell.
@@ -98,11 +98,12 @@ Everything got settled in the sizing model talk on 2026-10-17 (step 1a). The ans
 - **Why this one:** a fixed voltage can't show sag at all, and measured discharge tables only exist for some cells. The independent discharge tests published for popular 21700 cells are the check on this model instead.
 - **Later upgrades:** a term for how the voltage bounces back a little after a burst of current, and temperature. Cold weather stays on the unproven list.
 
-**The parts catalog (2026-10-17).** One YAML file per part, in folders by type (`design/catalog/motors/`, `props/`, `cells/`, `escs/`, `frames/`, `modules/`). Each file holds:
+**The parts catalog (2026-10-17).** One YAML file per part, in folders by type (`design/catalog/motors/`, `props/`, `cells/`, `escs/`, `frames/`, `components/`). Each file holds:
 - **Identity:** maker, model, part number, a link, the price, and the date it was checked.
 - **Physical:** mass, dimensions, mounting pattern, and a link to the manufacturer's 3D file if there is one. The CAD step reads these.
 - **Ratings:** voltage, continuous and peak current, and KV for motors.
 - **Data tables, each tagged with its source** (manufacturer, independent test, or thrust stand) and a link. Thrust tables live with the motor, one per prop and voltage it was tested with, because that's how manufacturers publish them. Measured data sits next to the manufacturer's as its own table. The model uses the best source it has (thrust stand, then independent test, then manufacturer), and the report says which one it used.
+- **Components** are everything else with a mass: the flight controller, receiver, module parts, wiring. They can carry a power draw and a drag area, each with its own source. (This folder was going to be called `modules/`, but the base drone has components too.)
 - **Cells** carry their voltage curve and internal resistance. Packs aren't separate parts: the model builds them from cells (6S2P, 6S3P), plus a weight allowance for the nickel strips, wires and wrap.
 
 Tests check every file against a fixed format, so a typo can't slip through, and every number has to have a source. **Why this one:** it's readable, changes show up clearly in git, it matches `targets.yaml`, and adding a part is just adding a file. A spreadsheet can't hold a thrust table in one row, and a database is overkill for a few dozen parts and hard to review.

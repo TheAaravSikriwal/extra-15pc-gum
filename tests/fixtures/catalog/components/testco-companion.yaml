@@ -1,0 +1,9 @@
+# Made up for tests. Not a real part, and its numbers never reach a real report.
+type: component
+id: testco-companion
+maker: Testco
+model: companion computer
+source: {kind: made_up, note: Invented for the pcs14 tests}
+mass_g: 60
+power_w: 6.0
+power_source: {kind: made_up, note: Invented for the pcs14 tests}

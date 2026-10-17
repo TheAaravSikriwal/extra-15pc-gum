@@ -1,0 +1,25 @@
+# Made up for tests. Not a real part, and its numbers never reach a real report.
+type: motor
+id: testco-m2810-900kv
+maker: Testco
+model: M2810 900KV
+source: {kind: made_up, note: Invented for the pcs14 tests}
+mass_g: 70
+kv: 900
+cells_min: 4
+cells_max: 6
+max_current_a: 40
+thrust_tables:
+  - prop: testco-p10x45
+    voltage_v: 24.0
+    source: {kind: made_up, note: "Invented, but shaped like a real 10 inch table"}
+    rows:
+      - {throttle_pct: 20, thrust_g: 220, current_a: 1.2, rpm: 4300}
+      - {throttle_pct: 30, thrust_g: 420, current_a: 2.5, rpm: 5900}
+      - {throttle_pct: 40, thrust_g: 650, current_a: 4.3, rpm: 7300}
+      - {throttle_pct: 50, thrust_g: 900, current_a: 6.7, rpm: 8600}
+      - {throttle_pct: 60, thrust_g: 1150, current_a: 9.6, rpm: 9700}
+      - {throttle_pct: 70, thrust_g: 1400, current_a: 13.0, rpm: 10700}
+      - {throttle_pct: 80, thrust_g: 1650, current_a: 17.0, rpm: 11600}
+      - {throttle_pct: 90, thrust_g: 1880, current_a: 21.5, rpm: 12400}
+      - {throttle_pct: 100, thrust_g: 2100, current_a: 26.5, rpm: 13100}

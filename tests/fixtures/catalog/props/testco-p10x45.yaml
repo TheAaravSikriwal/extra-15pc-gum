@@ -1,0 +1,10 @@
+# Made up for tests. Not a real part, and its numbers never reach a real report.
+type: prop
+id: testco-p10x45
+maker: Testco
+model: P10x4.5
+source: {kind: made_up, note: Invented for the pcs14 tests}
+mass_g: 14
+diameter_in: 10
+pitch_in: 4.5
+blades: 2

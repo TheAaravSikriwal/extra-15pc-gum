@@ -1,0 +1,27 @@
+# Made up for tests. Not a real part, and its numbers never reach a real report.
+type: cell
+id: testco-c21700-45
+maker: Testco
+model: C21700-45
+source: {kind: made_up, note: Invented for the pcs14 tests}
+mass_g: 70
+capacity_mah: 4500
+max_continuous_a: 45
+min_voltage_v: 2.5
+max_voltage_v: 4.2
+internal_resistance_mohm: 15
+resistance_source: {kind: made_up, note: Invented for the pcs14 tests}
+ocv_source: {kind: made_up, note: "Invented, but shaped like a real Li-ion resting curve"}
+ocv_curve:
+  - {soc: 0.00, voltage_v: 3.00}
+  - {soc: 0.05, voltage_v: 3.30}
+  - {soc: 0.10, voltage_v: 3.42}
+  - {soc: 0.20, voltage_v: 3.52}
+  - {soc: 0.30, voltage_v: 3.59}
+  - {soc: 0.40, voltage_v: 3.65}
+  - {soc: 0.50, voltage_v: 3.72}
+  - {soc: 0.60, voltage_v: 3.80}
+  - {soc: 0.70, voltage_v: 3.88}
+  - {soc: 0.80, voltage_v: 3.97}
+  - {soc: 0.90, voltage_v: 4.07}
+  - {soc: 1.00, voltage_v: 4.18}
