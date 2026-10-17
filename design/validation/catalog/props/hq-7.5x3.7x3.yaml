@@ -1,0 +1,11 @@
+# Researched 2026-10-17.
+type: prop
+id: hq-7.5x3.7x3
+maker: HQProp
+model: 7.5x3.7x3
+checked: 2026-10-17
+source: {kind: estimate, note: "Size from the MOZ7 V2's spec list (https://oscarliang.com/geprc-moz7-v2/). The mass isn't needed for the honesty check (the takeoff weight is measured), so it's a placeholder for a 7.5 inch tri-blade"}
+mass_g: 7
+diameter_in: 7.5
+pitch_in: 3.7
+blades: 3

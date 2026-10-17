@@ -121,3 +121,21 @@ def test_a_made_up_validation_cant_go_in_docs_reports(cases):
     root = Path(__file__).resolve().parents[1]
     with pytest.raises(ValueError, match="made-up"):
         write_validation(root / "docs" / "reports" / "sizing", [], [], made_up=True)
+
+
+def test_the_drag_area_it_would_take_to_match(cases):
+    from pcs14.sizing.validate import drag_area_to_match
+
+    hover = cases[0]
+    assert drag_area_to_match(hover) is None  # drag doesn't matter in a hover
+
+    cruise_measured = hover.measured.model_copy(update={"kind": "cruise", "speed_ms": 12.0})
+    cruise = hover.model_copy(update={"measured": cruise_measured})
+    shorter = 0.8 * compare_case(cruise).predicted_minutes
+    case = cruise.model_copy(
+        update={"measured": cruise_measured.model_copy(update={"minutes": shorter})}
+    )
+    needed = drag_area_to_match(case)
+    assert needed > case.drag_area_cm2
+    matched = compare_case(case.model_copy(update={"drag_area_cm2": needed}))
+    assert matched.predicted_minutes == pytest.approx(shorter, abs=0.1)

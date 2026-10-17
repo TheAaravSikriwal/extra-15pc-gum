@@ -208,6 +208,9 @@ These get filled in properly when I get close to them.
   - the Ultralytics docs ([docs.ultralytics.com](https://docs.ultralytics.com))
   - the OpenVINO docs ([docs.openvino.ai](https://docs.openvino.ai))
   - the VisDrone dataset ([github.com/VisDrone/VisDrone-Dataset](https://github.com/VisDrone/VisDrone-Dataset))
+- **Rotor drag in forward flight** (the honesty check): why a quad's spinning props add drag that grows with speed, on top of the frame's frontal area, and why that matters for cruise power.
+  - Robert Mahony, Vijay Kumar and Peter Corke, "Multirotor Aerial Vehicles: Modeling, Estimation, and Control of Quadrotor," *IEEE Robotics & Automation Magazine*, 2012
+  - Philippe Martin and Erwan Salaün, "The true role of accelerometer feedback in quadrotor control," *IEEE ICRA*, 2010
 - **Soaring and descending** (soar mode, #31, step 7): where rising air comes from (slope lift, thermals), how a rotor's power changes when the air moves up through it, and the vortex ring state.
   - the FAA's *Glider Flying Handbook* (free on [faa.gov](https://www.faa.gov)), the parts on soaring weather, slope lift and thermals
   - Leishman's *Principles of Helicopter Aerodynamics* (topic 2), the parts on descending flight and the vortex ring state

@@ -46,6 +46,16 @@ Instead of buying parts and building it, I'm designing the whole drone in simula
 | Real radio range with trees and terrain | A walk-out range test |
 | Compass interference from the power wires | Compass readings against throttle |
 | Solder joints, connectors and tolerances | The bench checks |
+| Forward-flight power, especially the drag the props add at speed (see the honesty check below) | A GPS-logged cruise at a steady speed, with current logged |
+
+### The first honesty check (2026-10-17)
+
+`pcs14 validate` runs the model against published data. The first results:
+
+- **The battery model holds up.** Against four cells' published 10 A discharge curves (Molicel P42A and P45B, Samsung 40T and 50S), it lands within 0.02 to 0.06 V per cell RMS. Real cells sag a touch more than it says, never less.
+- **Cruise is where it misses.** On Oscar Liang's independent test of the GEPRC MOZ7 V2, the model says 31.9 minutes and he measured 16. The hover side agrees with his throttle numbers (about 30% to hover lines up with the table), but to match the cruise, the drone's drag area would have to be about 540 cm2 instead of the 100 cm2 I estimated from its frontal area.
+- **Why, probably:** in forward flight the props themselves add drag that grows with speed, which a frontal-area estimate leaves out. The test also had 15-20 mph wind, normal FPV flying instead of a steady cruise, and no published landing voltage. It can't just be a bigger frontal drag area, because that drone reaches 110 km/h, which a 540 cm2 drag area wouldn't allow.
+- **What it means:** the cruise numbers in the sizing report are probably optimistic, possibly by up to 2x, and the hover numbers are the ones to trust for now. Fixing it means modeling rotor drag properly and the wind tunnel side track. A thrust stand, and one real GPS-logged flight, would settle it.
 
 ### Simulate everything
 

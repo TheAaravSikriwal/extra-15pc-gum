@@ -79,10 +79,10 @@ class Canvas:
     def _text(self, x, y, text, size, color, family, **kw):
         self.fig.text(x, y, text, fontsize=size, color=_c(color), family=family, va="center", **kw)
 
-    def headline(self, number: str, caption: str) -> None:
+    def headline(self, number: str, caption: str, color: str = "accent") -> None:
         x = style.load()["layout"]["margin_px"] / self.width
         fonts = _fonts()
-        self._text(x, 215 / self.height, number, 44, "accent", fonts["numbers"], weight="bold")
+        self._text(x, 215 / self.height, number, 44, color, fonts["numbers"], weight="bold")
         self.fig.text(
             x,
             150 / self.height,

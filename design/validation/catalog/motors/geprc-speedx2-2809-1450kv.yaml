@@ -1,0 +1,24 @@
+# Researched 2026-10-17. Rows transcribed from GEPRC's datasheet image and checked by eye.
+type: motor
+id: geprc-speedx2-2809-1450kv
+maker: GEPRC
+model: SPEEDX2 2809 1450KV V1.1
+link: https://geprc.com/product/geprc-speedx2-2809-v1-1-motor/
+checked: 2026-10-17
+source: {kind: manufacturer, url: 'https://geprc.com/product/geprc-speedx2-2809-v1-1-motor/', checked: 2026-10-17, note: "Mass and ratings aren't needed here: the honesty check uses the build's measured takeoff weight. The mass is a placeholder from similar 2809 motors"}
+mass_g: 50
+kv: 1450
+cells_min: 4
+cells_max: 6
+max_current_a: 58.3
+thrust_tables:
+  - prop: hq-7.5x3.7x3
+    voltage_v: 25
+    source: {kind: manufacturer, url: 'https://geprc.com/wp-content/uploads/2025/06/11.jpg', checked: 2026-10-17, note: "GEPRC's datasheet image. It starts at 50% throttle and has no rpm column. Odd spots elsewhere on the sheet (a 27 in the efficiency column, and the flatter 7.5x3 prop out-thrusting this one) make it worth trusting less"}
+    rows:
+      - {throttle_pct: 50, thrust_g: 986, current_a: 12.85, power_w: 320.3}
+      - {throttle_pct: 60, thrust_g: 1387, current_a: 19.51, power_w: 484.8}
+      - {throttle_pct: 70, thrust_g: 1748, current_a: 28.01, power_w: 693.3}
+      - {throttle_pct: 80, thrust_g: 1882, current_a: 37.64, power_w: 927.5}
+      - {throttle_pct: 90, thrust_g: 2185, current_a: 47.99, power_w: 1178.2}
+      - {throttle_pct: 100, thrust_g: 2383, current_a: 58.3, power_w: 1425.1}

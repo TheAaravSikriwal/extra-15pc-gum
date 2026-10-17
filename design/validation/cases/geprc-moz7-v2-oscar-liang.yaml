@@ -1,0 +1,22 @@
+# Researched 2026-10-17.
+name: GEPRC MOZ7 V2 (Oscar Liang)
+source: {kind: independent_test, url: 'https://oscarliang.com/geprc-moz7-v2/', checked: 2026-10-17, note: "Measured weights: 843 g dry, 1480 g with the 6S 6000mAh (18650 6S2P) pack. Flight: just under 16 minutes, over 15 km, in 15-20 mph wind, hover throttle around 30%, cruise at 60-70 km/h around 35% throttle. In the comments Oscar also mentions a 20 minute flight on a smaller 6S 4000mAh pack, conditions not stated"}
+motor: geprc-speedx2-2809-1450kv
+prop: hq-7.5x3.7x3
+pack:
+  cell: lumenier-nav-18650
+  series: 6
+  parallel: 2
+  overhead_g: 0
+  wiring_mohm: 3
+  note: "The pack's weight is already in the measured takeoff weight; wiring is an estimate"
+takeoff_weight_g: 1480
+drag_area_cm2: 100
+avionics_power_w: 8
+estimate_note: "Not published, so estimated: drag area 100 cm2 (a 7.5 inch frame with a camera cage and a 6S2P 18650 pack, at a drag coefficient of 1.0), and 8 W for the DJI O4 Pro video system, flight controller, receiver and GPS. Cruise speed 15.6 m/s is the 15 km over about 16 minutes, and the landing point (3.0 V per cell under load) is a typical Li-ion landing, since the review doesn't give one. The 15-20 mph wind isn't modeled, and the motor's table starts at 50% throttle, above this drone's hover"
+measured:
+  kind: cruise
+  speed_ms: 15.6
+  minutes: 16.0
+  until: {loaded_voltage_per_cell_v: 3.0}
+  label: independent measurement

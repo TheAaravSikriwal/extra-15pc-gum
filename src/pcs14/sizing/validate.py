@@ -177,6 +177,31 @@ def compare_case(case: ValidationCase, dt: float = 1.0) -> Comparison:
     )
 
 
+def drag_area_to_match(case: ValidationCase, high: float = 5000.0) -> float | None:
+    """The drag area (cm^2) that would make the model's published-data prediction match the
+    measured time, for a cruise case. None for a hover, where drag doesn't matter, or if no
+    drag area up to `high` gets there."""
+    if case.measured.kind == "hover":
+        return None
+
+    def minutes(area: float) -> float:
+        return compare_case(
+            case.model_copy(update={"drag_area_cm2": area}), dt=2.0
+        ).predicted_minutes
+
+    target = case.measured.minutes
+    low, top = 0.0, high
+    if minutes(low) < target or minutes(top) > target:
+        return None
+    for _ in range(40):
+        mid = (low + top) / 2
+        if minutes(mid) > target:
+            low = mid
+        else:
+            top = mid
+    return (low + top) / 2
+
+
 @dataclass(frozen=True)
 class DischargeCheck:
     cell: Cell

@@ -1,0 +1,27 @@
+# Researched 2026-10-17.
+type: cell
+id: lumenier-nav-18650
+maker: Lumenier
+model: NAV 18650 (cell in the 6S 6000mAh pack)
+checked: 2026-10-17
+source: {kind: independent_test, url: 'https://oscarliang.com/lumenier-nav-6s-3000mah-li-ion/', checked: 2026-10-17, note: "Oscar Liang's review of the NAV packs: 45 g per cell, 637 g for the 6S2P pack, 5763 mAh measured to 2.7 V per cell at 2 A (so about 2880 mAh per cell), 10C continuous. The cell model isn't disclosed"}
+mass_g: 45
+capacity_mah: 2880
+max_continuous_a: 30
+min_voltage_v: 2.7
+max_voltage_v: 4.2
+internal_resistance_mohm: 13
+resistance_source: {kind: manufacturer, url: 'https://oscarliang.com/lumenier-nav-6s-3000mah-li-ion/', checked: 2026-10-17, note: "The spec sheet's 13 mOhm per cell, as quoted in the review. Oscar measured about 13-15 mOhm on a charger"}
+ocv_source: {kind: estimate, note: "No curve is published for this cell, so the shape is borrowed from HKJ's 0.2 A curve for the Molicel P42A (also NMC), scaled to this cell's capacity and its 2.7 V cutoff"}
+ocv_curve:
+  - {soc: 0.0, voltage_v: 2.70}
+  - {soc: 0.1, voltage_v: 3.29}
+  - {soc: 0.2, voltage_v: 3.45}
+  - {soc: 0.3, voltage_v: 3.56}
+  - {soc: 0.4, voltage_v: 3.64}
+  - {soc: 0.5, voltage_v: 3.72}
+  - {soc: 0.6, voltage_v: 3.81}
+  - {soc: 0.7, voltage_v: 3.90}
+  - {soc: 0.8, voltage_v: 4.01}
+  - {soc: 0.9, voltage_v: 4.06}
+  - {soc: 1.0, voltage_v: 4.15}
