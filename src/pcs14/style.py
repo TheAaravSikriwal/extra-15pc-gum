@@ -25,6 +25,10 @@ FALLBACK = {
         "vertical": [1080, 1920],
         "wide": [1920, 1080],
     },
+    "layout": {
+        "margin_px": 64,
+        "credit": "Extra 15pc Gum · github.com/TheAaravSikriwal/extra-15pc-gum",
+    },
 }
 
 

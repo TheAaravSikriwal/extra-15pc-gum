@@ -48,7 +48,7 @@ This is the live version. When a step finishes, its outcome goes here, with a li
 |---|---|---|---|
 | 1a. Talk | Settle the power and battery math, the sag model, the parts catalog and the report | Done, 2026-10-17 | Eight questions settled, from the power model to which setup sizes the drone ([log](docs/log/2026-10-17-sizing-model-talk.md), [spec](docs/specs/2026-10-13-phase-1-simulation.md#settled-in-the-sizing-model-talk)) |
 | 1b. Plan | Update the spec, then write the implementation plan | Done, 2026-10-17 | 15 test-first tasks, with every flight streaming into Rerun from task 10 on ([plan](docs/plans/2026-10-17-sizing-model.md)) |
-| 1c. Build | Test-first, in Python. The first answer: the mass budget for every setup | In progress: task 12 of 15 done | |
+| 1c. Build | Test-first, in Python. The first answer: the mass budget for every setup | In progress: task 13 of 15 done | |
 | 1d. Pick the parts | Research and add the real parts, run the sweep, choose the parts and the growth margin, with uncertainty bands | Not started | |
 | Thrust stand | One motor and prop on a load cell, to replace the manufacturer's numbers | Optional | |
 

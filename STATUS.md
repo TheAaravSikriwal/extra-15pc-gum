@@ -1,7 +1,7 @@
 # Status
 
 **Last updated:** 2026-10-17, on the PC's Windows side
-**Step:** 1c, building the sizing model ([the plan](docs/plans/2026-10-17-sizing-model.md)): task 12 of 15 done, the sweep and the margin chart; next is task 13, the report
+**Step:** 1c, building the sizing model ([the plan](docs/plans/2026-10-17-sizing-model.md)): task 13 of 15 done, the report; next is task 14, the command line
 **Main machine:** the PC, with WSL2 Ubuntu 24.04 for the Linux tools
 
 ## Right now
