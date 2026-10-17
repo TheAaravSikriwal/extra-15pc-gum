@@ -81,7 +81,6 @@ Manufacturer thrust data is usually optimistic, so I'm treating flight times as 
 
 These are what the sizing model discussion is for. Once one is settled, it moves to the next section.
 
-- how to model the battery, including voltage sag, well enough to get thrust-to-weight at the reserve right
 - the catalog file format, which real parts to seed it with, and how measured thrust-stand data sits next to the manufacturer's
 - what the report looks like
 - where the code lives and how it's packaged
@@ -94,6 +93,14 @@ These are what the sizing model discussion is for. Once one is settled, it moves
 - **The least-power speed falls out of the same model.** It sweeps through speeds and finds the one that costs the least, and that replaces the 10 m/s placeholder.
 - **Why this one:** pure physics with guessed efficiencies barely uses the real parts' data, and blade-by-blade prop modeling only works for props with published wind tunnel data. That stays as a later upgrade for the props that have it (the University of Illinois propeller database is the big source).
 - **Checked against:** published long-range builds with known flight times, and the thrust stand if I ever do one.
+
+**The battery (2026-10-17).** A voltage curve plus internal resistance.
+- Each cell's resting voltage against how charged it is comes from the datasheet's discharge curve, and its internal resistance makes it sag whenever current flows.
+- The cells scale up to the pack (6S2P or 6S3P), plus the wiring's resistance from the electrical step.
+- The model steps through a flight a few seconds at a time: the motors draw current, the voltage sags, the pack loses charge, repeat. The motors pull more current when the voltage drops, so that feedback is part of every step.
+- The reserve is counted in mAh, and thrust-to-weight at the reserve uses the sagged voltage at that moment.
+- **Why this one:** a fixed voltage can't show sag at all, and measured discharge tables only exist for some cells. The independent discharge tests published for popular 21700 cells are the check on this model instead.
+- **Later upgrades:** a term for how the voltage bounces back a little after a burst of current, and temperature. Cold weather stays on the unproven list.
 
 ## The thrust stand (optional)
 
