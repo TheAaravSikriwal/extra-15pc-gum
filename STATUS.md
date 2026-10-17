@@ -24,8 +24,7 @@ Where to look:
 ## Up next
 
 1. **Set up WSL2 on the PC** with [docs/setup-pc.md](docs/setup-pc.md). The `wsl --install` step needs an admin PowerShell and one reboot. Then commit `docs/machines/pc.md`.
-2. **Step 1a: talk through the sizing model.** Started 2026-10-17, and it doesn't need WSL. Settled so far: hover and cruise power (the least-power speed falls out of it), the battery model with sag, the catalog format, which parts go in first, the outputs (a Markdown report, Rerun replays of every test, and the project site), and the code as one package called 14 pcs left, in the spec under "Settled in the sizing model talk". Still to settle:
-   - how the code spells the package name (Python names can't start with a number)
+2. **Step 1a: talk through the sizing model.** Started 2026-10-17, and it doesn't need WSL. Settled so far: hover and cruise power (the least-power speed falls out of it), the battery model with sag, the catalog format, which parts go in first, the outputs (a Markdown report, Rerun replays of every test, and the project site), and the code as one package called 14 pcs left (`pcs14` in the code), in the spec under "Settled in the sizing model talk". Still to settle:
    - whether Max (with the claws) should still size the motors while the claws are uncertain
 3. **Step 1b: update the spec** with the answers, then **write the implementation plan** for the sizing model.
 4. **Step 1c: build it**, test-first. Its first job is the mass budget: does Max fit under 2.5 kg?

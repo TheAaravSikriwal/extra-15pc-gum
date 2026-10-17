@@ -81,7 +81,6 @@ Manufacturer thrust data is usually optimistic, so I'm treating flight times as 
 
 These are what the sizing model discussion is for. Once one is settled, it moves to the next section.
 
-- how the code spells the package name (Python names can't start with a number)
 - whether Max (with the claws) should still size the motors while the claws are uncertain, or Mission plus a margin
 
 ### Settled in the sizing model talk
@@ -131,10 +130,10 @@ The exact part numbers get researched and filled in during step 1c, and the list
 
 **How the code is organized (2026-10-17).** One Python package for the whole project, called **14 pcs left**, since the pack of gum is down a piece.
 - One part per layer: the catalog (loading and checking the parts files), sizing (the rotor model, the battery model, the flight stepper and the sweep), the report, and viz (streaming tests to Rerun). Later layers (CAD, electrical, the Gazebo generator, the site) slot in beside them.
-- A command-line tool to run it: size, sweep, report.
+- A command-line tool to run it: `pcs14 size`, `pcs14 sweep`, `pcs14 report`.
 - Standard metric units inside (meters, kilograms, seconds, newtons, watts), converted only where data comes in or goes out. That prevents the classic grams-versus-kilograms bug.
 - The top-level folders (`aero/`, `sim/` and the rest) keep the non-Python files, like OpenFOAM cases and Gazebo worlds.
-- Python names can't start with a number, so the code's own spelling of the name is still being picked.
+- In the code it's spelled `pcs14`, because Python names can't start with a number (`from pcs14.sizing import battery`).
 - **Why this one:** every piece gets tested once and reused everywhere. Separate scripts per layer would copy the catalog loader and battery model into every layer, and notebooks are hard to test and rerun. Notebooks can still be a learning companion that reads from the package.
 
 ## The thrust stand (optional)
