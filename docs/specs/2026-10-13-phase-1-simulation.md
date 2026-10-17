@@ -81,7 +81,6 @@ Manufacturer thrust data is usually optimistic, so I'm treating flight times as 
 
 These are what the sizing model discussion is for. Once one is settled, it moves to the next section.
 
-- which real parts to seed the catalog with
 - what the report looks like
 - where the code lives and how it's packaged
 
@@ -110,6 +109,14 @@ These are what the sizing model discussion is for. Once one is settled, it moves
 - **Cells** carry their voltage curve and internal resistance. Packs aren't separate parts: the model builds them from cells (6S2P, 6S3P), plus a weight allowance for the nickel strips, wires and wrap.
 
 Tests check every file against a fixed format, so a typo can't slip through, and every number has to have a source. **Why this one:** it's readable, changes show up clearly in git, it matches `targets.yaml`, and adding a part is just adding a file. A spreadsheet can't hold a thrust table in one row, and a database is overkill for a few dozen parts and hard to review.
+
+**Seeding the catalog (2026-10-17): data first.** A part only goes in if its test data is public and has a source. The starting set covers the range of reasonable choices, about 15–20 files:
+- **Motors:** 6S motors made for 9" and 10" props, at two or three KV levels each, from makers who publish full thrust tables. One 8" setup goes in too, as a check that it really does lose.
+- **Props:** the 3–4 props those motors were actually tested with.
+- **Cells:** 3–4 high-drain 21700 cells with independent discharge tests (well-tested names like the Molicel P42A and P45B and the Samsung 50S).
+- **ESCs and frames:** two of each.
+
+The exact part numbers get researched and filled in during step 1c, and the list gets a look before the sweep runs. **Why this one:** popular parts often lack the test data the model needs, and going wide means far more research for parts that mostly lose. The catalog widens later around whatever wins.
 
 ## The thrust stand (optional)
 
