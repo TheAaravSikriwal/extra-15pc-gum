@@ -7,6 +7,8 @@ A recording can stream to a live viewer, save to an .rrd file, or both.
 """
 
 import re
+import shutil
+import sys
 from pathlib import Path
 
 import rerun as rr
@@ -44,19 +46,27 @@ def blueprint() -> rrb.Blueprint:
     return rrb.Blueprint(rrb.Tabs(flights, sweep, summary), collapse_panels=True)
 
 
+def _viewer() -> str | None:
+    """The Rerun viewer: on the PATH, or next to this Python (inside a venv that isn't
+    activated, it's only there)."""
+    return shutil.which("rerun") or shutil.which("rerun", path=str(Path(sys.executable).parent))
+
+
 class Recorder:
     def __init__(self, path: Path | None = None, live: bool = False, app: str = "pcs14-sizing"):
+        if not live and path is None:
+            raise ValueError("a recording needs somewhere to go: a file, a live viewer, or both")
+        self.rec = rr.RecordingStream(app)
         sinks = []
         if live:
-            rr.spawn(connect=False)
+            # The viewer has to be started for this recording, not Rerun's global one, which
+            # pcs14 never switches on.
+            rr.spawn(connect=False, recording=self.rec, executable_path=_viewer())
             sinks.append(rr.GrpcSink())
         if path is not None:
             path = Path(path)
             path.parent.mkdir(parents=True, exist_ok=True)
             sinks.append(rr.FileSink(str(path)))
-        if not sinks:
-            raise ValueError("a recording needs somewhere to go: a file, a live viewer, or both")
-        self.rec = rr.RecordingStream(app)
         self.rec.set_sinks(*sinks, default_blueprint=blueprint())
 
     def log_flight(self, setup: str, kind: str, case: str, flight: Flight, highlight: bool) -> None:

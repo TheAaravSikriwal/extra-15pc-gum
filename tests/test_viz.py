@@ -30,3 +30,9 @@ def test_writes_a_recording_without_a_viewer_open(build, setups, tmp_path):
 def test_needs_somewhere_to_send_the_recording():
     with pytest.raises(ValueError, match="somewhere"):
         Recorder()
+
+
+def test_the_viewer_is_found_even_outside_an_activated_venv():
+    from pcs14.viz.rerun_log import _viewer
+
+    assert _viewer() is not None
