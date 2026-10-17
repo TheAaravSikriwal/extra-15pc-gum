@@ -208,6 +208,14 @@ class Build:
     def thrust_table(self) -> ThrustTable:
         return pick_table(self.motor, self.prop, self.pack.series * NOMINAL_CELL_VOLTAGE)
 
+    def carried(self, modules: frozenset[str]) -> tuple[Component, ...]:
+        """The base parts, plus the parts of every module fitted."""
+        parts = list(self.base)
+        for module in MODULES:
+            if module in modules:
+                parts += self.modules.get(module, ())
+        return tuple(parts)
+
     def variant(self, **changes) -> "Build":
         """The same build with some parts swapped: motor, prop, cell or parallel."""
         pack_changes = {k: changes.pop(k) for k in ("cell", "series", "parallel") if k in changes}
