@@ -79,14 +79,21 @@ Manufacturer thrust data is usually optimistic, so I'm treating flight times as 
 
 ### To settle before building it
 
-These are what the sizing model discussion is for:
+These are what the sizing model discussion is for. Once one is settled, it moves to the next section.
 
-- the exact math for hover power, cruise power and the battery model, and what I validate them against
-- how to find the least-power speed that replaces the 10 m/s cruise placeholder
-- how to model voltage sag well enough to get thrust-to-weight at the reserve right
+- how to model the battery, including voltage sag, well enough to get thrust-to-weight at the reserve right
 - the catalog file format, which real parts to seed it with, and how measured thrust-stand data sits next to the manufacturer's
 - what the report looks like
 - where the code lives and how it's packaged
+
+### Settled in the sizing model talk
+
+**Hover and cruise power (2026-10-17).** It's built on the real parts' own data.
+- **Hover:** each motor has to lift a quarter of the weight. The model reads the current for that thrust straight from the manufacturer's thrust table (or the thrust stand's, if it exists), then corrects it for the battery's actual voltage under load.
+- **Cruise:** the standard momentum-theory model of a rotor in forward flight, fitted so it matches the same table at hover, plus drag from the frame's frontal area. The aero side track swaps that drag guess for real numbers later.
+- **The least-power speed falls out of the same model.** It sweeps through speeds and finds the one that costs the least, and that replaces the 10 m/s placeholder.
+- **Why this one:** pure physics with guessed efficiencies barely uses the real parts' data, and blade-by-blade prop modeling only works for props with published wind tunnel data. That stays as a later upgrade for the props that have it (the University of Illinois propeller database is the big source).
+- **Checked against:** published long-range builds with known flight times, and the thrust stand if I ever do one.
 
 ## The thrust stand (optional)
 
