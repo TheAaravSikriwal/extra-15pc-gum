@@ -183,6 +183,12 @@ The CAD talk (step 2a) started on 2026-10-17. Seven questions, one at a time: wh
 - **Why:** hanging under the chute, the heavy pack at the bottom keeps the drone upright, so it comes down on its legs, and the top stays free for the modules. With the pack on top (the frame's stock layout), the chute would ride on the battery, high and in the way of every battery swap, and V and the claws would crowd the belly with the lidar.
 - **Still to work out:** how the pack straps to the XL10's bottom plate (the frame is designed for a top-mounted pack), and where the HaLow and receiver antennas go, which the clearance checks will settle.
 
+**Our own parts (2026-10-17): printable designs where they're pinned down, sized envelopes for the rest.**
+- **Designed for real now:** the landing legs, the battery tray, the top module rail and its connector mount, the GPS mast mount, the lidar bracket, the Remote ID mount, and the safety monitor's carrier. Each gets real wall thicknesses, screw holes, a named material and a print orientation.
+- **Envelopes for now:** the V housing, the parachute's holder and ejector, and the claws. Each is an exactly sized box with its mounting points, until the modules step designs it.
+- **Materials, to start:** TPU for parts that take hits (the legs and the GPS mast mount, like the TPU mounts that come with the XL10), and carbon-filled PETG for the rigid parts. Each material's density and print settings go in one file, and a printed part's mass comes from its geometry, replacing the catalog's guesses. The structure side track checks that the legs and tray are strong enough.
+- **Why:** the simple brackets cost little to do properly and give real weights. The parachute ejector belongs to the modules step and the claws are a placeholder by decision, so designing those now would mean designing them twice.
+
 ## Layer 3: Aerodynamics (`aero/`)
 
 The virtual wind tunnel. It runs as a side track, instead of inside the loop. At a 10 m/s cruise, drag is roughly 10% of the power, so even a 30% drag error moves flight time by about 3%, which is well inside the thrust data's uncertainty. Its numbers still go back into the sizing model and Gazebo whenever they're ready, and the targets get rechecked.
