@@ -15,6 +15,7 @@ from pcs14.catalog.schema import (
     Part,
     Prop,
     SourceKind,
+    Wire,
 )
 
 FOLDERS: dict[str, type[Part]] = {
@@ -24,6 +25,7 @@ FOLDERS: dict[str, type[Part]] = {
     "escs": Esc,
     "frames": Frame,
     "components": Component,
+    "wires": Wire,
 }
 FOLDER_FOR_TYPE = {
     cls.model_fields["type"].annotation.__args__[0]: folder for folder, cls in FOLDERS.items()
@@ -42,6 +44,7 @@ class Catalog:
     escs: dict[str, Esc] = field(default_factory=dict)
     frames: dict[str, Frame] = field(default_factory=dict)
     components: dict[str, Component] = field(default_factory=dict)
+    wires: dict[str, Wire] = field(default_factory=dict)
 
     def all_parts(self) -> list[Part]:
         return [
@@ -51,6 +54,7 @@ class Catalog:
             *self.escs.values(),
             *self.frames.values(),
             *self.components.values(),
+            *self.wires.values(),
         ]
 
     def motor(self, part_id: str) -> Motor:
@@ -70,6 +74,9 @@ class Catalog:
 
     def component(self, part_id: str) -> Component:
         return _get(self.components, "component", part_id)
+
+    def wire(self, part_id: str) -> Wire:
+        return _get(self.wires, "wire", part_id)
 
 
 def _get(table: dict, kind: str, part_id: str):
@@ -116,6 +123,21 @@ def load_catalog(root: Path, *, allow_made_up: bool = False) -> Catalog:
                 raise CatalogError(
                     f"{where[motor.id]}: a thrust table names the prop '{table.prop}', which isn't "
                     "in the catalog"
+                )
+    for part in catalog.all_parts():
+        if part.electrical is None:
+            continue
+        for family in sorted(part.electrical.families()):
+            holder = catalog.components.get(family)
+            if holder is None:
+                raise CatalogError(
+                    f"{where[part.id]}: a connector's family is '{family}', which isn't in the "
+                    "catalog (it should be the part that holds the contact rating, or 'pads')"
+                )
+            if holder.electrical is None or holder.electrical.rating is None:
+                raise CatalogError(
+                    f"{where[family]}: '{family}' is used as a connector family, so it needs an "
+                    "electrical block with a rating"
                 )
     return catalog
 

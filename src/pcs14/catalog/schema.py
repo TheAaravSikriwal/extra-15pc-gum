@@ -15,6 +15,7 @@ from pydantic import Field, HttpUrl, model_validator
 
 from pcs14 import units
 from pcs14.catalog.cad import AnyCad
+from pcs14.catalog.electrical import ElectricalBlock
 from pcs14.catalog.source import Source, SourceKind, Strict
 
 __all__ = ["Source", "SourceKind", "Strict"]
@@ -34,13 +35,15 @@ class Part(Strict):
     source: Source
     mass_g: float = Field(gt=0)
     cad: AnyCad | None = None  # every part in the build gets one; see pcs14.catalog.cad
+    electrical: ElectricalBlock | None = None  # see pcs14.catalog.electrical
 
     @property
     def mass(self) -> float:
         return units.g_to_kg(self.mass_g)
 
     def sources(self) -> list[Source]:
-        return [self.source] + ([self.cad.source] if self.cad is not None else [])
+        blocks = [b for b in (self.cad, self.electrical) if b is not None]
+        return [self.source] + [b.source for b in blocks]
 
 
 class ThrustRow(Strict):
@@ -277,3 +280,55 @@ class Component(Part):
     @property
     def drag_area(self) -> float:
         return units.cm2_to_m2(self.drag_area_cm2)
+
+
+class WireGauge(Strict):
+    awg: int
+    resistance_mohm_per_m: float = Field(gt=0)  # the conductor, at 20 °C
+    outer_diameter_mm: float = Field(gt=0)  # over the insulation
+    mass_g_per_m: float = Field(gt=0)
+
+    @property
+    def resistance_per_m(self) -> float:
+        return units.mohm_to_ohm(self.resistance_mohm_per_m)
+
+    @property
+    def outer_diameter(self) -> float:
+        return units.mm_to_m(self.outer_diameter_mm)
+
+    @property
+    def mass_per_m(self) -> float:
+        return units.g_to_kg(self.mass_g_per_m)
+
+
+class Wire(Part):
+    """A kind of hookup wire, as a table of gauges. It has no mass of its own: each gauge has
+    grams per meter, and the connection list says how much of each the drone carries."""
+
+    type: Literal["wire"]
+    mass_g: None = None
+    insulation_max_c: float
+    gauges: list[WireGauge] = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def _thicker_conducts_better(self):
+        by_size = sorted(self.gauges, key=lambda g: g.awg)
+        if len({g.awg for g in by_size}) != len(by_size):
+            raise ValueError("a gauge is listed twice")
+        for thick, thin in zip(by_size, by_size[1:], strict=False):
+            if thick.resistance_mohm_per_m >= thin.resistance_mohm_per_m:
+                raise ValueError(
+                    f"{thick.awg} AWG has more resistance than {thin.awg} AWG, which is thinner"
+                )
+        return self
+
+    @property
+    def mass(self) -> float:
+        raise AttributeError("a wire table has no single mass: each gauge has its mass per meter")
+
+    def gauge(self, awg: int) -> WireGauge:
+        for gauge in self.gauges:
+            if gauge.awg == awg:
+                return gauge
+        listed = ", ".join(str(g.awg) for g in sorted(self.gauges, key=lambda g: g.awg))
+        raise KeyError(f"there's no {awg} AWG in this wire table (it has {listed})")

@@ -16,9 +16,9 @@ from pcs14.electrical import tools
 EXE = ".exe" if sys.platform == "win32" else ""
 
 
-def fake_program(folder, name):
+def fake_program(folder, name, suffix=EXE):
     folder.mkdir(parents=True, exist_ok=True)
-    path = folder / f"{name}{EXE}"
+    path = folder / f"{name}{suffix}"
     path.write_text("")
     path.chmod(0o755)
     return path
@@ -49,8 +49,9 @@ def test_ngspice_prefers_its_console_build(tmp_path):
 
 def test_then_where_the_installer_puts_it_newest_version_first(tmp_path):
     programs = tmp_path / "Programs" / "KiCad"
-    fake_program(programs / "9.0" / "bin", "kicad-cli")
-    newest = fake_program(programs / "10.0" / "bin", "kicad-cli")
+    # Windows installers lay it out like this, so it's .exe on any system
+    fake_program(programs / "9.0" / "bin", "kicad-cli", ".exe")
+    newest = fake_program(programs / "10.0" / "bin", "kicad-cli", ".exe")
     environ = {"PATH": str(tmp_path / "empty"), "LOCALAPPDATA": str(tmp_path)}
     found = tools.find("kicad-cli", environ, windows=True)
     assert found is not None and found.resolve() == newest.resolve()

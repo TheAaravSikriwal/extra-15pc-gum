@@ -1,8 +1,8 @@
 """Unit conversions.
 
-Everything inside pcs14 is in meters, kilograms, seconds, newtons, watts, volts, amps and
-coulombs. Grams, millimeters, inches, mAh and km/h only exist in the parts files and the
-reports, and these functions are the only place they get converted.
+Everything inside pcs14 is in meters, kilograms, seconds, newtons, watts, volts, amps, ohms
+and coulombs. Grams, millimeters, inches, mAh, km/h and milliohms only exist in the parts files
+and the reports, and these functions are the only place they get converted.
 """
 
 G0 = 9.80665  # standard gravity, m/s^2
@@ -71,3 +71,7 @@ def seconds_to_minutes(seconds: float) -> float:
 
 def minutes_to_seconds(minutes: float) -> float:
     return minutes * 60
+
+
+def ohm_to_mohm(ohms: float) -> float:
+    return ohms * 1000
