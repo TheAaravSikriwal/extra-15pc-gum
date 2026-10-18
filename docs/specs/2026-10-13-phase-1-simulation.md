@@ -175,6 +175,14 @@ The CAD talk (step 2a) started on 2026-10-17. Seven questions, one at a time: wh
 
 **Where the shapes come from (2026-10-17): our own solids, exact where it matters.** I model every part from the maker's published dimensions: the outside envelope, the mounting holes and the connector and antenna spots exact, the insides plain. Before modeling a part, I check whether a CAD model of it already exists, official or community-made, and the catalog records what turned up (link, format, license, date checked), including "none found". Existing models never get committed, since most can't legally be reposted. They get downloaded to a local cache and used for two things only: checking that my shape matches (an automated comparison of size and mounting holes), and hero renders. **Why:** the repo stays shareable under GPL and builds offline, so CI can test it; the checks only need envelopes and mounting points; and existing models vary a lot in quality. This replaces the line above about importing a frame's STEP file: a real frame's file gets used to check my frame, not to replace it.
 
+**The layout (2026-10-17): battery underneath, modules on top.**
+- **On top:** the module mount. P sits in the middle, over the center of gravity, so the chute fires straight up with nothing in its way. V sits behind it, and the GPS mast goes at the very back, away from the power wires. Base with no modules has a clean top.
+- **In the frame:** the flight controller and ESC stack in the middle, with the camera in the frame's nose.
+- **Underneath:** the battery, strapped to the bottom plate, with landing legs taller than the pack. The lidar looks down beside the pack, and the claws clip on behind it, between the legs.
+- **Trim:** the pack slides fore and aft to put the center of gravity over the center of thrust for each module combination.
+- **Why:** hanging under the chute, the heavy pack at the bottom keeps the drone upright, so it comes down on its legs, and the top stays free for the modules. With the pack on top (the frame's stock layout), the chute would ride on the battery, high and in the way of every battery swap, and V and the claws would crowd the belly with the lidar.
+- **Still to work out:** how the pack straps to the XL10's bottom plate (the frame is designed for a top-mounted pack), and where the HaLow and receiver antennas go, which the clearance checks will settle.
+
 ## Layer 3: Aerodynamics (`aero/`)
 
 The virtual wind tunnel. It runs as a side track, instead of inside the loop. At a 10 m/s cruise, drag is roughly 10% of the power, so even a 30% drag error moves flight time by about 3%, which is well inside the thrust data's uncertainty. Its numbers still go back into the sizing model and Gazebo whenever they're ready, and the targets get rechecked.
