@@ -124,6 +124,13 @@ def render(design: DesignResult, sweep=None, margin=None, made_up=False, generat
         f"| {_source(build.esc.source)} |",
         f"| Frame | {build.frame.maker} {build.frame.model} | {build.frame.mass_g:.0f} g "
         f"| {_source(build.frame.source)} |",
+    ]
+    if build.current_cap is not None:
+        lines.append(
+            f"| Current cap | {build.current_cap:g} A, set in my firmware "
+            f"({build.current_cap_fraction:.0%} of the pack's rating) | | |"
+        )
+    lines += [
         "",
         "## Every setup",
         "",

@@ -7,6 +7,8 @@ At full charge (25.08 V rest) that's 21.134 V and 82.19 A; at the 20% reserve (2
 rest) it's 18.195 V. Thrust scales with voltage squared: 2100 g x (V / 24)^2 per motor.
 """
 
+import dataclasses
+
 import pytest
 
 from pcs14.catalog import Motor, SourceKind
@@ -119,3 +121,32 @@ def test_the_closest_voltage_breaks_a_tie(catalog):
     maker = {"kind": "manufacturer", "url": "https://example.com/m"}
     motor = _motor_with([_table(16, maker), _table(24, maker)])
     assert pick_table(motor, catalog.prop("testco-p10x45"), 21.6).voltage == 24
+
+
+def test_a_current_cap_throttles_back_full_throttle(build, pack):
+    # The firmware caps the pack at half its 90 A rating, so 45 A instead of 82 A flat out.
+    # The pack sags less, and the motors get power = pack volts x 45 A, with thrust following
+    # power to the 2/3 from the full-throttle row (the same law as uncapped full throttle).
+    rotor = Rotor.from_build(build.variant(current_cap_fraction=0.5))
+    full = rotor.full_throttle(pack, soc=1.0)
+    assert full.current == 45
+    assert full.voltage == pytest.approx(pack.ocv(1.0) - pack.resistance * 45)
+    assert full.capped_from == pytest.approx(82.19, abs=0.01)
+    share = (full.voltage * 45 / (4 * rotor.max_power)) ** (1 / 3)
+    assert full.thrust == pytest.approx(rotor.max_thrust * share**2)
+    assert full.rpm == pytest.approx(13100 * share)
+
+
+def test_a_cap_above_the_draw_changes_nothing(build, pack):
+    free = Rotor.from_build(build).full_throttle(pack, soc=1.0)
+    roomy = Rotor.from_build(build.variant(current_cap_fraction=1.0))  # 90 A cap, 82 A draw
+    assert roomy.full_throttle(pack, soc=1.0) == free
+
+
+def test_the_cap_meets_full_throttle_without_a_jump(build, pack):
+    free = Rotor.from_build(build).full_throttle(pack, soc=1.0)
+    rotor = dataclasses.replace(Rotor.from_build(build), current_cap=free.current * (1 - 1e-9))
+    just_under = rotor.full_throttle(pack, soc=1.0)
+    assert just_under.thrust == pytest.approx(free.thrust, rel=1e-6)
+    assert just_under.rpm == pytest.approx(free.rpm, rel=1e-6)
+    assert just_under.voltage == pytest.approx(free.voltage, rel=1e-6)

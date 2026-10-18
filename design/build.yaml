@@ -35,3 +35,7 @@ modules:
     - p-mount
   C:
     - claws-placeholder
+firmware:
+  # My flight controller caps the total battery current at the pack's continuous rating, so
+  # full throttle can't overdraw the cells (decided 2026-10-17). 1.0 means 100% of the rating.
+  current_cap_fraction: 1.0

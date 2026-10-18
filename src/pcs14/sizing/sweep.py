@@ -3,7 +3,8 @@
 Builds that can't go together (a prop too big for the frame, a pack outside what the motor
 or ESC takes, a motor with no thrust table for the prop) get skipped, with the reason kept.
 The rest are ranked by verdict, then by how far their tightest required check clears its
-limit, then by the sizing case's cruise time.
+limit, then by the sizing case's cruise time. A check that a firmware setting holds (the
+current cap) doesn't count toward the ranking, since it says nothing about the parts.
 """
 
 from dataclasses import dataclass
@@ -35,6 +36,7 @@ class Candidate:
             for setup in self.result.setups
             if setup.setup.required
             for check in setup.checks
+            if check.ranked
         ]
         return min(margins, default=float("-inf"))
 

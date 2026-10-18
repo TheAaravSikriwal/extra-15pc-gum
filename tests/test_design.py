@@ -103,3 +103,24 @@ def test_variants_swap_parts_and_keep_the_rest(catalog):
     assert bigger.pack.parallel == 3
     assert bigger.motor is build.motor
     assert build.pack.parallel == 2
+
+
+def test_no_firmware_section_means_no_current_cap(catalog):
+    assert load_build(FIXTURES / "build.yaml", catalog).current_cap is None
+
+
+def test_the_firmware_can_cap_the_current(catalog, tmp_path):
+    path = tmp_path / "build.yaml"
+    text = (FIXTURES / "build.yaml").read_text(encoding="utf-8")
+    path.write_text(text + "firmware:\n  current_cap_fraction: 0.8\n", encoding="utf-8")
+    build = load_build(path, catalog)
+    assert build.current_cap == pytest.approx(0.8 * 90)  # 6S2P of 45 A cells
+    assert build.variant(parallel=3).current_cap == pytest.approx(0.8 * 135)  # follows the pack
+
+
+def test_the_current_cap_has_to_be_above_zero(catalog, tmp_path):
+    path = tmp_path / "build.yaml"
+    text = (FIXTURES / "build.yaml").read_text(encoding="utf-8")
+    path.write_text(text + "firmware:\n  current_cap_fraction: 0\n", encoding="utf-8")
+    with pytest.raises(DesignError, match="current_cap_fraction"):
+        load_build(path, catalog)

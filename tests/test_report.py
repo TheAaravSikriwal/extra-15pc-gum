@@ -74,6 +74,7 @@ def test_the_data_file_matches_the_results(report, results):
     data = json.loads((report / "sizing.json").read_text(encoding="utf-8"))
     design = results["design"]
     assert data["made_up"] is True
+    assert data["build"]["current_cap_a"] is None
     assert data["verdict"] == design.verdict
     mission = next(s for s in data["setups"] if s["name"] == "mission")
     assert mission["mass_g"] == pytest.approx(2216)
@@ -105,3 +106,11 @@ def test_the_report_says_when_hover_is_below_the_thrust_table(results):
 def test_the_report_points_at_the_honesty_check(report):
     text = (report / "README.md").read_text(encoding="utf-8")
     assert "[validation.md](validation.md)" in text
+
+
+def test_the_report_shows_the_current_cap(results):
+    design = results["design"]
+    assert "Current cap" not in render(design)
+    capped = design.build.variant(current_cap_fraction=1.0)
+    text = render(evaluate(capped, design.targets))
+    assert "| Current cap | 90 A, set in my firmware (100% of the pack's rating) |" in text

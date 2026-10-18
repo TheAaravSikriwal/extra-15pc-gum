@@ -12,7 +12,8 @@ from pathlib import Path
 import pytest
 
 from pcs14.catalog import load_catalog
-from pcs14.sizing.sweep import margin_curve, sweep
+from pcs14.sizing.checks import evaluate
+from pcs14.sizing.sweep import Candidate, margin_curve, sweep
 from pcs14.viz import Recorder
 
 FIXTURES = Path(__file__).parent / "fixtures"
@@ -102,3 +103,13 @@ def test_every_extra_100_g_costs_flight_time(build, targets):
     cruise = [point.cruise_minutes for point in mission]
     assert cruise == sorted(cruise, reverse=True)
     assert cruise[0] - cruise[1] > 0.5  # 100 g costs more than half a minute
+
+
+def test_a_capped_current_check_stays_out_of_the_ranking(build, targets):
+    capped = build.variant(current_cap_fraction=1.0)  # 90 A cap; the 82 A draw is the tightest
+    candidate = Candidate(build=capped, result=evaluate(capped, targets))
+    checks = [c for s in candidate.result.setups if s.setup.required for c in s.checks]
+    current = next(c for c in checks if c.name == "Full-throttle current")
+    others = [c.margin for c in checks if c.name != "Full-throttle current"]
+    assert current.margin < min(others)
+    assert candidate.tightest_margin == min(others)

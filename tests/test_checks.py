@@ -76,3 +76,19 @@ def test_every_flight_can_go_into_rerun(build, targets, tmp_path):
     evaluate(build, targets, recorder=recorder)
     recorder.close()
     assert path.stat().st_size > 10_000
+
+
+def test_a_current_cap_keeps_full_throttle_inside_the_rating(build, targets, setups):
+    capped = build.variant(current_cap_fraction=0.5)  # 45 A on a 90 A pack
+    base = evaluate_setup(capped, targets, setups["base"])
+    current = base.check("Full-throttle current")
+    assert current.nominal == 45
+    assert current.verdict == "pass"
+    assert "caps it at 45 A" in current.note
+    assert "would pull 83 A" in current.note  # 82.19 A, rounded toward failing
+    assert not current.ranked  # the cap holds it, so it says nothing about the parts
+
+
+def test_without_a_cap_the_current_check_ranks(build, targets, setups):
+    base = evaluate_setup(build, targets, setups["base"])
+    assert base.check("Full-throttle current").ranked

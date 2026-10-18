@@ -11,6 +11,7 @@ Two targets needed a working definition:
 - Top speed is checked at half charge, the middle of a flight.
 """
 
+import math
 from dataclasses import dataclass, field
 
 from pcs14 import units
@@ -47,6 +48,7 @@ class Check:
     limit: float
     higher_is_better: bool
     note: str = ""
+    ranked: bool = True  # counts toward the sweep's ranking (a firmware cap holds it if not)
 
     @property
     def verdict(self) -> str:
@@ -182,16 +184,17 @@ def evaluate_setup(
         ),
     ]
     if targets.current_within_battery_rating:
-        full_current = nominal.rotor.full_throttle(pack, 1.0).current
+        full = nominal.rotor.full_throttle(pack, 1.0)
         checks.append(
             Check(
                 "Full-throttle current",
                 "A",
-                full_current,
-                full_current,
+                full.current,
+                full.current,
                 pack.max_continuous_current,
                 False,
-                note="All four motors flat out on a full pack, against the pack's rating",
+                note=_current_note(build, full),
+                ranked=build.current_cap is None,
             )
         )
     tops = {
@@ -248,6 +251,18 @@ def evaluate_setup(
         least_power_speed=speed,
         least_power_minutes=best.minutes,
         top_speeds_kmh=tops,
+    )
+
+
+def _current_note(build: Build, full) -> str:
+    cap = build.current_cap
+    if cap is None:
+        return "All four motors flat out on a full pack, against the pack's rating"
+    if full.capped_from is None:
+        return f"All four motors flat out on a full pack, under the firmware's {cap:g} A cap"
+    return (
+        f"All four motors flat out on a full pack. The firmware caps it at {cap:g} A; without "
+        f"the cap it would pull {math.ceil(full.capped_from)} A"
     )
 
 

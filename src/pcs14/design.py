@@ -160,6 +160,12 @@ class _PackFile(_Strict):
     note: str = Field(min_length=1)  # these two numbers are estimates until the electrical step
 
 
+class _FirmwareFile(_Strict):
+    # The flight controller caps total battery current at this share of the pack's
+    # continuous rating. Leave it out for no cap.
+    current_cap_fraction: float | None = Field(default=None, gt=0)
+
+
 class _BuildFile(_Strict):
     motor: str
     prop: str
@@ -168,6 +174,7 @@ class _BuildFile(_Strict):
     pack: _PackFile
     base: list[str]
     modules: dict[Literal["V", "P", "C"], list[str]]
+    firmware: _FirmwareFile = Field(default_factory=_FirmwareFile)
 
 
 @dataclass(frozen=True)
@@ -200,9 +207,18 @@ class Build:
     pack: PackSpec
     base: tuple[Component, ...]
     modules: dict[str, tuple[Component, ...]]
+    current_cap_fraction: float | None = None  # of the pack's continuous rating, in firmware
 
     def __post_init__(self):
         _check_fit(self)
+
+    @property
+    def current_cap(self) -> float | None:
+        """A: the most current the firmware lets all four motors pull from the pack."""
+        if self.current_cap_fraction is None:
+            return None
+        rating = self.pack.parallel * self.pack.cell.max_continuous_a  # as in Pack
+        return rating * self.current_cap_fraction
 
     @property
     def thrust_table(self) -> ThrustTable:
@@ -217,7 +233,8 @@ class Build:
         return tuple(parts)
 
     def variant(self, **changes) -> "Build":
-        """The same build with some parts swapped: motor, prop, cell or parallel."""
+        """The same build with some parts swapped (motor, prop, cell or parallel), or a
+        different current cap."""
         pack_changes = {k: changes.pop(k) for k in ("cell", "series", "parallel") if k in changes}
         pack = dataclasses.replace(self.pack, **pack_changes)
         return dataclasses.replace(self, pack=pack, **changes)
@@ -268,6 +285,7 @@ def load_build(path: Path, catalog: Catalog) -> Build:
             ),
             base=tuple(catalog.component(c) for c in raw.base),
             modules={m: tuple(catalog.component(c) for c in ids) for m, ids in raw.modules.items()},
+            current_cap_fraction=raw.firmware.current_cap_fraction,
         )
     except CatalogError as error:
         raise CatalogError(f"{path.name}: {error}") from None

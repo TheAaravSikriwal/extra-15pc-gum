@@ -9,6 +9,11 @@ Full throttle: the motor's speed scales with voltage, so thrust scales with volt
 and power with voltage cubed. On a real pack the voltage sags as the current climbs, so the
 pack settles where V = V_rest - R * P0 * V^2 / V0^3, which has a closed-form answer.
 
+Current cap: if the build's firmware caps the pack current and flat out would pull more, the
+flight controller throttles back until the pack gives exactly the cap. The pack then sits at
+V_rest - R * cap, the motors get V * cap watts, and thrust follows that power to the 2/3,
+the same law as above, so the capped and uncapped numbers meet without a jump.
+
 Forward flight: each prop's power splits into lifting (induced) power, which shrinks with
 speed because the prop keeps getting fresh air; blade-drag (profile) power, which grows a
 little with speed; and the power to push the drone through the air, drag x speed. The hover
@@ -53,6 +58,7 @@ class FullThrottle:
     current: float  # A from the pack, all four motors
     thrust: float  # N per motor
     rpm: float
+    capped_from: float | None = None  # A it would pull without the firmware's current cap
 
 
 @dataclass(frozen=True)
@@ -60,12 +66,13 @@ class Rotor:
     table: ThrustTable
     prop: Prop
     thrust_scale: float = 1.0  # 1 - DERATE in the pessimistic case
+    current_cap: float | None = None  # A from the pack, all four motors, set in the firmware
 
     @classmethod
     def from_build(cls, build: Build, pessimistic: bool = False) -> "Rotor":
         table = build.thrust_table
         scale = 1 - DERATE[table.source.kind] if pessimistic else 1.0
-        return cls(table=table, prop=build.prop, thrust_scale=scale)
+        return cls(table=table, prop=build.prop, thrust_scale=scale, current_cap=build.current_cap)
 
     @property
     def _thrusts(self) -> list[float]:
@@ -98,12 +105,24 @@ class Rotor:
         a = pack.resistance * p0 / v0**3
         rest = pack.ocv(soc)
         volts = (-1 + math.sqrt(1 + 4 * a * rest)) / (2 * a)
-        last = self.table.rows[-1]
+        current = p0 * volts**2 / v0**3
+        rpm = self.table.rows[-1].rpm or 0.0
+        cap = self.current_cap
+        if cap is None or current <= cap:
+            return FullThrottle(
+                voltage=volts,
+                current=current,
+                thrust=self.max_thrust * (volts / v0) ** 2,
+                rpm=rpm * volts / v0,
+            )
+        volts = rest - pack.resistance * cap
+        share = (volts * cap / p0) ** (1 / 3)  # the motors' effective voltage over v0
         return FullThrottle(
             voltage=volts,
-            current=p0 * volts**2 / v0**3,
-            thrust=self.max_thrust * (volts / v0) ** 2,
-            rpm=(last.rpm or 0.0) * volts / v0,
+            current=cap,
+            thrust=self.max_thrust * share**2,
+            rpm=rpm * share,
+            capped_from=current,
         )
 
 

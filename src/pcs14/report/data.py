@@ -88,6 +88,7 @@ def to_data(design: DesignResult, sweep=None, margin=None, made_up=False, genera
                 "source": table.source.kind.value,
                 "source_url": str(table.source.url) if table.source.url else None,
             },
+            "current_cap_a": r(build.current_cap),
             "components": [part_info(c) for c in build.base],
             "modules": {m: [part_info(c) for c in parts] for m, parts in build.modules.items()},
         },
