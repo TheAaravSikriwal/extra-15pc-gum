@@ -196,6 +196,13 @@ Power distribution, wire gauges and voltage drop, connectors and their current r
 - [ ] **Read:** the WireViz README ([github.com/wireviz/WireViz](https://github.com/wireviz/WireViz)), which turns a text file into a wiring diagram.
 - [ ] **Read:** Oscar Liang's guides on power and flight controller wiring ([oscarliang.com](https://oscarliang.com)).
 
+Four things came up in the electrical talk (2026-10-18). DShot, and the bidirectional kind, is the language between the flight controller and the ESC, and the safety monitor now has to speak it too. DroneCAN is how the modules talk to the flight controller. Partial power-down (Ioff) is why a dead Teensy won't drag down the lines it listens to: without it, a chip's protection diodes get powered through its input pins. And fusing current, how fast a wire melts at a given current, is how the pack's cell links get judged.
+
+- [ ] **Read:** Betaflight's DShot page ([betaflight.com/docs/development/API/Dshot](https://betaflight.com/docs/development/API/Dshot)), put together by one of the Bluejay ESC firmware's authors: the frame, the checksum, and how the RPM reply works.
+- [ ] **Read:** the DroneCAN docs ([dronecan.github.io](https://dronecan.github.io)), and skim libcanard ([github.com/dronecan/libcanard](https://github.com/dronecan/libcanard)), the small C library my firmware will use to speak it.
+- [ ] **Read:** TI's technical article on partial power-down ([ti.com/lit/pdf/ssztap0](https://ti.com/lit/pdf/ssztap0)), then look up "Ioff" in any 74LVC datasheet.
+- [ ] **Read:** Signal Integrity Journal's piece on how traces fuse ([signalintegrityjournal.com](https://www.signalintegrityjournal.com/articles/1704-how-do-traces-fuse-melt)), on Onderdonk's equation and where it stops being right. For the deep version: Douglas Brooks and Johannes Adam, *PCB Design Guide to Via and Trace Currents and Temperatures* (Artech House, 2021), chapter 12.
+
 ## 16. Structure: stress and vibration
 
 *Needed for the structure side track.*

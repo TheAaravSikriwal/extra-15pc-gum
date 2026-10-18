@@ -1,7 +1,7 @@
 # Status
 
 **Last updated:** 2026-10-18, on the PC's Windows side
-**Step:** step 2 is done (2026-10-18): the whole drone is modeled, every module combination passes its checks, and the real weights are back in the sizing model. Next is step 3, electrical design.
+**Step:** step 3, electrical design. The talk (3a) is done; next is the plan (3b).
 **Main machine:** the PC, with WSL2 Ubuntu 24.04 for the Linux tools
 
 ## Right now
@@ -27,7 +27,7 @@ Where to look:
 
 **Step 2 is done (2026-10-18).** `pcs14 cad` builds the whole drone, checks all eight module combinations (collisions, prop clearance, the parachute's cone, the rail, balance with the pack trimmed, the compass and Remote ID rules, the lidar's view), compares parts with existing CAD models, exports STEP, meshes, a GLB and print files, renders stills, and plays it all in Rerun. The first checks failed every combination; the fixed layout passes all eight. The printed parts' real weights went back into the catalog: Mission is 2293 g and still passes, with almost no margin left. The [CAD report](docs/reports/cad/README.md) and the [log](docs/log/2026-10-18-cad-build.md) have the details.
 
-**Step 3a, the electrical talk, is under way (2026-10-18).** Four of eight answers are in the [electrical spec](docs/specs/2026-10-18-electrical.md): one connection list in code generates every diagram and check, the ARK FPV replaces the Kakute H7, the modules get DroneCAN plus a serial line for the Pi, and the main power runs through the frame's XT60 with no main fuse (small fuses on the branches, a fuse link on each cell). Still to settle: the 5 V rail, the motor cut and chute circuit, the check limits, and how I watch it.
+**Step 3a, the electrical talk, is done (2026-10-18).** Eight answers, all in the [electrical spec](docs/specs/2026-10-18-electrical.md): one connection list in code generates every diagram and check; the ARK FPV replaces the Kakute H7; DroneCAN plus a serial line for the modules; the frame's XT60 with no main fuse (fused branches, a fuse link on each cell); one BEC for the Pi and the modules; the safety monitor takes over the ESC lines and sends stop frames, because AM32 holds the last throttle for half a second when its signal just disappears; 80% of every rating, with a 10 s burst at the 90 A cap for heat; and Rerun with the wires colored by current. The [log](docs/log/2026-10-18-electrical-talk.md) has the story.
 
 **The parts research added two missing parts (2026-10-17).** The camera needs a 22-pin cable for the Pi 5, and the HaLow card comes with no antenna, so both went into module V (14 g together). Mission is now 2268 g and hovers 25.5 min (21.9 pessimistic, against 21), and Max is 2468 g. Everything still passes, with a thinner margin.
 
@@ -38,14 +38,16 @@ Where to look:
 ## Up next
 
 1. **Set up WSL2 on the PC** with [docs/setup-pc.md](docs/setup-pc.md). The `wsl --install` step needs an admin PowerShell and one reboot. Then commit `docs/machines/pc.md`.
-2. **Finish step 3a, the electrical talk.** Next up is the 5 V rail: the BEC is rated right at the Pi's 5 A, with the servos in P and C wanting power too. Then the motor cut and chute circuit, the check limits, and watching it.
+2. **Step 3b: the electrical plan.** Research the new parts (a DroneCAN GPS to replace the end-of-life M10Q, two DroneCAN servo nodes, the safety monitor's multiplexers and buffers, the module connector, the fuses), then write the implementation plan.
 3. **The project site's spec** (what it's built with), so its first pages can come with the sizing model.
 4. **Write the first half of `scripts/setup-ubuntu.sh`** (inside WSL2): Gazebo, PX4 and the Python tools, with pinned versions.
 
 ## Still open
 
 - Rotor drag in forward flight, so the cruise numbers get believable (the honesty check's big miss)
-- Almost no weight margin left: Mission's pessimistic hover is 21.6 min against 21, and Max is 7 g under its 2500 g limit. The next grams need a decision.
+- Almost no weight margin left: Mission's pessimistic hover is 21.6 min against 21, and Max is 7 g under its 2500 g limit. The next grams need a decision. Step 3's new parts (the DroneCAN GPS, servo nodes, the monitor's extra chips) will add some.
+- The ARK FPV's 5 V supply rating, which ARK doesn't publish
+- Whether a safety monitor cut can be undone in the air (step 5), and the delay between cutting the motors and firing the chute (step 6)
 - Whether the HaLow HAT works on a Pi 5 (Heltec lists Pi 1 to 4), and which 915 MHz antenna to use
 - Cruise speed: 10 m/s until the sizing model says otherwise
 - Which OpenFOAM: the Foundation release or ESI's. Decided when writing the CFD half of the setup script.

@@ -73,19 +73,19 @@ Claude writes the CAD in build123d, reading the catalog and `design/build.yaml`.
 
 ## Step 3: Electrical design
 
-No custom PCB: everything is off-the-shelf boards and breakouts.
+No custom PCB: everything is off-the-shelf boards and breakouts. The talk (2026-10-18) settled the details; they're in the [electrical spec](specs/2026-10-18-electrical.md).
 
 1. **A system schematic** in KiCad, and wiring harness diagrams generated from code with WireViz.
 2. **A pin map:**
    - the flight controller: four bidirectional DShot outputs on timers, serial ports for the receiver, GPS, safety monitor and companion computer, SPI for the IMU
    - the Teensy: the receiver feed, its own IMU, the signal switch, the chute trigger, the heartbeat
-3. **Power:** the battery connector, the ESC, 5 V supplies for the flight controller and the companion computer, the current sensor, a fuse, wire gauges and connector ratings.
+3. **Power:** the battery connector (the frame's XT60), the ESC, 5 V supplies for the flight controller and the companion computer, the current sensor, fuses on the branches and on each cell (no main fuse), wire gauges and connector ratings.
 4. **Checks:**
    - voltage drop, using wire lengths from the CAD
    - peak and continuous currents in every setup
    - rough heat in the ESC and motors
    - the power budget for every module combination
-5. **Circuit sim (ngspice):** the safety monitor's signal switch passes bidirectional DShot cleanly, and still passes signals with the Teensy unpowered.
+5. **Circuit sim (ngspice):** the safety monitor's multiplexer passes bidirectional DShot cleanly, still passes it with the Teensy unpowered, and hands the lines over to the Teensy's stop frames with at most one broken frame. A dead Teensy doesn't load the lines it listens to.
 
 **Done when:** every connection is specified, and every current, voltage and temperature is inside its rating with margin.
 

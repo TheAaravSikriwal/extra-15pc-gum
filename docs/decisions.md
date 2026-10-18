@@ -102,6 +102,19 @@ Building the drone in CAD and checking every module combination changed a few th
 - **The battery tray's strap slots sit just outside the pack,** so the straps wrap around it (the first design had them landing on the pack's edge).
 - **The printed parts' weights now come from the CAD,** marked as such in the catalog, and the legs, battery tray and four brackets joined it. Mission went from 2268 g to 2293 g, and its pessimistic hover from 21.9 to 21.6 min against 21. Max is 2493 g against its 2500 g limit.
 
+### The electrical talk (decided 2026-10-18)
+
+Eight questions, all in the [electrical spec](specs/2026-10-18-electrical.md) under "Settled in the electrical talk":
+
+- **One connection list in code** (`design/electrical.yaml`) generates the harness diagrams, pin maps, checks, a KiCad schematic and the 3D wires colored by current.
+- **The ARK FPV replaces the Kakute H7:** five full serial ports, CAN and a debug plug.
+- **The module bus:** DroneCAN for the modules' parts plus one serial line for the Pi, through an XT30 for 5 V and a JST-GH for signals.
+- **The main power path:** the frame's XT60, no main fuse, small fuses on the branches, a fuse link on each cell.
+- **The 5 V rail:** one BEC for the Pi and the modules, with checks keeping the Pi's voltage up when servos stall. The Pi's 5 A ask is mostly for USB.
+- **The motor cut:** the safety monitor takes over the ESC lines and sends stop frames, because AM32 holds the last throttle for half a second when the signal just disappears. The Teensy fires the chute over its own wires, never through the bus.
+- **The check numbers:** 80% of continuous ratings, a 10 s burst at the 90 A cap for heat, 20 °C under every temperature rating at 40 °C air, 2% drop on the main path.
+- **Watching it:** Rerun with the wires colored by current and the switch's scope traces, plus stills.
+
 ### The parts (picked 2026-10-17)
 
 I picked the lightest build that passes every setup, Max included, over the sweep's favorite (a Hobbywing 3115 on 6S3P, 660 g heavier, which breaks Max's 2500 g limit). The sweep ranks by headroom, so this one comes in at #33 of 192, and that's fine: it meets every target I set.
@@ -360,8 +373,8 @@ The rules that don't bend:
 The Teensy 4.1 used to live in module P, which would have come late. That meant the first flights of brand-new firmware would have a kill switch running inside that same firmware. So it moved into Base. In the research it's designed, wired and simulated like everything else.
 
 - It has its own IMU, and it listens to the same receiver as the flight controller (the receiver's output wire splits to both). The kill switch reaches the motors through two separate boards running separate code. A second receiver would add more independence, but the thing I'm protecting against is my firmware, not the receiver.
-- It cuts the motors by blocking the four ESC signal lines with an analog switch, not by switching the main power. A switch in a ~100 A power line is a new way to drop a healthy drone, and ESCs stop the motors when their signal disappears (simulated in step 3, and on the bench checklist if it gets built). It has to pass signals both ways, because bidirectional DShot sends RPM back on the same wire.
-- It fails in the useful direction. If the Teensy loses power, the switch passes signals and the drone keeps flying on the flight controller. The flight controller watches the Teensy's heartbeat, warns me if it goes quiet, and won't arm without it.
+- It cuts the motors by taking over the four ESC signal lines, not by switching the main power. A switch in a ~100 A power line is a new way to drop a healthy drone. The first plan just disconnected the lines, counting on the ESC to stop when its signal disappears, but AM32 keeps the last throttle for half a second before it does. So (decided 2026-10-18 in the electrical talk) a FET multiplexer hands the lines to the Teensy, which sends DShot stop frames, and the motors stop within a millisecond. It has to pass signals both ways, because bidirectional DShot sends RPM back on the same wire. The electrical spec has the circuit.
+- It fails in the useful direction. If the Teensy loses power, the switch passes signals and the drone keeps flying on the flight controller. It takes power from both the flight controller's 5 V and the module supply, through diodes, so it can still fire the chute if the flight controller loses power. The flight controller watches the Teensy's heartbeat, warns me if it goes quiet, and won't arm without it.
 - The automatic triggers (free fall, tumbling, the flight controller going quiet) start in shadow mode: they log what they would have done, and do nothing. In the sim they go live in step 6, once the false-trigger replay shows zero false triggers; on a real drone, only after enough real flights with none. A fast descent at low throttle looks a lot like free fall to an accelerometer, so this matters. The 4.1's SD card handles the logging.
 - When P is fitted, it can fire the chute too, after cutting the motors.
 
@@ -482,7 +495,7 @@ Parts so far:
 - **Control link:** an ExpressLRS receiver and a handheld transmitter, on 2.4 GHz. HaLow and Meshtastic (below) both use 902–928 MHz in the US, and so does 900 MHz ExpressLRS, so the control link stays off that band. Its protocol (CRSF) is well documented and easy to parse.
 - **Data/video link to the laptop:** the lead option (2026-10-14) is Wi-Fi HaLow (802.11ah), which is Wi-Fi on 900 MHz. It has a lot more range than normal Wi-Fi, with a few Mbps up close dropping to hundreds of kbps far out. It carries normal IP traffic, so MAVLink telemetry and real compressed video can share one link from the companion computer, and existing ground station software works while I build my own. The same video could go into ATAK too (the free civilian version runs on Android). One catch: the Pi 5 has no hardware H.264 encoder, so video encoding runs on its CPU, which counts when picking Pi vs Jetson. Confirmed in step 6.
 - **Remote ID:** a broadcast module on a mount and 5 V plug in Base. Whether it's fitted is up to me (see the limits profiles).
-- **Power:** a dedicated 5 V / 5 A+ supply for the companion computer, and a current sensor (usually on the ESC). The main power path (decided 2026-10-18): the frame's XT60, no main fuse, small fuses on the branches that tap the battery, and a fuse link on each cell of the pack. See the electrical spec.
+- **Power:** a dedicated 5 V / 5 A+ supply for the companion computer, and a current sensor (usually on the ESC). The main power path (decided 2026-10-18): the frame's XT60, no main fuse, small fuses on the branches that tap the battery, and a fuse link on each cell of the pack. The 5 V rail: the BEC feeds the Pi and every module, servos included, and the flight-critical parts run on the flight controller's own 5 V. See the electrical spec.
 - **Thrust stand (optional):** a load cell, an HX711 amplifier and a current sensor, to measure how efficient the motors and props really are, and feed that back into the sim. If I do it, it happens in step 1, as soon as the sizing model has a shortlist, running off a real 6S pack so the voltage sag gets measured too. It's the single measurement that makes the whole simulation more believable.
 
 ## Shortlist (not final)

@@ -28,7 +28,7 @@ This is the live version. When a step finishes, its outcome goes here, with a li
 | Setup | WSL2 on the PC, with all checks passing | Up next | |
 | 1. Sizing and parts | Real, orderable parts that hit the targets | Done, 2026-10-17 | Emax 2814 850KV motors, Gemfan 10x5 props, a 6S2P Molicel P42A pack and a Nazgul XL10 frame. Every setup passes, Max included: 25.7 min hover with Mission's loadout at 2254 g ([report](docs/reports/sizing/README.md), [log](docs/log/2026-10-17-first-real-sweep.md)) |
 | 2. The virtual drone (CAD) | Every part modeled and connected | Done, 2026-10-18 | Every part modeled and every module combination passing its checks, with the real weights back in the sizing model: Mission 2293 g, still passing ([report](docs/reports/cad/README.md), [log](docs/log/2026-10-18-cad-build.md)) |
-| 3. Electrical design | Every wire, pin and connector | Up next | |
+| 3. Electrical design | Every wire, pin and connector | In progress | The talk is done: eight questions settled ([spec](docs/specs/2026-10-18-electrical.md)). Next is the plan |
 | 4. Flight sim (PX4) | Prove the airframe flies, in all eight module combinations | Not started | |
 | 5. My firmware | My flight code and the safety monitor, passing the same tests as PX4 | Not started | |
 | 6. Modules in sim | Parachute, vision & nav, and claws if they happen | Not started | |
@@ -60,6 +60,15 @@ This is the live version. When a step finishes, its outcome goes here, with a li
 | 2b. Plan | Every part's dimensions and existing CAD checked, then the implementation plan | Done, 2026-10-17 | Six of the build's parts have official 3D files; the frame has no drawing at all, so it gets traced from iFlight's renders ([plan](docs/plans/2026-10-17-cad.md)) |
 | 2c. Build | Test-first, in build123d: every part, the assembly, the checks, Rerun and the exports | Done, 2026-10-18 | The frame traced from iFlight's render; the first checks failed every combination and the fixed layout passes all eight ([log](docs/log/2026-10-18-cad-build.md)) |
 | 2d. Close the loop | The CAD's weights back into the sizing model, and the targets rechecked | Done, 2026-10-18 | The printed parts went into the catalog. Mission's pessimistic hover is 21.6 min against 21, and Max is 2493 g against 2500: everything passes, with almost no room left |
+
+### Step 3, in detail
+
+| Part | What happens | Status | Outcome |
+|---|---|---|---|
+| 3a. Talk | Settle where the design lives, the flight controller, the module bus, power, the motor cut, the checks and watching it | Done, 2026-10-18 | Eight questions settled. The surprise: the ESC firmware holds the last throttle for half a second when its signal disappears, so the safety monitor now sends stop frames instead of just disconnecting the lines ([log](docs/log/2026-10-18-electrical-talk.md), [spec](docs/specs/2026-10-18-electrical.md#settled-in-the-electrical-talk)) |
+| 3b. Plan | The new parts researched (a DroneCAN GPS, servo nodes, the multiplexers, connectors and fuses), then the implementation plan | Up next | |
+| 3c. Build | Test-first: the connection list, the ARK FPV swap, the checks, the generators (WireViz, pin maps, KiCad), ngspice, Rerun and the report | Not started | |
+| 3d. Close the loop | The new parts' weights back into the CAD and the sizing model, with Max only 7 g under its limit | Not started | |
 
 ## Modules
 
