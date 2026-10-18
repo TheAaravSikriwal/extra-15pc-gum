@@ -8,3 +8,17 @@ source: {kind: manufacturer, url: 'https://www.mateksys.com/?portfolio=bec12s-pr
 mass_g: 5
 power_w: 1.0
 power_source: {kind: estimate, checked: 2026-10-17, note: "Losses at about 10 W out and about 90% efficiency"}
+cad:
+  shape: box
+  length_mm: 35
+  width_mm: 24
+  height_mm: 5.5
+  source:
+    kind: manufacturer
+    url: https://www.mateksys.com/?portfolio=bec12s-pro
+    checked: '2026-10-17'
+    note: 35 x 24 x 5.5 mm, no mounting holes
+  existing:
+    found: none
+    checked: '2026-10-17'
+    note: No download on Matek's page, unlike the GPS

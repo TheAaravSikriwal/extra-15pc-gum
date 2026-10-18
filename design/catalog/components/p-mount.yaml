@@ -6,3 +6,13 @@ model: Module P mount
 checked: 2026-10-17
 source: {kind: estimate, checked: 2026-10-17, note: "A printed mount for the parachute canister"}
 mass_g: 15
+cad:
+  shape: printed
+  source:
+    kind: estimate
+    checked: '2026-10-17'
+    note: My own part, designed in pcs14.cad.printed
+  existing:
+    found: none
+    checked: '2026-10-17'
+    note: My own part, so there's nothing to look for

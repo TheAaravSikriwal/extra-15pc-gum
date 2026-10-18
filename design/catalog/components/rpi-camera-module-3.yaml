@@ -9,3 +9,38 @@ source: {kind: manufacturer, url: 'https://github.com/raspberrypi/documentation/
 mass_g: 4
 power_w: 1.0
 power_source: {kind: estimate, checked: 2026-10-17, note: "Raspberry Pi publishes no draw for the Camera Module 3; around 1 W while streaming is assumed"}
+cad:
+  shape: board
+  length_mm: 25
+  width_mm: 23.862
+  thickness_mm: 1.12
+  top_mm: 7.0
+  bottom_mm: 3.2
+  holes:
+  - x_mm: 10.5
+    y_mm: -9.931
+    diameter_mm: 2.2
+  - x_mm: -10.5
+    y_mm: -9.931
+    diameter_mm: 2.2
+  - x_mm: -10.5
+    y_mm: 2.569
+    diameter_mm: 2.2
+  - x_mm: 10.5
+    y_mm: 2.569
+    diameter_mm: 2.2
+  source:
+    kind: manufacturer
+    url: https://pip-assets.raspberrypi.com/categories/1207-design-files/documents/RP-008153-DS-1-camera-module-3-standard-mechanical-drawing.pdf
+    checked: '2026-10-17'
+    note: 'Raspberry Pi''s drawing: 25 x 23.862 mm, 1.12 mm board, 11.3 mm deep, four 2.2 mm holes 21
+      mm apart side to side and 12.5 mm apart up and down'
+  estimates:
+  - bottom_mm
+  estimate_note: The 11.3 mm overall depth minus the lens stack and the board
+  existing:
+    found: official
+    url: https://pip.raspberrypi.com/categories/1207-design-files
+    format: STEP
+    terms: No license file; Raspberry Pi's site terms reserve all rights.
+    checked: '2026-10-17'

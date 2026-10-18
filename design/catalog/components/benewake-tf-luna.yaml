@@ -10,3 +10,27 @@ source: {kind: manufacturer, url: 'https://en.benewake.com/uploadfiles/2025/04/2
 mass_g: 5
 power_w: 0.35
 power_source: {kind: manufacturer, url: 'https://en.benewake.com/TFLuna/index.html', checked: 2026-10-17, note: "0.35 W or less"}
+cad:
+  shape: board
+  length_mm: 35
+  width_mm: 21.25
+  thickness_mm: 2
+  top_mm: 11.5
+  holes:
+  - x_mm: 15.25
+    y_mm: 0
+    diameter_mm: 2.2
+  - x_mm: -15.25
+    y_mm: 0
+    diameter_mm: 2.2
+  source:
+    kind: manufacturer
+    url: https://en.benewake.com/uploadfiles/2025/04/20250430174501874.pdf
+    checked: '2026-10-17'
+    note: 'The datasheet drawing: 35 mm across the mounting ears, 21.25 mm tall, 13.5 mm deep, 2 mm ears
+      with 2.2 mm holes 30.5 mm apart (drawn here centered on the ears). It can''t measure closer than
+      20 cm'
+  existing:
+    found: none
+    checked: '2026-10-17'
+    note: Benewake publishes 3D files for other sensors, not this one

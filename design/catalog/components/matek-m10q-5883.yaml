@@ -8,3 +8,20 @@ source: {kind: manufacturer, url: 'https://www.mateksys.com/?portfolio=m10q-5883
 mass_g: 8
 power_w: 0.07
 power_source: {kind: manufacturer, url: 'https://www.mateksys.com/?portfolio=m10q-5883', checked: 2026-10-17, note: "13 mA, taken at 5 V"}
+cad:
+  shape: box
+  length_mm: 20
+  width_mm: 20
+  height_mm: 12.4
+  source:
+    kind: manufacturer
+    url: https://www.mateksys.com/?portfolio=m10q-5883
+    checked: '2026-10-17'
+    note: 20 x 20 x 12.4 mm, no mounting holes. Matek says to keep the compass 10 cm from power wires,
+      the ESC and the motors
+  existing:
+    found: official
+    url: https://www.mateksys.com/Downloads/other/M10Q-5883_step.zip
+    format: STEP
+    terms: No license in the zip or on the page; copyright Matek, so all rights reserved
+    checked: '2026-10-17'

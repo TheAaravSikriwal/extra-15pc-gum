@@ -9,3 +9,42 @@ source: {kind: estimate, url: 'https://heltec.org/project/ht-hc01p/', checked: 2
 mass_g: 15
 power_w: 0.7
 power_source: {kind: manufacturer, url: 'https://resource.heltec.cn/download/HT-HC01P/Datasheet/HT-HC01P.pdf', checked: 2026-10-17, note: "Transmitting at 21 dBm: 57 mA plus 152 mA at 3.3 V, about 0.69 W"}
+cad:
+  shape: board
+  length_mm: 65
+  width_mm: 56.5
+  thickness_mm: 1.6
+  top_mm: 8
+  bottom_mm: 8.5
+  holes:
+  - x_mm: 29
+    y_mm: 24.5
+    diameter_mm: 2.75
+  - x_mm: -29
+    y_mm: 24.5
+    diameter_mm: 2.75
+  - x_mm: -29
+    y_mm: -24.5
+    diameter_mm: 2.75
+  - x_mm: 29
+    y_mm: -24.5
+    diameter_mm: 2.75
+  source:
+    kind: manufacturer
+    url: https://resource.heltec.cn/download/HT-HC01P/Datasheet/HT-HC01P_Rev.1.0.0.pdf
+    checked: '2026-10-17'
+    note: 'The card: a full-size mini PCIe card, 50.95 x 30 x 3.75 mm, with an IPEX1.0 antenna jack. Heltec
+      publishes nothing about the HAT''s size'
+  estimates:
+  - length_mm
+  - width_mm
+  - thickness_mm
+  - top_mm
+  - bottom_mm
+  estimate_note: The HAT looks HAT-sized in Heltec's photos, so it's drawn as the standard Raspberry Pi
+    HAT (65 x 56.5 mm, holes on 58 x 49 mm), with the card lying on it and a 40-pin header underneath.
+    Heltec only lists Pi 1 to 4 for the HAT
+  existing:
+    found: none
+    checked: '2026-10-17'
+    note: Nothing on Heltec's pages, wiki or download server

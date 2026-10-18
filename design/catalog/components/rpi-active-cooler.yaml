@@ -8,3 +8,17 @@ source: {kind: estimate, checked: 2026-10-17, note: "The Pi 5 throttles under su
 mass_g: 15
 power_w: 0.3
 power_source: {kind: estimate, checked: 2026-10-17, note: "A small 5 V fan"}
+cad:
+  shape: box
+  length_mm: 63.5
+  width_mm: 42.5
+  height_mm: 13.7
+  source:
+    kind: manufacturer
+    url: https://pip-assets.raspberrypi.com/categories/993-raspberry-pi-active-cooler/documents/RP-008187-DS-1-raspberry-pi-active-cooler-mechanical-drawing.pdf
+    checked: '2026-10-17'
+    note: 63.5 x 42.5 x 13.7 mm, on two spring push pins. It sits where a HAT would go
+  existing:
+    found: none
+    checked: '2026-10-17'
+    note: Raspberry Pi publishes the drawing, not a 3D file

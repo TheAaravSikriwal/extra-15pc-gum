@@ -12,3 +12,33 @@ max_prop_in: 10
 wheelbase_mm: 420
 drag_area_cm2: 120
 drag_source: {kind: estimate, checked: 2026-10-17, note: "Frontal area from the published size, times a drag coefficient of 1.0 for a blunt body: body 35 x 100 mm, arms 7 x 297 mm, four motors about 35 x 25 mm, and a 6S2P 21700 pack end-on about 42 x 70 mm, about 0.012 m2 in all. The battery is counted here. Replaced when the wind tunnel side track has real numbers"}
+cad:
+  shape: frame
+  arm_thickness_mm: 7
+  arm_width_mm: 24
+  plate_thickness_mm: 3
+  plate_gap_mm: 19
+  body_length_mm: 150
+  body_width_mm: 40
+  stack_spacing_mm: 30.5
+  max_stack_mm: 19
+  source:
+    kind: manufacturer
+    url: https://shop.iflight.com/xl10-v6-10-inch-fpv-frame-Pro1967
+    checked: '2026-10-17'
+    note: 420 mm true X, 297 x 297 x 35 mm, 7 mm arms, three 3 mm plates, flight stack up to 19 mm (which
+      sets the gap between the plates), 30.5 or 20 mm stack holes
+  estimates:
+  - arm_width_mm
+  - body_length_mm
+  - body_width_mm
+  estimate_note: Not published anywhere. These are first guesses, which the frame task replaces by tracing
+    iFlight's product renders at the 420 mm wheelbase scale
+  existing:
+    found: unofficial
+    url: https://cults3d.com/en/3d-model/gadget/iflight-xl10-v6-10-drone-frame-cad
+    format: STEP and SolidWorks
+    terms: 'Unknown: the site blocked automated access, so its license couldn''t be read'
+    checked: '2026-10-17'
+    note: A community model. iFlight publishes no STEP, DXF or dimensioned drawing, only an exploded assembly
+      guide

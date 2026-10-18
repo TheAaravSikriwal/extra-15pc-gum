@@ -1,0 +1,29 @@
+# Researched 2026-10-17.
+type: component
+id: halow-antenna-915
+maker: Various
+model: 915 MHz dipole antenna with an IPEX pigtail (placeholder)
+checked: '2026-10-17'
+source:
+  kind: estimate
+  checked: '2026-10-17'
+  note: The HaLow card has an IPEX1.0 jack but comes with no antenna, and Heltec doesn't name one. A placeholder
+    until a real 902-928 MHz antenna gets picked; the weight is a guess
+mass_g: 12
+cad:
+  shape: cylinder
+  diameter_mm: 10
+  length_mm: 164
+  source:
+    kind: estimate
+    checked: '2026-10-17'
+    note: A half-wave dipole at 915 MHz is about 164 mm long
+  estimates:
+  - diameter_mm
+  - length_mm
+  estimate_note: 'Physics, not a datasheet: half the wavelength at 915 MHz. A real antenna will be close
+    to this, and it needs a spot clear of the props and the carbon'
+  existing:
+    found: none
+    checked: '2026-10-17'
+    note: Not picked yet, so nothing to look for

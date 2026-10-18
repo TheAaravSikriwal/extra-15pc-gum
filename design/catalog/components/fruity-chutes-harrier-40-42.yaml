@@ -11,3 +11,17 @@ power_w: 0.2
 power_source: {kind: estimate, checked: 2026-10-17, note: "A trigger servo holding position"}
 drag_area_cm2: 25
 drag_source: {kind: estimate, checked: 2026-10-17, note: "The 40 mm x 154 mm canister, mostly end-on, at a drag coefficient of 1.0 plus its mount"}
+cad:
+  shape: cylinder
+  diameter_mm: 40
+  length_mm: 154
+  source:
+    kind: manufacturer
+    url: https://shop.fruitychutes.com/products/harrier-40-42-drone-parachute-bundle-2-5kg-4-6m-s
+    checked: '2026-10-17'
+    note: 40 x 154 mm. The launcher is its own canister, with a spring piston and a servo release, and
+      three 4-40 screw holes in its base (spacing not published)
+  existing:
+    found: none
+    checked: '2026-10-17'
+    note: No CAD or drawing from Fruity Chutes

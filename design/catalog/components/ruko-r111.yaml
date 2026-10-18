@@ -7,3 +7,18 @@ price_usd: 59.99
 checked: 2026-10-17
 source: {kind: manufacturer, url: 'https://ruko.net/blogs/ruko/introducing-ruko-r111-remote-id-module-enhancing-drone-safety-and-compliance', checked: 2026-10-17, note: "FAA-accepted broadcast module with its own battery (5 h or more), so it takes no power from the drone"}
 mass_g: 13.5
+cad:
+  shape: box
+  length_mm: 33.0
+  width_mm: 27.9
+  height_mm: 12.7
+  source:
+    kind: manufacturer
+    url: https://ruko.net/products/ruko-r111-remote-id-module
+    checked: '2026-10-17'
+    note: 1.3 x 1.1 x 0.5 inches on Ruko's spec card. It mounts with Velcro, tape or zip ties, and Ruko
+      says to keep it away from the GPS, the props and the belly
+  existing:
+    found: none
+    checked: '2026-10-17'
+    note: No CAD or drawing from Ruko

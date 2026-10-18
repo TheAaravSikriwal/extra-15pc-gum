@@ -1,0 +1,23 @@
+# Researched 2026-10-17.
+type: component
+id: rpi-camera-cable-standard-mini
+maker: Raspberry Pi
+model: Camera cable, Standard-Mini, 200 mm
+link: https://www.raspberrypi.com/documentation/accessories/camera.html
+checked: '2026-10-17'
+source:
+  kind: estimate
+  checked: '2026-10-17'
+  note: The Pi 5 needs the 22-pin mini camera connector, so Camera Module 3's own 15-pin cable won't do
+    (Raspberry Pi's camera documentation). The weight is a guess for a 200 mm flat cable
+mass_g: 2
+cad:
+  shape: routed
+  source:
+    kind: estimate
+    checked: '2026-10-17'
+    note: A flat cable, drawn along its route in design/cad.yaml
+  existing:
+    found: none
+    checked: '2026-10-17'
+    note: A flat cable, so there's nothing to look for

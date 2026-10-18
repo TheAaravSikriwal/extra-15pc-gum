@@ -13,3 +13,43 @@ cells_max: 6
 continuous_a_per_motor: 50
 burst_a_per_motor: 60
 bidirectional_dshot: true
+cad:
+  shape: board
+  length_mm: 48
+  width_mm: 37
+  thickness_mm: 1.6
+  top_mm: 3.5
+  bottom_mm: 0.9
+  holes:
+  - x_mm: 15.25
+    y_mm: 15.25
+    diameter_mm: 4
+  - x_mm: -15.25
+    y_mm: 15.25
+    diameter_mm: 4
+  - x_mm: -15.25
+    y_mm: -15.25
+    diameter_mm: 4
+  - x_mm: 15.25
+    y_mm: -15.25
+    diameter_mm: 4
+  source:
+    kind: manufacturer
+    url: https://holybro.com/products/tekko32-f4-4in1-50a-esc
+    checked: '2026-10-17'
+    note: 48 x 37 x 6 mm, M4 holes on 30.5 x 30.5 mm with M3 grommets
+  estimates:
+  - thickness_mm
+  - top_mm
+  - bottom_mm
+  estimate_note: Holybro gives 6 mm overall; the split between the board and its parts, and the hole pattern
+    sitting centered along the 48 mm length, come from Holybro's stack STEP, measured roughly
+  existing:
+    found: official
+    url: https://docs.holybro.com/autopilot/kakute-h7-v1-v2-mini/download
+    format: STEP
+    terms: No license on the download page; holybro.com's terms forbid reproducing it without written
+      permission. Fine to download and use locally, not to commit.
+    checked: '2026-10-17'
+    note: One STEP of the Kakute H7 (V1.3) on the Tekko32 F4 50A, with an extra board in the middle that
+      isn't in my build

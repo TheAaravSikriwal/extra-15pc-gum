@@ -10,3 +10,21 @@ power_w: 2.0
 power_source: {kind: estimate, checked: 2026-10-17, note: "Two servos holding a grip"}
 drag_area_cm2: 40
 drag_source: {kind: estimate, checked: 2026-10-17, note: "A placeholder until there's a design"}
+cad:
+  shape: box
+  length_mm: 100
+  width_mm: 60
+  height_mm: 50
+  source:
+    kind: estimate
+    checked: '2026-10-17'
+    note: A placeholder until the claws get designed in the modules step
+  estimates:
+  - length_mm
+  - width_mm
+  - height_mm
+  estimate_note: A box roughly the size of a small claw with its servos
+  existing:
+    found: none
+    checked: '2026-10-17'
+    note: Not designed yet, so nothing to look for

@@ -38,3 +38,26 @@ thrust_tables:
       - {throttle_pct: 80, thrust_g: 2820, current_a: 33.6, rpm: 11810, power_w: 840}
       - {throttle_pct: 90, thrust_g: 3230, current_a: 43.7, rpm: 12758, power_w: 1092.5}
       - {throttle_pct: 100, thrust_g: 3940, current_a: 58.4, rpm: 13780, power_w: 1460}
+cad:
+  shape: motor
+  diameter_mm: 35.1
+  length_mm: 45.5
+  bell_length_mm: 31
+  shaft_diameter_mm: 5
+  mount_spacing_mm: 19
+  mount_hole_mm: 3
+  source:
+    kind: manufacturer
+    url: https://emaxmodel.com/data/motor-e3-2814.js
+    checked: '2026-10-17'
+    note: 35.1 x 45.5 mm, 19 x 19 mm M3 mount, 5 mm shaft with an M5 prop thread
+  estimates:
+  - bell_length_mm
+  estimate_note: Emax doesn't publish how the 45.5 mm splits between the body and the shaft. 31 mm for
+    the base and bell, leaving 14.5 mm of shaft, is a typical split for a 2814, to be checked against
+    Emax's side photos
+  existing:
+    found: none
+    checked: '2026-10-17'
+    note: Nothing for this motor on Emax's site or shop. GrabCAD has other brands' 2814s (T-Motor AS2814,
+      Cobra C-2814), which aren't this motor

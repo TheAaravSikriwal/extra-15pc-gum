@@ -10,3 +10,25 @@ mass_g: 16.8
 diameter_in: 10
 pitch_in: 5
 blades: 3
+cad:
+  shape: prop
+  hub_diameter_mm: 15
+  hub_thickness_mm: 9
+  bore_mm: 5
+  blade_width_mm: 22
+  source:
+    kind: manufacturer
+    url: https://www.gemfanhobby.com/1050-cinelifter-glass-fiber-nylon-3-blade.html
+    checked: '2026-10-17'
+    note: 10 x 5 inch, 3 blades, 5 mm bore
+  estimates:
+  - hub_diameter_mm
+  - hub_thickness_mm
+  - blade_width_mm
+  estimate_note: Gemfan publishes only the size, bore and weight. The 9 mm hub and 22 mm blade width come
+    from a retailer's spec block (rotorvillage.ca), which looks copied from Gemfan. The hub diameter isn't
+    published anywhere; 15 mm is a guess for a 10-inch tri-blade
+  existing:
+    found: none
+    checked: '2026-10-17'
+    note: Nothing on Gemfan's site, GrabCAD, Printables or Thingiverse

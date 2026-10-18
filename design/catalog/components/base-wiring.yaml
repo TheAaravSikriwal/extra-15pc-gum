@@ -6,3 +6,14 @@ model: Wiring, XT60 lead, battery strap and hardware
 checked: 2026-10-17
 source: {kind: estimate, checked: 2026-10-17, note: "Silicone power leads, an XT60 pigtail, signal wiring, a battery strap and screws. Worked out properly in the electrical step"}
 mass_g: 45
+cad:
+  shape: routed
+  source:
+    kind: estimate
+    checked: '2026-10-17'
+    note: The wire routes in design/cad.yaml. The two 20 x 300 mm battery straps come with the frame and
+      get drawn with the battery tray
+  existing:
+    found: none
+    checked: '2026-10-17'
+    note: Wires, so there's nothing to look for

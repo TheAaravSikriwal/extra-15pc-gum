@@ -9,3 +9,42 @@ source: {kind: manufacturer, url: 'https://www.ldlc.com/en/product/PB00574323.ht
 mass_g: 46
 power_w: 8.0
 power_source: {kind: independent_test, url: 'https://www.jeffgeerling.com/blog/2024/new-2gb-pi-5-has-33-smaller-die-30-idle-power-savings/', checked: 2026-10-17, note: "Jeff Geerling measured 3.3 W idle and 9.8 W under stress-ng on the 4 GB board. Software video encoding keeps the CPU busy, so 8 W is assumed"}
+cad:
+  shape: board
+  length_mm: 85
+  width_mm: 56
+  thickness_mm: 1.4
+  top_mm: 16
+  bottom_mm: 2
+  holes:
+  - x_mm: -39
+    y_mm: 24.5
+    diameter_mm: 2.7
+  - x_mm: 19
+    y_mm: 24.5
+    diameter_mm: 2.7
+  - x_mm: 19
+    y_mm: -24.5
+    diameter_mm: 2.7
+  - x_mm: -39
+    y_mm: -24.5
+    diameter_mm: 2.7
+  source:
+    kind: manufacturer
+    url: https://pip-assets.raspberrypi.com/categories/892-raspberry-pi-5/documents/RP-008347-DS-1-raspberry-pi-5-mechanical-drawing.pdf
+    checked: '2026-10-17'
+    note: 'Raspberry Pi''s drawing: 85 x 56 mm, four 2.7 mm holes on 58 x 49 mm starting 3.5 mm from the
+      edges. The USB and Ethernet stack overhangs one end by 3 mm'
+  estimates:
+  - thickness_mm
+  - top_mm
+  - bottom_mm
+  estimate_note: The drawing doesn't give the board thickness or the USB and Ethernet stack's height;
+    these are typical for a Raspberry Pi
+  existing:
+    found: official
+    url: https://pip.raspberrypi.com/categories/892-raspberry-pi-5
+    format: STEP
+    terms: 'MIT license, in the zip: it can be shared, with the copyright notice. It''s 77 MB unzipped,
+      so it stays in the local cache'
+    checked: '2026-10-17'

@@ -42,3 +42,17 @@ discharge_tests:
       - {capacity_mah: 3112, voltage_v: 3.33}
       - {capacity_mah: 3501, voltage_v: 3.21}
       - {capacity_mah: 3890, voltage_v: 2.80}
+cad:
+  shape: cell
+  diameter_mm: 21.7
+  length_mm: 70.2
+  source:
+    kind: manufacturer
+    url: https://www.molicel.com/product/inr-21700-p42a/
+    checked: '2026-10-17'
+    note: The maximum diameter and height, for clearances
+  existing:
+    found: none
+    checked: '2026-10-17'
+    note: It's a cylinder. Molicel publishes no 3D file, and the full datasheet sits behind a contact
+      form

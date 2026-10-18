@@ -8,3 +8,13 @@ source: {kind: estimate, checked: 2026-10-17, note: "A carbon folding mast that 
 mass_g: 10
 drag_area_cm2: 12
 drag_source: {kind: estimate, checked: 2026-10-17, note: "The GPS puck and mast, about 20 x 60 mm frontal, at a drag coefficient of 1.0"}
+cad:
+  shape: printed
+  source:
+    kind: estimate
+    checked: '2026-10-17'
+    note: My own part, designed in pcs14.cad.printed
+  existing:
+    found: none
+    checked: '2026-10-17'
+    note: My own part, so there's nothing to look for

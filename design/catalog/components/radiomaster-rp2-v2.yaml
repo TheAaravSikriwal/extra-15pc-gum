@@ -10,3 +10,18 @@ source: {kind: manufacturer, url: 'https://radiomasterrc.com/products/rp2-expres
 mass_g: 0.55
 power_w: 0.4
 power_source: {kind: estimate, checked: 2026-10-17, note: "Not published for the RP2. Matek's similar ELRS-R24-S lists 60-65 mA at 5 V while binding (https://www.mateksys.com/?portfolio=elrs-r24), about 0.3 W, rounded up"}
+cad:
+  shape: box
+  length_mm: 13
+  width_mm: 11
+  height_mm: 7
+  source:
+    kind: manufacturer
+    url: https://radiomasterrc.com/products/rp2-expresslrs-2-4ghz-nano-receiver
+    checked: '2026-10-17'
+    note: 13 x 11 x 7 mm with its ceramic antenna standing up at one corner (user manual drawing). The
+      antenna has to sit outside the carbon
+  existing:
+    found: none
+    checked: '2026-10-17'
+    note: No CAD on RadioMaster's site; a 13 mm board is fine as a box

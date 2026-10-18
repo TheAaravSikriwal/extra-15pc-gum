@@ -30,6 +30,8 @@ modules:
     - heltec-ht-hc01p
     - matek-bec12s-pro
     - v-housing
+    - rpi-camera-cable-standard-mini
+    - halow-antenna-915
   P:
     - fruity-chutes-harrier-40-42
     - p-mount

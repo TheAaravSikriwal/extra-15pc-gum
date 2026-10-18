@@ -10,3 +10,26 @@ source: {kind: manufacturer, url: 'https://joy-it.net/en/products/Teensy41', che
 mass_g: 15
 power_w: 0.5
 power_source: {kind: manufacturer, url: 'https://www.pjrc.com/store/teensy41.html', checked: 2026-10-17, note: "About 100 mA at 600 MHz, at 5 V"}
+cad:
+  shape: board
+  length_mm: 60.96
+  width_mm: 17.78
+  thickness_mm: 1.57
+  top_mm: 3.07
+  bottom_mm: 1.5
+  source:
+    kind: manufacturer
+    url: https://www.pjrc.com/teensy/dimensions_teensy41.png
+    checked: '2026-10-17'
+    note: 'PJRC''s drawing: 60.96 x 17.78 mm, 1.57 mm board, micro-USB 3.07 mm tall. No mounting holes,
+      it sits on its pin headers'
+  estimates:
+  - bottom_mm
+  estimate_note: The microSD socket's height underneath isn't given; 1.5 mm is a guess
+  existing:
+    found: unofficial
+    url: https://forum.pjrc.com/threads/61169-3D-Model-for-Teensy-4-1
+    format: STEP
+    terms: Its author, Zack Kummer, says in the PJRC forum it can be included with credit
+    checked: '2026-10-17'
+    note: Also on GrabCAD, and in the blackketter/teensy.pretty repo on GitHub (19 MB)

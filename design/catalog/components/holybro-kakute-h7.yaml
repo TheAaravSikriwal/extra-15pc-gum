@@ -10,3 +10,42 @@ source: {kind: manufacturer, url: 'https://docs.px4.io/main/en/flight_controller
 mass_g: 8
 power_w: 1.0
 power_source: {kind: estimate, checked: 2026-10-17, note: "No published figure. H7 flight controllers with an IMU, baro and OSD draw roughly 0.2 A at 5 V"}
+cad:
+  shape: board
+  length_mm: 35
+  width_mm: 35
+  thickness_mm: 1.6
+  top_mm: 4.0
+  bottom_mm: 1.8
+  holes:
+  - x_mm: 15.25
+    y_mm: 15.25
+    diameter_mm: 4
+  - x_mm: -15.25
+    y_mm: 15.25
+    diameter_mm: 4
+  - x_mm: -15.25
+    y_mm: -15.25
+    diameter_mm: 4
+  - x_mm: 15.25
+    y_mm: -15.25
+    diameter_mm: 4
+  source:
+    kind: manufacturer
+    url: https://holybro.com/products/kakute-h7
+    checked: '2026-10-17'
+    note: 35 x 35 mm, 4 mm holes on 30.5 x 30.5 mm with 3 mm grommets
+  estimates:
+  - thickness_mm
+  - top_mm
+  - bottom_mm
+  estimate_note: Holybro's stack STEP measures 7.4 mm overall with parts on both sides; the split is rough
+  existing:
+    found: official
+    url: https://docs.holybro.com/autopilot/kakute-h7-v1-v2-mini/download
+    format: STEP
+    terms: No license on the download page; holybro.com's terms forbid reproducing it without written
+      permission. Fine to download and use locally, not to commit.
+    checked: '2026-10-17'
+    note: The V1.3 board; Holybro's change list says V1.5 only changed the IMU and the barometer, so it
+      should match

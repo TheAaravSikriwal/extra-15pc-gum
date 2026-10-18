@@ -8,3 +8,21 @@ source: {kind: estimate, checked: 2026-10-17, note: "An ICM-42688-P breakout and
 mass_g: 5
 power_w: 0.05
 power_source: {kind: estimate, checked: 2026-10-17, note: "An IMU and a bus switch draw a few milliamps"}
+cad:
+  shape: box
+  length_mm: 25
+  width_mm: 20
+  height_mm: 6
+  source:
+    kind: estimate
+    checked: '2026-10-17'
+    note: The IMU breakout and the signal switch board aren't picked yet
+  estimates:
+  - length_mm
+  - width_mm
+  - height_mm
+  estimate_note: A box big enough for a small IMU breakout and a signal switch board
+  existing:
+    found: none
+    checked: '2026-10-17'
+    note: Not picked yet, so nothing to look for
