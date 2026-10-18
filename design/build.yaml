@@ -20,6 +20,7 @@ base:
   - ruko-r111
   - base-wiring
   - module-mount
+  - matek-bec12s-pro # the module connector's 5 V supply
 modules:
   V:
     - matek-m10q-5883
@@ -28,7 +29,6 @@ modules:
     - rpi-5-4gb
     - rpi-active-cooler
     - heltec-ht-hc01p
-    - matek-bec12s-pro
     - v-housing
     - rpi-camera-cable-standard-mini
     - halow-antenna-915

@@ -47,7 +47,7 @@ def test_every_bought_part_has_a_spot(settings, build):
 
 def test_places_come_out_in_meters(settings):
     lidar = settings.place["benewake-tf-luna"]
-    assert lidar.at == pytest.approx((0.125, 0, -0.003))
+    assert lidar.at == pytest.approx((0.135, 0, -0.003))
     assert lidar.turn_deg == (180, 0, 0)
 
 

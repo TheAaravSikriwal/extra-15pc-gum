@@ -140,6 +140,8 @@ class FrameCad(CadBlock):
     body_front_mm: float = MM  # how far the body plates reach ahead of the motors' center
     body_back_mm: float = MM  # and behind it
     body_width_mm: float = MM
+    nose_from_mm: float  # where the plates narrow, ahead of the motors' center
+    nose_width_mm: float = MM
     stack_spacing_mm: float = MM  # the flight controller stack's hole pattern
     max_stack_mm: float = MM
 

@@ -44,10 +44,24 @@ def build_frame(frame: Frame) -> FrameModel:
     bay_height = cad.size("plate_gap_mm")
     top_z = bay_floor + bay_height
 
+    nose_from, nose_width = cad.size("nose_from_mm"), cad.size("nose_width_mm")
+
     def plate(z: float) -> Part:
-        body = Box(front + back, width, plate_t, align=BOTTOM)
-        body = fillet(body.edges().filter_by(Axis.Z), CORNER_RADIUS)
-        body = Pos((front - back) / 2, 0, z) * body
+        """The full width behind nose_from, narrower in front of it, corners rounded."""
+        rear = Pos((nose_from - back) / 2, 0, 0) * Box(
+            nose_from + back, width, plate_t, align=BOTTOM
+        )
+        nose = Pos((front + nose_from) / 2, 0, 0) * Box(
+            front - nose_from, nose_width, plate_t, align=BOTTOM
+        )
+        body = rear + nose
+        outer = [
+            edge
+            for edge in body.edges().filter_by(Axis.Z)
+            if min(abs(edge.center().X + back), abs(edge.center().X - front)) < 1e-6
+        ]
+        body = fillet(outer, CORNER_RADIUS)
+        body = Pos(0, 0, z) * body
         half = cad.size("stack_spacing_mm") / 2
         for x, y in ((half, half), (-half, half), (-half, -half), (half, -half)):
             body -= Pos(x, y, z) * Cylinder(SCREW / 2, plate_t * 3, align=BOTTOM)

@@ -234,8 +234,9 @@ def build_printed(build: Build, settings: CadSettings, frame: FrameModel) -> lis
     stand = Pos(nose + 1.5 * MM, cam_y, (4 * MM + top_z) / 2) * Box(
         3 * MM, 28 * MM, top_z - 4 * MM, align=CENTERED
     )
+    # the tab stays 20 mm wide so its corners clear the front props by 10 mm
     stand += Pos(nose - 7 * MM + 1.5 * MM, cam_y, top_z) * Box(
-        17 * MM, 28 * MM, 3 * MM, align=BOTTOM
+        17 * MM, 20 * MM, 3 * MM, align=BOTTOM
     )
     for hole in camera.cad.holes:
         hx, hy, hz = place_point((hole.x, hole.y, 0), cspot)
@@ -248,7 +249,7 @@ def build_printed(build: Build, settings: CadSettings, frame: FrameModel) -> lis
         stand += post
         stand -= Pos(nose + 3 * MM, hy, hz) * Rot(0, 90, 0) * Cylinder(M2 / 2, 0.05, align=CENTERED)
     for hx in (nose - 10 * MM,):
-        for hy in (8, -8):
+        for hy in (5, -5):
             stand -= Pos(hx, cam_y + hy * MM, top_z + 1.5 * MM) * Cylinder(
                 M3 / 2, 1.0, align=CENTERED
             )
