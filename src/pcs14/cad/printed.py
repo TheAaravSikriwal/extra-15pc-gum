@@ -21,6 +21,7 @@ MM = 0.001
 BOTTOM = (Align.CENTER, Align.CENTER, Align.MIN)
 CENTERED = (Align.CENTER, Align.CENTER, Align.CENTER)
 M3 = 3.2 * MM  # clearance holes
+FIT = 0.4 * MM  # room around a part that drops into a pocket
 M2 = 2.2 * MM
 
 
@@ -128,16 +129,24 @@ def build_printed(build: Build, settings: CadSettings, frame: FrameModel) -> lis
             tray -= Pos(cx + sx * MM, sy * MM, -tray_t / 2) * Cylinder(M3 / 2, 1.0, align=CENTERED)
     add("battery tray", [(tray, "petg_cf")], "petg_cf", 1.5 * MM, (0, 0, 1), "base", "battery-tray")
 
-    # Module rail: on the top plate, with a pocket for the module connector
+    # Module rail: on the top plate, with a pocket for each module socket that sits on it
     rail_s = settings.rail
     top_z = frame.top
     rail_len = (rail_s.to_x_mm - rail_s.from_x_mm) * MM
     rail_cx = (rail_s.to_x_mm + rail_s.from_x_mm) / 2 * MM
     rail_h = rail_s.height_mm * MM
     rail = Pos(rail_cx, 0, top_z) * Box(rail_len, rail_s.width_mm * MM, rail_h, align=BOTTOM)
-    rail -= Pos(-5 * MM, 0, top_z + rail_h - 4 * MM) * Box(
-        12 * MM, 8 * MM, 4 * MM + 1e-4, align=BOTTOM
-    )
+    socket = next((p for p in build.base if p.id == "module-socket"), None)
+    for spot in settings.spots():
+        x, y, z = spot.placement.at
+        if socket is None or spot.part_id != socket.id or z < top_z - 1e-6:
+            continue
+        rail -= Pos(x, y, top_z - 1e-4) * Box(
+            socket.cad.size("length_mm") + FIT,
+            socket.cad.size("width_mm") + FIT,
+            rail_h + 2e-4,
+            align=BOTTOM,
+        )
     for hx in (rail_s.from_x_mm + 10, rail_s.to_x_mm - 10):
         for hy in (8, -8):
             rail -= Pos(hx * MM, hy * MM, top_z + rail_h / 2) * Cylinder(
@@ -273,6 +282,19 @@ def build_printed(build: Build, settings: CadSettings, frame: FrameModel) -> lis
     shell -= Pos(vcx, 0, floor_z + wall) * Box(
         vlen - 2 * wall, vh.width_mm * MM - 2 * wall, vh.height_mm * MM - 2 * wall, align=BOTTOM
     )
+    # a hole in the floor for the module plug, which mates with the socket in the rail
+    for part in build.modules.get("V", ()):
+        if part.id != "module-plug":
+            continue
+        for spot in settings.spots():
+            if spot.part_id == part.id and spot.module == "V":
+                x, y, _ = spot.placement.at
+                shell -= Pos(x, y, floor_z - 1e-4) * Box(
+                    part.cad.size("length_mm") + 2 * FIT,
+                    part.cad.size("width_mm") + 2 * FIT,
+                    wall + 2e-4,
+                    align=BOTTOM,
+                )
     add("v housing", [(shell, vh.material)], vh.material, wall, (0, 0, -1), "V", "v-housing")
 
     # P holder: a cradle ring with a flange around the Harrier tube's base
@@ -281,9 +303,14 @@ def build_printed(build: Build, settings: CadSettings, frame: FrameModel) -> lis
     px, py, pz = settings.place[chute.id].at
     tube_r = chute.cad.size("diameter_mm") / 2
     inner = tube_r + 0.1 * MM
-    ring = Pos(px, py, pz) * Cylinder(inner + ph.wall_mm * MM, ph.height_mm * MM, align=BOTTOM)
-    ring += Pos(px, py, pz) * Cylinder(inner + 6 * MM, 3 * MM, align=BOTTOM)
-    ring -= Pos(px, py, pz) * Cylinder(inner, 1.0, align=CENTERED)
+    # The tube stands on a lip, raised off the rail so the module plug fits under it
+    base_z = top_z + rail_h
+    ring = Pos(px, py, base_z) * Cylinder(
+        inner + ph.wall_mm * MM, pz - base_z + ph.height_mm * MM, align=BOTTOM
+    )
+    ring += Pos(px, py, base_z) * Cylinder(inner + 6 * MM, 3 * MM, align=BOTTOM)
+    ring -= Pos(px, py, pz) * Cylinder(inner, 1.0, align=BOTTOM)
+    ring -= Pos(px, py, base_z - 1e-4) * Cylinder(tube_r - 2 * MM, 1.0, align=BOTTOM)
     add(
         "p holder",
         [(ring, ph.material)],

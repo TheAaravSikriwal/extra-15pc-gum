@@ -79,3 +79,17 @@ def test_the_prop_disks_come_along_for_the_checks(drone, setups):
     assert len(assembly.prop_disks) == 4
     disk = assembly.prop_disks[0].bounding_box()
     assert disk.size.X / MM == pytest.approx(254)
+
+
+def test_a_part_in_two_modules_comes_with_each(drone, setups):
+    p_only = names(drone.combination(setups["P"].modules))
+    full = names(drone.combination(setups["max"].modules))
+    assert "ark-cannode@P" in p_only and "ark-cannode@C" not in p_only
+    assert {"ark-cannode@P", "ark-cannode@C"} <= full
+
+
+def test_a_part_at_several_spots_splits_its_weight(drone, setups):
+    full = drone.combination(setups["max"].modules)
+    sockets = [p for p in full.pieces if p.part_id == "module-socket"]
+    assert len(sockets) == 3
+    assert sum(p.mass for p in sockets) == pytest.approx(drone.build_part_mass("module-socket"))

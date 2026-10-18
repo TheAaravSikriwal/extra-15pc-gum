@@ -60,7 +60,7 @@ def test_weights_come_from_volume_and_density(made):
         )
         assert part.mass == pytest.approx(expected), part.name
     assert 3 <= printed["leg front left"].mass * 1000 <= 15
-    assert 40 <= printed["v housing"].mass * 1000 <= 120
+    assert 35 <= printed["v housing"].mass * 1000 <= 120
     assert printed["module rail"].mass * 1000 <= 30
 
 

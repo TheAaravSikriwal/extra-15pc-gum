@@ -8,9 +8,12 @@ checked: 2026-10-18
 source: {kind: manufacturer, url: 'https://www.onsemi.com/pdf/datasheet/1n5817-d.pdf', checked: 2026-10-18, note: "onsemi gives about 0.4 g each, so 0.8 g for two"}
 mass_g: 0.8
 cad:
-  shape: routed
-  source: {kind: estimate, checked: '2026-10-18', note: "Soldered inline in P's servo lead and sleeved, so they ride along with the wiring"}
-  existing: {found: none, checked: '2026-10-18', note: "Not worth modeling apart from the wire"}
+  shape: box
+  length_mm: 12
+  width_mm: 8
+  height_mm: 4
+  source: {kind: estimate, checked: '2026-10-18', note: "Two DO-41 diodes (5.2 mm long, 2.7 mm across) side by side with their leads, sleeved"}
+  existing: {found: none, checked: '2026-10-18', note: "Small enough that a box will do"}
 electrical:
   source: {kind: manufacturer, url: 'https://www.onsemi.com/pdf/datasheet/1n5817-d.pdf', checked: 2026-10-18, note: "onsemi's 1N5817: 1.0 A average, 20 V reverse, 25 A surge, forward voltage at most 0.32 V at 0.1 A, 0.45 V at 1 A and 0.75 V at 3 A. One diode's numbers; the pair share them"}
   connectors:

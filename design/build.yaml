@@ -12,15 +12,21 @@ pack:
   wiring_mohm: 3
   note: "Both pack numbers are estimates until the electrical step: 60 g of nickel strip, balance and power leads, an XT60 and wrap for a 6S2P 18650 pack, and 3 mOhm from battery to ESC"
 base:
-  - holybro-kakute-h7
+  - ark-fpv # replaced the Kakute H7 in the electrical talk
   - radiomaster-rp2-v2
   - benewake-tf-luna
   - pjrc-teensy-41
-  - safety-monitor-extras
+  - adafruit-lsm6dsox # the safety monitor's own IMU
+  - cjmcu-5018 # the motor cut switch
+  - safety-monitor-buffers
+  - bat54c-on-adapter # the Teensy's two feeds
+  - pololu-d36v6f3 # 3.3 V for the motor cut switch
   - ruko-r111
   - base-wiring
   - module-mount
   - matek-bec12s-pro # the module connector's 5 V supply
+  - module-socket # three slots: V, P, C
+  - branch-fuses
   - landing-legs # printed
   - battery-tray # printed
   - lidar-bracket # printed
@@ -28,7 +34,7 @@ base:
   - safety-monitor-carrier # printed
 modules:
   V:
-    - matek-m10q-5883
+    - ark-gps # DroneCAN, replaced the end-of-life M10Q
     - gps-mast
     - rpi-camera-module-3
     - rpi-5-4gb
@@ -38,11 +44,19 @@ modules:
     - rpi-camera-cable-standard-mini
     - halow-antenna-915
     - camera-bracket # printed
+    - module-plug
   P:
     - fruity-chutes-harrier-40-42
     - p-mount
+    - ark-cannode # DroneCAN servo node for the release servo
+    - p-chute-switch # lets the safety monitor take over the release servo
+    - pololu-d36v6f3 # 3.3 V for the chute switch
+    - p-servo-diodes # the release servo's backup feed
+    - module-plug
   C:
     - claws-placeholder
+    - ark-cannode # DroneCAN servo node for the claws
+    - module-plug
 firmware:
   # My flight controller caps the total battery current at the pack's continuous rating, so
   # full throttle can't overdraw the cells (decided 2026-10-17). 1.0 means 100% of the rating.

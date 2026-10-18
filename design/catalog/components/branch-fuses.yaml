@@ -8,6 +8,9 @@ checked: 2026-10-18
 source: {kind: estimate, checked: 2026-10-18, note: "Two fuses at 0.57 g (Littelfuse) and two inline holders at about 3 g each. No maker publishes a holder's mass (Littelfuse's FHM and Bussmann's HHM don't), so the holders are a guess, and a heavy-ish one: 7.1 g in all. If weight decides it, a wire-leaded fuse soldered inline would drop the holders"}
 mass_g: 7.1
 cad:
-  shape: routed
-  source: {kind: estimate, checked: '2026-10-18', note: "Inline in the battery feeds, so they ride along with the wiring"}
-  existing: {found: none, checked: '2026-10-18', note: "Not worth modeling apart from the wire"}
+  shape: box
+  length_mm: 24
+  width_mm: 12
+  height_mm: 10
+  source: {kind: estimate, checked: '2026-10-18', note: "One inline MINI holder with its fuse; there are two. No maker publishes the holder's size, so it's a guess"}
+  existing: {found: none, checked: '2026-10-18', note: "Small enough that a box will do"}

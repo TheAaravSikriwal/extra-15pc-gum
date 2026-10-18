@@ -154,18 +154,19 @@ class Drone:
             ]
         }
         module_of[build.esc.id] = "base"
-        for part_id, spot in settings.place.items():
-            part = catalog_parts[part_id]
+        for spot in settings.spots():
+            part = catalog_parts[spot.part_id]
+            mass = part.mass * spot.share
             pieces.append(
                 Piece(
-                    part_id,
-                    placed(build_part(part), spot),
+                    spot.name,
+                    placed(build_part(part), spot.placement),
                     "bought",
-                    module_of[part_id],
-                    part.mass,
-                    part.mass,
-                    moving=part_id in MOVING_PARTS,
-                    part_id=part_id,
+                    spot.module or module_of[spot.part_id],
+                    mass,
+                    mass,
+                    moving=spot.part_id in MOVING_PARTS,
+                    part_id=spot.part_id,
                 )
             )
 
@@ -204,6 +205,11 @@ class Drone:
                 Piece(f"wire {wire.name}", tube, "wire", wire.module, mass, mass, moving=True)
             )
         return pieces, disks
+
+    def build_part_mass(self, part_id: str) -> float:
+        """One catalog part's mass, however many spots it's split across."""
+        parts = [self.build.esc, *self.build.base, *self.build.all_module_parts()]
+        return next(p.mass for p in parts if p.id == part_id)
 
     def combination(self, modules, pack_x: float | None = None) -> Assembly:
         modules = frozenset(modules)

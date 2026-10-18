@@ -29,6 +29,8 @@ checks: # from the spec's "check numbers"
   chute_cone_height_mm: 500
   compass_from_power_mm: 100 # Matek: keep the compass 10 cm from power wires, the ESC and motors
   remote_id_from_gps_mm: 100 # Ruko says "away from the GPS"; 10 cm is my reading of that
+  compass_part: ark-gps # the GPS carries the compass
+  remote_id_part: ruko-r111
 
 pack:
   tray_max_length_mm: 150 # the pack hangs under the body, between the legs
@@ -74,21 +76,40 @@ p_holder: # a cradle around the Harrier tube's base
 # after turning by turn_deg about x, then y, then z.
 place:
   holybro-tekko32-f4-50a: {at_mm: [0, 0, 13.9]} # on the middle plate, its underside parts at 13.0
-  holybro-kakute-h7: {at_mm: [0, 0, 20.8]} # stacked on the ESC; its top at 26.4, under the 32 mm top plate
+  ark-fpv: {at_mm: [0, 0, 20.4]} # stacked on the ESC; its top at 27, under the 32 mm top plate
   radiomaster-rp2-v2: {at_mm: [-56, 0, 13]} # at the rear edge of the bay, its ceramic antenna at the back
   matek-bec12s-pro: {at_mm: [-36.5, 0, 13], turn_deg: [0, 0, 90]} # in the bay behind the ESC; the module connector carries its 5 V
   pjrc-teensy-41: {at_mm: [62, 0, 17.5]} # in front of the stack, on its printed carrier
-  safety-monitor-extras: {at_mm: [110, 0, 13]}
+  adafruit-lsm6dsox: {at_mm: [110, 0, 13]} # the safety monitor's IMU, ahead of the Teensy
+  cjmcu-5018: {at_mm: [63, 0, 22.14]} # the motor cut switch, on the Teensy
+  safety-monitor-buffers: {at_mm: [90, 0, 22.14]} # on the Teensy's front half
+  bat54c-on-adapter: {at_mm: [43, 0, 22.14]}
+  pololu-d36v6f3@base: {at_mm: [63, 0, 26.14]} # on the switch board, under the top plate
+  module-socket: # one per slot: V's and P's sunk into the rail, C's off the frame's back edge
+    - {at_mm: [-5, 0, 35]}
+    - {at_mm: [38, 0, 35]}
+    - {at_mm: [-70, 15, 3]}
+  branch-fuses: # two holders hanging off the back edge, beside the battery leads
+    - {at_mm: [-74, -14, 3]}
+    - {at_mm: [-98, -14, 3]}
   ruko-r111: {at_mm: [86.5, 0, 35]} # on the front of the top plate, away from the GPS and the belly
   benewake-tf-luna: {at_mm: [135, 0, -3], turn_deg: [180, 0, 0]} # under the nose, looking down
   rpi-camera-module-3: {at_mm: [162, 0, 17.5], turn_deg: [0, 90, 0]} # in front of the plates, looking forward
-  matek-m10q-5883: {at_mm: [-58, 0, 125]} # on top of the GPS mast
-  rpi-5-4gb: {at_mm: [-19, 0, 45], turn_deg: [0, 0, 90]} # inside the V housing, its long side across
-  rpi-active-cooler: {at_mm: [-19, 0, 62.4], turn_deg: [0, 0, 90]} # drawn above the Pi's envelope, which is conservative
-  heltec-ht-hc01p: {at_mm: [-19, 0, 84.6], turn_deg: [0, 0, 90]} # on a stacking header above the cooler
-  halow-antenna-915: {at_mm: [-50, 35, 95], turn_deg: [0, -90, 0]} # out the back of the V housing, high and to the left
-  fruity-chutes-harrier-40-42: {at_mm: [38, 0, 41]} # standing on the rail, just ahead of the center
+  ark-gps: {at_mm: [-58, 0, 125]} # on top of the GPS mast, overhanging its plate
+  module-plug@V: {at_mm: [-5, 0, 41]} # through the V housing's floor, under the Pi
+  rpi-5-4gb: {at_mm: [-19, 0, 51], turn_deg: [0, 0, 90]} # inside the V housing, its long side across, raised 6 mm for the module plug
+  rpi-active-cooler: {at_mm: [-19, 0, 68.4], turn_deg: [0, 0, 90]} # drawn above the Pi's envelope, which is conservative
+  heltec-ht-hc01p: {at_mm: [-19, 0, 90.6], turn_deg: [0, 0, 90]} # on a stacking header above the cooler
+  halow-antenna-915: {at_mm: [-50, 35, 101], turn_deg: [0, -90, 0]} # out the back of the V housing, high and to the left
+  fruity-chutes-harrier-40-42: {at_mm: [38, 0, 47]} # on its cradle's lip, 6 mm above the rail for the module plug
+  module-plug@P: {at_mm: [38, 0, 41]} # under the Harrier tube, inside the cradle
+  ark-cannode@P: {at_mm: [38, 39.1, 59], turn_deg: [90, 0, 0]} # strapped to the cradle's side
+  p-chute-switch: {at_mm: [38, -30.6, 44]} # the other side of the cradle
+  pololu-d36v6f3@P: {at_mm: [38, -31.2, 47]}
+  p-servo-diodes: {at_mm: [38, -30.1, 49.5]}
   claws-placeholder: {at_mm: [-125, 0, -53]} # behind the pack, far enough back to let it slide
+  ark-cannode@C: {at_mm: [-125, 0, -3]} # on top of the claws
+  module-plug@C: {at_mm: [-86, 15, 3]} # mated to C's socket from behind
 
 # Rough wire routes: a tube about the thickness of each run's likely gauge, through these
 # points. Step 3 picks the real gauges and connectors and sends back exact thicknesses.
@@ -127,7 +148,7 @@ wires:
     path_mm: [[-70, 6, 10], [-60, 6, 16], [-49, 6, 16]]
   - name: module connector
     diameter_mm: 4
-    path_mm: [[-5, 0, 29], [-5, 0, 41]]
+    path_mm: [[-5, 0, 28], [-5, 0, 35]]
   - name: camera cable
     module: V
     diameter_mm: 3

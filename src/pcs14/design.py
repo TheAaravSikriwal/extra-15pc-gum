@@ -224,6 +224,9 @@ class Build:
     def thrust_table(self) -> ThrustTable:
         return pick_table(self.motor, self.prop, self.pack.series * NOMINAL_CELL_VOLTAGE)
 
+    def all_module_parts(self) -> tuple[Component, ...]:
+        return tuple(p for parts in self.modules.values() for p in parts)
+
     def carried(self, modules: frozenset[str]) -> tuple[Component, ...]:
         """The base parts, plus the parts of every module fitted."""
         parts = list(self.base)

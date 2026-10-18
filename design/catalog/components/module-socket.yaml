@@ -7,9 +7,12 @@ checked: 2026-10-18
 source: {kind: estimate, checked: 2026-10-18, note: "Three XT30U halves at 0.99 g (LCSC's listing) and three 8-pin JST-GH halves at about 0.2 g (the jst-gh estimate), about 3.6 g"}
 mass_g: 3.6
 cad:
-  shape: routed
-  source: {kind: estimate, checked: '2026-10-18', note: "Mounted in the module rail; placed with the module connector's wire route"}
-  existing: {found: none, checked: '2026-10-18', note: "Connectors only"}
+  shape: box
+  length_mm: 16
+  width_mm: 14
+  height_mm: 6
+  source: {kind: estimate, checked: '2026-10-18', note: "One slot's socket (an XT30U half lying flat beside an 8-pin JST-GH header), sunk into the rail for V and P and hung off the frame's back edge for C. Amass gives no XT30U drawing in its catalog table, so the size is a guess from the parts"}
+  existing: {found: none, checked: '2026-10-18', note: "Small enough that a box will do"}
 electrical:
   source: {kind: manufacturer, url: 'https://www.china-amass.com/biao/268.html', checked: 2026-10-18, note: "Amass's XT30U (20 A) and JST's GH (1 A a contact, https://www.jst-mfg.com/product/pdf/eng/eGH.pdf). The pin assignment is this design's own (the electrical spec)"}
   connectors:

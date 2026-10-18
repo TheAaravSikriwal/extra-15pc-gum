@@ -23,9 +23,10 @@ from pcs14.cad.mass import MassProperties, mass_properties
 
 MM = 0.001
 OVERLAP = 1e-9  # m³: anything under 1 mm³ is touching, not colliding
-POWER_PARTS = (
+POWER_PARTS = (  # catalog ids, plus the pack and the power wires by name
     "holybro-tekko32-f4-50a",
     "matek-bec12s-pro",
+    "branch-fuses",
     "pack",
     "wire battery leads",
     "wire bec feed",
@@ -265,11 +266,13 @@ def check_combination(drone: Drone, setup: str, modules) -> CombinationResult:
                 )
             )
 
-    gps_id, rid_id = "matek-m10q-5883", "ruko-r111"
+    gps_id, rid_id = checks.compass_part, checks.remote_id_part
     if gps_id in names:
         gps = assembly.piece(gps_id).solid
         power = [
-            p for p in assembly.pieces if p.name in POWER_PARTS or p.name.startswith("wire motor")
+            p
+            for p in assembly.pieces
+            if p.name in POWER_PARTS or p.part_id in POWER_PARTS or p.name.startswith("wire motor")
         ]
         power += [p for p in assembly.pieces if p.kind == "motor"]
         nearest = min(power, key=lambda p: gps.distance_to(p.solid))

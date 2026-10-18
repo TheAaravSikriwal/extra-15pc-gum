@@ -4,6 +4,7 @@ The file is in millimeters and degrees, like everything people edit; the propert
 lengths back in meters.
 """
 
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
 
@@ -52,6 +53,8 @@ class Checks(Strict):
     chute_cone_height_mm: float = Field(gt=0)
     compass_from_power_mm: float = Field(ge=0)
     remote_id_from_gps_mm: float = Field(ge=0)
+    compass_part: str  # the part with the compass in it (the GPS)
+    remote_id_part: str
 
     @property
     def rigid_clearance(self) -> float:
@@ -129,6 +132,38 @@ class Placement(Strict):
         return _m(self.at_mm)
 
 
+MODULES = ("base", "V", "P", "C")
+
+
+@dataclass(frozen=True)
+class Spot:
+    """One placed piece. A part listed in more than one module gets a spot per module, keyed
+    `id@module`; a part with a list of spots (three module sockets, say) shares its weight
+    between them."""
+
+    name: str
+    part_id: str
+    module: str | None  # None: wherever the build lists the part
+    placement: Placement
+    share: float
+
+
+def parse_spots(place: dict) -> list[Spot]:
+    spots = []
+    for key, value in place.items():
+        part_id, _, module = key.partition("@")
+        if module and module not in MODULES:
+            raise ValueError(f"{key}: {module} isn't a module (they're {', '.join(MODULES)})")
+        listed = value if isinstance(value, list) else [value]
+        placements = [
+            v if isinstance(v, Placement) else Placement.model_validate(v) for v in listed
+        ]
+        for n, placement in enumerate(placements, start=1):
+            name = key if len(placements) == 1 else f"{key} {n}"
+            spots.append(Spot(name, part_id, module or None, placement, 1 / len(placements)))
+    return spots
+
+
 class Wire(Strict):
     name: str
     module: Literal["base", "V", "P", "C"] = "base"
@@ -154,8 +189,18 @@ class CadSettings(Strict):
     gps_mast: GpsMast
     v_housing: VHousing
     p_holder: PHolder
-    place: dict[str, Placement]
+    place: dict[str, Placement | list[Placement]]
     wires: list[Wire]
+
+    def spots(self) -> list[Spot]:
+        return parse_spots(self.place)
+
+    def spot(self, name: str) -> Placement:
+        """The placement of a part with a single spot, by its name."""
+        for spot in self.spots():
+            if spot.name == name:
+                return spot.placement
+        raise KeyError(f"nothing is placed as {name} in design/cad.yaml")
 
 
 def load_settings(path: Path) -> CadSettings:
