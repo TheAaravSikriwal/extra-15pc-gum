@@ -114,19 +114,19 @@ def build_printed(build: Build, settings: CadSettings, frame: FrameModel) -> lis
 
     # Battery tray: under the bottom plate, long enough for the pack's whole slide, with strap slots
     length = layout.length + 2 * pack.slide_mm * MM
-    width = layout.width + 6 * MM
+    width = layout.width + 12 * MM  # room for strap slots just outside the pack's sides
     cx = pack.x_mm * MM
     tray = Pos(cx, 0, -tray_t) * Box(length, width, tray_t, align=BOTTOM)
     for sx in (40, -40):
         for sy in (1, -1):
-            slot_y = sy * (width / 2 - 5 * MM)
+            slot_y = sy * (layout.width / 2 + 2.5 * MM)  # the strap wraps around the pack
             tray -= Pos(cx + sx * MM, slot_y, -tray_t / 2) * Box(
                 22 * MM, 4 * MM, 1.0, align=CENTERED
             )
     for sx in (50, -50):
         for sy in (10, -10):
             tray -= Pos(cx + sx * MM, sy * MM, -tray_t / 2) * Cylinder(M3 / 2, 1.0, align=CENTERED)
-    add("battery tray", [(tray, "petg_cf")], "petg_cf", 3 * MM, (0, 0, 1), "base", "battery-tray")
+    add("battery tray", [(tray, "petg_cf")], "petg_cf", 1.5 * MM, (0, 0, 1), "base", "battery-tray")
 
     # Module rail: on the top plate, with a pocket for the module connector
     rail_s = settings.rail
