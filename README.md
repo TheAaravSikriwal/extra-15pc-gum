@@ -57,7 +57,7 @@ This is the live version. When a step finishes, its outcome goes here, with a li
 | Part | What happens | Status | Outcome |
 |---|---|---|---|
 | 2a. Talk | Settle how the parts get modeled, the layout, the checks and what comes out | Done, 2026-10-17 | Seven questions settled, from where the shapes come from to the wires. Battery underneath, modules on top ([log](docs/log/2026-10-17-cad-talk.md), [spec](docs/specs/2026-10-13-phase-1-simulation.md#settled-in-the-cad-talk)) |
-| 2b. Plan | Every part's dimensions and existing CAD checked, then the implementation plan | Up next | |
+| 2b. Plan | Every part's dimensions and existing CAD checked, then the implementation plan | In progress: plan written, waiting for my OK | Six of the build's parts have official 3D files; the frame has no drawing at all, so it gets traced from iFlight's renders ([plan](docs/plans/2026-10-17-cad.md)) |
 | 2c. Build | Test-first, in build123d: every part, the assembly, the checks, Rerun and the exports | Not started | |
 | 2d. Close the loop | The CAD's weights back into the sizing model, and the targets rechecked | Not started | |
 

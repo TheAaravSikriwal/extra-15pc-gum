@@ -1,7 +1,7 @@
 # Status
 
 **Last updated:** 2026-10-17, on the PC's Windows side
-**Step:** 2b, planning the CAD. Step 1 is done (the parts are picked), and the CAD talk (2a) settled seven questions on 2026-10-17. A researcher is checking every part's dimensions and existing CAD models for the plan.
+**Step:** 2b, planning the CAD. Step 1 is done (the parts are picked), the CAD talk (2a) settled seven questions, and the [plan](docs/plans/2026-10-17-cad.md) is written (15 test-first tasks), waiting for my OK.
 **Main machine:** the PC, with WSL2 Ubuntu 24.04 for the Linux tools
 
 ## Right now
@@ -32,7 +32,7 @@ Where to look:
 ## Up next
 
 1. **Set up WSL2 on the PC** with [docs/setup-pc.md](docs/setup-pc.md). The `wsl --install` step needs an admin PowerShell and one reboot. Then commit `docs/machines/pc.md`.
-2. **Step 2b: the CAD plan.** Fold in the parts research (dimensions, mounting patterns, existing CAD models and their terms), then write the test-first implementation plan from the spec's "Settled in the CAD talk".
+2. **OK the CAD plan** ([docs/plans/2026-10-17-cad.md](docs/plans/2026-10-17-cad.md)), then build it task by task. The parts research is folded in: the frame has no published drawing, the Pi 5 stack needs its own housing, and the HaLow antenna still has to be picked.
 3. **The project site's spec** (what it's built with), so its first pages can come with the sizing model.
 4. **Write the first half of `scripts/setup-ubuntu.sh`** (inside WSL2): Gazebo, PX4 and the Python tools, with pinned versions.
 
