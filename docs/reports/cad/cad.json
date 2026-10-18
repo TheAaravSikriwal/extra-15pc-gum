@@ -5463,6 +5463,36 @@
    "compared": null
   },
   {
+   "part": "landing-legs",
+   "found": "none",
+   "terms": null,
+   "compared": null
+  },
+  {
+   "part": "battery-tray",
+   "found": "none",
+   "terms": null,
+   "compared": null
+  },
+  {
+   "part": "lidar-bracket",
+   "found": "none",
+   "terms": null,
+   "compared": null
+  },
+  {
+   "part": "remote-id-mount",
+   "found": "none",
+   "terms": null,
+   "compared": null
+  },
+  {
+   "part": "safety-monitor-carrier",
+   "found": "none",
+   "terms": null,
+   "compared": null
+  },
+  {
    "part": "matek-m10q-5883",
    "found": "official",
    "terms": "No license in the zip or on the page; copyright Matek, so all rights reserved",
@@ -5512,6 +5542,12 @@
   },
   {
    "part": "halow-antenna-915",
+   "found": "none",
+   "terms": null,
+   "compared": null
+  },
+  {
+   "part": "camera-bracket",
    "found": "none",
    "terms": null,
    "compared": null

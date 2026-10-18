@@ -27,8 +27,8 @@ This is the live version. When a step finishes, its outcome goes here, with a li
 | 0. Planning | Figure out what I'm designing | Done, 2026-10-17 | Decisions, targets and roadmap written, reviewed and revised ([log](docs/log/2026-10-14-plan-revision.md)), then turned into a research plan ([log](docs/log/2026-10-17-research-project.md)) |
 | Setup | WSL2 on the PC, with all checks passing | Up next | |
 | 1. Sizing and parts | Real, orderable parts that hit the targets | Done, 2026-10-17 | Emax 2814 850KV motors, Gemfan 10x5 props, a 6S2P Molicel P42A pack and a Nazgul XL10 frame. Every setup passes, Max included: 25.7 min hover with Mission's loadout at 2254 g ([report](docs/reports/sizing/README.md), [log](docs/log/2026-10-17-first-real-sweep.md)) |
-| 2. The virtual drone (CAD) | Every part modeled and connected | In progress | |
-| 3. Electrical design | Every wire, pin and connector | Not started | |
+| 2. The virtual drone (CAD) | Every part modeled and connected | Done, 2026-10-18 | Every part modeled and every module combination passing its checks, with the real weights back in the sizing model: Mission 2293 g, still passing ([report](docs/reports/cad/README.md), [log](docs/log/2026-10-18-cad-build.md)) |
+| 3. Electrical design | Every wire, pin and connector | Up next | |
 | 4. Flight sim (PX4) | Prove the airframe flies, in all eight module combinations | Not started | |
 | 5. My firmware | My flight code and the safety monitor, passing the same tests as PX4 | Not started | |
 | 6. Modules in sim | Parachute, vision & nav, and claws if they happen | Not started | |
@@ -58,8 +58,8 @@ This is the live version. When a step finishes, its outcome goes here, with a li
 |---|---|---|---|
 | 2a. Talk | Settle how the parts get modeled, the layout, the checks and what comes out | Done, 2026-10-17 | Seven questions settled, from where the shapes come from to the wires. Battery underneath, modules on top ([log](docs/log/2026-10-17-cad-talk.md), [spec](docs/specs/2026-10-13-phase-1-simulation.md#settled-in-the-cad-talk)) |
 | 2b. Plan | Every part's dimensions and existing CAD checked, then the implementation plan | Done, 2026-10-17 | Six of the build's parts have official 3D files; the frame has no drawing at all, so it gets traced from iFlight's renders ([plan](docs/plans/2026-10-17-cad.md)) |
-| 2c. Build | Test-first, in build123d: every part, the assembly, the checks, Rerun and the exports | In progress: task 10 of 15 done | The frame traced from iFlight's render; the first checks failed every combination and the fixed layout passes all eight ([log](docs/log/2026-10-18-cad-build.md)) |
-| 2d. Close the loop | The CAD's weights back into the sizing model, and the targets rechecked | Not started | |
+| 2c. Build | Test-first, in build123d: every part, the assembly, the checks, Rerun and the exports | Done, 2026-10-18 | The frame traced from iFlight's render; the first checks failed every combination and the fixed layout passes all eight ([log](docs/log/2026-10-18-cad-build.md)) |
+| 2d. Close the loop | The CAD's weights back into the sizing model, and the targets rechecked | Done, 2026-10-18 | The printed parts went into the catalog. Mission's pessimistic hover is 21.6 min against 21, and Max is 2493 g against 2500: everything passes, with almost no room left |
 
 ## Modules
 

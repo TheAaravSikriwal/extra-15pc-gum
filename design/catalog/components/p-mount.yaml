@@ -4,8 +4,8 @@ id: p-mount
 maker: Various
 model: Module P mount
 checked: 2026-10-17
-source: {kind: estimate, checked: 2026-10-17, note: "A printed mount for the parachute canister"}
-mass_g: 15
+source: {kind: cad, checked: 2026-10-18, note: "From the CAD: p holder, weighed from their geometry in petg_cf at the density and fill in design/cad.yaml"}
+mass_g: 6.4
 cad:
   shape: printed
   source:

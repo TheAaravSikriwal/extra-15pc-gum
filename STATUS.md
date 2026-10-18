@@ -1,7 +1,7 @@
 # Status
 
 **Last updated:** 2026-10-18, on the PC's Windows side
-**Step:** 2c, building the CAD: tasks 1 to 10 of the [plan](docs/plans/2026-10-17-cad.md) done. The whole drone is modeled, and every module combination passes the checks.
+**Step:** step 2 is done (2026-10-18): the whole drone is modeled, every module combination passes its checks, and the real weights are back in the sizing model. Next is step 3, electrical design.
 **Main machine:** the PC, with WSL2 Ubuntu 24.04 for the Linux tools
 
 ## Right now
@@ -25,7 +25,7 @@ Where to look:
 
 **Step 1 is done (2026-10-17).** I picked the lightest build that passes every setup, Max included: Emax E3 2814 850KV motors, Gemfan 1050 tri-blades, a 6S2P Molicel P42A pack, the Tekko32 F4 50A ESC and the Nazgul XL10 frame, with my firmware capping the current at 90 A. Mission hovers 25.7 min (22.2 pessimistic) at 2254 g, and Max weighs 2454 g. The growth margin stays 200 g. "The parts" in [decisions](docs/decisions.md) has the full picture, including the catch: thin margins, and cruise numbers that are probably optimistic.
 
-**The CAD is mostly built (2026-10-18).** Every part is modeled, the frame traced from iFlight's render, and my printed parts (128 g) designed. The checks failed every combination on the first run; after fixing the layout (narrower frame nose, parts moved back from the front props, the BEC moved into the frame bay and into Base, the pack and claws moved back) all eight pass. The [log](docs/log/2026-10-18-cad-build.md) has the story.
+**Step 2 is done (2026-10-18).** `pcs14 cad` builds the whole drone, checks all eight module combinations (collisions, prop clearance, the parachute's cone, the rail, balance with the pack trimmed, the compass and Remote ID rules, the lidar's view), compares parts with existing CAD models, exports STEP, meshes, a GLB and print files, renders stills, and plays it all in Rerun. The first checks failed every combination; the fixed layout passes all eight. The printed parts' real weights went back into the catalog: Mission is 2293 g and still passes, with almost no margin left. The [CAD report](docs/reports/cad/README.md) and the [log](docs/log/2026-10-18-cad-build.md) have the details.
 
 **The parts research added two missing parts (2026-10-17).** The camera needs a 22-pin cable for the Pi 5, and the HaLow card comes with no antenna, so both went into module V (14 g together). Mission is now 2268 g and hovers 25.5 min (21.9 pessimistic, against 21), and Max is 2468 g. Everything still passes, with a thinner margin.
 
@@ -36,13 +36,15 @@ Where to look:
 ## Up next
 
 1. **Set up WSL2 on the PC** with [docs/setup-pc.md](docs/setup-pc.md). The `wsl --install` step needs an admin PowerShell and one reboot. Then commit `docs/machines/pc.md`.
-2. **Finish step 2c:** tasks 11 to 15 (existing CAD comparison, the Rerun timeline, exports and stills, the CAD report, and the printed weights back into the sizing model).
+2. **Step 3a: the electrical talk.** Gauges, connectors and pinouts from the CAD's wire lengths (in `docs/reports/cad/cad.json`), the power budget for the Pi's 5 V rail (the BEC is rated right at the Pi's 5 A), and how modules talk to the flight controller.
 3. **The project site's spec** (what it's built with), so its first pages can come with the sizing model.
 4. **Write the first half of `scripts/setup-ubuntu.sh`** (inside WSL2): Gazebo, PX4 and the Python tools, with pinned versions.
 
 ## Still open
 
 - Rotor drag in forward flight, so the cruise numbers get believable (the honesty check's big miss)
+- Almost no weight margin left: Mission's pessimistic hover is 21.6 min against 21, and Max is 7 g under its 2500 g limit. The next grams need a decision.
+- Whether the HaLow HAT works on a Pi 5 (Heltec lists Pi 1 to 4), and which 915 MHz antenna to use
 - Cruise speed: 10 m/s until the sizing model says otherwise
 - How modules talk to the flight controller: plain serial or DroneCAN (step 3)
 - Which H743 flight controller board. It has to be one PX4 supports, with SWD pads.

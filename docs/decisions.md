@@ -91,6 +91,17 @@ The flight controller caps the total battery current at the pack's continuous ra
 - **What it changed:** 76 of the 192 builds pass now (15 of them 6S2P), against 14 before. The Samsung 50S makes up most of the fails: its 25 A rating gets capped so hard that thrust-to-weight at the reserve comes up short.
 - **For the firmware step:** a battery current limiter joins the flight controller's to-do list. It throttles all four motors together, and it never touches the kill switch or the safety monitor's motor cut.
 
+### What the CAD changed (2026-10-18)
+
+Building the drone in CAD and checking every module combination changed a few things:
+
+- **The 5 V supply for the Pi (the Matek BEC) moved into the frame's bay, and into Base.** Up in the V housing it sat 28 mm under the compass, where Matek asks for 100. In the bay it's 106 mm away, and the module connector carries its 5 V up to the modules, which is what the module mount was always meant to carry.
+- **The camera sits in front of the frame on a printed bracket.** Camera Module 3 is 25 mm tall and the XL10's camera bay is 19 mm.
+- **The pack's home moved back to 10 mm ahead of the motors' center, sliding 30 mm either way, and the claws hang further back.** That's what it takes to balance every combination within 5% (they all land within 0.2%).
+- **Parts moved back from the front props:** the Remote ID module and the camera bracket's tab, to keep 10 mm from the prop disks.
+- **The battery tray's strap slots sit just outside the pack,** so the straps wrap around it (the first design had them landing on the pack's edge).
+- **The printed parts' weights now come from the CAD,** marked as such in the catalog, and the legs, battery tray and four brackets joined it. Mission went from 2268 g to 2293 g, and its pessimistic hover from 21.9 to 21.6 min against 21. Max is 2493 g against its 2500 g limit.
+
 ### The parts (picked 2026-10-17)
 
 I picked the lightest build that passes every setup, Max included, over the sweep's favorite (a Hobbywing 3115 on 6S3P, 660 g heavier, which breaks Max's 2500 g limit). The sweep ranks by headroom, so this one comes in at #33 of 192, and that's fine: it meets every target I set.

@@ -564,19 +564,19 @@ Weighed from their geometry and material. Where the catalog had a guess, it's ne
 
 | Part | Material | Weight | The catalog's guess |
 |---|---|---|---|
-| leg front left | tpu | 6.6 g | none yet (landing-legs) |
-| leg front right | tpu | 6.6 g | none yet (landing-legs) |
-| leg back left | tpu | 6.6 g | none yet (landing-legs) |
-| leg back right | tpu | 6.6 g | none yet (landing-legs) |
-| battery tray | petg_cf | 29.4 g | none yet (battery-tray) |
-| module rail | petg_cf | 13.2 g | 30 g (module-mount) |
-| gps mast | tpu | 5.2 g | 10 g (gps-mast) |
-| lidar bracket | petg_cf | 2.4 g | none yet (lidar-bracket) |
-| remote id mount | tpu | 1.4 g | none yet (remote-id-mount) |
-| safety monitor carrier | petg_cf | 2.8 g | none yet (safety-monitor-carrier) |
-| camera bracket | petg_cf | 2.4 g | none yet (camera-bracket) |
-| v housing | petg_cf | 40.2 g | 50 g (v-housing) |
-| p holder | petg_cf | 6.4 g | 15 g (p-mount) |
+| leg front left | tpu | 6.6 g | 26 g (landing-legs) |
+| leg front right | tpu | 6.6 g | 26 g (landing-legs) |
+| leg back left | tpu | 6.6 g | 26 g (landing-legs) |
+| leg back right | tpu | 6.6 g | 26 g (landing-legs) |
+| battery tray | petg_cf | 29.4 g | 29 g (battery-tray) |
+| module rail | petg_cf | 13.2 g | 13 g (module-mount) |
+| gps mast | tpu | 5.2 g | 5 g (gps-mast) |
+| lidar bracket | petg_cf | 2.4 g | 2 g (lidar-bracket) |
+| remote id mount | tpu | 1.4 g | 1 g (remote-id-mount) |
+| safety monitor carrier | petg_cf | 2.8 g | 3 g (safety-monitor-carrier) |
+| camera bracket | petg_cf | 2.4 g | 2 g (camera-bracket) |
+| v housing | petg_cf | 40.2 g | 40 g (v-housing) |
+| p holder | petg_cf | 6.4 g | 6 g (p-mount) |
 
 Together they weigh 130 g.
 
@@ -635,6 +635,11 @@ Checked for every part before modeling it. They stay in a local cache that never
 | base-wiring | none |  |  |
 | module-mount | none |  |  |
 | matek-bec12s-pro | none |  |  |
+| landing-legs | none |  |  |
+| battery-tray | none |  |  |
+| lidar-bracket | none |  |  |
+| remote-id-mount | none |  |  |
+| safety-monitor-carrier | none |  |  |
 | matek-m10q-5883 | official | No license in the zip or on the page; copyright Matek, so all rights reserved | mine 12.4 x 20.0 x 20.0 mm, theirs 11.4 x 20.0 x 20.0 mm |
 | gps-mast | none |  |  |
 | rpi-camera-module-3 | official | No license file; Raspberry Pi's site terms reserve all rights. | mine 11.3 x 23.9 x 25.0 mm, theirs 10.2 x 23.9 x 25.0 mm; holes line up |
@@ -644,6 +649,7 @@ Checked for every part before modeling it. They stay in a local cache that never
 | v-housing | none |  |  |
 | rpi-camera-cable-standard-mini | none |  |  |
 | halow-antenna-915 | none |  |  |
+| camera-bracket | none |  |  |
 | fruity-chutes-harrier-40-42 | none |  |  |
 | p-mount | none |  |  |
 | claws-placeholder | none |  |  |

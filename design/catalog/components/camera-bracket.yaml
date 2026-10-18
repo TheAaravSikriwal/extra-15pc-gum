@@ -1,0 +1,16 @@
+# A printed part of my own, added by pcs14 cad --update-catalog.
+type: component
+id: camera-bracket
+maker: Printed
+model: Camera bracket
+source: {kind: cad, checked: 2026-10-18, note: "From the CAD: camera bracket, weighed from their geometry in petg_cf at the density and fill in design/cad.yaml"}
+mass_g: 2.4
+cad:
+  shape: printed
+  source:
+    kind: estimate
+    note: My own part, designed in pcs14.cad.printed
+  existing:
+    found: none
+    checked: '2026-10-18'
+    note: My own part, so there's nothing to look for

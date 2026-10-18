@@ -21,6 +21,11 @@ base:
   - base-wiring
   - module-mount
   - matek-bec12s-pro # the module connector's 5 V supply
+  - landing-legs # printed
+  - battery-tray # printed
+  - lidar-bracket # printed
+  - remote-id-mount # printed
+  - safety-monitor-carrier # printed
 modules:
   V:
     - matek-m10q-5883
@@ -32,6 +37,7 @@ modules:
     - v-housing
     - rpi-camera-cable-standard-mini
     - halow-antenna-915
+    - camera-bracket # printed
   P:
     - fruity-chutes-harrier-40-42
     - p-mount

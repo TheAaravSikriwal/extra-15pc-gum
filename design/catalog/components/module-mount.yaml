@@ -4,8 +4,8 @@ id: module-mount
 maker: Various
 model: Module mount and connector
 checked: 2026-10-17
-source: {kind: estimate, checked: 2026-10-17, note: "A printed or carbon mount with one power-and-data connector. Designed in the CAD step"}
-mass_g: 30
+source: {kind: cad, checked: 2026-10-18, note: "From the CAD: module rail, weighed from their geometry in petg_cf at the density and fill in design/cad.yaml"}
+mass_g: 13.2
 cad:
   shape: printed
   source:

@@ -39,7 +39,24 @@ def test_every_part_was_checked_for_an_existing_cad_model(build):
 
 def test_the_parts_i_design_are_marked_printed(build):
     printed = sorted(part.id for part in parts(build) if part.cad.shape == "printed")
-    assert printed == ["gps-mast", "module-mount", "p-mount", "v-housing"]
+    assert printed == [
+        "battery-tray",
+        "camera-bracket",
+        "gps-mast",
+        "landing-legs",
+        "lidar-bracket",
+        "module-mount",
+        "p-mount",
+        "remote-id-mount",
+        "safety-monitor-carrier",
+        "v-housing",
+    ]
+
+
+def test_printed_weights_come_from_the_cad(build):
+    for part in parts(build):
+        if part.cad.shape == "printed":
+            assert part.source.kind.value == "cad", part.id
 
 
 def test_wiring_comes_from_the_wire_routes(build):
