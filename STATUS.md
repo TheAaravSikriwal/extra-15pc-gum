@@ -1,7 +1,7 @@
 # Status
 
 **Last updated:** 2026-10-18, on the PC's Windows side
-**Step:** step 3, electrical design. The talk (3a) and the plan (3b) are done; next is the build (3c).
+**Step:** step 3, electrical design. The talk (3a) and the plan (3b) are done; the build (3c) is under way.
 **Main machine:** the PC, with WSL2 Ubuntu 24.04 for the Linux tools
 
 ## Right now
@@ -31,6 +31,8 @@ Where to look:
 
 **Step 3b, the electrical plan, is done (2026-10-18).** The research picked the parts (the ARK GPS on DroneCAN, ARK CANnodes in P and C, a TI TS3A5018 board for the motor cut, single-gate buffers that stay quiet when the Teensy is off) and the 14 tasks. The catch: the lightest DroneCAN GPS is 8 g over the old one, so with the servo nodes Max lands around 2514 g, over its limit. The [log](docs/log/2026-10-18-electrical-plan.md) has the story.
 
+**Step 3c is under way (2026-10-18).** Done: task 1 (Graphviz, ngspice 47 and KiCad 10 on the PC and in CI, `pcs14 electrical --tools`), task 2 (the catalog's electrical block and wire tables), task 3 (every part's pins, draws, supplies and ratings), and the first half of task 8 (the new parts in the build and the CAD, all eight combinations passing). Mission is now 2320 g, with a pessimistic hover of 21.2 min against 21, and Max 2526 g. The [build log](docs/log/2026-10-18-electrical-build.md) has the findings.
+
 **The parts research added two missing parts (2026-10-17).** The camera needs a 22-pin cable for the Pi 5, and the HaLow card comes with no antenna, so both went into module V (14 g together). Mission is now 2268 g and hovers 25.5 min (21.9 pessimistic, against 21), and Max is 2468 g. Everything still passes, with a thinner margin.
 
 **The CAD talk is done (2026-10-17).** Seven answers, all in the spec under "Settled in the CAD talk": I model every part myself from published dimensions, after checking whether a CAD model of it already exists; battery underneath and modules on top, so the chute fires straight up; real printable designs for our own brackets, legs, tray and rail; check limits based on what each one costs; Rerun and styled stills for watching; STEP, meshes, a GLB for the site and print files on every run, with `cad.json` committed; and rough wire routes now. The [log](docs/log/2026-10-17-cad-talk.md) has the story.
@@ -40,7 +42,7 @@ Where to look:
 ## Up next
 
 1. **Set up WSL2 on the PC** with [docs/setup-pc.md](docs/setup-pc.md). The `wsl --install` step needs an admin PowerShell and one reboot. Then commit `docs/machines/pc.md`.
-2. **Step 3c: the electrical build,** task by task from the [plan](docs/plans/2026-10-18-electrical.md), starting with the tools (Graphviz, ngspice and KiCad 10 on the PC).
+2. **Step 3c, task 4: the connection list** (`design/electrical.yaml`) and its rules, then the loads, checks and heat (tasks 5 to 7).
 3. **The project site's spec** (what it's built with), so its first pages can come with the sizing model.
 4. **Write the first half of `scripts/setup-ubuntu.sh`** (inside WSL2): Gazebo, PX4 and the Python tools, with pinned versions.
 
@@ -48,7 +50,8 @@ Where to look:
 
 - Rotor drag in forward flight, so the cruise numbers get believable (the honesty check's big miss)
 - Almost no weight margin left: Mission's pessimistic hover is 21.6 min against 21, and Max is 7 g under its 2500 g limit. The next grams need a decision. Step 3's new parts (the DroneCAN GPS, servo nodes, the monitor's extra chips) will add some.
-- The ARK FPV's 5 V supply rating, which ARK doesn't publish
+- Mission's weight margin: 21.2 min pessimistic hover against 21, before the wiring's real weight (step 3d). The two fuse holders (a 7.1 g guess) are the first thing to trim
+- What the motor cut board's two undocumented 1 kOhm resistors do (pull-ups would make the board fail the wrong way)
 - Whether a safety monitor cut can be undone in the air (step 5), and the delay between cutting the motors and firing the chute (step 6)
 - Whether the HaLow HAT works on a Pi 5 (Heltec lists Pi 1 to 4), and which 915 MHz antenna to use
 - Cruise speed: 10 m/s until the sizing model says otherwise

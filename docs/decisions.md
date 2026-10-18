@@ -117,6 +117,13 @@ Eight questions, all in the [electrical spec](specs/2026-10-18-electrical.md) un
 
 And one from the plan: **the GPS is the ARK GPS on DroneCAN** (16 g, 8 g over the old M10Q). With the servo nodes, Max comes to about 2514 g, over its 2.5 kg limit; the 8 g serial alternative wouldn't have saved it. Max only has to be reported.
 
+### What the electrical build changed (2026-10-18)
+
+- **The safety monitor's IMU is ST's LSM6DSOX** on Adafruit's breakout (1.7 g, in stock). No usable ICM-42688-P breakout is sold.
+- **The module plugs sit under the Pi and under the parachute tube,** so the Pi stack rose 6 mm in the V housing and the tube stands on a printed lip 6 mm above the rail. V's and P's sockets sink into the rail. C's socket and the two fuse holders hang off the frame's back edge.
+- **The HaLow card costs 1.06 W, not 0.69 W:** its Pi HAT feeds it through a linear regulator from 5 V.
+- **The weight now:** Mission 2320 g with a pessimistic hover of 21.2 min against 21; Max 2526 g, over its 2.5 kg limit. The wiring's real weight comes in step 3d.
+
 ### The parts (picked 2026-10-17)
 
 I picked the lightest build that passes every setup, Max included, over the sweep's favorite (a Hobbywing 3115 on 6S3P, 660 g heavier, which breaks Max's 2500 g limit). The sweep ranks by headroom, so this one comes in at #33 of 192, and that's fine: it meets every target I set.

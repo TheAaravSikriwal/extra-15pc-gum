@@ -67,7 +67,7 @@ This is the live version. When a step finishes, its outcome goes here, with a li
 |---|---|---|---|
 | 3a. Talk | Settle where the design lives, the flight controller, the module bus, power, the motor cut, the checks and watching it | Done, 2026-10-18 | Eight questions settled. The surprise: the ESC firmware holds the last throttle for half a second when its signal disappears, so the safety monitor now sends stop frames instead of just disconnecting the lines ([log](docs/log/2026-10-18-electrical-talk.md), [spec](docs/specs/2026-10-18-electrical.md#settled-in-the-electrical-talk)) |
 | 3b. Plan | The new parts researched (a DroneCAN GPS, servo nodes, the multiplexers, connectors and fuses), then the implementation plan | Done, 2026-10-18 | 14 test-first tasks. The lightest DroneCAN GPS is 8 g over the old one, and with the servo nodes Max will land around 2514 g, over its limit ([plan](docs/plans/2026-10-18-electrical.md)) |
-| 3c. Build | Test-first: the connection list, the ARK FPV swap, the checks, the generators (WireViz, pin maps, KiCad), ngspice, Rerun and the report | Up next | |
+| 3c. Build | Test-first: the connection list, the ARK FPV swap, the checks, the generators (WireViz, pin maps, KiCad), ngspice, Rerun and the report | In progress | Tools in, every part's pins and ratings in the catalog, and the new parts placed in the CAD with all eight combinations passing. Mission's pessimistic hover is down to 21.2 min against 21 ([log](docs/log/2026-10-18-electrical-build.md)) |
 | 3d. Close the loop | The new parts' weights back into the CAD and the sizing model, with Max only 7 g under its limit | Not started | |
 
 ## Modules
