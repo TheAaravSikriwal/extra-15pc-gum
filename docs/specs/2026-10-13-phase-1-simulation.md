@@ -169,6 +169,12 @@ Claude writes the CAD in Python with build123d. It reads `build.yaml` and builds
 
 The baseline is a plain X, modeled after a real 8–10" frame. If a real frame's STEP file is available, it gets imported instead of approximated.
 
+### Settled in the CAD talk
+
+The CAD talk (step 2a) started on 2026-10-17. Seven questions, one at a time: where the shapes come from, the layout, our own parts, the check numbers, watching it, what comes out, and wires.
+
+**Where the shapes come from (2026-10-17): our own solids, exact where it matters.** I model every part from the maker's published dimensions: the outside envelope, the mounting holes and the connector and antenna spots exact, the insides plain. Before modeling a part, I check whether a CAD model of it already exists, official or community-made, and the catalog records what turned up (link, format, license, date checked), including "none found". Existing models never get committed, since most can't legally be reposted. They get downloaded to a local cache and used for two things only: checking that my shape matches (an automated comparison of size and mounting holes), and hero renders. **Why:** the repo stays shareable under GPL and builds offline, so CI can test it; the checks only need envelopes and mounting points; and existing models vary a lot in quality. This replaces the line above about importing a frame's STEP file: a real frame's file gets used to check my frame, not to replace it.
+
 ## Layer 3: Aerodynamics (`aero/`)
 
 The virtual wind tunnel. It runs as a side track, instead of inside the loop. At a 10 m/s cruise, drag is roughly 10% of the power, so even a 30% drag error moves flight time by about 3%, which is well inside the thrust data's uncertainty. Its numbers still go back into the sizing model and Gazebo whenever they're ready, and the targets get rechecked.
