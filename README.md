@@ -28,7 +28,7 @@ This is the live version. When a step finishes, its outcome goes here, with a li
 | Setup | WSL2 on the PC, with all checks passing | Up next | |
 | 1. Sizing and parts | Real, orderable parts that hit the targets | Done, 2026-10-17 | Emax 2814 850KV motors, Gemfan 10x5 props, a 6S2P Molicel P42A pack and a Nazgul XL10 frame. Every setup passes, Max included: 25.7 min hover with Mission's loadout at 2254 g ([report](docs/reports/sizing/README.md), [log](docs/log/2026-10-17-first-real-sweep.md)) |
 | 2. The virtual drone (CAD) | Every part modeled and connected | Done, 2026-10-18 | Every part modeled and every module combination passing its checks, with the real weights back in the sizing model: Mission 2293 g, still passing ([report](docs/reports/cad/README.md), [log](docs/log/2026-10-18-cad-build.md)) |
-| 3. Electrical design | Every wire, pin and connector | In progress | The talk is done: eight questions settled ([spec](docs/specs/2026-10-18-electrical.md)). Next is the plan |
+| 3. Electrical design | Every wire, pin and connector | In progress | The talk and the plan are done ([spec](docs/specs/2026-10-18-electrical.md), [plan](docs/plans/2026-10-18-electrical.md)). Next is the build |
 | 4. Flight sim (PX4) | Prove the airframe flies, in all eight module combinations | Not started | |
 | 5. My firmware | My flight code and the safety monitor, passing the same tests as PX4 | Not started | |
 | 6. Modules in sim | Parachute, vision & nav, and claws if they happen | Not started | |
@@ -66,8 +66,8 @@ This is the live version. When a step finishes, its outcome goes here, with a li
 | Part | What happens | Status | Outcome |
 |---|---|---|---|
 | 3a. Talk | Settle where the design lives, the flight controller, the module bus, power, the motor cut, the checks and watching it | Done, 2026-10-18 | Eight questions settled. The surprise: the ESC firmware holds the last throttle for half a second when its signal disappears, so the safety monitor now sends stop frames instead of just disconnecting the lines ([log](docs/log/2026-10-18-electrical-talk.md), [spec](docs/specs/2026-10-18-electrical.md#settled-in-the-electrical-talk)) |
-| 3b. Plan | The new parts researched (a DroneCAN GPS, servo nodes, the multiplexers, connectors and fuses), then the implementation plan | Up next | |
-| 3c. Build | Test-first: the connection list, the ARK FPV swap, the checks, the generators (WireViz, pin maps, KiCad), ngspice, Rerun and the report | Not started | |
+| 3b. Plan | The new parts researched (a DroneCAN GPS, servo nodes, the multiplexers, connectors and fuses), then the implementation plan | Done, 2026-10-18 | 14 test-first tasks. The lightest DroneCAN GPS is 8 g over the old one, and with the servo nodes Max will land around 2514 g, over its limit ([plan](docs/plans/2026-10-18-electrical.md)) |
+| 3c. Build | Test-first: the connection list, the ARK FPV swap, the checks, the generators (WireViz, pin maps, KiCad), ngspice, Rerun and the report | Up next | |
 | 3d. Close the loop | The new parts' weights back into the CAD and the sizing model, with Max only 7 g under its limit | Not started | |
 
 ## Modules

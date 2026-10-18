@@ -1,6 +1,6 @@
 # Implementation plan: electrical design
 
-*Step 3b, written 2026-10-18. It turns the decisions in the [spec](../specs/2026-10-18-electrical.md#settled-in-the-electrical-talk) into code, one test-first task at a time.*
+*Step 3b, written and OK'd 2026-10-18. It turns the decisions in the [spec](../specs/2026-10-18-electrical.md#settled-in-the-electrical-talk) into code, one test-first task at a time.*
 
 ## What it builds
 
@@ -54,7 +54,7 @@ A research pass on 2026-10-18 went through every new part and every pin the conn
 | Cell links | Fuse wire, sized by Onderdonk's equation | from the wire | No maker publishes fusing data for cell links by size, so these get sized from the equation and go on the unproven list | n/a |
 | Wire | Silicone, 200 °C insulation | from the table | Resistance from the US standard copper wire tables (NBS Handbook 100), outer diameter and mass from a maker's sheet | n/a |
 
-**The GPS, and the weight.** A DroneCAN GPS costs 8 g over the M10Q, and the servo nodes add 5 g each. Adding up every new part with rough figures, Mission goes from 2293 g to about 2309 g, which still passes (its pessimistic hover drops from 21.6 to about 21.4 min, against 21). Max goes from 2493 g to about 2514 g, over its 2.5 kg limit. The alternative is ARK's SAM GPS MINI (u-blox SAM-M10Q, IIS2MDC compass, 8 g, the same as the M10Q) on a serial port. That brings Max to about 2506 g, still over, and its six wires have to pass through the module connector, which grows from 8 to 12 pins. The wiring's real weight (step 3d) replaces a 45 g guess, so the final number could move either way. Max only gets reported, it doesn't have to pass (decided 2026-10-17), but I picked these parts because they kept Max under 2500 g.
+**The GPS, and the weight.** A DroneCAN GPS costs 8 g over the M10Q, and the servo nodes add 5 g each. Adding up every new part with rough figures, Mission goes from 2293 g to about 2309 g, which still passes (its pessimistic hover drops from 21.6 to about 21.4 min, against 21). Max goes from 2493 g to about 2514 g, over its 2.5 kg limit. The alternative is ARK's SAM GPS MINI (u-blox SAM-M10Q, IIS2MDC compass, 8 g, the same as the M10Q) on a serial port. That brings Max to about 2506 g, still over, and its six wires have to pass through the module connector, which grows from 8 to 12 pins. The wiring's real weight (step 3d) replaces a 45 g guess, so the final number could move either way. Max only gets reported, it doesn't have to pass (decided 2026-10-17), but I picked these parts because they kept Max under 2500 g. **Decided 2026-10-18: the ARK GPS on DroneCAN.** The lighter serial GPS doesn't get Max under the limit by itself, and it would have cost four more pins in the module connector and a special case in the bus design. Max gets its final number in step 3d.
 
 **Pins, from the makers' docs:**
 - **The flight controller's serial ports:** the receiver on the RC port, the lidar on the GPS port (free now the GPS is on CAN), the Pi on TELEM1, the Teensy on the VTX connector's UART5, the ESC's telemetry on UART4's receive-only pin. The debug plug stays PX4's console. One receive-only port is left over.

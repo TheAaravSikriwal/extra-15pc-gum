@@ -68,6 +68,10 @@ The rest of the 5 V picture: the flight controller, receiver, GPS and lidar run 
 - **Stills:** the power tree, the harness diagrams and the schematic on the project's black, and the scope traces of the switch, at the post sizes.
 - **Why:** it's the CAD's setup again, one viewer for the whole project that runs in the browser pane. And the trace of DShot passing cleanly with the Teensy unpowered is the one picture that proves the safety design works.
 
+## Settled in the plan
+
+**The GPS (2026-10-18): the ARK GPS on DroneCAN.** The parts research found no DroneCAN GPS with a compass under 16 g that's still sold, 8 g more than the end-of-life M10Q. ARK's GPS (u-blox NEO-M9N, BMM150 compass, a barometer) ties for lightest, PX4 documents it, and its terminator is a software setting. With it, the servo nodes and the rest of the new parts, Mission comes to about 2309 g and still passes, and Max to about 2514 g, over its 2.5 kg limit. ARK's SAM GPS MINI on a serial port weighs 8 g, but Max would still land around 2506 g, and its six wires would have pushed the module connector from 8 pins to 12. Max only has to be reported, and step 3d gives it its real number. The [plan](../plans/2026-10-18-electrical.md) has the rest of the research.
+
 ## What happens next
 
 The implementation plan (step 3b), then the build (3c), test-first like the CAD: the connection list, the ARK FPV swapped into the catalog and the CAD, the new parts (a DroneCAN GPS, two servo nodes, the module connector, the multiplexers, buffers and fuses), the checks, the generators (WireViz, pin maps, KiCad), the ngspice runs, Rerun, and the report.

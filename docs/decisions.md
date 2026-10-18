@@ -115,6 +115,8 @@ Eight questions, all in the [electrical spec](specs/2026-10-18-electrical.md) un
 - **The check numbers:** 80% of continuous ratings, a 10 s burst at the 90 A cap for heat, 20 °C under every temperature rating at 40 °C air, 2% drop on the main path.
 - **Watching it:** Rerun with the wires colored by current and the switch's scope traces, plus stills.
 
+And one from the plan: **the GPS is the ARK GPS on DroneCAN** (16 g, 8 g over the old M10Q). With the servo nodes, Max comes to about 2514 g, over its 2.5 kg limit; the 8 g serial alternative wouldn't have saved it. Max only has to be reported.
+
 ### The parts (picked 2026-10-17)
 
 I picked the lightest build that passes every setup, Max included, over the sweep's favorite (a Hobbywing 3115 on 6S3P, 660 g heavier, which breaks Max's 2500 g limit). The sweep ranks by headroom, so this one comes in at #33 of 192, and that's fine: it meets every target I set.
@@ -490,7 +492,7 @@ Parts so far:
 - **Companion computer:** part of module V. A Pi 5 is probably enough now that the LLM and object detection (#39) are on the laptop. The only vision job that has to stay on board is GPS-free flight (#24), because it has to work when the link drops; a Jetson only if #24 needs more. Settled in step 6.
 - **IMU:** ICM-42688-P (it's on most modern flight controller boards anyway).
 - **Barometer:** on the flight controller board.
-- **GPS + compass:** a u-blox M10 module with compass, up on a mast away from the power wires.
+- **GPS + compass:** the ARK GPS (u-blox NEO-M9N, BMM150 compass, barometer) on DroneCAN, up on a mast away from the power wires (picked 2026-10-18 in the electrical plan; it replaced a Matek M10Q that went end of life).
 - **Rangefinder:** downward lidar (TF-Luna or TFmini-S).
 - **Control link:** an ExpressLRS receiver and a handheld transmitter, on 2.4 GHz. HaLow and Meshtastic (below) both use 902–928 MHz in the US, and so does 900 MHz ExpressLRS, so the control link stays off that band. Its protocol (CRSF) is well documented and easy to parse.
 - **Data/video link to the laptop:** the lead option (2026-10-14) is Wi-Fi HaLow (802.11ah), which is Wi-Fi on 900 MHz. It has a lot more range than normal Wi-Fi, with a few Mbps up close dropping to hundreds of kbps far out. It carries normal IP traffic, so MAVLink telemetry and real compressed video can share one link from the companion computer, and existing ground station software works while I build my own. The same video could go into ATAK too (the free civilian version runs on Android). One catch: the Pi 5 has no hardware H.264 encoder, so video encoding runs on its CPU, which counts when picking Pi vs Jetson. Confirmed in step 6.

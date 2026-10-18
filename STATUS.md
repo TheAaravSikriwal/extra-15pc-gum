@@ -1,7 +1,7 @@
 # Status
 
 **Last updated:** 2026-10-18, on the PC's Windows side
-**Step:** step 3, electrical design. The talk (3a) is done; next is the plan (3b).
+**Step:** step 3, electrical design. The talk (3a) and the plan (3b) are done; next is the build (3c).
 **Main machine:** the PC, with WSL2 Ubuntu 24.04 for the Linux tools
 
 ## Right now
@@ -29,6 +29,8 @@ Where to look:
 
 **Step 3a, the electrical talk, is done (2026-10-18).** Eight answers, all in the [electrical spec](docs/specs/2026-10-18-electrical.md): one connection list in code generates every diagram and check; the ARK FPV replaces the Kakute H7; DroneCAN plus a serial line for the modules; the frame's XT60 with no main fuse (fused branches, a fuse link on each cell); one BEC for the Pi and the modules; the safety monitor takes over the ESC lines and sends stop frames, because AM32 holds the last throttle for half a second when its signal just disappears; 80% of every rating, with a 10 s burst at the 90 A cap for heat; and Rerun with the wires colored by current. The [log](docs/log/2026-10-18-electrical-talk.md) has the story.
 
+**Step 3b, the electrical plan, is done (2026-10-18).** The research picked the parts (the ARK GPS on DroneCAN, ARK CANnodes in P and C, a TI TS3A5018 board for the motor cut, single-gate buffers that stay quiet when the Teensy is off) and the 14 tasks. The catch: the lightest DroneCAN GPS is 8 g over the old one, so with the servo nodes Max lands around 2514 g, over its limit. The [log](docs/log/2026-10-18-electrical-plan.md) has the story.
+
 **The parts research added two missing parts (2026-10-17).** The camera needs a 22-pin cable for the Pi 5, and the HaLow card comes with no antenna, so both went into module V (14 g together). Mission is now 2268 g and hovers 25.5 min (21.9 pessimistic, against 21), and Max is 2468 g. Everything still passes, with a thinner margin.
 
 **The CAD talk is done (2026-10-17).** Seven answers, all in the spec under "Settled in the CAD talk": I model every part myself from published dimensions, after checking whether a CAD model of it already exists; battery underneath and modules on top, so the chute fires straight up; real printable designs for our own brackets, legs, tray and rail; check limits based on what each one costs; Rerun and styled stills for watching; STEP, meshes, a GLB for the site and print files on every run, with `cad.json` committed; and rough wire routes now. The [log](docs/log/2026-10-17-cad-talk.md) has the story.
@@ -38,7 +40,7 @@ Where to look:
 ## Up next
 
 1. **Set up WSL2 on the PC** with [docs/setup-pc.md](docs/setup-pc.md). The `wsl --install` step needs an admin PowerShell and one reboot. Then commit `docs/machines/pc.md`.
-2. **Step 3b: the electrical plan.** Research the new parts (a DroneCAN GPS to replace the end-of-life M10Q, two DroneCAN servo nodes, the safety monitor's multiplexers and buffers, the module connector, the fuses), then write the implementation plan.
+2. **Step 3c: the electrical build,** task by task from the [plan](docs/plans/2026-10-18-electrical.md), starting with the tools (Graphviz, ngspice and KiCad 10 on the PC).
 3. **The project site's spec** (what it's built with), so its first pages can come with the sizing model.
 4. **Write the first half of `scripts/setup-ubuntu.sh`** (inside WSL2): Gazebo, PX4 and the Python tools, with pinned versions.
 
