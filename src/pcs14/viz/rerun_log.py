@@ -64,7 +64,13 @@ def _viewer() -> str | None:
 
 
 class Recorder:
-    def __init__(self, path: Path | None = None, live: bool = False, app: str = "pcs14-sizing"):
+    def __init__(
+        self,
+        path: Path | None = None,
+        live: bool = False,
+        app: str = "pcs14-sizing",
+        layout: rrb.Blueprint | None = None,
+    ):
         if not live and path is None:
             raise ValueError("a recording needs somewhere to go: a file, a live viewer, or both")
         self.rec = rr.RecordingStream(app)
@@ -78,7 +84,7 @@ class Recorder:
             path = Path(path)
             path.parent.mkdir(parents=True, exist_ok=True)
             sinks.append(rr.FileSink(str(path)))
-        self.rec.set_sinks(*sinks, default_blueprint=blueprint())
+        self.rec.set_sinks(*sinks, default_blueprint=layout or blueprint())
 
     def log_flight(self, setup: str, kind: str, case: str, flight: Flight, highlight: bool) -> None:
         """One flight: `kind` is hover or cruise, `case` is nominal or pessimistic."""
