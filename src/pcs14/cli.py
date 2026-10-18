@@ -57,6 +57,11 @@ def build_parser() -> argparse.ArgumentParser:
         default=(0, 600, 100),
         help="extra grams for the margin chart",
     )
+    report.add_argument(
+        "--sweep-best",
+        action="store_true",
+        help="write up the sweep's top pick instead of the build file's build",
+    )
     validate = commands.add_parser(
         "validate",
         help="The honesty check: the model against published builds and cell curves.",
@@ -198,9 +203,9 @@ def run_report(args) -> int:
     start, stop, step = args.grams
     recorder = _recorder(args)
     swept = sweep(build, catalog, targets, recorder=recorder)
-    best = swept.best.build if swept.ranked else build
-    design = evaluate(best, targets, recorder=recorder)
-    margin = margin_curve(best, targets, grams=range(start, stop + 1, step))
+    chosen = swept.best.build if args.sweep_best and swept.ranked else build
+    design = evaluate(chosen, targets, recorder=recorder)
+    margin = margin_curve(chosen, targets, grams=range(start, stop + 1, step))
     written = write_report(
         out,
         design,

@@ -55,6 +55,17 @@ class SweepResult:
     def best(self) -> Candidate:
         return self.ranked[0]
 
+    def rank_of(self, build: Build) -> int | None:
+        """Where this build landed (1 is the top), or None if the sweep didn't try it."""
+        for rank, candidate in enumerate(self.ranked, start=1):
+            if same_build(candidate.build, build):
+                return rank
+        return None
+
+
+def same_build(a: Build, b: Build) -> bool:
+    return a.label == b.label and a.frame.id == b.frame.id
+
 
 def candidate_builds(base: Build, catalog: Catalog) -> tuple[list[Build], list[tuple[str, str]]]:
     builds, skipped = [], []

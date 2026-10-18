@@ -309,10 +309,11 @@ def sweep_chart(design: DesignResult, sweep, path: Path, made_up: bool) -> None:
             label=verdict,
             edgecolors="none",
         )
-    best = sweep.best
+    rank = sweep.rank_of(design.build)
+    ringed = sweep.ranked[rank - 1] if rank is not None else sweep.best
     ax.scatter(
-        [units.kg_to_g(best.result.sizing.mass.total)],
-        [best.sizing_cruise_minutes],
+        [units.kg_to_g(ringed.result.sizing.mass.total)],
+        [ringed.sizing_cruise_minutes],
         s=520,
         facecolors="none",
         edgecolors=_c("text"),
@@ -329,7 +330,9 @@ def sweep_chart(design: DesignResult, sweep, path: Path, made_up: bool) -> None:
         else f"{skipped} more were skipped because their parts don't fit together."
     )
     canvas.headline(
-        f"{len(sweep.ranked)} builds", f"Ringed: the winner, {best.build.label}. {tail}"
+        f"{len(sweep.ranked)} builds",
+        f"Ringed: the build in this report, {ringed.build.label} (#{sweep.ranked.index(ringed) + 1}"
+        f"). {tail}",
     )
     canvas.save(path)
 

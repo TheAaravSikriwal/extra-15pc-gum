@@ -157,6 +157,7 @@ def to_data(design: DesignResult, sweep=None, margin=None, made_up=False, genera
                 for rank, c in enumerate(sweep.ranked, start=1)
             ],
             "skipped": [{"label": label, "reason": reason} for label, reason in sweep.skipped],
+            "chosen_rank": sweep.rank_of(build),
         }
     if margin is not None:
         data["margin_curve"] = {

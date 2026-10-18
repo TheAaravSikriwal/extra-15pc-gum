@@ -1,5 +1,6 @@
 """The pcs14 command, run end to end on the made-up test catalog."""
 
+import json
 from pathlib import Path
 
 from pcs14.cli import main
@@ -82,3 +83,26 @@ def test_validate_runs_the_honesty_check(tmp_path, capsys):
     assert main(args) == 0
     assert "Testco hover test: measured 36.0 min" in capsys.readouterr().out
     assert (tmp_path / "v" / "validation.md").is_file()
+
+
+def _report(tmp_path, *extra):
+    build = tmp_path / "build.yaml"
+    text = (FIXTURES / "build.yaml").read_text(encoding="utf-8")
+    build.write_text(text.replace("parallel: 2", "parallel: 3"), encoding="utf-8")  # ranks 2nd
+    out = tmp_path / "report"
+    parts = [*TEST_PARTS[:3], str(build), *TEST_PARTS[4:]]
+    args = ["report", *parts, "--out", str(out), "--no-record", "--grams", "0", "100", "100"]
+    assert main([*args, *extra]) == 0
+    return json.loads((out / "sizing.json").read_text(encoding="utf-8"))
+
+
+def test_report_writes_up_the_build_file_not_the_sweeps_favorite(tmp_path):
+    data = _report(tmp_path)
+    assert data["build"]["pack"]["parallel"] == 3
+    assert data["sweep"]["chosen_rank"] == 2
+
+
+def test_report_can_write_up_the_sweeps_favorite_instead(tmp_path):
+    data = _report(tmp_path, "--sweep-best")
+    assert data["build"]["pack"]["parallel"] == 2
+    assert data["sweep"]["chosen_rank"] == 1

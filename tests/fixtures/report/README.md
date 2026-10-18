@@ -224,13 +224,13 @@ The cruise targets are checked at 10 m/s for now. The speed that actually costs 
 
 ## The sweep
 
-2 builds tried, ranked by verdict, then by how far their tightest required check clears its limit.
+2 builds tried, ranked by verdict, then by how far their tightest required check clears its limit. The build in this report ranks #1 of 2.
 
 ![Every build the sweep tried](charts/sweep.png)
 
 | Rank | Build | Frame | Verdict | Tightest margin | mission cruise |
 |---|---|---|---|---|---|
-| 1 | M2810 900KV / P10x4.5 / 6S2P Testco C21700-45 | X10 | marginal | +9% | 34.0 min |
+| 1 | **M2810 900KV / P10x4.5 / 6S2P Testco C21700-45** | X10 | marginal | +9% | 34.0 min |
 | 2 | M2810 900KV / P10x4.5 / 6S3P Testco C21700-45 | X10 | fail | -1% | 41.3 min |
 
 ## What extra weight costs

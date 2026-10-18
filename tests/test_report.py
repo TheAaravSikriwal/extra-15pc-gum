@@ -114,3 +114,13 @@ def test_the_report_shows_the_current_cap(results):
     capped = design.build.variant(current_cap_fraction=1.0)
     text = render(evaluate(capped, design.targets))
     assert "| Current cap | 90 A, set in my firmware (100% of the pack's rating) |" in text
+
+
+def test_the_sweep_section_says_where_the_reported_build_ranks(results):
+    design, swept = results["design"], results["sweep"]
+    text = render(design, swept)
+    assert "The build in this report ranks #1 of 2." in text
+    second = swept.ranked[1].build
+    text = render(evaluate(second, design.targets), swept)
+    assert "The build in this report ranks #2 of 2." in text
+    assert "| 2 | **" in text  # its row is in bold

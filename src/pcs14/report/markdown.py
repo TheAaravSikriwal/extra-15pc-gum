@@ -49,6 +49,13 @@ def _hover_below_the_table(design: DesignResult) -> str | None:
     )
 
 
+def _where_it_ranks(sweep, build) -> str:
+    rank = sweep.rank_of(build)
+    if rank is None:
+        return "The build in this report isn't one the sweep tried."
+    return f"The build in this report ranks #{rank} of {len(sweep.ranked)}."
+
+
 def _verdict_sentence(design: DesignResult) -> str:
     required = [r for r in design.setups if r.setup.required]
     names = ", ".join(r.setup.name for r in required)
@@ -213,16 +220,22 @@ def render(design: DesignResult, sweep=None, margin=None, made_up=False, generat
             "## The sweep",
             "",
             f"{len(sweep.ranked)} builds tried, ranked by verdict, then by how far their tightest "
-            "required check clears its limit.",
+            "required check clears its limit. " + _where_it_ranks(sweep, build),
             "",
             "![Every build the sweep tried](charts/sweep.png)",
             "",
             f"| Rank | Build | Frame | Verdict | Tightest margin | {sizing.setup.name} cruise |",
             "|---|---|---|---|---|---|",
         ]
-        for rank, c in enumerate(sweep.ranked[:10], start=1):
+        chosen = sweep.rank_of(build)
+        shown = list(range(1, min(10, len(sweep.ranked)) + 1))
+        if chosen is not None and chosen not in shown:
+            shown.append(chosen)
+        for rank in shown:
+            c = sweep.ranked[rank - 1]
+            label = f"**{c.build.label}**" if rank == chosen else c.build.label
             lines.append(
-                f"| {rank} | {c.build.label} | {c.build.frame.model} | {c.verdict} | "
+                f"| {rank} | {label} | {c.build.frame.model} | {c.verdict} | "
                 f"{c.tightest_margin * 100:+.0f}% | "
                 f"{fmt_value(c.sizing_cruise_minutes, 'min', True)} min |"
             )
