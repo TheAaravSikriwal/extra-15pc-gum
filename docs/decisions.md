@@ -467,7 +467,7 @@ Parts so far:
 - **Motors and props (picked 2026-10-17):** Emax E3 2814 850KV on Gemfan 1050 tri-blades. See "The parts".
 - **ESC (picked 2026-10-17):** the Holybro Tekko32 F4 4in1 50A: 6S, bidirectional DShot, so I get RPM from every motor. That's great for filtering and for #21. It runs AM32, open-source ESC firmware, which is a nice bonus.
 - **Battery (picked 2026-10-17):** 6S2P Molicel P42A, 8 Ah and about 860 g, with my firmware capping the current at its 90 A rating.
-- **Flight controller (decided):** an off-the-shelf STM32H743 flight controller board in the drone, and optionally a Nucleo-H743 on the desk, which gives me a proper debugger, every pin broken out, and hardware-in-the-loop testing. Same chip, same firmware. The board has to be one PX4 supports, with SWD pads I can get a debugger onto.
+- **Flight controller (decided):** an off-the-shelf STM32H743 flight controller board in the drone, and optionally a Nucleo-H743 on the desk, which gives me a proper debugger, every pin broken out, and hardware-in-the-loop testing. Same chip, same firmware. The board has to be one PX4 supports, with SWD pads I can get a debugger onto. Picked 2026-10-18 in the electrical talk: the ARK FPV (five full serial ports, CAN, a JST-SH debug plug), replacing the Kakute H7 that the CAD started with. The electrical spec has the reasoning.
 - **Teensy 4.1:** I already have one lying around. A build would need a second (about $30) so each can keep its own job:
   1. Run the thrust stand (optional, in step 1): read the load cell, current and voltage, drive the ESC, and log to its SD card.
   2. Desk sandbox: dRehmFlight with a cheap IMU and no motors, so I can watch a complete flight controller work before I write mine.
@@ -597,7 +597,6 @@ Everything that came up while brainstorming, so nothing gets lost.
 - Final pick of the extras
 - Cruise speed: 10 m/s until the sizing model says otherwise
 - Which open-source flight code to start from (the chip is decided: STM32H743)
-- Which H743 board. It needs PX4 support for the baseline flight, and SWD pads.
 - How many clean shadow-mode flights a real build would need before the safety monitor's automatic triggers go live
 - Whether to get Part 107 (in the build package's legal checklist)
 - Data/video link to the laptop: HaLow is the lead option, confirmed in step 6 (the control link is decided: 2.4 GHz ExpressLRS)

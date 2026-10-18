@@ -47,7 +47,6 @@ Where to look:
 - Whether the HaLow HAT works on a Pi 5 (Heltec lists Pi 1 to 4), and which 915 MHz antenna to use
 - Cruise speed: 10 m/s until the sizing model says otherwise
 - How modules talk to the flight controller: plain serial or DroneCAN (step 3)
-- Which H743 flight controller board. It has to be one PX4 supports, with SWD pads.
 - Which OpenFOAM: the Foundation release or ESI's. Decided when writing the CFD half of the setup script.
 - Companion computer and camera (step 6). HaLow is the lead option for the video link.
 - Where the Meshtastic relay (#30) lives: V, Base, or its own little module
