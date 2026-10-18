@@ -9,6 +9,7 @@ description = "14 pcs left: the design and simulation tools for the Extra 15pc G
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "build123d==0.13.0",
     "matplotlib==3.11.2",
     "pydantic==2.13.5",
     "pyyaml==6.0.3",

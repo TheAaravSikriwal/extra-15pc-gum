@@ -47,6 +47,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     add("size", "Evaluate one build: every setup, every check, every flight.")
     add("sweep", "Try every build the catalog allows, and rank them.")
+    add("cad", "Build the drone in CAD: every part, every module combination, and the checks.")
     report = add("report", "Write the sizing report: Markdown, charts and the data file.")
     report.add_argument("--out", type=Path, help="report folder (default: docs/reports/sizing)")
     report.add_argument(
@@ -253,4 +254,18 @@ def run_validate(args) -> int:
     return 0
 
 
-COMMANDS = {"size": run_size, "sweep": run_sweep, "report": run_report, "validate": run_validate}
+def run_cad(args) -> int:
+    catalog, build, targets = _load(args)
+    parts = 4 + 4 + 1 + 1 + build.pack.cell_count + len(build.base)
+    parts += sum(len(module) for module in build.modules.values())
+    print(_made_up_line(args) + f"CAD: {parts} parts to model, from {build.label}")
+    return 0
+
+
+COMMANDS = {
+    "size": run_size,
+    "sweep": run_sweep,
+    "report": run_report,
+    "validate": run_validate,
+    "cad": run_cad,
+}
