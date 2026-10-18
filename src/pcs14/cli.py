@@ -47,7 +47,27 @@ def build_parser() -> argparse.ArgumentParser:
 
     add("size", "Evaluate one build: every setup, every check, every flight.")
     add("sweep", "Try every build the catalog allows, and rank them.")
-    add("cad", "Build the drone in CAD: every part, every module combination, and the checks.")
+    cad = add(
+        "cad", "Build the drone in CAD: every part, every module combination, and the checks."
+    )
+    cad.add_argument("--cad", type=Path, default=Path("design/cad.yaml"), help="the CAD settings")
+    cad.add_argument("--out", type=Path, default=Path("docs/reports/cad"), help="report folder")
+    cad.add_argument(
+        "--exports",
+        type=Path,
+        default=Path("outputs/cad"),
+        help="where STEP, meshes and print files go",
+    )
+    cad.add_argument(
+        "--skip-exports",
+        action="store_true",
+        help="just the checks and the report, no files or stills",
+    )
+    cad.add_argument(
+        "--update-catalog",
+        action="store_true",
+        help="write the printed parts' weights into the catalog (then rerun pcs14 report)",
+    )
     report = add("report", "Write the sizing report: Markdown, charts and the data file.")
     report.add_argument("--out", type=Path, help="report folder (default: docs/reports/sizing)")
     report.add_argument(
@@ -88,7 +108,7 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     try:
         return COMMANDS[args.command](args)
-    except (CatalogError, DesignError, ValueError) as error:
+    except (CatalogError, DesignError, ValueError, OSError) as error:
         print(f"pcs14 {args.command}: {error}", file=sys.stderr)
         return 2
 
@@ -100,16 +120,18 @@ def _load(args):
     return catalog, build, targets
 
 
-def _recorder(args):
+def _recorder(args, kind=None):
     if args.no_record and not args.live:
         return None
     from pcs14.viz import Recorder
+
+    kind = kind or Recorder
 
     path = None
     if not args.no_record:
         stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
         path = args.record or RECORDINGS / f"{args.command}-{stamp}.rrd"
-    recorder = Recorder(path=path, live=args.live)
+    recorder = kind(path=path, live=args.live)
     if path is not None:
         print(f"Recording to {path}")
     return recorder
@@ -255,10 +277,34 @@ def run_validate(args) -> int:
 
 
 def run_cad(args) -> int:
+    from pcs14.cad.assembly import Drone
+    from pcs14.cad.report import run_cad as run
+    from pcs14.cad.report import summary, write_cad_report
+    from pcs14.cad.settings import load_settings
+    from pcs14.viz.cad_log import CadRecorder
+
     catalog, build, targets = _load(args)
-    parts = 4 + 4 + 1 + 1 + build.pack.cell_count + len(build.base)
-    parts += sum(len(module) for module in build.modules.values())
-    print(_made_up_line(args) + f"CAD: {parts} parts to model, from {build.label}")
+    missing = [p.id for p in [build.motor, build.prop, build.esc, build.frame] if p.cad is None]
+    if missing:
+        raise ValueError(
+            f"these parts have no cad block, so they can't be modeled: {', '.join(missing)}"
+        )
+    drone = Drone(build, load_settings(args.cad))
+    recorder = _recorder(args, CadRecorder)
+    result = run(drone, targets.combinations(), recorder=recorder)
+    exports = None if args.skip_exports else args.exports
+    result = write_cad_report(args.out, result, drone, date.today().isoformat(), exports)
+    print(_made_up_line(args) + summary(result))
+    print(f"\nReport written to {Path(args.out).resolve()}")
+    if args.update_catalog:
+        from pcs14.cad.catalog_update import update_catalog
+
+        changed = update_catalog(result.printed, args.catalog, args.build)
+        print(f"\nThe catalog took {len(changed)} printed weights:")
+        for path in changed:
+            print(f"  {path}")
+    if recorder is not None:
+        recorder.close()
     return 0
 
 

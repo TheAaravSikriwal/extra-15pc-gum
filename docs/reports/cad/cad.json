@@ -1,0 +1,5558 @@
+{
+ "generated": "2026-10-18",
+ "pcs14_version": "0.1.0",
+ "build": "E3 2814 850KV / 1050 3-blade / 6S2P Molicel INR-21700-P42A",
+ "verdict": "pass",
+ "combinations": [
+  {
+   "setup": "base",
+   "modules": [],
+   "passed": true,
+   "trim_x_mm": -11.0,
+   "mass_g": 1782.657,
+   "center_of_gravity_mm": [
+    -0.129,
+    0.007,
+    -2.533
+   ],
+   "inertia_kg_m2": [
+    [
+     0.012742186641804371,
+     -9.160798038067486e-07,
+     -0.000391885808826403
+    ],
+    [
+     -9.160798038067486e-07,
+     0.015239405338502446,
+     -1.9494372820526437e-07
+    ],
+    [
+     -0.000391885808826403,
+     -1.9494372820526437e-07,
+     0.02557050127925645
+    ]
+   ],
+   "busiest_motor_extra": 0.000912,
+   "findings": [
+    {
+     "check": "balance",
+     "passed": true,
+     "value": 0.0009118481013487641,
+     "limit": 0.05,
+     "detail": "with the pack at x = -11 mm, the center of gravity sits -0.1 mm along x and +0.0 mm along y, so the busiest motor works 0.1% harder",
+     "parts": []
+    },
+    {
+     "check": "collisions",
+     "passed": true,
+     "value": 0.0,
+     "limit": 1e-09,
+     "detail": "nothing overlaps",
+     "parts": []
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.010625158543922073,
+     "limit": 0.01,
+     "detail": "frame is 10.6 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "frame"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.015025436154577477,
+     "limit": 0.01,
+     "detail": "ruko-r111 is 15.0 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "ruko-r111"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.029991033418163036,
+     "limit": 0.01,
+     "detail": "module rail is 30.0 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "module rail"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.0119083424970147,
+     "limit": 0.01,
+     "detail": "remote id mount is 11.9 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "remote id mount"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.0757207770071122,
+     "limit": 0.02,
+     "detail": "wire battery leads is 75.7 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.028500000000000004,
+     "limit": 0.02,
+     "detail": "wire motor leads front left is 28.5 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire motor leads front left"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.030280668263541744,
+     "limit": 0.02,
+     "detail": "wire lidar is 30.3 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire lidar"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.061583707758579125,
+     "limit": 0.02,
+     "detail": "wire safety monitor is 61.6 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire safety monitor"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.08458844822929847,
+     "limit": 0.02,
+     "detail": "wire module connector is 84.6 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire module connector"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.010625158543922073,
+     "limit": 0.01,
+     "detail": "frame is 10.6 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "frame"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.015025436154577472,
+     "limit": 0.01,
+     "detail": "ruko-r111 is 15.0 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "ruko-r111"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.029991033418163036,
+     "limit": 0.01,
+     "detail": "module rail is 30.0 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "module rail"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.011908342497014697,
+     "limit": 0.01,
+     "detail": "remote id mount is 11.9 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "remote id mount"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07572077700711219,
+     "limit": 0.02,
+     "detail": "wire battery leads is 75.7 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.028500000000000004,
+     "limit": 0.02,
+     "detail": "wire motor leads front right is 28.5 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire motor leads front right"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.04070259741923592,
+     "limit": 0.02,
+     "detail": "wire lidar is 40.7 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire lidar"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.061583707758579125,
+     "limit": 0.02,
+     "detail": "wire safety monitor is 61.6 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire safety monitor"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.08458844822929847,
+     "limit": 0.02,
+     "detail": "wire module connector is 84.6 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire module connector"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03211449277190538,
+     "limit": 0.01,
+     "detail": "frame is 32.1 mm from prop 3's disk (needs 10)",
+     "parts": [
+      "prop disk 3",
+      "frame"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03894588643334849,
+     "limit": 0.01,
+     "detail": "module rail is 38.9 mm from prop 3's disk (needs 10)",
+     "parts": [
+      "prop disk 3",
+      "module rail"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.045059589273358965,
+     "limit": 0.02,
+     "detail": "wire battery leads is 45.1 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.028500000000000004,
+     "limit": 0.02,
+     "detail": "wire motor leads back left is 28.5 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire motor leads back left"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.055601977494042484,
+     "limit": 0.02,
+     "detail": "wire receiver is 55.6 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire receiver"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07752053933678751,
+     "limit": 0.02,
+     "detail": "wire module connector is 77.5 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire module connector"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03211449277190538,
+     "limit": 0.01,
+     "detail": "frame is 32.1 mm from prop 4's disk (needs 10)",
+     "parts": [
+      "prop disk 4",
+      "frame"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.0389458864333485,
+     "limit": 0.01,
+     "detail": "module rail is 38.9 mm from prop 4's disk (needs 10)",
+     "parts": [
+      "prop disk 4",
+      "module rail"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.045059589273358965,
+     "limit": 0.02,
+     "detail": "wire battery leads is 45.1 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.028500000000000004,
+     "limit": 0.02,
+     "detail": "wire motor leads back right is 28.5 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire motor leads back right"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.05560197749404248,
+     "limit": 0.02,
+     "detail": "wire receiver is 55.6 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire receiver"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07752053933678751,
+     "limit": 0.02,
+     "detail": "wire module connector is 77.5 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire module connector"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.042984848098349904,
+     "limit": 0.01,
+     "detail": "props 1 and 2 are 43.0 mm apart",
+     "parts": [
+      "prop disk 1",
+      "prop disk 2"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.042984848098349904,
+     "limit": 0.01,
+     "detail": "props 1 and 3 are 43.0 mm apart",
+     "parts": [
+      "prop disk 1",
+      "prop disk 3"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.1659999999999999,
+     "limit": 0.01,
+     "detail": "props 1 and 4 are 166.0 mm apart",
+     "parts": [
+      "prop disk 1",
+      "prop disk 4"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.1659999999999999,
+     "limit": 0.01,
+     "detail": "props 2 and 3 are 166.0 mm apart",
+     "parts": [
+      "prop disk 2",
+      "prop disk 3"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.042984848098349904,
+     "limit": 0.01,
+     "detail": "props 2 and 4 are 43.0 mm apart",
+     "parts": [
+      "prop disk 2",
+      "prop disk 4"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.042984848098349904,
+     "limit": 0.01,
+     "detail": "props 3 and 4 are 43.0 mm apart",
+     "parts": [
+      "prop disk 3",
+      "prop disk 4"
+     ]
+    },
+    {
+     "check": "lidar view",
+     "passed": true,
+     "value": 0.0499,
+     "limit": null,
+     "detail": "the lidar sits 50 mm off the ground when landed, so it can't read the last 150 mm of a landing",
+     "parts": []
+    }
+   ]
+  },
+  {
+   "setup": "V",
+   "modules": [
+    "V"
+   ],
+   "passed": true,
+   "trim_x_mm": -7.0,
+   "mass_g": 1932.371,
+   "center_of_gravity_mm": [
+    -0.086,
+    0.225,
+    3.153
+   ],
+   "inertia_kg_m2": [
+    [
+     0.01369042242188273,
+     5.449291829401968e-05,
+     4.985331094101728e-05
+    ],
+    [
+     5.449291829401968e-05,
+     0.016576366349557947,
+     -3.8818035423171625e-05
+    ],
+    [
+     4.985331094101728e-05,
+     -3.8818035423171625e-05,
+     0.02614836384409505
+    ]
+   ],
+   "busiest_motor_extra": 0.002095,
+   "findings": [
+    {
+     "check": "balance",
+     "passed": true,
+     "value": 0.002094818350280147,
+     "limit": 0.05,
+     "detail": "with the pack at x = -7 mm, the center of gravity sits -0.1 mm along x and +0.2 mm along y, so the busiest motor works 0.2% harder",
+     "parts": []
+    },
+    {
+     "check": "collisions",
+     "passed": true,
+     "value": 0.0,
+     "limit": 1e-09,
+     "detail": "nothing overlaps",
+     "parts": []
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.010625158543922073,
+     "limit": 0.01,
+     "detail": "frame is 10.6 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "frame"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.015025436154577477,
+     "limit": 0.01,
+     "detail": "ruko-r111 is 15.0 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "ruko-r111"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.016370706808733523,
+     "limit": 0.01,
+     "detail": "rpi-camera-module-3 is 16.4 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "rpi-camera-module-3"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.04819283753320215,
+     "limit": 0.01,
+     "detail": "rpi-5-4gb is 48.2 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "rpi-5-4gb"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.029991033418163036,
+     "limit": 0.01,
+     "detail": "module rail is 30.0 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "module rail"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.0119083424970147,
+     "limit": 0.01,
+     "detail": "remote id mount is 11.9 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "remote id mount"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.011038036800297444,
+     "limit": 0.01,
+     "detail": "camera bracket is 11.0 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "camera bracket"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.043689422080853295,
+     "limit": 0.01,
+     "detail": "v housing is 43.7 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "v housing"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.0757207770071122,
+     "limit": 0.02,
+     "detail": "wire battery leads is 75.7 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.028500000000000004,
+     "limit": 0.02,
+     "detail": "wire motor leads front left is 28.5 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire motor leads front left"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.030280668263541744,
+     "limit": 0.02,
+     "detail": "wire lidar is 30.3 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire lidar"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.061583707758579125,
+     "limit": 0.02,
+     "detail": "wire safety monitor is 61.6 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire safety monitor"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.08458844822929847,
+     "limit": 0.02,
+     "detail": "wire module connector is 84.6 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire module connector"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.020544483527219857,
+     "limit": 0.02,
+     "detail": "wire camera cable is 20.5 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire camera cable"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.010625158543922073,
+     "limit": 0.01,
+     "detail": "frame is 10.6 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "frame"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.015025436154577472,
+     "limit": 0.01,
+     "detail": "ruko-r111 is 15.0 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "ruko-r111"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.01637070680873352,
+     "limit": 0.01,
+     "detail": "rpi-camera-module-3 is 16.4 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "rpi-camera-module-3"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.04819283753320215,
+     "limit": 0.01,
+     "detail": "rpi-5-4gb is 48.2 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "rpi-5-4gb"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.029991033418163036,
+     "limit": 0.01,
+     "detail": "module rail is 30.0 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "module rail"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.011908342497014697,
+     "limit": 0.01,
+     "detail": "remote id mount is 11.9 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "remote id mount"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.011038036800297444,
+     "limit": 0.01,
+     "detail": "camera bracket is 11.0 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "camera bracket"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.04368942208085329,
+     "limit": 0.01,
+     "detail": "v housing is 43.7 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "v housing"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07572077700711219,
+     "limit": 0.02,
+     "detail": "wire battery leads is 75.7 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.028500000000000004,
+     "limit": 0.02,
+     "detail": "wire motor leads front right is 28.5 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire motor leads front right"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.04070259741923592,
+     "limit": 0.02,
+     "detail": "wire lidar is 40.7 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire lidar"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.061583707758579125,
+     "limit": 0.02,
+     "detail": "wire safety monitor is 61.6 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire safety monitor"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.08458844822929847,
+     "limit": 0.02,
+     "detail": "wire module connector is 84.6 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire module connector"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.020544483527219857,
+     "limit": 0.02,
+     "detail": "wire camera cable is 20.5 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire camera cable"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03211449277190538,
+     "limit": 0.01,
+     "detail": "frame is 32.1 mm from prop 3's disk (needs 10)",
+     "parts": [
+      "prop disk 3",
+      "frame"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.019748444949844932,
+     "limit": 0.01,
+     "detail": "rpi-5-4gb is 19.7 mm from prop 3's disk (needs 10)",
+     "parts": [
+      "prop disk 3",
+      "rpi-5-4gb"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.033839569919899816,
+     "limit": 0.01,
+     "detail": "rpi-active-cooler is 33.8 mm from prop 3's disk (needs 10)",
+     "parts": [
+      "prop disk 3",
+      "rpi-active-cooler"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03894588643334849,
+     "limit": 0.01,
+     "detail": "module rail is 38.9 mm from prop 3's disk (needs 10)",
+     "parts": [
+      "prop disk 3",
+      "module rail"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03728965559924578,
+     "limit": 0.01,
+     "detail": "gps mast is 37.3 mm from prop 3's disk (needs 10)",
+     "parts": [
+      "prop disk 3",
+      "gps mast"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.015145891894765617,
+     "limit": 0.01,
+     "detail": "v housing is 15.1 mm from prop 3's disk (needs 10)",
+     "parts": [
+      "prop disk 3",
+      "v housing"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.045059589273358965,
+     "limit": 0.02,
+     "detail": "wire battery leads is 45.1 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.028500000000000004,
+     "limit": 0.02,
+     "detail": "wire motor leads back left is 28.5 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire motor leads back left"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.055601977494042484,
+     "limit": 0.02,
+     "detail": "wire receiver is 55.6 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire receiver"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.04276269037387853,
+     "limit": 0.02,
+     "detail": "wire gps is 42.8 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire gps"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07752053933678751,
+     "limit": 0.02,
+     "detail": "wire module connector is 77.5 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire module connector"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07832984271432072,
+     "limit": 0.02,
+     "detail": "wire camera cable is 78.3 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire camera cable"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03211449277190538,
+     "limit": 0.01,
+     "detail": "frame is 32.1 mm from prop 4's disk (needs 10)",
+     "parts": [
+      "prop disk 4",
+      "frame"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.019748444949844932,
+     "limit": 0.01,
+     "detail": "rpi-5-4gb is 19.7 mm from prop 4's disk (needs 10)",
+     "parts": [
+      "prop disk 4",
+      "rpi-5-4gb"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03383956991989982,
+     "limit": 0.01,
+     "detail": "rpi-active-cooler is 33.8 mm from prop 4's disk (needs 10)",
+     "parts": [
+      "prop disk 4",
+      "rpi-active-cooler"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.0389458864333485,
+     "limit": 0.01,
+     "detail": "module rail is 38.9 mm from prop 4's disk (needs 10)",
+     "parts": [
+      "prop disk 4",
+      "module rail"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.037289655599245776,
+     "limit": 0.01,
+     "detail": "gps mast is 37.3 mm from prop 4's disk (needs 10)",
+     "parts": [
+      "prop disk 4",
+      "gps mast"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.015145891894765617,
+     "limit": 0.01,
+     "detail": "v housing is 15.1 mm from prop 4's disk (needs 10)",
+     "parts": [
+      "prop disk 4",
+      "v housing"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.045059589273358965,
+     "limit": 0.02,
+     "detail": "wire battery leads is 45.1 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.028500000000000004,
+     "limit": 0.02,
+     "detail": "wire motor leads back right is 28.5 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire motor leads back right"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.05560197749404248,
+     "limit": 0.02,
+     "detail": "wire receiver is 55.6 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire receiver"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.05122411522965551,
+     "limit": 0.02,
+     "detail": "wire gps is 51.2 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire gps"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07752053933678751,
+     "limit": 0.02,
+     "detail": "wire module connector is 77.5 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire module connector"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07832984271432072,
+     "limit": 0.02,
+     "detail": "wire camera cable is 78.3 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire camera cable"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.042984848098349904,
+     "limit": 0.01,
+     "detail": "props 1 and 2 are 43.0 mm apart",
+     "parts": [
+      "prop disk 1",
+      "prop disk 2"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.042984848098349904,
+     "limit": 0.01,
+     "detail": "props 1 and 3 are 43.0 mm apart",
+     "parts": [
+      "prop disk 1",
+      "prop disk 3"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.1659999999999999,
+     "limit": 0.01,
+     "detail": "props 1 and 4 are 166.0 mm apart",
+     "parts": [
+      "prop disk 1",
+      "prop disk 4"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.1659999999999999,
+     "limit": 0.01,
+     "detail": "props 2 and 3 are 166.0 mm apart",
+     "parts": [
+      "prop disk 2",
+      "prop disk 3"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.042984848098349904,
+     "limit": 0.01,
+     "detail": "props 2 and 4 are 43.0 mm apart",
+     "parts": [
+      "prop disk 2",
+      "prop disk 4"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.042984848098349904,
+     "limit": 0.01,
+     "detail": "props 3 and 4 are 43.0 mm apart",
+     "parts": [
+      "prop disk 3",
+      "prop disk 4"
+     ]
+    },
+    {
+     "check": "module rail",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "detail": "v housing spans x = -50 to 12 mm, on a rail from -50 to 66",
+     "parts": [
+      "v housing"
+     ]
+    },
+    {
+     "check": "compass distance",
+     "passed": true,
+     "value": 0.105,
+     "limit": 0.1,
+     "detail": "the compass is 105 mm from wire battery leads (Matek asks for 100)",
+     "parts": [
+      "matek-m10q-5883",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "remote id distance",
+     "passed": true,
+     "value": 0.14106484324593424,
+     "limit": 0.1,
+     "detail": "the Remote ID module is 141 mm from the GPS",
+     "parts": [
+      "ruko-r111",
+      "matek-m10q-5883"
+     ]
+    },
+    {
+     "check": "lidar view",
+     "passed": true,
+     "value": 0.0499,
+     "limit": null,
+     "detail": "the lidar sits 50 mm off the ground when landed, so it can't read the last 150 mm of a landing",
+     "parts": []
+    }
+   ]
+  },
+  {
+   "setup": "P",
+   "modules": [
+    "P"
+   ],
+   "passed": true,
+   "trim_x_mm": -18.0,
+   "mass_g": 1943.009,
+   "center_of_gravity_mm": [
+    -0.073,
+    0.006,
+    7.204
+   ],
+   "inertia_kg_m2": [
+    [
+     0.015137075559104799,
+     -9.154333506990866e-07,
+     -0.0012452877920074183
+    ],
+    [
+     -9.154333506990866e-07,
+     0.01804003505769782,
+     -8.173368756874658e-08
+    ],
+    [
+     -0.0012452877920074183,
+     -8.173368756874658e-08,
+     0.026010039919458126
+    ]
+   ],
+   "busiest_motor_extra": 0.000534,
+   "findings": [
+    {
+     "check": "balance",
+     "passed": true,
+     "value": 0.0005338154639398157,
+     "limit": 0.05,
+     "detail": "with the pack at x = -18 mm, the center of gravity sits -0.1 mm along x and +0.0 mm along y, so the busiest motor works 0.1% harder",
+     "parts": []
+    },
+    {
+     "check": "collisions",
+     "passed": true,
+     "value": 0.0,
+     "limit": 1e-09,
+     "detail": "nothing overlaps",
+     "parts": []
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.010625158543922073,
+     "limit": 0.01,
+     "detail": "frame is 10.6 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "frame"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.015025436154577477,
+     "limit": 0.01,
+     "detail": "ruko-r111 is 15.0 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "ruko-r111"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.038090723085363425,
+     "limit": 0.01,
+     "detail": "fruity-chutes-harrier-40-42 is 38.1 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "fruity-chutes-harrier-40-42"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.029991033418163036,
+     "limit": 0.01,
+     "detail": "module rail is 30.0 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "module rail"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.0119083424970147,
+     "limit": 0.01,
+     "detail": "remote id mount is 11.9 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "remote id mount"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03199072308536344,
+     "limit": 0.01,
+     "detail": "p holder is 32.0 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "p holder"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.0757207770071122,
+     "limit": 0.02,
+     "detail": "wire battery leads is 75.7 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.028500000000000004,
+     "limit": 0.02,
+     "detail": "wire motor leads front left is 28.5 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire motor leads front left"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.030280668263541744,
+     "limit": 0.02,
+     "detail": "wire lidar is 30.3 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire lidar"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.061583707758579125,
+     "limit": 0.02,
+     "detail": "wire safety monitor is 61.6 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire safety monitor"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.08458844822929847,
+     "limit": 0.02,
+     "detail": "wire module connector is 84.6 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire module connector"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07036045079992558,
+     "limit": 0.02,
+     "detail": "wire chute servo is 70.4 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire chute servo"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.010625158543922073,
+     "limit": 0.01,
+     "detail": "frame is 10.6 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "frame"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.015025436154577472,
+     "limit": 0.01,
+     "detail": "ruko-r111 is 15.0 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "ruko-r111"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.038090723085363425,
+     "limit": 0.01,
+     "detail": "fruity-chutes-harrier-40-42 is 38.1 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "fruity-chutes-harrier-40-42"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.029991033418163036,
+     "limit": 0.01,
+     "detail": "module rail is 30.0 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "module rail"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.011908342497014697,
+     "limit": 0.01,
+     "detail": "remote id mount is 11.9 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "remote id mount"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03199072308536341,
+     "limit": 0.01,
+     "detail": "p holder is 32.0 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "p holder"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07572077700711219,
+     "limit": 0.02,
+     "detail": "wire battery leads is 75.7 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.028500000000000004,
+     "limit": 0.02,
+     "detail": "wire motor leads front right is 28.5 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire motor leads front right"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.04070259741923592,
+     "limit": 0.02,
+     "detail": "wire lidar is 40.7 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire lidar"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.061583707758579125,
+     "limit": 0.02,
+     "detail": "wire safety monitor is 61.6 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire safety monitor"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.08458844822929847,
+     "limit": 0.02,
+     "detail": "wire module connector is 84.6 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire module connector"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07439278480642686,
+     "limit": 0.02,
+     "detail": "wire chute servo is 74.4 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire chute servo"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03211449277190538,
+     "limit": 0.01,
+     "detail": "frame is 32.1 mm from prop 3's disk (needs 10)",
+     "parts": [
+      "prop disk 3",
+      "frame"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03894588643334849,
+     "limit": 0.01,
+     "detail": "module rail is 38.9 mm from prop 3's disk (needs 10)",
+     "parts": [
+      "prop disk 3",
+      "module rail"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.045059589273358965,
+     "limit": 0.02,
+     "detail": "wire battery leads is 45.1 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.028500000000000004,
+     "limit": 0.02,
+     "detail": "wire motor leads back left is 28.5 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire motor leads back left"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.055601977494042484,
+     "limit": 0.02,
+     "detail": "wire receiver is 55.6 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire receiver"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07752053933678751,
+     "limit": 0.02,
+     "detail": "wire module connector is 77.5 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire module connector"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07726889090390407,
+     "limit": 0.02,
+     "detail": "wire chute servo is 77.3 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire chute servo"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03211449277190538,
+     "limit": 0.01,
+     "detail": "frame is 32.1 mm from prop 4's disk (needs 10)",
+     "parts": [
+      "prop disk 4",
+      "frame"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.0389458864333485,
+     "limit": 0.01,
+     "detail": "module rail is 38.9 mm from prop 4's disk (needs 10)",
+     "parts": [
+      "prop disk 4",
+      "module rail"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.045059589273358965,
+     "limit": 0.02,
+     "detail": "wire battery leads is 45.1 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.028500000000000004,
+     "limit": 0.02,
+     "detail": "wire motor leads back right is 28.5 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire motor leads back right"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.05560197749404248,
+     "limit": 0.02,
+     "detail": "wire receiver is 55.6 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire receiver"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07752053933678751,
+     "limit": 0.02,
+     "detail": "wire module connector is 77.5 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire module connector"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.08841670351690063,
+     "limit": 0.02,
+     "detail": "wire chute servo is 88.4 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire chute servo"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.042984848098349904,
+     "limit": 0.01,
+     "detail": "props 1 and 2 are 43.0 mm apart",
+     "parts": [
+      "prop disk 1",
+      "prop disk 2"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.042984848098349904,
+     "limit": 0.01,
+     "detail": "props 1 and 3 are 43.0 mm apart",
+     "parts": [
+      "prop disk 1",
+      "prop disk 3"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.1659999999999999,
+     "limit": 0.01,
+     "detail": "props 1 and 4 are 166.0 mm apart",
+     "parts": [
+      "prop disk 1",
+      "prop disk 4"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.1659999999999999,
+     "limit": 0.01,
+     "detail": "props 2 and 3 are 166.0 mm apart",
+     "parts": [
+      "prop disk 2",
+      "prop disk 3"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.042984848098349904,
+     "limit": 0.01,
+     "detail": "props 2 and 4 are 43.0 mm apart",
+     "parts": [
+      "prop disk 2",
+      "prop disk 4"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.042984848098349904,
+     "limit": 0.01,
+     "detail": "props 3 and 4 are 43.0 mm apart",
+     "parts": [
+      "prop disk 3",
+      "prop disk 4"
+     ]
+    },
+    {
+     "check": "parachute cone",
+     "passed": true,
+     "value": 0.0,
+     "limit": 0.0,
+     "detail": "nothing in the chute's way",
+     "parts": []
+    },
+    {
+     "check": "module rail",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "detail": "p holder spans x = 12 to 64 mm, on a rail from -50 to 66",
+     "parts": [
+      "p holder"
+     ]
+    },
+    {
+     "check": "lidar view",
+     "passed": true,
+     "value": 0.0499,
+     "limit": null,
+     "detail": "the lidar sits 50 mm off the ground when landed, so it can't read the last 150 mm of a landing",
+     "parts": []
+    }
+   ]
+  },
+  {
+   "setup": "C",
+   "modules": [
+    "C"
+   ],
+   "passed": true,
+   "trim_x_mm": 11.0,
+   "mass_g": 1932.657,
+   "center_of_gravity_mm": [
+    -0.054,
+    0.006,
+    -4.509
+   ],
+   "inertia_kg_m2": [
+    [
+     0.012908174237515653,
+     -9.15205435381458e-07,
+     -0.0004507626419692776
+    ],
+    [
+     -9.15205435381458e-07,
+     0.01782916696890169,
+     -2.1792687901466045e-07
+    ],
+    [
+     -0.0004507626419692776,
+     -2.1792687901466045e-07,
+     0.028084275325717067
+    ]
+   ],
+   "busiest_motor_extra": 0.000402,
+   "findings": [
+    {
+     "check": "balance",
+     "passed": true,
+     "value": 0.00040202913063121085,
+     "limit": 0.05,
+     "detail": "with the pack at x = 11 mm, the center of gravity sits -0.1 mm along x and +0.0 mm along y, so the busiest motor works 0.0% harder",
+     "parts": []
+    },
+    {
+     "check": "collisions",
+     "passed": true,
+     "value": 0.0,
+     "limit": 1e-09,
+     "detail": "nothing overlaps",
+     "parts": []
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.010625158543922073,
+     "limit": 0.01,
+     "detail": "frame is 10.6 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "frame"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.015025436154577477,
+     "limit": 0.01,
+     "detail": "ruko-r111 is 15.0 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "ruko-r111"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.029991033418163036,
+     "limit": 0.01,
+     "detail": "module rail is 30.0 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "module rail"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.0119083424970147,
+     "limit": 0.01,
+     "detail": "remote id mount is 11.9 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "remote id mount"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.0757207770071122,
+     "limit": 0.02,
+     "detail": "wire battery leads is 75.7 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.028500000000000004,
+     "limit": 0.02,
+     "detail": "wire motor leads front left is 28.5 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire motor leads front left"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.030280668263541744,
+     "limit": 0.02,
+     "detail": "wire lidar is 30.3 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire lidar"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.061583707758579125,
+     "limit": 0.02,
+     "detail": "wire safety monitor is 61.6 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire safety monitor"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.08458844822929847,
+     "limit": 0.02,
+     "detail": "wire module connector is 84.6 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire module connector"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.010625158543922073,
+     "limit": 0.01,
+     "detail": "frame is 10.6 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "frame"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.015025436154577472,
+     "limit": 0.01,
+     "detail": "ruko-r111 is 15.0 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "ruko-r111"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.029991033418163036,
+     "limit": 0.01,
+     "detail": "module rail is 30.0 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "module rail"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.011908342497014697,
+     "limit": 0.01,
+     "detail": "remote id mount is 11.9 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "remote id mount"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07572077700711219,
+     "limit": 0.02,
+     "detail": "wire battery leads is 75.7 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.028500000000000004,
+     "limit": 0.02,
+     "detail": "wire motor leads front right is 28.5 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire motor leads front right"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.04070259741923592,
+     "limit": 0.02,
+     "detail": "wire lidar is 40.7 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire lidar"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.061583707758579125,
+     "limit": 0.02,
+     "detail": "wire safety monitor is 61.6 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire safety monitor"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.08458844822929847,
+     "limit": 0.02,
+     "detail": "wire module connector is 84.6 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire module connector"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03211449277190538,
+     "limit": 0.01,
+     "detail": "frame is 32.1 mm from prop 3's disk (needs 10)",
+     "parts": [
+      "prop disk 3",
+      "frame"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03894588643334849,
+     "limit": 0.01,
+     "detail": "module rail is 38.9 mm from prop 3's disk (needs 10)",
+     "parts": [
+      "prop disk 3",
+      "module rail"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.045059589273358965,
+     "limit": 0.02,
+     "detail": "wire battery leads is 45.1 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.028500000000000004,
+     "limit": 0.02,
+     "detail": "wire motor leads back left is 28.5 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire motor leads back left"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.055601977494042484,
+     "limit": 0.02,
+     "detail": "wire receiver is 55.6 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire receiver"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07752053933678751,
+     "limit": 0.02,
+     "detail": "wire module connector is 77.5 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire module connector"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03211449277190538,
+     "limit": 0.01,
+     "detail": "frame is 32.1 mm from prop 4's disk (needs 10)",
+     "parts": [
+      "prop disk 4",
+      "frame"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.0389458864333485,
+     "limit": 0.01,
+     "detail": "module rail is 38.9 mm from prop 4's disk (needs 10)",
+     "parts": [
+      "prop disk 4",
+      "module rail"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.045059589273358965,
+     "limit": 0.02,
+     "detail": "wire battery leads is 45.1 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.028500000000000004,
+     "limit": 0.02,
+     "detail": "wire motor leads back right is 28.5 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire motor leads back right"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.05560197749404248,
+     "limit": 0.02,
+     "detail": "wire receiver is 55.6 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire receiver"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07752053933678751,
+     "limit": 0.02,
+     "detail": "wire module connector is 77.5 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire module connector"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.042984848098349904,
+     "limit": 0.01,
+     "detail": "props 1 and 2 are 43.0 mm apart",
+     "parts": [
+      "prop disk 1",
+      "prop disk 2"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.042984848098349904,
+     "limit": 0.01,
+     "detail": "props 1 and 3 are 43.0 mm apart",
+     "parts": [
+      "prop disk 1",
+      "prop disk 3"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.1659999999999999,
+     "limit": 0.01,
+     "detail": "props 1 and 4 are 166.0 mm apart",
+     "parts": [
+      "prop disk 1",
+      "prop disk 4"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.1659999999999999,
+     "limit": 0.01,
+     "detail": "props 2 and 3 are 166.0 mm apart",
+     "parts": [
+      "prop disk 2",
+      "prop disk 3"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.042984848098349904,
+     "limit": 0.01,
+     "detail": "props 2 and 4 are 43.0 mm apart",
+     "parts": [
+      "prop disk 2",
+      "prop disk 4"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.042984848098349904,
+     "limit": 0.01,
+     "detail": "props 3 and 4 are 43.0 mm apart",
+     "parts": [
+      "prop disk 3",
+      "prop disk 4"
+     ]
+    },
+    {
+     "check": "lidar view",
+     "passed": true,
+     "value": 0.0499,
+     "limit": null,
+     "detail": "the lidar sits 50 mm off the ground when landed, so it can't read the last 150 mm of a landing",
+     "parts": []
+    }
+   ]
+  },
+  {
+   "setup": "mission",
+   "modules": [
+    "P",
+    "V"
+   ],
+   "passed": true,
+   "trim_x_mm": -14.0,
+   "mass_g": 2092.723,
+   "center_of_gravity_mm": [
+    -0.038,
+    0.207,
+    11.757
+   ],
+   "inertia_kg_m2": [
+    [
+     0.015904654830511043,
+     5.451391301983849e-05,
+     -0.0008023510606194318
+    ],
+    [
+     5.451391301983849e-05,
+     0.01914827632338387,
+     -3.5083188174339456e-05
+    ],
+    [
+     -0.0008023510606194318,
+     -3.5083188174339456e-05,
+     0.026539854177690177
+    ]
+   ],
+   "busiest_motor_extra": 0.001653,
+   "findings": [
+    {
+     "check": "balance",
+     "passed": true,
+     "value": 0.0016531870332759859,
+     "limit": 0.05,
+     "detail": "with the pack at x = -14 mm, the center of gravity sits -0.0 mm along x and +0.2 mm along y, so the busiest motor works 0.2% harder",
+     "parts": []
+    },
+    {
+     "check": "collisions",
+     "passed": true,
+     "value": 0.0,
+     "limit": 1e-09,
+     "detail": "nothing overlaps",
+     "parts": []
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.010625158543922073,
+     "limit": 0.01,
+     "detail": "frame is 10.6 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "frame"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.015025436154577477,
+     "limit": 0.01,
+     "detail": "ruko-r111 is 15.0 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "ruko-r111"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.016370706808733523,
+     "limit": 0.01,
+     "detail": "rpi-camera-module-3 is 16.4 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "rpi-camera-module-3"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.04819283753320215,
+     "limit": 0.01,
+     "detail": "rpi-5-4gb is 48.2 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "rpi-5-4gb"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.038090723085363425,
+     "limit": 0.01,
+     "detail": "fruity-chutes-harrier-40-42 is 38.1 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "fruity-chutes-harrier-40-42"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.029991033418163036,
+     "limit": 0.01,
+     "detail": "module rail is 30.0 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "module rail"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.0119083424970147,
+     "limit": 0.01,
+     "detail": "remote id mount is 11.9 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "remote id mount"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.011038036800297444,
+     "limit": 0.01,
+     "detail": "camera bracket is 11.0 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "camera bracket"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.043689422080853295,
+     "limit": 0.01,
+     "detail": "v housing is 43.7 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "v housing"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03199072308536344,
+     "limit": 0.01,
+     "detail": "p holder is 32.0 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "p holder"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.0757207770071122,
+     "limit": 0.02,
+     "detail": "wire battery leads is 75.7 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.028500000000000004,
+     "limit": 0.02,
+     "detail": "wire motor leads front left is 28.5 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire motor leads front left"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.030280668263541744,
+     "limit": 0.02,
+     "detail": "wire lidar is 30.3 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire lidar"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.061583707758579125,
+     "limit": 0.02,
+     "detail": "wire safety monitor is 61.6 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire safety monitor"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.08458844822929847,
+     "limit": 0.02,
+     "detail": "wire module connector is 84.6 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire module connector"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.020544483527219857,
+     "limit": 0.02,
+     "detail": "wire camera cable is 20.5 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire camera cable"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07036045079992558,
+     "limit": 0.02,
+     "detail": "wire chute servo is 70.4 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire chute servo"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.010625158543922073,
+     "limit": 0.01,
+     "detail": "frame is 10.6 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "frame"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.015025436154577472,
+     "limit": 0.01,
+     "detail": "ruko-r111 is 15.0 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "ruko-r111"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.01637070680873352,
+     "limit": 0.01,
+     "detail": "rpi-camera-module-3 is 16.4 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "rpi-camera-module-3"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.04819283753320215,
+     "limit": 0.01,
+     "detail": "rpi-5-4gb is 48.2 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "rpi-5-4gb"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.038090723085363425,
+     "limit": 0.01,
+     "detail": "fruity-chutes-harrier-40-42 is 38.1 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "fruity-chutes-harrier-40-42"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.029991033418163036,
+     "limit": 0.01,
+     "detail": "module rail is 30.0 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "module rail"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.011908342497014697,
+     "limit": 0.01,
+     "detail": "remote id mount is 11.9 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "remote id mount"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.011038036800297444,
+     "limit": 0.01,
+     "detail": "camera bracket is 11.0 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "camera bracket"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.04368942208085329,
+     "limit": 0.01,
+     "detail": "v housing is 43.7 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "v housing"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03199072308536341,
+     "limit": 0.01,
+     "detail": "p holder is 32.0 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "p holder"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07572077700711219,
+     "limit": 0.02,
+     "detail": "wire battery leads is 75.7 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.028500000000000004,
+     "limit": 0.02,
+     "detail": "wire motor leads front right is 28.5 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire motor leads front right"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.04070259741923592,
+     "limit": 0.02,
+     "detail": "wire lidar is 40.7 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire lidar"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.061583707758579125,
+     "limit": 0.02,
+     "detail": "wire safety monitor is 61.6 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire safety monitor"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.08458844822929847,
+     "limit": 0.02,
+     "detail": "wire module connector is 84.6 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire module connector"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.020544483527219857,
+     "limit": 0.02,
+     "detail": "wire camera cable is 20.5 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire camera cable"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07439278480642686,
+     "limit": 0.02,
+     "detail": "wire chute servo is 74.4 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire chute servo"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03211449277190538,
+     "limit": 0.01,
+     "detail": "frame is 32.1 mm from prop 3's disk (needs 10)",
+     "parts": [
+      "prop disk 3",
+      "frame"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.019748444949844932,
+     "limit": 0.01,
+     "detail": "rpi-5-4gb is 19.7 mm from prop 3's disk (needs 10)",
+     "parts": [
+      "prop disk 3",
+      "rpi-5-4gb"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.033839569919899816,
+     "limit": 0.01,
+     "detail": "rpi-active-cooler is 33.8 mm from prop 3's disk (needs 10)",
+     "parts": [
+      "prop disk 3",
+      "rpi-active-cooler"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03894588643334849,
+     "limit": 0.01,
+     "detail": "module rail is 38.9 mm from prop 3's disk (needs 10)",
+     "parts": [
+      "prop disk 3",
+      "module rail"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03728965559924578,
+     "limit": 0.01,
+     "detail": "gps mast is 37.3 mm from prop 3's disk (needs 10)",
+     "parts": [
+      "prop disk 3",
+      "gps mast"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.015145891894765617,
+     "limit": 0.01,
+     "detail": "v housing is 15.1 mm from prop 3's disk (needs 10)",
+     "parts": [
+      "prop disk 3",
+      "v housing"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.045059589273358965,
+     "limit": 0.02,
+     "detail": "wire battery leads is 45.1 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.028500000000000004,
+     "limit": 0.02,
+     "detail": "wire motor leads back left is 28.5 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire motor leads back left"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.055601977494042484,
+     "limit": 0.02,
+     "detail": "wire receiver is 55.6 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire receiver"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.04276269037387853,
+     "limit": 0.02,
+     "detail": "wire gps is 42.8 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire gps"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07752053933678751,
+     "limit": 0.02,
+     "detail": "wire module connector is 77.5 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire module connector"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07832984271432072,
+     "limit": 0.02,
+     "detail": "wire camera cable is 78.3 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire camera cable"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07726889090390407,
+     "limit": 0.02,
+     "detail": "wire chute servo is 77.3 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire chute servo"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03211449277190538,
+     "limit": 0.01,
+     "detail": "frame is 32.1 mm from prop 4's disk (needs 10)",
+     "parts": [
+      "prop disk 4",
+      "frame"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.019748444949844932,
+     "limit": 0.01,
+     "detail": "rpi-5-4gb is 19.7 mm from prop 4's disk (needs 10)",
+     "parts": [
+      "prop disk 4",
+      "rpi-5-4gb"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03383956991989982,
+     "limit": 0.01,
+     "detail": "rpi-active-cooler is 33.8 mm from prop 4's disk (needs 10)",
+     "parts": [
+      "prop disk 4",
+      "rpi-active-cooler"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.0389458864333485,
+     "limit": 0.01,
+     "detail": "module rail is 38.9 mm from prop 4's disk (needs 10)",
+     "parts": [
+      "prop disk 4",
+      "module rail"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.037289655599245776,
+     "limit": 0.01,
+     "detail": "gps mast is 37.3 mm from prop 4's disk (needs 10)",
+     "parts": [
+      "prop disk 4",
+      "gps mast"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.015145891894765617,
+     "limit": 0.01,
+     "detail": "v housing is 15.1 mm from prop 4's disk (needs 10)",
+     "parts": [
+      "prop disk 4",
+      "v housing"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.045059589273358965,
+     "limit": 0.02,
+     "detail": "wire battery leads is 45.1 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.028500000000000004,
+     "limit": 0.02,
+     "detail": "wire motor leads back right is 28.5 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire motor leads back right"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.05560197749404248,
+     "limit": 0.02,
+     "detail": "wire receiver is 55.6 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire receiver"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.05122411522965551,
+     "limit": 0.02,
+     "detail": "wire gps is 51.2 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire gps"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07752053933678751,
+     "limit": 0.02,
+     "detail": "wire module connector is 77.5 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire module connector"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07832984271432072,
+     "limit": 0.02,
+     "detail": "wire camera cable is 78.3 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire camera cable"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.08841670351690063,
+     "limit": 0.02,
+     "detail": "wire chute servo is 88.4 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire chute servo"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.042984848098349904,
+     "limit": 0.01,
+     "detail": "props 1 and 2 are 43.0 mm apart",
+     "parts": [
+      "prop disk 1",
+      "prop disk 2"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.042984848098349904,
+     "limit": 0.01,
+     "detail": "props 1 and 3 are 43.0 mm apart",
+     "parts": [
+      "prop disk 1",
+      "prop disk 3"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.1659999999999999,
+     "limit": 0.01,
+     "detail": "props 1 and 4 are 166.0 mm apart",
+     "parts": [
+      "prop disk 1",
+      "prop disk 4"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.1659999999999999,
+     "limit": 0.01,
+     "detail": "props 2 and 3 are 166.0 mm apart",
+     "parts": [
+      "prop disk 2",
+      "prop disk 3"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.042984848098349904,
+     "limit": 0.01,
+     "detail": "props 2 and 4 are 43.0 mm apart",
+     "parts": [
+      "prop disk 2",
+      "prop disk 4"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.042984848098349904,
+     "limit": 0.01,
+     "detail": "props 3 and 4 are 43.0 mm apart",
+     "parts": [
+      "prop disk 3",
+      "prop disk 4"
+     ]
+    },
+    {
+     "check": "parachute cone",
+     "passed": true,
+     "value": 0.0,
+     "limit": 0.0,
+     "detail": "nothing in the chute's way",
+     "parts": []
+    },
+    {
+     "check": "module rail",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "detail": "v housing spans x = -50 to 12 mm, on a rail from -50 to 66",
+     "parts": [
+      "v housing"
+     ]
+    },
+    {
+     "check": "module rail",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "detail": "p holder spans x = 12 to 64 mm, on a rail from -50 to 66",
+     "parts": [
+      "p holder"
+     ]
+    },
+    {
+     "check": "compass distance",
+     "passed": true,
+     "value": 0.105,
+     "limit": 0.1,
+     "detail": "the compass is 105 mm from wire battery leads (Matek asks for 100)",
+     "parts": [
+      "matek-m10q-5883",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "remote id distance",
+     "passed": true,
+     "value": 0.14106484324593424,
+     "limit": 0.1,
+     "detail": "the Remote ID module is 141 mm from the GPS",
+     "parts": [
+      "ruko-r111",
+      "matek-m10q-5883"
+     ]
+    },
+    {
+     "check": "lidar view",
+     "passed": true,
+     "value": 0.0499,
+     "limit": null,
+     "detail": "the lidar sits 50 mm off the ground when landed, so it can't read the last 150 mm of a landing",
+     "parts": []
+    }
+   ]
+  },
+  {
+   "setup": "V+C",
+   "modules": [
+    "C",
+    "V"
+   ],
+   "passed": true,
+   "trim_x_mm": 15.0,
+   "mass_g": 2082.371,
+   "center_of_gravity_mm": [
+    -0.02,
+    0.208,
+    0.909
+   ],
+   "inertia_kg_m2": [
+    [
+     0.01390176763866354,
+     5.452188569874689e-05,
+     -8.420189274494221e-06
+    ],
+    [
+     5.452188569874689e-05,
+     0.01936247617046595,
+     -3.979211118841776e-05
+    ],
+    [
+     -8.420189274494221e-06,
+     -3.979211118841776e-05,
+     0.02881314249569118
+    ]
+   ],
+   "busiest_motor_extra": 0.001536,
+   "findings": [
+    {
+     "check": "balance",
+     "passed": true,
+     "value": 0.0015364400279693797,
+     "limit": 0.05,
+     "detail": "with the pack at x = 15 mm, the center of gravity sits -0.0 mm along x and +0.2 mm along y, so the busiest motor works 0.2% harder",
+     "parts": []
+    },
+    {
+     "check": "collisions",
+     "passed": true,
+     "value": 0.0,
+     "limit": 1e-09,
+     "detail": "nothing overlaps",
+     "parts": []
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.010625158543922073,
+     "limit": 0.01,
+     "detail": "frame is 10.6 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "frame"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.015025436154577477,
+     "limit": 0.01,
+     "detail": "ruko-r111 is 15.0 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "ruko-r111"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.016370706808733523,
+     "limit": 0.01,
+     "detail": "rpi-camera-module-3 is 16.4 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "rpi-camera-module-3"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.04819283753320215,
+     "limit": 0.01,
+     "detail": "rpi-5-4gb is 48.2 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "rpi-5-4gb"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.029991033418163036,
+     "limit": 0.01,
+     "detail": "module rail is 30.0 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "module rail"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.0119083424970147,
+     "limit": 0.01,
+     "detail": "remote id mount is 11.9 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "remote id mount"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.011038036800297444,
+     "limit": 0.01,
+     "detail": "camera bracket is 11.0 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "camera bracket"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.043689422080853295,
+     "limit": 0.01,
+     "detail": "v housing is 43.7 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "v housing"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.0757207770071122,
+     "limit": 0.02,
+     "detail": "wire battery leads is 75.7 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.028500000000000004,
+     "limit": 0.02,
+     "detail": "wire motor leads front left is 28.5 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire motor leads front left"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.030280668263541744,
+     "limit": 0.02,
+     "detail": "wire lidar is 30.3 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire lidar"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.061583707758579125,
+     "limit": 0.02,
+     "detail": "wire safety monitor is 61.6 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire safety monitor"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.08458844822929847,
+     "limit": 0.02,
+     "detail": "wire module connector is 84.6 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire module connector"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.020544483527219857,
+     "limit": 0.02,
+     "detail": "wire camera cable is 20.5 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire camera cable"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.010625158543922073,
+     "limit": 0.01,
+     "detail": "frame is 10.6 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "frame"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.015025436154577472,
+     "limit": 0.01,
+     "detail": "ruko-r111 is 15.0 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "ruko-r111"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.01637070680873352,
+     "limit": 0.01,
+     "detail": "rpi-camera-module-3 is 16.4 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "rpi-camera-module-3"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.04819283753320215,
+     "limit": 0.01,
+     "detail": "rpi-5-4gb is 48.2 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "rpi-5-4gb"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.029991033418163036,
+     "limit": 0.01,
+     "detail": "module rail is 30.0 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "module rail"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.011908342497014697,
+     "limit": 0.01,
+     "detail": "remote id mount is 11.9 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "remote id mount"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.011038036800297444,
+     "limit": 0.01,
+     "detail": "camera bracket is 11.0 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "camera bracket"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.04368942208085329,
+     "limit": 0.01,
+     "detail": "v housing is 43.7 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "v housing"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07572077700711219,
+     "limit": 0.02,
+     "detail": "wire battery leads is 75.7 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.028500000000000004,
+     "limit": 0.02,
+     "detail": "wire motor leads front right is 28.5 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire motor leads front right"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.04070259741923592,
+     "limit": 0.02,
+     "detail": "wire lidar is 40.7 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire lidar"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.061583707758579125,
+     "limit": 0.02,
+     "detail": "wire safety monitor is 61.6 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire safety monitor"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.08458844822929847,
+     "limit": 0.02,
+     "detail": "wire module connector is 84.6 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire module connector"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.020544483527219857,
+     "limit": 0.02,
+     "detail": "wire camera cable is 20.5 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire camera cable"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03211449277190538,
+     "limit": 0.01,
+     "detail": "frame is 32.1 mm from prop 3's disk (needs 10)",
+     "parts": [
+      "prop disk 3",
+      "frame"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.019748444949844932,
+     "limit": 0.01,
+     "detail": "rpi-5-4gb is 19.7 mm from prop 3's disk (needs 10)",
+     "parts": [
+      "prop disk 3",
+      "rpi-5-4gb"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.033839569919899816,
+     "limit": 0.01,
+     "detail": "rpi-active-cooler is 33.8 mm from prop 3's disk (needs 10)",
+     "parts": [
+      "prop disk 3",
+      "rpi-active-cooler"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03894588643334849,
+     "limit": 0.01,
+     "detail": "module rail is 38.9 mm from prop 3's disk (needs 10)",
+     "parts": [
+      "prop disk 3",
+      "module rail"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03728965559924578,
+     "limit": 0.01,
+     "detail": "gps mast is 37.3 mm from prop 3's disk (needs 10)",
+     "parts": [
+      "prop disk 3",
+      "gps mast"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.015145891894765617,
+     "limit": 0.01,
+     "detail": "v housing is 15.1 mm from prop 3's disk (needs 10)",
+     "parts": [
+      "prop disk 3",
+      "v housing"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.045059589273358965,
+     "limit": 0.02,
+     "detail": "wire battery leads is 45.1 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.028500000000000004,
+     "limit": 0.02,
+     "detail": "wire motor leads back left is 28.5 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire motor leads back left"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.055601977494042484,
+     "limit": 0.02,
+     "detail": "wire receiver is 55.6 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire receiver"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.04276269037387853,
+     "limit": 0.02,
+     "detail": "wire gps is 42.8 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire gps"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07752053933678751,
+     "limit": 0.02,
+     "detail": "wire module connector is 77.5 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire module connector"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07832984271432072,
+     "limit": 0.02,
+     "detail": "wire camera cable is 78.3 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire camera cable"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03211449277190538,
+     "limit": 0.01,
+     "detail": "frame is 32.1 mm from prop 4's disk (needs 10)",
+     "parts": [
+      "prop disk 4",
+      "frame"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.019748444949844932,
+     "limit": 0.01,
+     "detail": "rpi-5-4gb is 19.7 mm from prop 4's disk (needs 10)",
+     "parts": [
+      "prop disk 4",
+      "rpi-5-4gb"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03383956991989982,
+     "limit": 0.01,
+     "detail": "rpi-active-cooler is 33.8 mm from prop 4's disk (needs 10)",
+     "parts": [
+      "prop disk 4",
+      "rpi-active-cooler"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.0389458864333485,
+     "limit": 0.01,
+     "detail": "module rail is 38.9 mm from prop 4's disk (needs 10)",
+     "parts": [
+      "prop disk 4",
+      "module rail"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.037289655599245776,
+     "limit": 0.01,
+     "detail": "gps mast is 37.3 mm from prop 4's disk (needs 10)",
+     "parts": [
+      "prop disk 4",
+      "gps mast"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.015145891894765617,
+     "limit": 0.01,
+     "detail": "v housing is 15.1 mm from prop 4's disk (needs 10)",
+     "parts": [
+      "prop disk 4",
+      "v housing"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.045059589273358965,
+     "limit": 0.02,
+     "detail": "wire battery leads is 45.1 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.028500000000000004,
+     "limit": 0.02,
+     "detail": "wire motor leads back right is 28.5 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire motor leads back right"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.05560197749404248,
+     "limit": 0.02,
+     "detail": "wire receiver is 55.6 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire receiver"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.05122411522965551,
+     "limit": 0.02,
+     "detail": "wire gps is 51.2 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire gps"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07752053933678751,
+     "limit": 0.02,
+     "detail": "wire module connector is 77.5 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire module connector"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07832984271432072,
+     "limit": 0.02,
+     "detail": "wire camera cable is 78.3 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire camera cable"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.042984848098349904,
+     "limit": 0.01,
+     "detail": "props 1 and 2 are 43.0 mm apart",
+     "parts": [
+      "prop disk 1",
+      "prop disk 2"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.042984848098349904,
+     "limit": 0.01,
+     "detail": "props 1 and 3 are 43.0 mm apart",
+     "parts": [
+      "prop disk 1",
+      "prop disk 3"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.1659999999999999,
+     "limit": 0.01,
+     "detail": "props 1 and 4 are 166.0 mm apart",
+     "parts": [
+      "prop disk 1",
+      "prop disk 4"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.1659999999999999,
+     "limit": 0.01,
+     "detail": "props 2 and 3 are 166.0 mm apart",
+     "parts": [
+      "prop disk 2",
+      "prop disk 3"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.042984848098349904,
+     "limit": 0.01,
+     "detail": "props 2 and 4 are 43.0 mm apart",
+     "parts": [
+      "prop disk 2",
+      "prop disk 4"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.042984848098349904,
+     "limit": 0.01,
+     "detail": "props 3 and 4 are 43.0 mm apart",
+     "parts": [
+      "prop disk 3",
+      "prop disk 4"
+     ]
+    },
+    {
+     "check": "module rail",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "detail": "v housing spans x = -50 to 12 mm, on a rail from -50 to 66",
+     "parts": [
+      "v housing"
+     ]
+    },
+    {
+     "check": "compass distance",
+     "passed": true,
+     "value": 0.105,
+     "limit": 0.1,
+     "detail": "the compass is 105 mm from wire battery leads (Matek asks for 100)",
+     "parts": [
+      "matek-m10q-5883",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "remote id distance",
+     "passed": true,
+     "value": 0.14106484324593424,
+     "limit": 0.1,
+     "detail": "the Remote ID module is 141 mm from the GPS",
+     "parts": [
+      "ruko-r111",
+      "matek-m10q-5883"
+     ]
+    },
+    {
+     "check": "lidar view",
+     "passed": true,
+     "value": 0.0499,
+     "limit": null,
+     "detail": "the lidar sits 50 mm off the ground when landed, so it can't read the last 150 mm of a landing",
+     "parts": []
+    }
+   ]
+  },
+  {
+   "setup": "P+C",
+   "modules": [
+    "C",
+    "P"
+   ],
+   "passed": true,
+   "trim_x_mm": 4.0,
+   "mass_g": 2093.009,
+   "center_of_gravity_mm": [
+    -0.008,
+    0.006,
+    4.681
+   ],
+   "inertia_kg_m2": [
+    [
+     0.015385898967362572,
+     -9.146722996621479e-07,
+     -0.0013031015629586119
+    ],
+    [
+     -9.146722996621479e-07,
+     0.020448354767424293,
+     -1.1106947390654307e-07
+    ],
+    [
+     -0.0013031015629586119,
+     -1.1106947390654307e-07,
+     0.028259536230900432
+    ]
+   ],
+   "busiest_motor_extra": 9e-05,
+   "findings": [
+    {
+     "check": "balance",
+     "passed": true,
+     "value": 9.01477455384411e-05,
+     "limit": 0.05,
+     "detail": "with the pack at x = 4 mm, the center of gravity sits -0.0 mm along x and +0.0 mm along y, so the busiest motor works 0.0% harder",
+     "parts": []
+    },
+    {
+     "check": "collisions",
+     "passed": true,
+     "value": 0.0,
+     "limit": 1e-09,
+     "detail": "nothing overlaps",
+     "parts": []
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.010625158543922073,
+     "limit": 0.01,
+     "detail": "frame is 10.6 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "frame"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.015025436154577477,
+     "limit": 0.01,
+     "detail": "ruko-r111 is 15.0 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "ruko-r111"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.038090723085363425,
+     "limit": 0.01,
+     "detail": "fruity-chutes-harrier-40-42 is 38.1 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "fruity-chutes-harrier-40-42"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.029991033418163036,
+     "limit": 0.01,
+     "detail": "module rail is 30.0 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "module rail"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.0119083424970147,
+     "limit": 0.01,
+     "detail": "remote id mount is 11.9 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "remote id mount"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03199072308536344,
+     "limit": 0.01,
+     "detail": "p holder is 32.0 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "p holder"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.0757207770071122,
+     "limit": 0.02,
+     "detail": "wire battery leads is 75.7 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.028500000000000004,
+     "limit": 0.02,
+     "detail": "wire motor leads front left is 28.5 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire motor leads front left"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.030280668263541744,
+     "limit": 0.02,
+     "detail": "wire lidar is 30.3 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire lidar"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.061583707758579125,
+     "limit": 0.02,
+     "detail": "wire safety monitor is 61.6 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire safety monitor"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.08458844822929847,
+     "limit": 0.02,
+     "detail": "wire module connector is 84.6 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire module connector"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07036045079992558,
+     "limit": 0.02,
+     "detail": "wire chute servo is 70.4 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire chute servo"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.010625158543922073,
+     "limit": 0.01,
+     "detail": "frame is 10.6 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "frame"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.015025436154577472,
+     "limit": 0.01,
+     "detail": "ruko-r111 is 15.0 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "ruko-r111"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.038090723085363425,
+     "limit": 0.01,
+     "detail": "fruity-chutes-harrier-40-42 is 38.1 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "fruity-chutes-harrier-40-42"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.029991033418163036,
+     "limit": 0.01,
+     "detail": "module rail is 30.0 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "module rail"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.011908342497014697,
+     "limit": 0.01,
+     "detail": "remote id mount is 11.9 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "remote id mount"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03199072308536341,
+     "limit": 0.01,
+     "detail": "p holder is 32.0 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "p holder"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07572077700711219,
+     "limit": 0.02,
+     "detail": "wire battery leads is 75.7 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.028500000000000004,
+     "limit": 0.02,
+     "detail": "wire motor leads front right is 28.5 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire motor leads front right"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.04070259741923592,
+     "limit": 0.02,
+     "detail": "wire lidar is 40.7 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire lidar"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.061583707758579125,
+     "limit": 0.02,
+     "detail": "wire safety monitor is 61.6 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire safety monitor"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.08458844822929847,
+     "limit": 0.02,
+     "detail": "wire module connector is 84.6 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire module connector"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07439278480642686,
+     "limit": 0.02,
+     "detail": "wire chute servo is 74.4 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire chute servo"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03211449277190538,
+     "limit": 0.01,
+     "detail": "frame is 32.1 mm from prop 3's disk (needs 10)",
+     "parts": [
+      "prop disk 3",
+      "frame"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03894588643334849,
+     "limit": 0.01,
+     "detail": "module rail is 38.9 mm from prop 3's disk (needs 10)",
+     "parts": [
+      "prop disk 3",
+      "module rail"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.045059589273358965,
+     "limit": 0.02,
+     "detail": "wire battery leads is 45.1 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.028500000000000004,
+     "limit": 0.02,
+     "detail": "wire motor leads back left is 28.5 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire motor leads back left"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.055601977494042484,
+     "limit": 0.02,
+     "detail": "wire receiver is 55.6 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire receiver"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07752053933678751,
+     "limit": 0.02,
+     "detail": "wire module connector is 77.5 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire module connector"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07726889090390407,
+     "limit": 0.02,
+     "detail": "wire chute servo is 77.3 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire chute servo"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03211449277190538,
+     "limit": 0.01,
+     "detail": "frame is 32.1 mm from prop 4's disk (needs 10)",
+     "parts": [
+      "prop disk 4",
+      "frame"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.0389458864333485,
+     "limit": 0.01,
+     "detail": "module rail is 38.9 mm from prop 4's disk (needs 10)",
+     "parts": [
+      "prop disk 4",
+      "module rail"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.045059589273358965,
+     "limit": 0.02,
+     "detail": "wire battery leads is 45.1 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.028500000000000004,
+     "limit": 0.02,
+     "detail": "wire motor leads back right is 28.5 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire motor leads back right"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.05560197749404248,
+     "limit": 0.02,
+     "detail": "wire receiver is 55.6 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire receiver"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07752053933678751,
+     "limit": 0.02,
+     "detail": "wire module connector is 77.5 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire module connector"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.08841670351690063,
+     "limit": 0.02,
+     "detail": "wire chute servo is 88.4 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire chute servo"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.042984848098349904,
+     "limit": 0.01,
+     "detail": "props 1 and 2 are 43.0 mm apart",
+     "parts": [
+      "prop disk 1",
+      "prop disk 2"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.042984848098349904,
+     "limit": 0.01,
+     "detail": "props 1 and 3 are 43.0 mm apart",
+     "parts": [
+      "prop disk 1",
+      "prop disk 3"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.1659999999999999,
+     "limit": 0.01,
+     "detail": "props 1 and 4 are 166.0 mm apart",
+     "parts": [
+      "prop disk 1",
+      "prop disk 4"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.1659999999999999,
+     "limit": 0.01,
+     "detail": "props 2 and 3 are 166.0 mm apart",
+     "parts": [
+      "prop disk 2",
+      "prop disk 3"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.042984848098349904,
+     "limit": 0.01,
+     "detail": "props 2 and 4 are 43.0 mm apart",
+     "parts": [
+      "prop disk 2",
+      "prop disk 4"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.042984848098349904,
+     "limit": 0.01,
+     "detail": "props 3 and 4 are 43.0 mm apart",
+     "parts": [
+      "prop disk 3",
+      "prop disk 4"
+     ]
+    },
+    {
+     "check": "parachute cone",
+     "passed": true,
+     "value": 0.0,
+     "limit": 0.0,
+     "detail": "nothing in the chute's way",
+     "parts": []
+    },
+    {
+     "check": "module rail",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "detail": "p holder spans x = 12 to 64 mm, on a rail from -50 to 66",
+     "parts": [
+      "p holder"
+     ]
+    },
+    {
+     "check": "lidar view",
+     "passed": true,
+     "value": 0.0499,
+     "limit": null,
+     "detail": "the lidar sits 50 mm off the ground when landed, so it can't read the last 150 mm of a landing",
+     "parts": []
+    }
+   ]
+  },
+  {
+   "setup": "max",
+   "modules": [
+    "C",
+    "P",
+    "V"
+   ],
+   "passed": true,
+   "trim_x_mm": 8.0,
+   "mass_g": 2242.723,
+   "center_of_gravity_mm": [
+    0.021,
+    0.194,
+    9.098
+   ],
+   "inertia_kg_m2": [
+    [
+     0.016202145963992706,
+     5.453940510541485e-05,
+     -0.0008597557010835168
+    ],
+    [
+     5.453940510541485e-05,
+     0.021756257509876552,
+     -3.623741663476373e-05
+    ],
+    [
+     -0.0008597557010835168,
+     -3.623741663476373e-05,
+     0.02894035627438929
+    ]
+   ],
+   "busiest_motor_extra": 0.001443,
+   "findings": [
+    {
+     "check": "balance",
+     "passed": true,
+     "value": 0.0014425613755699198,
+     "limit": 0.05,
+     "detail": "with the pack at x = 8 mm, the center of gravity sits +0.0 mm along x and +0.2 mm along y, so the busiest motor works 0.1% harder",
+     "parts": []
+    },
+    {
+     "check": "collisions",
+     "passed": true,
+     "value": 0.0,
+     "limit": 1e-09,
+     "detail": "nothing overlaps",
+     "parts": []
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.010625158543922073,
+     "limit": 0.01,
+     "detail": "frame is 10.6 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "frame"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.015025436154577477,
+     "limit": 0.01,
+     "detail": "ruko-r111 is 15.0 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "ruko-r111"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.016370706808733523,
+     "limit": 0.01,
+     "detail": "rpi-camera-module-3 is 16.4 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "rpi-camera-module-3"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.04819283753320215,
+     "limit": 0.01,
+     "detail": "rpi-5-4gb is 48.2 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "rpi-5-4gb"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.038090723085363425,
+     "limit": 0.01,
+     "detail": "fruity-chutes-harrier-40-42 is 38.1 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "fruity-chutes-harrier-40-42"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.029991033418163036,
+     "limit": 0.01,
+     "detail": "module rail is 30.0 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "module rail"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.0119083424970147,
+     "limit": 0.01,
+     "detail": "remote id mount is 11.9 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "remote id mount"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.011038036800297444,
+     "limit": 0.01,
+     "detail": "camera bracket is 11.0 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "camera bracket"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.043689422080853295,
+     "limit": 0.01,
+     "detail": "v housing is 43.7 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "v housing"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03199072308536344,
+     "limit": 0.01,
+     "detail": "p holder is 32.0 mm from prop 1's disk (needs 10)",
+     "parts": [
+      "prop disk 1",
+      "p holder"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.0757207770071122,
+     "limit": 0.02,
+     "detail": "wire battery leads is 75.7 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.028500000000000004,
+     "limit": 0.02,
+     "detail": "wire motor leads front left is 28.5 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire motor leads front left"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.030280668263541744,
+     "limit": 0.02,
+     "detail": "wire lidar is 30.3 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire lidar"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.061583707758579125,
+     "limit": 0.02,
+     "detail": "wire safety monitor is 61.6 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire safety monitor"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.08458844822929847,
+     "limit": 0.02,
+     "detail": "wire module connector is 84.6 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire module connector"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.020544483527219857,
+     "limit": 0.02,
+     "detail": "wire camera cable is 20.5 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire camera cable"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07036045079992558,
+     "limit": 0.02,
+     "detail": "wire chute servo is 70.4 mm from prop 1's disk (needs 20)",
+     "parts": [
+      "prop disk 1",
+      "wire chute servo"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.010625158543922073,
+     "limit": 0.01,
+     "detail": "frame is 10.6 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "frame"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.015025436154577472,
+     "limit": 0.01,
+     "detail": "ruko-r111 is 15.0 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "ruko-r111"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.01637070680873352,
+     "limit": 0.01,
+     "detail": "rpi-camera-module-3 is 16.4 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "rpi-camera-module-3"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.04819283753320215,
+     "limit": 0.01,
+     "detail": "rpi-5-4gb is 48.2 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "rpi-5-4gb"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.038090723085363425,
+     "limit": 0.01,
+     "detail": "fruity-chutes-harrier-40-42 is 38.1 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "fruity-chutes-harrier-40-42"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.029991033418163036,
+     "limit": 0.01,
+     "detail": "module rail is 30.0 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "module rail"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.011908342497014697,
+     "limit": 0.01,
+     "detail": "remote id mount is 11.9 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "remote id mount"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.011038036800297444,
+     "limit": 0.01,
+     "detail": "camera bracket is 11.0 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "camera bracket"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.04368942208085329,
+     "limit": 0.01,
+     "detail": "v housing is 43.7 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "v housing"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03199072308536341,
+     "limit": 0.01,
+     "detail": "p holder is 32.0 mm from prop 2's disk (needs 10)",
+     "parts": [
+      "prop disk 2",
+      "p holder"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07572077700711219,
+     "limit": 0.02,
+     "detail": "wire battery leads is 75.7 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.028500000000000004,
+     "limit": 0.02,
+     "detail": "wire motor leads front right is 28.5 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire motor leads front right"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.04070259741923592,
+     "limit": 0.02,
+     "detail": "wire lidar is 40.7 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire lidar"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.061583707758579125,
+     "limit": 0.02,
+     "detail": "wire safety monitor is 61.6 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire safety monitor"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.08458844822929847,
+     "limit": 0.02,
+     "detail": "wire module connector is 84.6 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire module connector"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.020544483527219857,
+     "limit": 0.02,
+     "detail": "wire camera cable is 20.5 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire camera cable"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07439278480642686,
+     "limit": 0.02,
+     "detail": "wire chute servo is 74.4 mm from prop 2's disk (needs 20)",
+     "parts": [
+      "prop disk 2",
+      "wire chute servo"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03211449277190538,
+     "limit": 0.01,
+     "detail": "frame is 32.1 mm from prop 3's disk (needs 10)",
+     "parts": [
+      "prop disk 3",
+      "frame"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.019748444949844932,
+     "limit": 0.01,
+     "detail": "rpi-5-4gb is 19.7 mm from prop 3's disk (needs 10)",
+     "parts": [
+      "prop disk 3",
+      "rpi-5-4gb"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.033839569919899816,
+     "limit": 0.01,
+     "detail": "rpi-active-cooler is 33.8 mm from prop 3's disk (needs 10)",
+     "parts": [
+      "prop disk 3",
+      "rpi-active-cooler"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03894588643334849,
+     "limit": 0.01,
+     "detail": "module rail is 38.9 mm from prop 3's disk (needs 10)",
+     "parts": [
+      "prop disk 3",
+      "module rail"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03728965559924578,
+     "limit": 0.01,
+     "detail": "gps mast is 37.3 mm from prop 3's disk (needs 10)",
+     "parts": [
+      "prop disk 3",
+      "gps mast"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.015145891894765617,
+     "limit": 0.01,
+     "detail": "v housing is 15.1 mm from prop 3's disk (needs 10)",
+     "parts": [
+      "prop disk 3",
+      "v housing"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.045059589273358965,
+     "limit": 0.02,
+     "detail": "wire battery leads is 45.1 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.028500000000000004,
+     "limit": 0.02,
+     "detail": "wire motor leads back left is 28.5 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire motor leads back left"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.055601977494042484,
+     "limit": 0.02,
+     "detail": "wire receiver is 55.6 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire receiver"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.04276269037387853,
+     "limit": 0.02,
+     "detail": "wire gps is 42.8 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire gps"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07752053933678751,
+     "limit": 0.02,
+     "detail": "wire module connector is 77.5 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire module connector"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07832984271432072,
+     "limit": 0.02,
+     "detail": "wire camera cable is 78.3 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire camera cable"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07726889090390407,
+     "limit": 0.02,
+     "detail": "wire chute servo is 77.3 mm from prop 3's disk (needs 20)",
+     "parts": [
+      "prop disk 3",
+      "wire chute servo"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03211449277190538,
+     "limit": 0.01,
+     "detail": "frame is 32.1 mm from prop 4's disk (needs 10)",
+     "parts": [
+      "prop disk 4",
+      "frame"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.019748444949844932,
+     "limit": 0.01,
+     "detail": "rpi-5-4gb is 19.7 mm from prop 4's disk (needs 10)",
+     "parts": [
+      "prop disk 4",
+      "rpi-5-4gb"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.03383956991989982,
+     "limit": 0.01,
+     "detail": "rpi-active-cooler is 33.8 mm from prop 4's disk (needs 10)",
+     "parts": [
+      "prop disk 4",
+      "rpi-active-cooler"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.0389458864333485,
+     "limit": 0.01,
+     "detail": "module rail is 38.9 mm from prop 4's disk (needs 10)",
+     "parts": [
+      "prop disk 4",
+      "module rail"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.037289655599245776,
+     "limit": 0.01,
+     "detail": "gps mast is 37.3 mm from prop 4's disk (needs 10)",
+     "parts": [
+      "prop disk 4",
+      "gps mast"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.015145891894765617,
+     "limit": 0.01,
+     "detail": "v housing is 15.1 mm from prop 4's disk (needs 10)",
+     "parts": [
+      "prop disk 4",
+      "v housing"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.045059589273358965,
+     "limit": 0.02,
+     "detail": "wire battery leads is 45.1 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.028500000000000004,
+     "limit": 0.02,
+     "detail": "wire motor leads back right is 28.5 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire motor leads back right"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.05560197749404248,
+     "limit": 0.02,
+     "detail": "wire receiver is 55.6 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire receiver"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.05122411522965551,
+     "limit": 0.02,
+     "detail": "wire gps is 51.2 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire gps"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07752053933678751,
+     "limit": 0.02,
+     "detail": "wire module connector is 77.5 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire module connector"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.07832984271432072,
+     "limit": 0.02,
+     "detail": "wire camera cable is 78.3 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire camera cable"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.08841670351690063,
+     "limit": 0.02,
+     "detail": "wire chute servo is 88.4 mm from prop 4's disk (needs 20)",
+     "parts": [
+      "prop disk 4",
+      "wire chute servo"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.042984848098349904,
+     "limit": 0.01,
+     "detail": "props 1 and 2 are 43.0 mm apart",
+     "parts": [
+      "prop disk 1",
+      "prop disk 2"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.042984848098349904,
+     "limit": 0.01,
+     "detail": "props 1 and 3 are 43.0 mm apart",
+     "parts": [
+      "prop disk 1",
+      "prop disk 3"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.1659999999999999,
+     "limit": 0.01,
+     "detail": "props 1 and 4 are 166.0 mm apart",
+     "parts": [
+      "prop disk 1",
+      "prop disk 4"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.1659999999999999,
+     "limit": 0.01,
+     "detail": "props 2 and 3 are 166.0 mm apart",
+     "parts": [
+      "prop disk 2",
+      "prop disk 3"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.042984848098349904,
+     "limit": 0.01,
+     "detail": "props 2 and 4 are 43.0 mm apart",
+     "parts": [
+      "prop disk 2",
+      "prop disk 4"
+     ]
+    },
+    {
+     "check": "prop clearance",
+     "passed": true,
+     "value": 0.042984848098349904,
+     "limit": 0.01,
+     "detail": "props 3 and 4 are 43.0 mm apart",
+     "parts": [
+      "prop disk 3",
+      "prop disk 4"
+     ]
+    },
+    {
+     "check": "parachute cone",
+     "passed": true,
+     "value": 0.0,
+     "limit": 0.0,
+     "detail": "nothing in the chute's way",
+     "parts": []
+    },
+    {
+     "check": "module rail",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "detail": "v housing spans x = -50 to 12 mm, on a rail from -50 to 66",
+     "parts": [
+      "v housing"
+     ]
+    },
+    {
+     "check": "module rail",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "detail": "p holder spans x = 12 to 64 mm, on a rail from -50 to 66",
+     "parts": [
+      "p holder"
+     ]
+    },
+    {
+     "check": "compass distance",
+     "passed": true,
+     "value": 0.105,
+     "limit": 0.1,
+     "detail": "the compass is 105 mm from wire battery leads (Matek asks for 100)",
+     "parts": [
+      "matek-m10q-5883",
+      "wire battery leads"
+     ]
+    },
+    {
+     "check": "remote id distance",
+     "passed": true,
+     "value": 0.14106484324593424,
+     "limit": 0.1,
+     "detail": "the Remote ID module is 141 mm from the GPS",
+     "parts": [
+      "ruko-r111",
+      "matek-m10q-5883"
+     ]
+    },
+    {
+     "check": "lidar view",
+     "passed": true,
+     "value": 0.0499,
+     "limit": null,
+     "detail": "the lidar sits 50 mm off the ground when landed, so it can't read the last 150 mm of a landing",
+     "parts": []
+    }
+   ]
+  }
+ ],
+ "printed_parts": [
+  {
+   "name": "leg front left",
+   "material": "tpu",
+   "mass_g": 6.594,
+   "module": "base",
+   "catalog_id": "landing-legs"
+  },
+  {
+   "name": "leg front right",
+   "material": "tpu",
+   "mass_g": 6.594,
+   "module": "base",
+   "catalog_id": "landing-legs"
+  },
+  {
+   "name": "leg back left",
+   "material": "tpu",
+   "mass_g": 6.594,
+   "module": "base",
+   "catalog_id": "landing-legs"
+  },
+  {
+   "name": "leg back right",
+   "material": "tpu",
+   "mass_g": 6.594,
+   "module": "base",
+   "catalog_id": "landing-legs"
+  },
+  {
+   "name": "battery tray",
+   "material": "petg_cf",
+   "mass_g": 29.38,
+   "module": "base",
+   "catalog_id": "battery-tray"
+  },
+  {
+   "name": "module rail",
+   "material": "petg_cf",
+   "mass_g": 13.197,
+   "module": "base",
+   "catalog_id": "module-mount"
+  },
+  {
+   "name": "gps mast",
+   "material": "tpu",
+   "mass_g": 5.165,
+   "module": "V",
+   "catalog_id": "gps-mast"
+  },
+  {
+   "name": "lidar bracket",
+   "material": "petg_cf",
+   "mass_g": 2.411,
+   "module": "base",
+   "catalog_id": "lidar-bracket"
+  },
+  {
+   "name": "remote id mount",
+   "material": "tpu",
+   "mass_g": 1.444,
+   "module": "base",
+   "catalog_id": "remote-id-mount"
+  },
+  {
+   "name": "safety monitor carrier",
+   "material": "petg_cf",
+   "mass_g": 2.8,
+   "module": "base",
+   "catalog_id": "safety-monitor-carrier"
+  },
+  {
+   "name": "camera bracket",
+   "material": "petg_cf",
+   "mass_g": 2.369,
+   "module": "V",
+   "catalog_id": "camera-bracket"
+  },
+  {
+   "name": "v housing",
+   "material": "petg_cf",
+   "mass_g": 40.18,
+   "module": "V",
+   "catalog_id": "v-housing"
+  },
+  {
+   "name": "p holder",
+   "material": "petg_cf",
+   "mass_g": 6.352,
+   "module": "P",
+   "catalog_id": "p-mount"
+  }
+ ],
+ "wire_lengths_mm": {
+  "battery leads": 159.142,
+  "motor leads front left": 182.515,
+  "motor leads front right": 182.515,
+  "motor leads back left": 182.515,
+  "motor leads back right": 182.515,
+  "receiver": 40.608,
+  "gps": 137.044,
+  "lidar": 146.0,
+  "safety monitor": 20.1,
+  "bec feed": 22.662,
+  "module connector": 12.0,
+  "camera cable": 178.924,
+  "chute servo": 22.482
+ },
+ "estimates": [
+  {
+   "part": "emax-e3-2814-850kv",
+   "dimensions": [
+    "bell_length_mm"
+   ],
+   "note": "Emax doesn't publish how the 45.5 mm splits between the body and the shaft. 31 mm for the base and bell, leaving 14.5 mm of shaft, is a typical split for a 2814, to be checked against Emax's side photos"
+  },
+  {
+   "part": "gemfan-1050x3",
+   "dimensions": [
+    "hub_diameter_mm",
+    "hub_thickness_mm",
+    "blade_width_mm"
+   ],
+   "note": "Gemfan publishes only the size, bore and weight. The 9 mm hub and 22 mm blade width come from a retailer's spec block (rotorvillage.ca), which looks copied from Gemfan. The hub diameter isn't published anywhere; 15 mm is a guess for a 10-inch tri-blade"
+  },
+  {
+   "part": "holybro-tekko32-f4-50a",
+   "dimensions": [
+    "thickness_mm",
+    "top_mm",
+    "bottom_mm"
+   ],
+   "note": "Holybro gives 6 mm overall; the split between the board and its parts, and the hole pattern sitting centered along the 48 mm length, come from Holybro's stack STEP, measured roughly"
+  },
+  {
+   "part": "iflight-nazgul-xl10-v6",
+   "dimensions": [
+    "arm_width_mm",
+    "motor_pad_mm",
+    "body_front_mm",
+    "body_back_mm",
+    "body_width_mm",
+    "nose_from_mm",
+    "nose_width_mm"
+   ],
+   "note": "Not published, so traced from iFlight's top-down product render (https://cdn.iflight.com/store/product/Drone-Frame/XL10-V6/XL10-V6-B3.png) with the 420 mm diagonal between motors as the scale. The motors came out 295.5 x 298.9 mm apart against iFlight's 297 x 297, so the scale is good to about 1%. Arms 15 mm wide (15.1 to 16.4 along their length); body plates 36 mm wide, narrowing to 29 mm from about 70 mm ahead of the center, reaching 154 mm ahead of the motors' center and 62 mm behind, not counting the camera cage and the XT60 mount. The motor pads weren't measured; 34 mm is a guess that just carries a 35 mm motor"
+  },
+  {
+   "part": "holybro-kakute-h7",
+   "dimensions": [
+    "thickness_mm",
+    "top_mm",
+    "bottom_mm"
+   ],
+   "note": "Holybro's stack STEP measures 7.4 mm overall with parts on both sides; the split is rough"
+  },
+  {
+   "part": "pjrc-teensy-41",
+   "dimensions": [
+    "bottom_mm"
+   ],
+   "note": "The microSD socket's height underneath isn't given; 1.5 mm is a guess"
+  },
+  {
+   "part": "safety-monitor-extras",
+   "dimensions": [
+    "length_mm",
+    "width_mm",
+    "height_mm"
+   ],
+   "note": "A box big enough for a small IMU breakout and a signal switch board"
+  },
+  {
+   "part": "rpi-camera-module-3",
+   "dimensions": [
+    "bottom_mm"
+   ],
+   "note": "The 11.3 mm overall depth minus the lens stack and the board"
+  },
+  {
+   "part": "rpi-5-4gb",
+   "dimensions": [
+    "thickness_mm",
+    "top_mm",
+    "bottom_mm"
+   ],
+   "note": "The drawing doesn't give the board thickness or the USB and Ethernet stack's height; these are typical for a Raspberry Pi"
+  },
+  {
+   "part": "heltec-ht-hc01p",
+   "dimensions": [
+    "length_mm",
+    "width_mm",
+    "thickness_mm",
+    "top_mm",
+    "bottom_mm"
+   ],
+   "note": "The HAT looks HAT-sized in Heltec's photos, so it's drawn as the standard Raspberry Pi HAT (65 x 56.5 mm, holes on 58 x 49 mm), with the card lying on it and a 40-pin header underneath. Heltec only lists Pi 1 to 4 for the HAT"
+  },
+  {
+   "part": "halow-antenna-915",
+   "dimensions": [
+    "diameter_mm",
+    "length_mm"
+   ],
+   "note": "Physics, not a datasheet: half the wavelength at 915 MHz. A real antenna will be close to this, and it needs a spot clear of the props and the carbon"
+  },
+  {
+   "part": "claws-placeholder",
+   "dimensions": [
+    "length_mm",
+    "width_mm",
+    "height_mm"
+   ],
+   "note": "A box roughly the size of a small claw with its servos"
+  }
+ ],
+ "existing_cad": [
+  {
+   "part": "emax-e3-2814-850kv",
+   "found": "none",
+   "terms": null,
+   "compared": null
+  },
+  {
+   "part": "gemfan-1050x3",
+   "found": "none",
+   "terms": null,
+   "compared": null
+  },
+  {
+   "part": "holybro-tekko32-f4-50a",
+   "found": "official",
+   "terms": "No license on the download page; holybro.com's terms forbid reproducing it without written permission. Fine to download and use locally, not to commit.",
+   "compared": null
+  },
+  {
+   "part": "iflight-nazgul-xl10-v6",
+   "found": "unofficial",
+   "terms": "Unknown: the site blocked automated access, so its license couldn't be read",
+   "compared": null
+  },
+  {
+   "part": "molicel-p42a",
+   "found": "none",
+   "terms": null,
+   "compared": null
+  },
+  {
+   "part": "holybro-kakute-h7",
+   "found": "official",
+   "terms": "No license on the download page; holybro.com's terms forbid reproducing it without written permission. Fine to download and use locally, not to commit.",
+   "compared": "mine 7.4 x 35.0 x 35.0 mm, theirs 20.7 x 37.2 x 48.0 mm; holes line up"
+  },
+  {
+   "part": "radiomaster-rp2-v2",
+   "found": "none",
+   "terms": null,
+   "compared": null
+  },
+  {
+   "part": "benewake-tf-luna",
+   "found": "none",
+   "terms": null,
+   "compared": null
+  },
+  {
+   "part": "pjrc-teensy-41",
+   "found": "unofficial",
+   "terms": "Its author, Zack Kummer, says in the PJRC forum it can be included with credit",
+   "compared": null
+  },
+  {
+   "part": "safety-monitor-extras",
+   "found": "none",
+   "terms": null,
+   "compared": null
+  },
+  {
+   "part": "ruko-r111",
+   "found": "none",
+   "terms": null,
+   "compared": null
+  },
+  {
+   "part": "base-wiring",
+   "found": "none",
+   "terms": null,
+   "compared": null
+  },
+  {
+   "part": "module-mount",
+   "found": "none",
+   "terms": null,
+   "compared": null
+  },
+  {
+   "part": "matek-bec12s-pro",
+   "found": "none",
+   "terms": null,
+   "compared": null
+  },
+  {
+   "part": "matek-m10q-5883",
+   "found": "official",
+   "terms": "No license in the zip or on the page; copyright Matek, so all rights reserved",
+   "compared": "mine 12.4 x 20.0 x 20.0 mm, theirs 11.4 x 20.0 x 20.0 mm"
+  },
+  {
+   "part": "gps-mast",
+   "found": "none",
+   "terms": null,
+   "compared": null
+  },
+  {
+   "part": "rpi-camera-module-3",
+   "found": "official",
+   "terms": "No license file; Raspberry Pi's site terms reserve all rights.",
+   "compared": "mine 11.3 x 23.9 x 25.0 mm, theirs 10.2 x 23.9 x 25.0 mm; holes line up"
+  },
+  {
+   "part": "rpi-5-4gb",
+   "found": "official",
+   "terms": "MIT license, in the zip: it can be shared, with the copyright notice. It's 77 MB unzipped, so it stays in the local cache",
+   "compared": "in the cache, but 77 MB is too big to compare on every run"
+  },
+  {
+   "part": "rpi-active-cooler",
+   "found": "none",
+   "terms": null,
+   "compared": null
+  },
+  {
+   "part": "heltec-ht-hc01p",
+   "found": "none",
+   "terms": null,
+   "compared": null
+  },
+  {
+   "part": "v-housing",
+   "found": "none",
+   "terms": null,
+   "compared": null
+  },
+  {
+   "part": "rpi-camera-cable-standard-mini",
+   "found": "none",
+   "terms": null,
+   "compared": null
+  },
+  {
+   "part": "halow-antenna-915",
+   "found": "none",
+   "terms": null,
+   "compared": null
+  },
+  {
+   "part": "fruity-chutes-harrier-40-42",
+   "found": "none",
+   "terms": null,
+   "compared": null
+  },
+  {
+   "part": "p-mount",
+   "found": "none",
+   "terms": null,
+   "compared": null
+  },
+  {
+   "part": "claws-placeholder",
+   "found": "none",
+   "terms": null,
+   "compared": null
+  }
+ ],
+ "exports": [
+  "outputs/cad/drone.step",
+  "outputs/cad/drone-gazebo.stl",
+  "outputs/cad/drone-cfd.stl",
+  "outputs/cad/drone.glb",
+  "outputs/cad/print/leg-front-left.3mf",
+  "outputs/cad/print/leg-front-right.3mf",
+  "outputs/cad/print/leg-back-left.3mf",
+  "outputs/cad/print/leg-back-right.3mf",
+  "outputs/cad/print/battery-tray.3mf",
+  "outputs/cad/print/module-rail.3mf",
+  "outputs/cad/print/gps-mast-1.3mf",
+  "outputs/cad/print/gps-mast-2.3mf",
+  "outputs/cad/print/lidar-bracket.3mf",
+  "outputs/cad/print/remote-id-mount.3mf",
+  "outputs/cad/print/safety-monitor-carrier.3mf",
+  "outputs/cad/print/camera-bracket.3mf",
+  "outputs/cad/print/v-housing.3mf",
+  "outputs/cad/print/p-holder.3mf"
+ ]
+}

@@ -25,6 +25,7 @@ def test_build123d_makes_solids():
     assert Box(10, 10, 10).volume == pytest.approx(1000)
 
 
-def test_the_cad_command_runs(capsys):
-    assert main(["cad", *TEST_PARTS, "--no-record"]) == 0
-    assert "parts" in capsys.readouterr().out
+def test_the_cad_command_says_clearly_when_parts_cant_be_modeled(capsys):
+    # the made-up test parts have no cad blocks
+    assert main(["cad", *TEST_PARTS, "--no-record", "--skip-exports"]) == 2
+    assert "no cad block" in capsys.readouterr().err
