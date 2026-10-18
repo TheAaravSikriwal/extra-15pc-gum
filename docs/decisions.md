@@ -80,7 +80,16 @@ What the sweep found, trying 192 builds:
 - **The pick's hover sits below its table.** Flash Hobby's table starts at 50% throttle (1047 g), and Mission hovers at 670 g per motor, so the model scales the power down from that first row. Checked on an Emax table that goes lower, that reads 3 to 10% low on power. The pessimistic numbers cover it, and the report says so.
 - **The growth margin stays 200 g for now.** The final pick waits on the question below.
 
-Open question: should full throttle have to fit the pack's continuous rating, or should my firmware cap the current at the rating instead? A cap costs punch on a fresh pack, but at the 20% reserve, where thrust-to-weight is checked, the sagging pack already keeps the draw near the rating.
+Open question (settled the same day, below): should full throttle have to fit the pack's continuous rating, or should my firmware cap the current at the rating instead?
+
+### My firmware caps the battery current (decided 2026-10-17)
+
+The flight controller caps the total battery current at the pack's continuous rating (100% for now, set in `design/build.yaml` under `firmware`). The target stays the same, full throttle inside the pack's rating, and the cap is how the build meets it.
+
+- **In the model:** when flat out would pull more than the cap, the flight controller throttles back until the pack gives exactly the cap. The pack then sits at its resting voltage minus the cap times its resistance, and thrust follows power to the 2/3, the same law as uncapped full throttle, so the two meet without a jump. Thrust-to-weight, top speed, wind headroom and the flight stepper all see the capped thrust.
+- **In the ranking:** the current check still shows in the report, but it doesn't count toward the sweep's ranking when the cap holds it, since it says nothing about the parts.
+- **What it changed:** 76 of the 192 builds pass now (15 of them 6S2P), against 14 before. The Samsung 50S makes up most of the fails: its 25 A rating gets capped so hard that thrust-to-weight at the reserve comes up short.
+- **For the firmware step:** a battery current limiter joins the flight controller's to-do list. It throttles all four motors together, and it never touches the kill switch or the safety monitor's motor cut.
 
 ### Simulate everything
 
@@ -550,8 +559,8 @@ Everything that came up while brainstorming, so nothing gets lost.
 ## Still open
 
 - Final pick of the extras
-- Exact prop size, cell type, and 6S2P vs 6S3P. The first real sweep says 10", P42A and 6S3P under today's rules, but that hangs on the next question.
-- Whether full throttle has to fit the pack's continuous rating, or the firmware caps the current instead (step 1d, see "The first real sweep")
+- Exact prop size, cell type, and 6S2P vs 6S3P. With the current cap, 10" props win either way; the pack hangs on the next question.
+- Which build to pick: the sweep's most robust one (heavy, 6S3P) or the lightest one that passes every setup, Max included (step 1d)
 - Cruise speed: 10 m/s until the sizing model says otherwise
 - Which open-source flight code to start from (the chip is decided: STM32H743)
 - Which H743 board. It needs PX4 support for the baseline flight, and SWD pads.

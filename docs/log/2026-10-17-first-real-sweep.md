@@ -45,6 +45,19 @@ Switch the current rule off and 111 builds pass, including lighter 6S2P ones. So
 
 The full report, with every check, the mass budget and charts, is in [docs/reports/sizing](../reports/sizing/README.md).
 
+## Later that night: a current cap
+
+I went with the firmware cap. My flight controller will limit the total battery current to the pack's rating, so full throttle can't overdraw the cells. In the model, when flat out would pull more than the cap, the drone throttles back until the pack gives exactly the cap, and thrust follows the power that's left. Ten more tests, and then the sweep again, live in Rerun this time so I could watch all 192 builds land one dot at a time.
+
+| | Before the cap | With the cap |
+|---|---|---|
+| Builds that pass | 14 | 76 |
+| 6S2P builds that pass | 0 | 15 |
+
+Watching it live also caught a bug of mine. The flight plots opened on a 30 second window around the time cursor, so you saw the last few seconds of one flight as nearly flat lines. They open on whole flights now.
+
+Now there are two kinds of winner. The sweep ranks by the worst margin, and its favorite is a Hobbywing 3115 on HQ 10x5 props with a 6S3P P45B pack: 35.1 minutes of hover with Mission's loadout, lots of headroom everywhere, and 2914 g. The lightest build that passes every setup, Max included, is an Emax 2814 on Gemfan 10x5 props with a 6S2P P42A pack: 25.7 minutes of hover and 2254 g. Max weighs 2454 g, under its 2500 g limit. Picking between them is next.
+
 ## Next
 
-Settle the current-limit question, then lock the parts and the growth margin and close step 1. Modeling the props' drag in forward flight is how the cruise numbers get believable.
+Pick the build, then lock the parts and the growth margin and close step 1. Modeling the props' drag in forward flight is how the cruise numbers get believable.
