@@ -46,7 +46,6 @@ Where to look:
 - Almost no weight margin left: Mission's pessimistic hover is 21.6 min against 21, and Max is 7 g under its 2500 g limit. The next grams need a decision.
 - Whether the HaLow HAT works on a Pi 5 (Heltec lists Pi 1 to 4), and which 915 MHz antenna to use
 - Cruise speed: 10 m/s until the sizing model says otherwise
-- How modules talk to the flight controller: plain serial or DroneCAN (step 3)
 - Which OpenFOAM: the Foundation release or ESI's. Decided when writing the CFD half of the setup script.
 - Companion computer and camera (step 6). HaLow is the lead option for the video link.
 - Where the Meshtastic relay (#30) lives: V, Base, or its own little module

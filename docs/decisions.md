@@ -399,7 +399,7 @@ Base is always on: frame, motors, ESC, battery, flight controller, receiver, ran
 - **The parachute rule:** the firmware checks whether P is fitted, and won't fly autonomous missions or go above about 30 m without it. The chute needs about 10 m to open anyway, so there's no point carrying it for low hover tests.
 - **A standard module mount (#17):** one mechanical interface, and one connector carrying power and a data bus.
   - The firmware sees which modules are on and loads a tuning profile to match. The self-tuning controller (#21) then fine-tunes in flight.
-  - The bus is still open: plain serial, or DroneCAN (the industry standard for drone add-ons; the H743 has CAN hardware).
+  - The bus (decided 2026-10-18): DroneCAN for the modules' parts, plus one serial line for the companion computer's MAVLink. See the electrical spec.
 - **Ballast:** until a module exists, the sim (and one day the real drone) carries weights on its mount, so it can still be tested at full weight.
 
 ### Target specs (locked 2026-10-13, revised 2026-10-14)
@@ -603,6 +603,5 @@ Everything that came up while brainstorming, so nothing gets lost.
 - Where the Meshtastic relay (#30) lives: in V, in Base, or as its own little module
 - Exactly what goes in the `us-recreational` limits profile, checked against the current FAA and FCC rules for the build package
 - Camera: FPV video, stills for mapping, or both
-- Module bus: serial or DroneCAN
 - What "unique" is allowed to mean for the design hunt (decided after the baseline works)
 - Which OpenFOAM: the Foundation release (openfoam.org) or ESI's (openfoam.com). Both have the tutorials I need. Decided when writing the setup script.
