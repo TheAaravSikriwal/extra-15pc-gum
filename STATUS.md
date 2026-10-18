@@ -1,7 +1,7 @@
 # Status
 
-**Last updated:** 2026-10-17, on the PC's Windows side
-**Step:** 2b, planning the CAD. Step 1 is done (the parts are picked), the CAD talk (2a) settled seven questions, and the [plan](docs/plans/2026-10-17-cad.md) is written (15 test-first tasks), waiting for my OK.
+**Last updated:** 2026-10-18, on the PC's Windows side
+**Step:** 2c, building the CAD: tasks 1 to 10 of the [plan](docs/plans/2026-10-17-cad.md) done. The whole drone is modeled, and every module combination passes the checks.
 **Main machine:** the PC, with WSL2 Ubuntu 24.04 for the Linux tools
 
 ## Right now
@@ -25,6 +25,8 @@ Where to look:
 
 **Step 1 is done (2026-10-17).** I picked the lightest build that passes every setup, Max included: Emax E3 2814 850KV motors, Gemfan 1050 tri-blades, a 6S2P Molicel P42A pack, the Tekko32 F4 50A ESC and the Nazgul XL10 frame, with my firmware capping the current at 90 A. Mission hovers 25.7 min (22.2 pessimistic) at 2254 g, and Max weighs 2454 g. The growth margin stays 200 g. "The parts" in [decisions](docs/decisions.md) has the full picture, including the catch: thin margins, and cruise numbers that are probably optimistic.
 
+**The CAD is mostly built (2026-10-18).** Every part is modeled, the frame traced from iFlight's render, and my printed parts (128 g) designed. The checks failed every combination on the first run; after fixing the layout (narrower frame nose, parts moved back from the front props, the BEC moved into the frame bay and into Base, the pack and claws moved back) all eight pass. The [log](docs/log/2026-10-18-cad-build.md) has the story.
+
 **The parts research added two missing parts (2026-10-17).** The camera needs a 22-pin cable for the Pi 5, and the HaLow card comes with no antenna, so both went into module V (14 g together). Mission is now 2268 g and hovers 25.5 min (21.9 pessimistic, against 21), and Max is 2468 g. Everything still passes, with a thinner margin.
 
 **The CAD talk is done (2026-10-17).** Seven answers, all in the spec under "Settled in the CAD talk": I model every part myself from published dimensions, after checking whether a CAD model of it already exists; battery underneath and modules on top, so the chute fires straight up; real printable designs for our own brackets, legs, tray and rail; check limits based on what each one costs; Rerun and styled stills for watching; STEP, meshes, a GLB for the site and print files on every run, with `cad.json` committed; and rough wire routes now. The [log](docs/log/2026-10-17-cad-talk.md) has the story.
@@ -34,7 +36,7 @@ Where to look:
 ## Up next
 
 1. **Set up WSL2 on the PC** with [docs/setup-pc.md](docs/setup-pc.md). The `wsl --install` step needs an admin PowerShell and one reboot. Then commit `docs/machines/pc.md`.
-2. **OK the CAD plan** ([docs/plans/2026-10-17-cad.md](docs/plans/2026-10-17-cad.md)), then build it task by task. The parts research is folded in: the frame has no published drawing, the Pi 5 stack needs its own housing, and the HaLow antenna still has to be picked.
+2. **Finish step 2c:** tasks 11 to 15 (existing CAD comparison, the Rerun timeline, exports and stills, the CAD report, and the printed weights back into the sizing model).
 3. **The project site's spec** (what it's built with), so its first pages can come with the sizing model.
 4. **Write the first half of `scripts/setup-ubuntu.sh`** (inside WSL2): Gazebo, PX4 and the Python tools, with pinned versions.
 
