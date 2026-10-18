@@ -1,11 +1,13 @@
 """Streaming flights into Rerun, and the project's colors."""
 
 import pytest
+import rerun.blueprint as rrb
 
 from pcs14 import style
 from pcs14.sizing.battery import Pack
 from pcs14.sizing.flight import fly, power_model
 from pcs14.viz import Recorder
+from pcs14.viz.rerun_log import blueprint
 
 
 def test_colors_come_from_the_style_file():
@@ -36,3 +38,23 @@ def test_the_viewer_is_found_even_outside_an_activated_venv():
     from pcs14.viz.rerun_log import _viewer
 
     assert _viewer() is not None
+
+
+def _views(container):
+    for item in getattr(container, "contents", []):
+        yield item
+        yield from _views(item)
+
+
+def test_every_plot_shows_the_whole_run_not_a_window_around_the_cursor():
+    # Rerun's default is a short window around the time cursor, which shows only the last
+    # seconds of one flight. Each plot should open on whole flights (and the whole sweep).
+    whole = rrb.TimeAxis(
+        view_range=rrb.TimeRange(
+            start=rrb.TimeRangeBoundary.infinite(), end=rrb.TimeRangeBoundary.infinite()
+        )
+    )
+    plots = [v for v in _views(blueprint().root_container) if isinstance(v, rrb.TimeSeriesView)]
+    assert len(plots) == 5  # four flight plots and the sweep
+    for plot in plots:
+        assert repr(plot.properties.get("TimeAxis")) == repr(whole), plot.name

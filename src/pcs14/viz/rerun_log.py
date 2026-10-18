@@ -33,15 +33,26 @@ def _safe(name: str) -> str:
     return re.sub(r"[^A-Za-z0-9_-]", "", name)
 
 
+# Rerun opens plots on a short window around the time cursor, which shows only the last
+# seconds of one flight. These open on the whole run instead.
+WHOLE_RUN = rrb.TimeAxis(
+    view_range=rrb.TimeRange(
+        start=rrb.TimeRangeBoundary.infinite(), end=rrb.TimeRangeBoundary.infinite()
+    )
+)
+
+
 def blueprint() -> rrb.Blueprint:
     flights = rrb.Grid(
         *(
-            rrb.TimeSeriesView(origin=f"/{key}", name=title)
+            rrb.TimeSeriesView(origin=f"/{key}", name=title, axis_x=WHOLE_RUN)
             for key, (title, _) in QUANTITIES.items()
         ),
         name="Flights",
     )
-    sweep = rrb.TimeSeriesView(origin="/sweep", name="Sweep: cruise minutes per candidate")
+    sweep = rrb.TimeSeriesView(
+        origin="/sweep", name="Sweep: cruise minutes per candidate", axis_x=WHOLE_RUN
+    )
     summary = rrb.TextDocumentView(origin="/summary", name="Summary")
     return rrb.Blueprint(rrb.Tabs(flights, sweep, summary), collapse_panels=True)
 
