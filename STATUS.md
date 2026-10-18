@@ -27,6 +27,8 @@ Where to look:
 
 **Step 2 is done (2026-10-18).** `pcs14 cad` builds the whole drone, checks all eight module combinations (collisions, prop clearance, the parachute's cone, the rail, balance with the pack trimmed, the compass and Remote ID rules, the lidar's view), compares parts with existing CAD models, exports STEP, meshes, a GLB and print files, renders stills, and plays it all in Rerun. The first checks failed every combination; the fixed layout passes all eight. The printed parts' real weights went back into the catalog: Mission is 2293 g and still passes, with almost no margin left. The [CAD report](docs/reports/cad/README.md) and the [log](docs/log/2026-10-18-cad-build.md) have the details.
 
+**Step 3a, the electrical talk, is under way (2026-10-18).** Four of eight answers are in the [electrical spec](docs/specs/2026-10-18-electrical.md): one connection list in code generates every diagram and check, the ARK FPV replaces the Kakute H7, the modules get DroneCAN plus a serial line for the Pi, and the main power runs through the frame's XT60 with no main fuse (small fuses on the branches, a fuse link on each cell). Still to settle: the 5 V rail, the motor cut and chute circuit, the check limits, and how I watch it.
+
 **The parts research added two missing parts (2026-10-17).** The camera needs a 22-pin cable for the Pi 5, and the HaLow card comes with no antenna, so both went into module V (14 g together). Mission is now 2268 g and hovers 25.5 min (21.9 pessimistic, against 21), and Max is 2468 g. Everything still passes, with a thinner margin.
 
 **The CAD talk is done (2026-10-17).** Seven answers, all in the spec under "Settled in the CAD talk": I model every part myself from published dimensions, after checking whether a CAD model of it already exists; battery underneath and modules on top, so the chute fires straight up; real printable designs for our own brackets, legs, tray and rail; check limits based on what each one costs; Rerun and styled stills for watching; STEP, meshes, a GLB for the site and print files on every run, with `cad.json` committed; and rough wire routes now. The [log](docs/log/2026-10-17-cad-talk.md) has the story.
@@ -36,7 +38,7 @@ Where to look:
 ## Up next
 
 1. **Set up WSL2 on the PC** with [docs/setup-pc.md](docs/setup-pc.md). The `wsl --install` step needs an admin PowerShell and one reboot. Then commit `docs/machines/pc.md`.
-2. **Step 3a: the electrical talk.** Gauges, connectors and pinouts from the CAD's wire lengths (in `docs/reports/cad/cad.json`), the power budget for the Pi's 5 V rail (the BEC is rated right at the Pi's 5 A), and how modules talk to the flight controller.
+2. **Finish step 3a, the electrical talk.** Next up is the 5 V rail: the BEC is rated right at the Pi's 5 A, with the servos in P and C wanting power too. Then the motor cut and chute circuit, the check limits, and watching it.
 3. **The project site's spec** (what it's built with), so its first pages can come with the sizing model.
 4. **Write the first half of `scripts/setup-ubuntu.sh`** (inside WSL2): Gazebo, PX4 and the Python tools, with pinned versions.
 
