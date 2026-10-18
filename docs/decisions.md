@@ -155,6 +155,8 @@ Where everything runs:
 
 ### CAD in code, then hunt for a unique design (decided 2026-10-13)
 
+*The CAD talk (2026-10-17) settled the details, all in the spec under "Settled in the CAD talk": our own solids from published dimensions, with every part checked for an existing CAD model first; battery underneath and modules on top; printable designs for our own brackets, legs, tray and rail; check limits based on what each one costs; Rerun plus styled stills for watching; the full set of outputs on every run; and rough wire routes now.*
+
 Claude writes all the CAD as Python code with build123d, reading from the parts files. Change a part and the model rebuilds itself. It spits out:
 - the center of gravity and inertia
 - meshes for the sim and for CFD

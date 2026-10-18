@@ -171,7 +171,7 @@ The baseline is a plain X, modeled after a real 8–10" frame. If a real frame's
 
 ### Settled in the CAD talk
 
-The CAD talk (step 2a) started on 2026-10-17. Seven questions, one at a time: where the shapes come from, the layout, our own parts, the check numbers, watching it, what comes out, and wires.
+The CAD talk (step 2a) happened on 2026-10-17. Seven questions, one at a time: where the shapes come from, the layout, our own parts, the check numbers, watching it, what comes out, and wires. The [log](../log/2026-10-17-cad-talk.md) has the story.
 
 **Where the shapes come from (2026-10-17): our own solids, exact where it matters.** I model every part from the maker's published dimensions: the outside envelope, the mounting holes and the connector and antenna spots exact, the insides plain. Before modeling a part, I check whether a CAD model of it already exists, official or community-made, and the catalog records what turned up (link, format, license, date checked), including "none found". Existing models never get committed, since most can't legally be reposted. They get downloaded to a local cache and used for two things only: checking that my shape matches (an automated comparison of size and mounting holes), and hero renders. **Why:** the repo stays shareable under GPL and builds offline, so CI can test it; the checks only need envelopes and mounting points; and existing models vary a lot in quality. This replaces the line above about importing a frame's STEP file: a real frame's file gets used to check my frame, not to replace it.
 
@@ -207,6 +207,8 @@ The CAD talk (step 2a) started on 2026-10-17. Seven questions, one at a time: wh
 - **Committed:** `cad.json`, next to `sizing.json`, with mass, center of gravity, inertia and the pack's trim position for each module combination.
 - **Back into the model:** the printed parts' computed weights replace the catalog's guesses, marked as coming from the CAD, and the sizing report reruns on them. Center of gravity and inertia feed the Gazebo generator in step 4.
 - **Why:** each extra format is a few lines once the model exists, the GLB lets the project site start, and the print files make our parts real.
+
+**Wires (2026-10-17): rough routes now, the real harness in step 3.** Every run of wire gets a path in the CAD (battery leads, ESC to each motor along the arms, the flight controller out to the receiver, GPS, lidar and safety monitor, and the module connector) as a tube about the thickness of its likely gauge. The clearance checks treat wires as moving parts (20 mm from the prop disk), and every length gets measured for step 3, which picks the gauges, connectors and pinouts and sends the exact thicknesses back. **Why:** the props are the biggest danger to wires, and step 3 needs lengths to start from. The first routes are a best guess, and some will move once connectors are picked.
 
 ## Layer 3: Aerodynamics (`aero/`)
 

@@ -1,7 +1,7 @@
 # Status
 
 **Last updated:** 2026-10-17, on the PC's Windows side
-**Step:** step 1 is done (2026-10-17): the parts are picked. Next is step 2, the virtual drone in CAD, starting with the talk.
+**Step:** 2b, planning the CAD. Step 1 is done (the parts are picked), and the CAD talk (2a) settled seven questions on 2026-10-17. A researcher is checking every part's dimensions and existing CAD models for the plan.
 **Main machine:** the PC, with WSL2 Ubuntu 24.04 for the Linux tools
 
 ## Right now
@@ -25,12 +25,14 @@ Where to look:
 
 **Step 1 is done (2026-10-17).** I picked the lightest build that passes every setup, Max included: Emax E3 2814 850KV motors, Gemfan 1050 tri-blades, a 6S2P Molicel P42A pack, the Tekko32 F4 50A ESC and the Nazgul XL10 frame, with my firmware capping the current at 90 A. Mission hovers 25.7 min (22.2 pessimistic) at 2254 g, and Max weighs 2454 g. The growth margin stays 200 g. "The parts" in [decisions](docs/decisions.md) has the full picture, including the catch: thin margins, and cruise numbers that are probably optimistic.
 
+**The CAD talk is done (2026-10-17).** Seven answers, all in the spec under "Settled in the CAD talk": I model every part myself from published dimensions, after checking whether a CAD model of it already exists; battery underneath and modules on top, so the chute fires straight up; real printable designs for our own brackets, legs, tray and rail; check limits based on what each one costs; Rerun and styled stills for watching; STEP, meshes, a GLB for the site and print files on every run, with `cad.json` committed; and rough wire routes now. The [log](docs/log/2026-10-17-cad-talk.md) has the story.
+
 **Offline?** Study from [docs/learning.md](docs/learning.md). Topics 1 and 2 (how quads fly; props, motors and batteries) are what the sizing model needs.
 
 ## Up next
 
 1. **Set up WSL2 on the PC** with [docs/setup-pc.md](docs/setup-pc.md). The `wsl --install` step needs an admin PowerShell and one reboot. Then commit `docs/machines/pc.md`.
-2. **Step 2a: the CAD talk.** Settle how build123d models the real parts (maker 3D files vs datasheet drawings), the clearance and center-of-gravity checks, and what comes out, then write the spec and the plan. The picked parts are in `design/build.yaml`.
+2. **Step 2b: the CAD plan.** Fold in the parts research (dimensions, mounting patterns, existing CAD models and their terms), then write the test-first implementation plan from the spec's "Settled in the CAD talk".
 3. **The project site's spec** (what it's built with), so its first pages can come with the sizing model.
 4. **Write the first half of `scripts/setup-ubuntu.sh`** (inside WSL2): Gazebo, PX4 and the Python tools, with pinned versions.
 

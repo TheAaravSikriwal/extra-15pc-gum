@@ -92,6 +92,16 @@ How build123d builds solids from code: sketches, extrusions, positions, assembli
 - [ ] **Do:** the build123d introductory tutorials ([build123d.readthedocs.io](https://build123d.readthedocs.io)).
 - [ ] **Do:** open one of the generated STEP files in a regular CAD tool and poke around.
 
+The quick version of what the CAD talk (2026-10-17) leaned on:
+- **Center of gravity vs center of thrust.** If the weight sits off center, the motors on the heavy side have to push harder to keep the drone level. The CAD judges the offset by how much harder the busiest motor works in a hover.
+- **Inertia** is how hard the drone is to spin about each axis. It comes out of the geometry once every part's mass is spread over its shape, and the flight sim needs it.
+- **File formats:** STEP is exact CAD geometry that any CAD tool opens. STL and 3MF are triangle meshes for printing and simulation. GLB (binary glTF) is the 3D format for the web.
+- **Print materials:** TPU is rubbery and survives hits (legs, GPS mounts). Carbon-filled PETG is stiff and light (brackets, trays).
+
+- [ ] **Watch:** MIT OpenCourseWare, *2.003SC Engineering Dynamics*, the lectures on center of mass and moments of inertia.
+- [ ] **Read:** the Khronos Group's glTF overview ([khronos.org/gltf](https://www.khronos.org/gltf/)), for how GLB files carry named parts to the web.
+- [ ] **Read:** Prusa's material guides ([help.prusa3d.com](https://help.prusa3d.com)) on PETG and flexible filaments like TPU.
+
 ## 7. 3D rendering
 
 *Needed for hero shots and turntables.*
