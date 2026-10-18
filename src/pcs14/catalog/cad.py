@@ -128,12 +128,17 @@ class CellCad(CadBlock):
 
 
 class FrameCad(CadBlock):
+    """A plain X: a bottom plate, the arms on it, a middle plate on the arms, the stack bay,
+    then the top plate. The motors sit on the arms at the wheelbase's corners."""
+
     shape: Literal["frame"]
     arm_thickness_mm: float = MM
     arm_width_mm: float = MM
+    motor_pad_mm: float = MM  # the round pad at the end of each arm
     plate_thickness_mm: float = MM
-    plate_gap_mm: float = MM  # between the bottom and top plates
-    body_length_mm: float = MM
+    plate_gap_mm: float = MM  # the stack bay, between the middle and top plates
+    body_front_mm: float = MM  # how far the body plates reach ahead of the motors' center
+    body_back_mm: float = MM  # and behind it
     body_width_mm: float = MM
     stack_spacing_mm: float = MM  # the flight controller stack's hole pattern
     max_stack_mm: float = MM

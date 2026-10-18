@@ -15,11 +15,13 @@ drag_source: {kind: estimate, checked: 2026-10-17, note: "Frontal area from the 
 cad:
   shape: frame
   arm_thickness_mm: 7
-  arm_width_mm: 24
+  arm_width_mm: 15
+  motor_pad_mm: 34
   plate_thickness_mm: 3
   plate_gap_mm: 19
-  body_length_mm: 150
-  body_width_mm: 40
+  body_front_mm: 154
+  body_back_mm: 62
+  body_width_mm: 36
   stack_spacing_mm: 30.5
   max_stack_mm: 19
   source:
@@ -30,10 +32,16 @@ cad:
       sets the gap between the plates), 30.5 or 20 mm stack holes
   estimates:
   - arm_width_mm
-  - body_length_mm
+  - motor_pad_mm
+  - body_front_mm
+  - body_back_mm
   - body_width_mm
-  estimate_note: Not published anywhere. These are first guesses, which the frame task replaces by tracing
-    iFlight's product renders at the 420 mm wheelbase scale
+  estimate_note: Not published, so traced from iFlight's top-down product render (https://cdn.iflight.com/store/product/Drone-Frame/XL10-V6/XL10-V6-B3.png)
+    with the 420 mm diagonal between motors as the scale. The motors came out 295.5 x 298.9 mm apart against
+    iFlight's 297 x 297, so the scale is good to about 1%. Arms 15 mm wide (15.1 to 16.4 along their length);
+    body plates 36 mm wide, reaching 154 mm ahead of the motors' center and 62 mm behind, not counting
+    the camera cage and the XT60 mount. The motor pads weren't measured; 34 mm is a guess that just carries
+    a 35 mm motor
   existing:
     found: unofficial
     url: https://cults3d.com/en/3d-model/gadget/iflight-xl10-v6-10-drone-frame-cad
