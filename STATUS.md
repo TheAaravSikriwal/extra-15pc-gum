@@ -1,7 +1,7 @@
 # Status
 
 **Last updated:** 2026-10-17, on the PC's Windows side
-**Step:** 1d, picking the parts. The sizing model is built (step 1c), the catalog has real parts, and my firmware's current cap is in the model (174 tests). One question is open before the parts get locked: which build.
+**Step:** step 1 is done (2026-10-17): the parts are picked. Next is step 2, the virtual drone in CAD, starting with the talk.
 **Main machine:** the PC, with WSL2 Ubuntu 24.04 for the Linux tools
 
 ## Right now
@@ -23,22 +23,21 @@ Where to look:
 
 **The first real sweep (2026-10-17).** Six real motors, seven props, four cells, two frames: 192 builds. At first, the rule that full throttle has to fit the pack's continuous rating forced a third parallel cell (and 400 g) on everything. So my firmware caps the battery current at the rating now, and 76 builds pass. The most robust is a Hobbywing 3115 on HQ 10x5 props with a 6S3P P45B pack (35.1 min hover with Mission's loadout, 2914 g); the lightest that passes every setup, Max included, is an Emax 2814 on Gemfan 1050 props with a 6S2P P42A pack (2254 g). The [report](docs/reports/sizing/README.md), the [log](docs/log/2026-10-17-first-real-sweep.md), and [decisions](docs/decisions.md) have the details.
 
+**Step 1 is done (2026-10-17).** I picked the lightest build that passes every setup, Max included: Emax E3 2814 850KV motors, Gemfan 1050 tri-blades, a 6S2P Molicel P42A pack, the Tekko32 F4 50A ESC and the Nazgul XL10 frame, with my firmware capping the current at 90 A. Mission hovers 25.7 min (22.2 pessimistic) at 2254 g, and Max weighs 2454 g. The growth margin stays 200 g. "The parts" in [decisions](docs/decisions.md) has the full picture, including the catch: thin margins, and cruise numbers that are probably optimistic.
+
 **Offline?** Study from [docs/learning.md](docs/learning.md). Topics 1 and 2 (how quads fly; props, motors and batteries) are what the sizing model needs.
 
 ## Up next
 
 1. **Set up WSL2 on the PC** with [docs/setup-pc.md](docs/setup-pc.md). The `wsl --install` step needs an admin PowerShell and one reboot. Then commit `docs/machines/pc.md`.
-2. **Pick the build:** the sweep's most robust (Hobbywing 3115, 10x5, 6S3P P45B, 2914 g with Mission's loadout, Max over 2500 g) or the lightest that passes every setup including Max (Emax 2814, Gemfan 1050, 6S2P P42A, 2254 g).
-3. **Close step 1d:** lock the parts and the growth margin, and fill in the README's step 1 outcome.
-4. **The project site's spec** (what it's built with), so its first pages can come with the sizing model.
-5. **Write the first half of `scripts/setup-ubuntu.sh`** (inside WSL2): Gazebo, PX4 and the Python tools, with pinned versions.
+2. **Step 2a: the CAD talk.** Settle how build123d models the real parts (maker 3D files vs datasheet drawings), the clearance and center-of-gravity checks, and what comes out, then write the spec and the plan. The picked parts are in `design/build.yaml`.
+3. **The project site's spec** (what it's built with), so its first pages can come with the sizing model.
+4. **Write the first half of `scripts/setup-ubuntu.sh`** (inside WSL2): Gazebo, PX4 and the Python tools, with pinned versions.
 
 ## Still open
 
-- Which build: most robust, or lightest that passes every setup. This decides 6S2P vs 6S3P.
 - Rotor drag in forward flight, so the cruise numbers get believable (the honesty check's big miss)
 - Cruise speed: 10 m/s until the sizing model says otherwise
-- The final growth margin (step 1d)
 - How modules talk to the flight controller: plain serial or DroneCAN (step 3)
 - Which H743 flight controller board. It has to be one PX4 supports, with SWD pads.
 - Which OpenFOAM: the Foundation release or ESI's. Decided when writing the CFD half of the setup script.

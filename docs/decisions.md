@@ -91,6 +91,29 @@ The flight controller caps the total battery current at the pack's continuous ra
 - **What it changed:** 76 of the 192 builds pass now (15 of them 6S2P), against 14 before. The Samsung 50S makes up most of the fails: its 25 A rating gets capped so hard that thrust-to-weight at the reserve comes up short.
 - **For the firmware step:** a battery current limiter joins the flight controller's to-do list. It throttles all four motors together, and it never touches the kill switch or the safety monitor's motor cut.
 
+### The parts (picked 2026-10-17)
+
+I picked the lightest build that passes every setup, Max included, over the sweep's favorite (a Hobbywing 3115 on 6S3P, 660 g heavier, which breaks Max's 2500 g limit). The sweep ranks by headroom, so this one comes in at #33 of 192, and that's fine: it meets every target I set.
+
+| Part | Pick | Mass |
+|---|---|---|
+| Motors (4) | Emax E3 2814 850KV | 82 g each, without wires |
+| Props (4) | Gemfan 1050 3-blade (10 x 5 in) | 16.8 g each |
+| Pack | 6S2P Molicel P42A: 8062 mAh, 90 A continuous | 858 g with an estimated 60 g of nickel, leads and wrap |
+| ESC | Holybro Tekko32 F4 4in1 50A (AM32) | 14 g |
+| Frame | iFlight Nazgul XL10 V6 | 343 g |
+| Current cap | 90 A, in my firmware (100% of the pack's rating) | |
+
+| Setup | Weight | Hover (published / pessimistic) | Thrust-to-weight at 20% charge |
+|---|---|---|---|
+| Base | 1732 g | 39.9 / 34.0 min | 3.59 |
+| Mission (with the 200 g margin) | 2254 g | 25.7 / 22.2 min (target 21) | 2.76 |
+| Max | 2454 g | 22.6 / 19.6 min (target 17) | 2.53 |
+
+- **Why this one:** it's the only kind of build that keeps Max under 2500 g, it's 660 g lighter than the robust pick (less energy in a crash, an easier job for the parachute, 6 fewer cells), and its hover point (564 g per motor) sits inside Emax's measured table, which starts at 545 g.
+- **The catch:** thinner margins. Mission's pessimistic hover clears its target by about 6%. And if cruise really is up to 2x optimistic (the honesty check), Mission's 32.8 min cruise could be closer to 16 than 25. That's the first thing a thrust stand and the rotor drag model would check.
+- **The growth margin stays 200 g.** Mission passes on the pessimistic numbers up to about 250 g, and turns marginal around 300 g, so 200 g leaves about 50 g of slack for parts that come in heavier than their estimates.
+
 ### Simulate everything
 
 The loop is:
@@ -427,10 +450,10 @@ Three layers, plus a safety monitor underneath them all. Each one has to stay sa
 
 Parts so far:
 
-- **Frame:** for the baseline, a real, orderable 8–10" carbon X frame with the module mount. Printed arms would flex too much at this size. If the design hunt finds something unique, the frame goes custom (see above).
-- **Motors:** low-KV, 6S, picked from thrust data once the prop size is settled.
-- **ESC:** 4-in-1, 6S, with bidirectional DShot, so I get RPM from every motor. That's great for filtering and for #21. AM32 is open-source ESC firmware, which is a nice bonus.
-- **Battery:** 6S2P Li-ion from 21700 high-drain cells, around 9 Ah and 850–900 g. The sizing model also tries 6S3P, in case the extra cells earn their weight.
+- **Frame (picked 2026-10-17):** the iFlight Nazgul XL10 V6, a real, orderable 10" carbon X frame, with the module mount added. Printed arms would flex too much at this size. If the design hunt finds something unique, the frame goes custom (see above).
+- **Motors and props (picked 2026-10-17):** Emax E3 2814 850KV on Gemfan 1050 tri-blades. See "The parts".
+- **ESC (picked 2026-10-17):** the Holybro Tekko32 F4 4in1 50A: 6S, bidirectional DShot, so I get RPM from every motor. That's great for filtering and for #21. It runs AM32, open-source ESC firmware, which is a nice bonus.
+- **Battery (picked 2026-10-17):** 6S2P Molicel P42A, 8 Ah and about 860 g, with my firmware capping the current at its 90 A rating.
 - **Flight controller (decided):** an off-the-shelf STM32H743 flight controller board in the drone, and optionally a Nucleo-H743 on the desk, which gives me a proper debugger, every pin broken out, and hardware-in-the-loop testing. Same chip, same firmware. The board has to be one PX4 supports, with SWD pads I can get a debugger onto.
 - **Teensy 4.1:** I already have one lying around. A build would need a second (about $30) so each can keep its own job:
   1. Run the thrust stand (optional, in step 1): read the load cell, current and voltage, drive the ESC, and log to its SD card.
@@ -559,14 +582,11 @@ Everything that came up while brainstorming, so nothing gets lost.
 ## Still open
 
 - Final pick of the extras
-- Exact prop size, cell type, and 6S2P vs 6S3P. With the current cap, 10" props win either way; the pack hangs on the next question.
-- Which build to pick: the sweep's most robust one (heavy, 6S3P) or the lightest one that passes every setup, Max included (step 1d)
 - Cruise speed: 10 m/s until the sizing model says otherwise
 - Which open-source flight code to start from (the chip is decided: STM32H743)
 - Which H743 board. It needs PX4 support for the baseline flight, and SWD pads.
 - How many clean shadow-mode flights a real build would need before the safety monitor's automatic triggers go live
 - Whether to get Part 107 (in the build package's legal checklist)
-- The final growth margin (picked in step 1d, from the minutes-per-100 g chart)
 - Data/video link to the laptop: HaLow is the lead option, confirmed in step 6 (the control link is decided: 2.4 GHz ExpressLRS)
 - Where the Meshtastic relay (#30) lives: in V, in Base, or as its own little module
 - Exactly what goes in the `us-recreational` limits profile, checked against the current FAA and FCC rules for the build package

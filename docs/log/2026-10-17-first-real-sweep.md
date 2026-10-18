@@ -58,6 +58,14 @@ Watching it live also caught a bug of mine. The flight plots opened on a 30 seco
 
 Now there are two kinds of winner. The sweep ranks by the worst margin, and its favorite is a Hobbywing 3115 on HQ 10x5 props with a 6S3P P45B pack: 35.1 minutes of hover with Mission's loadout, lots of headroom everywhere, and 2914 g. The lightest build that passes every setup, Max included, is an Emax 2814 on Gemfan 10x5 props with a 6S2P P42A pack: 25.7 minutes of hover and 2254 g. Max weighs 2454 g, under its 2500 g limit. Picking between them is next.
 
+## The pick
+
+I went light. Emax E3 2814 850KV motors, Gemfan 1050 tri-blades, a 6S2P Molicel P42A pack, the Tekko32 ESC and the Nazgul XL10 frame. It's the only kind of build that keeps Max under 2500 g, and it's 660 g lighter than the sweep's favorite. Its hover point also sits inside Emax's measured table instead of being estimated below it.
+
+The catch is margin. Mission's pessimistic hover is 22.2 minutes against a 21 minute target, and if the cruise numbers really are as optimistic as the honesty check says, Mission's cruise could land well short of 25 minutes. I'd rather know that and carry 660 g less. The growth margin stays at 200 g: Mission keeps passing up to about 250 g, so there's a little slack for parts that come in heavy.
+
+On the sweep chart it's the ringed dot at the far left: the lightest build that passes. That's step 1 done.
+
 ## Next
 
-Pick the build, then lock the parts and the growth margin and close step 1. Modeling the props' drag in forward flight is how the cruise numbers get believable.
+Step 2, the virtual drone in CAD, starting with a talk about how to model the real parts. Modeling the props' drag in forward flight is how the cruise numbers get believable.

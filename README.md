@@ -26,8 +26,8 @@ This is the live version. When a step finishes, its outcome goes here, with a li
 |---|---|---|---|
 | 0. Planning | Figure out what I'm designing | Done, 2026-10-17 | Decisions, targets and roadmap written, reviewed and revised ([log](docs/log/2026-10-14-plan-revision.md)), then turned into a research plan ([log](docs/log/2026-10-17-research-project.md)) |
 | Setup | WSL2 on the PC, with all checks passing | Up next | |
-| 1. Sizing and parts | Real, orderable parts that hit the targets | In progress | |
-| 2. The virtual drone (CAD) | Every part modeled and connected | Not started | |
+| 1. Sizing and parts | Real, orderable parts that hit the targets | Done, 2026-10-17 | Emax 2814 850KV motors, Gemfan 10x5 props, a 6S2P Molicel P42A pack and a Nazgul XL10 frame. Every setup passes, Max included: 25.7 min hover with Mission's loadout at 2254 g ([report](docs/reports/sizing/README.md), [log](docs/log/2026-10-17-first-real-sweep.md)) |
+| 2. The virtual drone (CAD) | Every part modeled and connected | Up next | |
 | 3. Electrical design | Every wire, pin and connector | Not started | |
 | 4. Flight sim (PX4) | Prove the airframe flies, in all eight module combinations | Not started | |
 | 5. My firmware | My flight code and the safety monitor, passing the same tests as PX4 | Not started | |
@@ -49,7 +49,7 @@ This is the live version. When a step finishes, its outcome goes here, with a li
 | 1a. Talk | Settle the power and battery math, the sag model, the parts catalog and the report | Done, 2026-10-17 | Eight questions settled, from the power model to which setup sizes the drone ([log](docs/log/2026-10-17-sizing-model-talk.md), [spec](docs/specs/2026-10-13-phase-1-simulation.md#settled-in-the-sizing-model-talk)) |
 | 1b. Plan | Update the spec, then write the implementation plan | Done, 2026-10-17 | 15 test-first tasks, with every flight streaming into Rerun from task 10 on ([plan](docs/plans/2026-10-17-sizing-model.md)) |
 | 1c. Build | Test-first, in Python. The first answer: the mass budget for every setup | Done, 2026-10-17 | All 15 tasks, 163 tests. The honesty check trusts the battery model and says cruise runs optimistic, maybe up to 2x ([log](docs/log/2026-10-17-first-real-sweep.md), [honesty check](docs/reports/sizing/validation.md)) |
-| 1d. Pick the parts | Research and add the real parts, run the sweep, choose the parts and the growth margin, with uncertainty bands | In progress: sweep done with the firmware current cap, one question open | 192 real builds, 76 pass. The most robust: Hobbywing 3115 900KV, HQ 10x5x3, 6S3P P45B, 35.1 min hover with Mission's loadout. The lightest: Emax 2814 850KV, Gemfan 1050, 6S2P P42A, 2254 g ([report](docs/reports/sizing/README.md), [log](docs/log/2026-10-17-first-real-sweep.md)) |
+| 1d. Pick the parts | Research and add the real parts, run the sweep, choose the parts and the growth margin, with uncertainty bands | Done, 2026-10-17 | 192 real builds, 76 pass with my firmware's current cap. I picked the lightest that passes every setup over the most robust (660 g heavier, Max over its limit). Growth margin stays 200 g ([decisions](docs/decisions.md), [report](docs/reports/sizing/README.md)) |
 | Thrust stand | One motor and prop on a load cell, to replace the manufacturer's numbers | Optional | |
 
 ## Modules
