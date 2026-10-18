@@ -247,19 +247,27 @@ def render(run: CadRun, generated: str | None = None) -> str:
         "",
         "## My printed parts",
         "",
-        "Weighed from their geometry and material. Where the catalog had a guess, it's next to it.",
+        "Weighed from their geometry and material, next to what the catalog says for each one's "
+        "entry (pcs14 cad --update-catalog writes the CAD's numbers in).",
         "",
-        "| Part | Material | Weight | The catalog's guess |",
+        "| Part | Material | Weight | Its catalog entry |",
         "|---|---|---|---|",
     ]
+    groups: dict[str, list[PrintedPart]] = {}
     for part in run.printed:
-        guess = run.catalog_masses.get(part.catalog_id)
-        before = (
-            f"{guess * 1000:.0f} g ({part.catalog_id})"
-            if guess is not None
-            else f"none yet ({part.catalog_id})"
-        )
-        lines.append(f"| {part.name} | {part.material} | {part.mass * 1000:.1f} g | {before} |")
+        groups.setdefault(part.catalog_id, []).append(part)
+    for part in run.printed:
+        group = groups[part.catalog_id]
+        entry = run.catalog_masses.get(part.catalog_id)
+        cad_total = sum(p.mass for p in group)
+        if entry is None:
+            listed = f"not in the catalog yet ({part.catalog_id})"
+        elif abs(entry - cad_total) < 0.00015:
+            shared = f" for all {len(group)}" if len(group) > 1 else ""
+            listed = f"{entry * 1000:.1f} g{shared}, from the CAD ({part.catalog_id})"
+        else:
+            listed = f"{entry * 1000:.0f} g, a guess the CAD replaces ({part.catalog_id})"
+        lines.append(f"| {part.name} | {part.material} | {part.mass * 1000:.1f} g | {listed} |")
     total = sum(p.mass for p in run.printed)
     lines += [
         "",

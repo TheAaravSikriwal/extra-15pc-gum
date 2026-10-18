@@ -54,12 +54,12 @@ Each part's weight spread over its solid, with the pack at its trim. Inertia is 
 
 ## My printed parts
 
-Weighed from their geometry and material. Where the catalog had a guess, it's next to it.
+Weighed from their geometry and material, next to what the catalog says for each one's entry (pcs14 cad --update-catalog writes the CAD's numbers in).
 
-| Part | Material | Weight | The catalog's guess |
+| Part | Material | Weight | Its catalog entry |
 |---|---|---|---|
-| module rail | petg_cf | 13.4 g | 30 g (module-mount) |
-| leg front left | tpu | 6.6 g | none yet (landing-legs) |
+| module rail | petg_cf | 13.4 g | 30 g, a guess the CAD replaces (module-mount) |
+| leg front left | tpu | 6.6 g | not in the catalog yet (landing-legs) |
 
 Together they weigh 20 g.
 

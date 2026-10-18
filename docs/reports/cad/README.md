@@ -560,23 +560,23 @@ Each part's weight spread over its solid, with the pack at its trim. Inertia is 
 
 ## My printed parts
 
-Weighed from their geometry and material. Where the catalog had a guess, it's next to it.
+Weighed from their geometry and material, next to what the catalog says for each one's entry (pcs14 cad --update-catalog writes the CAD's numbers in).
 
-| Part | Material | Weight | The catalog's guess |
+| Part | Material | Weight | Its catalog entry |
 |---|---|---|---|
-| leg front left | tpu | 6.6 g | 26 g (landing-legs) |
-| leg front right | tpu | 6.6 g | 26 g (landing-legs) |
-| leg back left | tpu | 6.6 g | 26 g (landing-legs) |
-| leg back right | tpu | 6.6 g | 26 g (landing-legs) |
-| battery tray | petg_cf | 29.4 g | 29 g (battery-tray) |
-| module rail | petg_cf | 13.2 g | 13 g (module-mount) |
-| gps mast | tpu | 5.2 g | 5 g (gps-mast) |
-| lidar bracket | petg_cf | 2.4 g | 2 g (lidar-bracket) |
-| remote id mount | tpu | 1.4 g | 1 g (remote-id-mount) |
-| safety monitor carrier | petg_cf | 2.8 g | 3 g (safety-monitor-carrier) |
-| camera bracket | petg_cf | 2.4 g | 2 g (camera-bracket) |
-| v housing | petg_cf | 40.2 g | 40 g (v-housing) |
-| p holder | petg_cf | 6.4 g | 6 g (p-mount) |
+| leg front left | tpu | 6.6 g | 26.4 g for all 4, from the CAD (landing-legs) |
+| leg front right | tpu | 6.6 g | 26.4 g for all 4, from the CAD (landing-legs) |
+| leg back left | tpu | 6.6 g | 26.4 g for all 4, from the CAD (landing-legs) |
+| leg back right | tpu | 6.6 g | 26.4 g for all 4, from the CAD (landing-legs) |
+| battery tray | petg_cf | 29.4 g | 29.4 g, from the CAD (battery-tray) |
+| module rail | petg_cf | 13.2 g | 13.2 g, from the CAD (module-mount) |
+| gps mast | tpu | 5.2 g | 5.2 g, from the CAD (gps-mast) |
+| lidar bracket | petg_cf | 2.4 g | 2.4 g, from the CAD (lidar-bracket) |
+| remote id mount | tpu | 1.4 g | 1.4 g, from the CAD (remote-id-mount) |
+| safety monitor carrier | petg_cf | 2.8 g | 2.8 g, from the CAD (safety-monitor-carrier) |
+| camera bracket | petg_cf | 2.4 g | 2.4 g, from the CAD (camera-bracket) |
+| v housing | petg_cf | 40.2 g | 40.2 g, from the CAD (v-housing) |
+| p holder | petg_cf | 6.4 g | 6.4 g, from the CAD (p-mount) |
 
 Together they weigh 130 g.
 
