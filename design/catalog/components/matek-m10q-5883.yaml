@@ -22,6 +22,7 @@ cad:
   existing:
     found: official
     url: https://www.mateksys.com/Downloads/other/M10Q-5883_step.zip
+    download_url: 'https://www.mateksys.com/Downloads/other/M10Q-5883_step.zip'
     format: STEP
     terms: No license in the zip or on the page; copyright Matek, so all rights reserved
     checked: '2026-10-17'

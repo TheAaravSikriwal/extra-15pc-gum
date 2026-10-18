@@ -43,6 +43,7 @@ cad:
   existing:
     found: official
     url: https://docs.holybro.com/autopilot/kakute-h7-v1-v2-mini/download
+    download_url: 'https://2367252986-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FLIgtGDAvVGkCKGOJb1bR%2Fuploads%2FZIwniNS3hRam14bc8twB%2FKakute%20h7%20v1.3%2050a_stack.stp?alt=media&token=5cb2b8f5-c5b3-4207-a4de-3c5ee09486f5'
     format: STEP
     terms: No license on the download page; holybro.com's terms forbid reproducing it without written
       permission. Fine to download and use locally, not to commit.

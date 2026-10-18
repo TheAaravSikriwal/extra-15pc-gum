@@ -41,6 +41,7 @@ cad:
   existing:
     found: official
     url: https://pip.raspberrypi.com/categories/1207-design-files
+    download_url: 'https://pip-assets.raspberrypi.com/categories/1207-design-files/documents/RP-008154-DS-1-camera-module-3-step.zip'
     format: STEP
     terms: No license file; Raspberry Pi's site terms reserve all rights.
     checked: '2026-10-17'

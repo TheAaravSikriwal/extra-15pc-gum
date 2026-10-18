@@ -44,6 +44,7 @@ cad:
   existing:
     found: official
     url: https://pip.raspberrypi.com/categories/892-raspberry-pi-5
+    download_url: 'https://pip-assets.raspberrypi.com/categories/892-raspberry-pi-5/documents/RP-010083-CA-1-rpi-5%203D%20STEP%20-%20No%20Graphics%20small%20file.zip'
     format: STEP
     terms: 'MIT license, in the zip: it can be shared, with the copyright notice. It''s 77 MB unzipped,
       so it stays in the local cache'

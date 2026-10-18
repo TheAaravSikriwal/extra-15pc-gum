@@ -22,6 +22,7 @@ MM = Field(gt=0)
 class ExistingCad(Strict):
     found: Literal["official", "unofficial", "none"]
     url: HttpUrl | None = None
+    download_url: HttpUrl | None = None  # the file itself, for the local cache, when there's one
     format: str | None = None
     terms: str | None = None  # what the license or terms say, or that they say nothing
     checked: date
