@@ -74,7 +74,7 @@ p_holder: # a cradle around the Harrier tube's base
 # after turning by turn_deg about x, then y, then z.
 place:
   holybro-tekko32-f4-50a: {at_mm: [0, 0, 13.9]} # on the middle plate, its underside parts at 13.0
-  holybro-kakute-h7: {at_mm: [0, 0, 22.8]} # 2 mm above the ESC; its top at 28.4, under the 32 mm top plate
+  holybro-kakute-h7: {at_mm: [0, 0, 20.8]} # stacked on the ESC; its top at 26.4, under the 32 mm top plate
   radiomaster-rp2-v2: {at_mm: [-56, 0, 13]} # at the rear edge of the bay, its ceramic antenna at the back
   pjrc-teensy-41: {at_mm: [62, 0, 17.5]} # in front of the stack, on its printed carrier
   safety-monitor-extras: {at_mm: [110, 0, 13]}
@@ -92,6 +92,7 @@ place:
 
 # Rough wire routes: a tube about the thickness of each run's likely gauge, through these
 # points. Step 3 picks the real gauges and connectors and sends back exact thicknesses.
+# A wire belongs to Base unless it says otherwise, and only shows up when its module is on.
 wires:
   - name: battery leads
     diameter_mm: 8 # two 12 AWG leads side by side
@@ -112,6 +113,7 @@ wires:
     diameter_mm: 3
     path_mm: [[-10, 0, 25], [-50, 0, 18]]
   - name: gps
+    module: V
     diameter_mm: 3
     path_mm: [[-10, 5, 28], [-55, 5, 30], [-55, 5, 40], [-55, 5, 122]]
   - name: lidar
@@ -121,14 +123,17 @@ wires:
     diameter_mm: 3
     path_mm: [[15, 0, 26], [35, 0, 24]]
   - name: bec feed
+    module: V
     diameter_mm: 3
     path_mm: [[-70, 6, 10], [-66, 6, 38], [-40, 30, 45], [-30, 30, 94]]
   - name: module connector
     diameter_mm: 4
     path_mm: [[-5, 0, 29], [-5, 0, 41]]
   - name: camera cable
+    module: V
     diameter_mm: 3
     path_mm: [[158, 0, 17.5], [150, 0, 38], [12, 0, 44], [-5, 0, 52]]
   - name: chute servo
+    module: P
     diameter_mm: 3
     path_mm: [[0, 8, 29], [8, 8, 38], [11, 0, 44]]

@@ -5,6 +5,7 @@ lengths back in meters.
 """
 
 from pathlib import Path
+from typing import Literal
 
 import yaml
 from pydantic import Field, ValidationError
@@ -130,6 +131,7 @@ class Placement(Strict):
 
 class Wire(Strict):
     name: str
+    module: Literal["base", "V", "P", "C"] = "base"
     diameter_mm: float = Field(gt=0)
     path_mm: list[Point] = Field(min_length=2)
 
