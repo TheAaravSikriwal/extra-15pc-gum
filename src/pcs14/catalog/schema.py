@@ -9,47 +9,17 @@ carry their own.
 
 import math
 from datetime import date
-from enum import StrEnum
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, HttpUrl, model_validator
+from pydantic import Field, HttpUrl, model_validator
 
 from pcs14 import units
+from pcs14.catalog.cad import AnyCad
+from pcs14.catalog.source import Source, SourceKind, Strict
+
+__all__ = ["Source", "SourceKind", "Strict"]
 
 ID_PATTERN = r"^[a-z0-9][a-z0-9.-]*$"
-
-
-class SourceKind(StrEnum):
-    MANUFACTURER = "manufacturer"
-    INDEPENDENT_TEST = "independent_test"
-    THRUST_STAND = "thrust_stand"
-    ESTIMATE = "estimate"
-    MADE_UP = "made_up"  # test parts only; the real catalog refuses them
-
-
-class Strict(BaseModel):
-    model_config = ConfigDict(extra="forbid", frozen=True)
-
-
-class Source(Strict):
-    kind: SourceKind
-    url: HttpUrl | None = None
-    checked: date | None = None
-    note: str | None = None
-
-    @model_validator(mode="after")
-    def _enough_to_check_it(self):
-        linked = (SourceKind.MANUFACTURER, SourceKind.INDEPENDENT_TEST)
-        if self.kind in linked and self.url is None:
-            raise ValueError(
-                f"a {self.kind} source needs a link (url) to where the numbers came from"
-            )
-        explained = (SourceKind.ESTIMATE, SourceKind.THRUST_STAND)
-        if self.kind in explained and not self.note:
-            raise ValueError(
-                f"a {self.kind} source needs a note saying how the numbers were worked out"
-            )
-        return self
 
 
 class Part(Strict):
@@ -63,13 +33,14 @@ class Part(Strict):
     checked: date | None = None
     source: Source
     mass_g: float = Field(gt=0)
+    cad: AnyCad | None = None  # every part in the build gets one; see pcs14.catalog.cad
 
     @property
     def mass(self) -> float:
         return units.g_to_kg(self.mass_g)
 
     def sources(self) -> list[Source]:
-        return [self.source]
+        return [self.source] + ([self.cad.source] if self.cad is not None else [])
 
 
 class ThrustRow(Strict):
@@ -107,6 +78,8 @@ class ThrustTable(Strict):
 
     @model_validator(mode="after")
     def _rises_with_throttle(self):
+        if self.source.kind is SourceKind.CAD:
+            raise ValueError("a thrust table can't come from the CAD, only from a test")
         for before, after in zip(self.rows, self.rows[1:], strict=False):
             if after.throttle_pct <= before.throttle_pct:
                 raise ValueError("rows have to go in order of rising throttle")
@@ -136,7 +109,7 @@ class Motor(Part):
         return self
 
     def sources(self) -> list[Source]:
-        return [self.source, *(table.source for table in self.thrust_tables)]
+        return [*super().sources(), *(table.source for table in self.thrust_tables)]
 
     def tables_for(self, prop_id: str) -> list[ThrustTable]:
         return [table for table in self.thrust_tables if table.prop == prop_id]
@@ -224,7 +197,7 @@ class Cell(Part):
 
     def sources(self) -> list[Source]:
         return [
-            self.source,
+            *super().sources(),
             self.resistance_source,
             self.ocv_source,
             *(test.source for test in self.discharge_tests),
@@ -264,7 +237,7 @@ class Frame(Part):
     drag_source: Source
 
     def sources(self) -> list[Source]:
-        return [self.source, self.drag_source]
+        return [*super().sources(), self.drag_source]
 
     @property
     def drag_area(self) -> float:
@@ -294,7 +267,8 @@ class Component(Part):
         return self
 
     def sources(self) -> list[Source]:
-        return [s for s in (self.source, self.power_source, self.drag_source) if s is not None]
+        extra = [s for s in (self.power_source, self.drag_source) if s is not None]
+        return [*super().sources(), *extra]
 
     @property
     def power(self) -> float:

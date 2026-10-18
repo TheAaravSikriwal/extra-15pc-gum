@@ -1,0 +1,161 @@
+"""A part's cad block: its shape, where the dimensions came from, which ones are estimates,
+and whether a CAD model of it already exists (checked before modeling, even when the answer
+is "none found").
+
+Dimensions carry _mm in their names, like every unit in the catalog; `size()` and the hole
+properties hand them back in meters. Each shape is one builder in pcs14.cad. Two shapes have
+no dimensions here: "printed" parts are designed in code, and "routed" parts (the wiring) come
+from the wire routes in design/cad.yaml.
+"""
+
+from datetime import date
+from typing import Annotated, Literal
+
+from pydantic import Field, HttpUrl, model_validator
+
+from pcs14 import units
+from pcs14.catalog.source import Source, Strict
+
+MM = Field(gt=0)
+
+
+class ExistingCad(Strict):
+    found: Literal["official", "unofficial", "none"]
+    url: HttpUrl | None = None
+    format: str | None = None
+    terms: str | None = None  # what the license or terms say, or that they say nothing
+    checked: date
+    note: str | None = None
+
+    @model_validator(mode="after")
+    def _found_ones_say_where(self):
+        if self.found != "none" and (self.url is None or not self.terms):
+            raise ValueError(
+                "a CAD model that was found needs its link and its terms (url and terms), "
+                "so it's clear whether it can be used"
+            )
+        return self
+
+
+class Hole(Strict):
+    x_mm: float  # from the part's center
+    y_mm: float
+    diameter_mm: float = MM
+
+    @property
+    def x(self) -> float:
+        return units.mm_to_m(self.x_mm)
+
+    @property
+    def y(self) -> float:
+        return units.mm_to_m(self.y_mm)
+
+    @property
+    def diameter(self) -> float:
+        return units.mm_to_m(self.diameter_mm)
+
+
+class CadBlock(Strict):
+    source: Source
+    estimates: list[str] = Field(default_factory=list)  # names of dimensions that are estimates
+    estimate_note: str | None = None
+    existing: ExistingCad
+
+    @model_validator(mode="after")
+    def _estimates_are_real_and_explained(self):
+        dimensions = {name for name in type(self).model_fields if name.endswith("_mm")}
+        unknown = [name for name in self.estimates if name not in dimensions]
+        if unknown:
+            known = ", ".join(sorted(dimensions)) or "none"
+            raise ValueError(
+                f"estimates names {', '.join(unknown)}, which isn't a dimension of a "
+                f"{self.shape} (they're: {known})"
+            )
+        if self.estimates and not self.estimate_note:
+            raise ValueError("estimates need an estimate_note saying how they were worked out")
+        return self
+
+    def size(self, name: str) -> float:
+        """A dimension in meters."""
+        return units.mm_to_m(getattr(self, name))
+
+
+class BoxCad(CadBlock):
+    shape: Literal["box"]
+    length_mm: float = MM
+    width_mm: float = MM
+    height_mm: float = MM
+
+
+class CylinderCad(CadBlock):
+    shape: Literal["cylinder"]
+    diameter_mm: float = MM
+    length_mm: float = MM
+
+
+class BoardCad(CadBlock):
+    shape: Literal["board"]
+    length_mm: float = MM
+    width_mm: float = MM
+    thickness_mm: float = MM
+    top_mm: float = Field(ge=0)  # tallest part above the board
+    bottom_mm: float = Field(default=0, ge=0)  # tallest part below it
+    holes: list[Hole] = Field(default_factory=list)
+
+
+class MotorCad(CadBlock):
+    shape: Literal["motor"]
+    diameter_mm: float = MM
+    length_mm: float = MM  # base, bell and shaft together
+    bell_length_mm: float = MM
+    shaft_diameter_mm: float = MM
+    mount_spacing_mm: float = MM  # square pattern, hole to hole
+    mount_hole_mm: float = MM
+
+
+class PropCad(CadBlock):
+    shape: Literal["prop"]
+    hub_diameter_mm: float = MM
+    hub_thickness_mm: float = MM
+    bore_mm: float = MM
+    blade_width_mm: float = MM
+
+
+class CellCad(CadBlock):
+    shape: Literal["cell"]
+    diameter_mm: float = MM
+    length_mm: float = MM
+
+
+class FrameCad(CadBlock):
+    shape: Literal["frame"]
+    arm_thickness_mm: float = MM
+    arm_width_mm: float = MM
+    plate_thickness_mm: float = MM
+    plate_gap_mm: float = MM  # between the bottom and top plates
+    body_length_mm: float = MM
+    body_width_mm: float = MM
+    stack_spacing_mm: float = MM  # the flight controller stack's hole pattern
+    max_stack_mm: float = MM
+
+
+class PrintedCad(CadBlock):
+    shape: Literal["printed"]  # designed in pcs14.cad.printed
+
+
+class RoutedCad(CadBlock):
+    shape: Literal["routed"]  # modeled by the wire routes in design/cad.yaml
+
+
+AnyCad = Annotated[
+    BoxCad
+    | CylinderCad
+    | BoardCad
+    | MotorCad
+    | PropCad
+    | CellCad
+    | FrameCad
+    | PrintedCad
+    | RoutedCad,
+    Field(discriminator="shape"),
+]

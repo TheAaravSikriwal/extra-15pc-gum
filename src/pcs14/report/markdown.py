@@ -12,6 +12,7 @@ SOURCE_WORDS = {
     "independent_test": "independent test",
     "thrust_stand": "thrust stand",
     "estimate": "estimate",
+    "cad": "from the CAD",
     "made_up": "made up",
 }
 
