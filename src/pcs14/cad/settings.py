@@ -100,6 +100,7 @@ class GpsMast(Strict):
     at_mm: tuple[float, float]
     height_mm: float = Field(gt=0)
     tube_diameter_mm: float = Field(gt=0)
+    mount_size_mm: float = Field(gt=0)
     material: str
 
 

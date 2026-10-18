@@ -45,7 +45,7 @@ legs:
 
 rail: # the module rail on the top plate, carrying V and P
   from_x_mm: -52
-  to_x_mm: 54
+  to_x_mm: 66
   width_mm: 30
   height_mm: 6
   material: petg_cf
@@ -54,11 +54,12 @@ gps_mast:
   at_mm: [-58, 0] # on the top plate, behind the V housing
   height_mm: 90
   tube_diameter_mm: 8
+  mount_size_mm: 14 # the printed TPU block the tube plugs into
   material: carbon
 
 v_housing: # an envelope around the Pi 5 stack, until the modules step designs it
-  from_x_mm: -52
-  to_x_mm: 8
+  from_x_mm: -50
+  to_x_mm: 12 # 58 mm inside, for the 56.5 mm HaLow HAT
   width_mm: 92
   height_mm: 69
   wall_mm: 2
@@ -81,12 +82,12 @@ place:
   benewake-tf-luna: {at_mm: [125, 0, -3], turn_deg: [180, 0, 0]} # under the nose, looking down
   rpi-camera-module-3: {at_mm: [162, 0, 17.5], turn_deg: [0, 90, 0]} # in front of the plates, looking forward
   matek-m10q-5883: {at_mm: [-58, 0, 125]} # on top of the GPS mast
-  rpi-5-4gb: {at_mm: [-22, 0, 47], turn_deg: [0, 0, 90]} # inside the V housing, its long side across
-  rpi-active-cooler: {at_mm: [-22, 0, 64.4], turn_deg: [0, 0, 90]} # drawn above the Pi's envelope, which is conservative
-  heltec-ht-hc01p: {at_mm: [-22, 0, 86.6], turn_deg: [0, 0, 90]} # on a stacking header above the cooler
-  matek-bec12s-pro: {at_mm: [-22, 0, 96.2]}
-  halow-antenna-915: {at_mm: [-52, 35, 95], turn_deg: [0, -90, 0]} # out the back of the V housing, high and to the left
-  fruity-chutes-harrier-40-42: {at_mm: [32, 0, 41]} # standing on the rail, just ahead of the center
+  rpi-5-4gb: {at_mm: [-19, 0, 45], turn_deg: [0, 0, 90]} # inside the V housing, its long side across
+  rpi-active-cooler: {at_mm: [-19, 0, 62.4], turn_deg: [0, 0, 90]} # drawn above the Pi's envelope, which is conservative
+  heltec-ht-hc01p: {at_mm: [-19, 0, 84.6], turn_deg: [0, 0, 90]} # on a stacking header above the cooler
+  matek-bec12s-pro: {at_mm: [-19, 0, 94.2]}
+  halow-antenna-915: {at_mm: [-50, 35, 95], turn_deg: [0, -90, 0]} # out the back of the V housing, high and to the left
+  fruity-chutes-harrier-40-42: {at_mm: [38, 0, 41]} # standing on the rail, just ahead of the center
   claws-placeholder: {at_mm: [-100, 0, -53]} # behind the pack, hanging from the back of the bottom plate
 
 # Rough wire routes: a tube about the thickness of each run's likely gauge, through these
@@ -121,7 +122,7 @@ wires:
     path_mm: [[15, 0, 26], [35, 0, 24]]
   - name: bec feed
     diameter_mm: 3
-    path_mm: [[-70, 6, 10], [-66, 6, 38], [-40, 30, 45], [-30, 30, 98]]
+    path_mm: [[-70, 6, 10], [-66, 6, 38], [-40, 30, 45], [-30, 30, 94]]
   - name: module connector
     diameter_mm: 4
     path_mm: [[-5, 0, 29], [-5, 0, 41]]
@@ -130,4 +131,4 @@ wires:
     path_mm: [[158, 0, 17.5], [150, 0, 38], [12, 0, 44], [-5, 0, 52]]
   - name: chute servo
     diameter_mm: 3
-    path_mm: [[0, 8, 29], [20, 8, 38], [26, 8, 42]]
+    path_mm: [[0, 8, 29], [8, 8, 38], [11, 0, 44]]
