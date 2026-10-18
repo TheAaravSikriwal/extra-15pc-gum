@@ -1,0 +1,13 @@
+# Researched 2026-10-18. The two fuses on branches that tap the battery: the module supply's
+# feed and the flight controller's battery feed. Ratings come from littelfuse-mini-297.
+type: component
+id: branch-fuses
+maker: Littelfuse (fuses), various (holders)
+model: Two MINI blade fuses in inline holders
+checked: 2026-10-18
+source: {kind: estimate, checked: 2026-10-18, note: "Two fuses at 0.57 g (Littelfuse) and two inline holders at about 3 g each. No maker publishes a holder's mass (Littelfuse's FHM and Bussmann's HHM don't), so the holders are a guess, and a heavy-ish one: 7.1 g in all. If weight decides it, a wire-leaded fuse soldered inline would drop the holders"}
+mass_g: 7.1
+cad:
+  shape: routed
+  source: {kind: estimate, checked: '2026-10-18', note: "Inline in the battery feeds, so they ride along with the wiring"}
+  existing: {found: none, checked: '2026-10-18', note: "Not worth modeling apart from the wire"}

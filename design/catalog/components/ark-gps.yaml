@@ -1,0 +1,59 @@
+# Researched 2026-10-18 for the electrical plan, which picked it to replace the Matek M10Q.
+type: component
+id: ark-gps
+maker: ARK Electronics
+model: ARK GPS (DroneCAN, u-blox NEO-M9N, BMM150 compass, BMP388 barometer)
+price_usd: 225.0
+checked: 2026-10-18
+source: {kind: manufacturer, url: 'https://docs.arkelectron.com/products/gps/ark-gps/hardware.md', checked: 2026-10-18, note: "ARK's hardware page: 5 x 5 x 1 cm, 16 g (neither says whether the case is included), two CAN plugs and a debug plug. $225 and in stock on ARK's shop (https://arkelectron.com/product/ark-gps/). It won't boot unless the flight controller has an SD card in it"}
+mass_g: 16
+power_w: 0.55
+power_source: {kind: manufacturer, url: 'https://docs.arkelectron.com/products/gps/ark-gps/hardware.md', checked: 2026-10-18, note: "5 V, 110 mA average, 117 mA most"}
+cad:
+  shape: box
+  length_mm: 50
+  width_mm: 50
+  height_mm: 10
+  source:
+    kind: manufacturer
+    url: https://docs.arkelectron.com/products/gps/ark-gps/hardware.md
+    checked: '2026-10-18'
+    note: 5 x 5 x 1 cm. ARK says to point the connectors at the back of the vehicle, and publishes no mounting holes
+  existing:
+    found: official
+    url: https://github.com/ARK-Electronics/ark-hardware/tree/main/ARK_GPS
+    format: STEP (Rev 3) and case STLs
+    terms: BSD-3-Clause (the folder's LICENSE file)
+    checked: '2026-10-18'
+electrical:
+  source: {kind: manufacturer, url: 'https://docs.arkelectron.com/products/gps/ark-gps/hardware.md', checked: 2026-10-18, note: "Both CAN plugs are the Pixhawk standard 4-pin JST-GH (5V, CAN_P, CAN_N, GND); the debug plug is a 6-pin JST-SH. Its terminator is built in and switched on with CANNODE_TERM=1 (https://docs.arkelectron.com/products/gps/ark-gps/firmware.md)"}
+  estimates: ['draws[CAN1.5V]', 'outputs[CAN_THROUGH]']
+  estimate_note: "ARK gives 5 V and no range, so 4.75 to 5.25 V is assumed. The second CAN plug passes the 5 V straight on to the next node; its limit is taken as the JST-GH contact's 1 A"
+  connectors:
+    - name: CAN1
+      family: jst-gh
+      pins:
+        - {name: 5V, role: power, volts: 5.0}
+        - {name: CAN_P, role: bus}
+        - {name: CAN_N, role: bus}
+        - {name: GND, role: ground}
+    - name: CAN2
+      family: jst-gh
+      pins:
+        - {name: 5V, role: power, volts: 5.0}
+        - {name: CAN_P, role: bus}
+        - {name: CAN_N, role: bus}
+        - {name: GND, role: ground}
+    - name: DEBUG
+      family: jst-sh
+      pins:
+        - {name: 3V3, role: power, volts: 3.3}
+        - {name: USART2_TX, role: signal, direction: out, volts: 3.3}
+        - {name: USART2_RX, role: signal, direction: in, volts: 3.3}
+        - {name: SWDIO, role: signal, direction: both, volts: 3.3}
+        - {name: SWCLK, role: signal, direction: in, volts: 3.3}
+        - {name: GND, role: ground}
+  draws:
+    - {pin: CAN1.5V, min_v: 4.75, max_v: 5.25, typical_a: 0.11, worst_a: 0.117}
+  outputs:
+    - {name: CAN_THROUGH, kind: through, fed_from: CAN1.5V, pins: [CAN2.5V], volts: 5.0, continuous_a: 1.0}

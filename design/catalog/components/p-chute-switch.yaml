@@ -1,0 +1,30 @@
+# Researched 2026-10-18. In module P, in front of the release servo: picks the CAN node's
+# signal unless the safety monitor takes over.
+type: component
+id: p-chute-switch
+maker: Nexperia (chip)
+model: 74LVC1G157 two-input multiplexer on a SOT-23-6 adapter
+checked: 2026-10-18
+source: {kind: estimate, checked: 2026-10-18, note: "No published mass for the chip or a SOT-23-6 adapter; 0.2 g, like the buffers"}
+mass_g: 0.2
+cad:
+  shape: box
+  length_mm: 12
+  width_mm: 9
+  height_mm: 3
+  source: {kind: estimate, checked: '2026-10-18', note: "Artekit's SOT23-6 adapter is 12 x 9 x 1 mm (https://www.artekit.eu/products/breakout-boards/bbadapters/sot-to-dip/sot23-6-to-dip-adapter-pack-of-4/), plus the chip"}
+  existing: {found: none, checked: '2026-10-18', note: "A plain adapter board"}
+electrical:
+  source: {kind: manufacturer, url: 'https://cdn.components.ru/media/PDF/1726248.pdf', checked: 2026-10-18, note: "Nexperia's 74LVC1G157 datasheet (a mirror; nexperia.com refuses scripts): 1.65 to 5.5 V, Schmitt-trigger inputs, IOFF of 2 uA at most with the supply off, 4 uA supply current at most. Pins (SOT457, SC-74): 1 I1, 2 GND, 3 I0, 4 Y, 5 VCC, 6 S. S low picks I0, S high picks I1"}
+  connectors:
+    - name: U1
+      family: pads
+      pins:
+        - {name: I1, role: signal, direction: in, volts: 3.3, max_volts: 5.5, functions: [the safety monitor's signal]}
+        - {name: GND, role: ground}
+        - {name: I0, role: signal, direction: in, volts: 3.3, max_volts: 5.5, functions: [the CAN node's signal]}
+        - {name: Y, role: signal, direction: out, volts: 3.3, functions: [to the release servo]}
+        - {name: VCC, role: power, volts: 3.3, max_volts: 5.5}
+        - {name: S, role: signal, direction: in, volts: 3.3, max_volts: 5.5, functions: [low picks I0, high picks I1]}
+  draws:
+    - {pin: U1.VCC, min_v: 1.65, max_v: 5.5, typical_a: 0.0000001, worst_a: 0.000004}

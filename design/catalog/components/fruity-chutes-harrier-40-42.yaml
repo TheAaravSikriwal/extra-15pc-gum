@@ -25,3 +25,14 @@ cad:
     found: none
     checked: '2026-10-17'
     note: No CAD or drawing from Fruity Chutes
+electrical:
+  source: {kind: estimate, checked: 2026-10-18, note: "Fruity Chutes doesn't name the Harrier's trigger servo or its draw. Hitec's HS-55 micro servo stands in: 4.8 to 6.0 V, 5.5 mA idle, 150 mA running, 450 mA stalled (https://hitecrcd.com/hs-55-economy-feather-servo/). Typical is the 0.2 W the sizing model already counts for holding position"}
+  connectors:
+    - name: servo
+      family: pads
+      pins:
+        - {name: SIG, role: signal, direction: in, volts: 3.3, max_volts: 6.0}
+        - {name: V+, role: power, volts: 5.0, max_volts: 6.0}
+        - {name: GND, role: ground}
+  draws:
+    - {pin: servo.V+, min_v: 4.8, max_v: 6.0, typical_a: 0.04, worst_a: 0.45}

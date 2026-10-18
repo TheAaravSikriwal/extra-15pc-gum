@@ -1,0 +1,75 @@
+# Researched 2026-10-18. The safety monitor's listening lines: one buffer per line (the
+# receiver's CRSF, the four DShot lines, the flight controller's serial), each going quiet when
+# the Teensy loses power.
+type: component
+id: safety-monitor-buffers
+maker: Texas Instruments (chips), SparkFun (adapters)
+model: Six SN74LVC1G125 buffers on SparkFun SOT-23 adapters (BOB-00717)
+checked: 2026-10-18
+source: {kind: estimate, checked: 2026-10-18, note: "Neither TI nor SparkFun publishes a mass. 0.2 g each (a 0.34 x 0.46 inch adapter board, https://www.sparkfun.com/sparkfun-sot23-to-dip-adapter.html, and a SOT-23 chip), so 1.2 g for six"}
+mass_g: 1.2
+cad:
+  shape: box
+  length_mm: 26
+  width_mm: 24
+  height_mm: 4
+  source: {kind: estimate, checked: '2026-10-18', note: "Six 8.6 x 11.7 mm adapters in two rows of three"}
+  existing: {found: none, checked: '2026-10-18', note: "Plain adapter boards; nothing worth comparing against"}
+electrical:
+  source: {kind: manufacturer, url: 'https://www.ti.com/lit/ds/symlink/sn74lvc1g125.pdf', checked: 2026-10-18, note: "TI's SN74LVC1G125: 1.65 to 5.5 V, inputs take up to 5.5 V, Ioff of 10 uA at most with the supply off (so a powered-down buffer doesn't load the line it listens to), input thresholds 2.0 V high and 0.8 V low at 3 to 3.6 V, 3.7 ns delay, 10 uA supply current at most. SOT-23-5 pins: 1 OE (low enables), 2 A, 3 GND, 4 Y, 5 VCC. The quad SN74LVC125A was passed over because its datasheet specifies no Ioff"}
+  connectors:
+    - name: B1
+      family: pads
+      pins:
+        - {name: OE, role: signal, direction: in, volts: 3.3, max_volts: 5.5, functions: [low enables]}
+        - {name: A, role: signal, direction: in, volts: 3.3, max_volts: 5.5}
+        - {name: GND, role: ground}
+        - {name: Y, role: signal, direction: out, volts: 3.3}
+        - {name: VCC, role: power, volts: 3.3, max_volts: 5.5}
+    - name: B2
+      family: pads
+      pins:
+        - {name: OE, role: signal, direction: in, volts: 3.3, max_volts: 5.5, functions: [low enables]}
+        - {name: A, role: signal, direction: in, volts: 3.3, max_volts: 5.5}
+        - {name: GND, role: ground}
+        - {name: Y, role: signal, direction: out, volts: 3.3}
+        - {name: VCC, role: power, volts: 3.3, max_volts: 5.5}
+    - name: B3
+      family: pads
+      pins:
+        - {name: OE, role: signal, direction: in, volts: 3.3, max_volts: 5.5, functions: [low enables]}
+        - {name: A, role: signal, direction: in, volts: 3.3, max_volts: 5.5}
+        - {name: GND, role: ground}
+        - {name: Y, role: signal, direction: out, volts: 3.3}
+        - {name: VCC, role: power, volts: 3.3, max_volts: 5.5}
+    - name: B4
+      family: pads
+      pins:
+        - {name: OE, role: signal, direction: in, volts: 3.3, max_volts: 5.5, functions: [low enables]}
+        - {name: A, role: signal, direction: in, volts: 3.3, max_volts: 5.5}
+        - {name: GND, role: ground}
+        - {name: Y, role: signal, direction: out, volts: 3.3}
+        - {name: VCC, role: power, volts: 3.3, max_volts: 5.5}
+    - name: B5
+      family: pads
+      pins:
+        - {name: OE, role: signal, direction: in, volts: 3.3, max_volts: 5.5, functions: [low enables]}
+        - {name: A, role: signal, direction: in, volts: 3.3, max_volts: 5.5}
+        - {name: GND, role: ground}
+        - {name: Y, role: signal, direction: out, volts: 3.3}
+        - {name: VCC, role: power, volts: 3.3, max_volts: 5.5}
+    - name: B6
+      family: pads
+      pins:
+        - {name: OE, role: signal, direction: in, volts: 3.3, max_volts: 5.5, functions: [low enables]}
+        - {name: A, role: signal, direction: in, volts: 3.3, max_volts: 5.5}
+        - {name: GND, role: ground}
+        - {name: Y, role: signal, direction: out, volts: 3.3}
+        - {name: VCC, role: power, volts: 3.3, max_volts: 5.5}
+  draws:
+    - {pin: B1.VCC, min_v: 1.65, max_v: 5.5, typical_a: 0.000001, worst_a: 0.00001}
+    - {pin: B2.VCC, min_v: 1.65, max_v: 5.5, typical_a: 0.000001, worst_a: 0.00001}
+    - {pin: B3.VCC, min_v: 1.65, max_v: 5.5, typical_a: 0.000001, worst_a: 0.00001}
+    - {pin: B4.VCC, min_v: 1.65, max_v: 5.5, typical_a: 0.000001, worst_a: 0.00001}
+    - {pin: B5.VCC, min_v: 1.65, max_v: 5.5, typical_a: 0.000001, worst_a: 0.00001}
+    - {pin: B6.VCC, min_v: 1.65, max_v: 5.5, typical_a: 0.000001, worst_a: 0.00001}

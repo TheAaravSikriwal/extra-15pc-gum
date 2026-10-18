@@ -1,0 +1,47 @@
+# Researched 2026-10-18. The safety monitor's motor cut: the flight controller's four DShot
+# lines go through it to the ESC, and the Teensy can hand them to itself.
+type: component
+id: cjmcu-5018
+maker: Texas Instruments (chip), various (board)
+model: TS3A5018 quad two-way analog switch on a CJMCU-5018 breakout
+price_usd: 1.2
+checked: 2026-10-18
+source: {kind: manufacturer, url: 'https://store.siqma.com/ts3a5018-4channel-switch-module.html', checked: 2026-10-18, note: "Siqma's listing: 26 x 18 mm, 18 pins, 1.8 to 3.6 V, $1.20. NOYITO sells the same board on Amazon (https://www.amazon.com/dp/B07PS18HST). Nobody publishes its mass; 1.0 g is a guess"}
+mass_g: 1.0
+cad:
+  shape: box
+  length_mm: 26
+  width_mm: 18
+  height_mm: 4
+  source: {kind: manufacturer, url: 'https://store.siqma.com/ts3a5018-4channel-switch-module.html', checked: '2026-10-18', note: "26 x 18 mm"}
+  estimates: [height_mm]
+  estimate_note: The board and the chip, without header pins
+  existing: {found: none, checked: '2026-10-18', note: "No model found for the breakout"}
+electrical:
+  source: {kind: manufacturer, url: 'https://www.ti.com/lit/ds/symlink/ts3a5018.pdf', checked: 2026-10-18, note: "TI's TS3A5018: 1.65 to 3.6 V; with EN and IN low each common connects to its NC pin, IN high moves them to NO, EN high opens everything (TI's own example wires EN and IN pulled low). At 3 V: on-resistance 7 Ohm typical, 10 most; 16 pF on; on and off in 8 and 6.5 ns at most; inputs 2.0 V high, 0.8 V low. The switch pins take -0.5 to 4.6 V whatever the supply, and leak 2 uA at 25 °C (10 uA over -40 to 85 °C) with the supply at 0 V. TI publishes an IBIS model, not a SPICE one"}
+  estimates: ['connectors[J1]', 'draws[J1.VCC]']
+  estimate_note: "The board's pin order isn't published, so the pins are listed by function. It has two 1 kOhm resistors near the chip whose job isn't documented: if they pull IN or EN up rather than down, the board would hand the motors to the Teensy by default, so the build package says to check them with a meter and the design adds its own pull-downs. The supply draw is a guess that allows for a power LED"
+  connectors:
+    - name: J1
+      family: pads
+      pins:
+        - {name: VCC, role: power, volts: 3.3, max_volts: 3.6}
+        - {name: GND, role: ground}
+        - {name: IN, role: signal, direction: in, volts: 3.3, max_volts: 4.6, functions: [low picks NC, high picks NO]}
+        - {name: EN, role: signal, direction: in, volts: 3.3, max_volts: 4.6, functions: [low enables, high opens all four]}
+        - {name: CM1, role: signal, direction: both, volts: 3.3, max_volts: 4.6, functions: [common 1]}
+        - {name: NC1, role: signal, direction: both, volts: 3.3, max_volts: 4.6, functions: [connected to CM1 when IN and EN are low]}
+        - {name: NO1, role: signal, direction: both, volts: 3.3, max_volts: 4.6, functions: [connected to CM1 when IN is high and EN low]}
+        - {name: CM2, role: signal, direction: both, volts: 3.3, max_volts: 4.6, functions: [common 2]}
+        - {name: NC2, role: signal, direction: both, volts: 3.3, max_volts: 4.6, functions: [connected to CM2 when IN and EN are low]}
+        - {name: NO2, role: signal, direction: both, volts: 3.3, max_volts: 4.6, functions: [connected to CM2 when IN is high and EN low]}
+        - {name: CM3, role: signal, direction: both, volts: 3.3, max_volts: 4.6, functions: [common 3]}
+        - {name: NC3, role: signal, direction: both, volts: 3.3, max_volts: 4.6, functions: [connected to CM3 when IN and EN are low]}
+        - {name: NO3, role: signal, direction: both, volts: 3.3, max_volts: 4.6, functions: [connected to CM3 when IN is high and EN low]}
+        - {name: CM4, role: signal, direction: both, volts: 3.3, max_volts: 4.6, functions: [common 4]}
+        - {name: NC4, role: signal, direction: both, volts: 3.3, max_volts: 4.6, functions: [connected to CM4 when IN and EN are low]}
+        - {name: NO4, role: signal, direction: both, volts: 3.3, max_volts: 4.6, functions: [connected to CM4 when IN is high and EN low]}
+        - {name: VCC2, role: power, volts: 3.3, max_volts: 3.6}
+        - {name: GND2, role: ground}
+  draws:
+    - {pin: J1.VCC, min_v: 1.65, max_v: 3.6, typical_a: 0.00001, worst_a: 0.003}

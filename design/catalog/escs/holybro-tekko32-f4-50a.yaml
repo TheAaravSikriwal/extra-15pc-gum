@@ -53,3 +53,41 @@ cad:
     checked: '2026-10-17'
     note: One STEP of the Kakute H7 (V1.3) on the Tekko32 F4 50A, with an extra board in the middle that
       isn't in my build
+electrical:
+  source: {kind: manufacturer, url: 'https://holybro.com/products/tekko32-f4-4in1-50a-esc', checked: 2026-10-18, note: "Holybro: 4 to 6S, 50 A continuous and 60 A burst per motor, no BEC, an onboard analog current sensor, and an 8-pin 1.0 mm flight controller plug wired VBAT, TLM, GND, CURRENT, M1, M2, M3, M4 (Holybro's pin map image, https://cdn.shopify.com/s/files/1/0604/5905/7341/files/Tekko32F44in150AESC_AM32_13.jpg). Current scale 120 on PCB V1.9 and V1.9T, which PX4 and ArduPilot take as 83.3 A per volt; earlier boards were 168 or 110 (https://docs.holybro.com/esc/current-sensor-scale.md)"}
+  estimates: ['connectors[FC]', 'draws[BAT.VBAT]']
+  estimate_note: "Holybro's pin map doesn't number the pins, so the battery end is taken as pin 1: check one with a meter. The ESC's own idle draw isn't published, so 50 mA is a guess, and 12 V (4S at 3.0 V a cell) is taken as the bottom of its range"
+  connectors:
+    - name: FC
+      family: jst-sh
+      pins:
+        - {name: VBAT, role: power, max_volts: 25.2}
+        - {name: TLM, role: signal, direction: out, volts: 3.3, functions: [ESC telemetry]}
+        - {name: GND, role: ground}
+        - {name: CURRENT, role: signal, direction: out, volts: 3.3, functions: [analog current sense, 83.3 A per volt on PCB V1.9]}
+        - {name: M1, role: signal, direction: both, volts: 3.3, functions: [bidirectional DShot]}
+        - {name: M2, role: signal, direction: both, volts: 3.3, functions: [bidirectional DShot]}
+        - {name: M3, role: signal, direction: both, volts: 3.3, functions: [bidirectional DShot]}
+        - {name: M4, role: signal, direction: both, volts: 3.3, functions: [bidirectional DShot]}
+    - name: BAT
+      family: pads
+      pins:
+        - {name: VBAT, role: power, max_volts: 25.2}
+        - {name: GND, role: ground}
+    - name: MOTORS
+      family: pads
+      pins:
+        - {name: M1A, role: power}
+        - {name: M1B, role: power}
+        - {name: M1C, role: power}
+        - {name: M2A, role: power}
+        - {name: M2B, role: power}
+        - {name: M2C, role: power}
+        - {name: M3A, role: power}
+        - {name: M3B, role: power}
+        - {name: M3C, role: power}
+        - {name: M4A, role: power}
+        - {name: M4B, role: power}
+        - {name: M4C, role: power}
+  draws:
+    - {pin: BAT.VBAT, min_v: 12, max_v: 25.2, typical_a: 0.05, worst_a: 0.05, note: "its own electronics; the motors' current comes from the sizing model"}

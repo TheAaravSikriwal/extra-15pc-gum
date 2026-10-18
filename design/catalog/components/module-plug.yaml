@@ -1,0 +1,31 @@
+# Researched 2026-10-18. Each module's half of its connector: V, P and C all carry one.
+type: component
+id: module-plug
+maker: Amass and JST
+model: Module plug (an XT30U and an 8-pin JST-GH)
+checked: 2026-10-18
+source: {kind: estimate, checked: 2026-10-18, note: "An XT30U half at 0.99 g (LCSC's listing) and an 8-pin JST-GH half at about 0.2 g (the jst-gh estimate)"}
+mass_g: 1.2
+cad:
+  shape: routed
+  source: {kind: estimate, checked: '2026-10-18', note: "Part of each module's end of the module connector's wire route"}
+  existing: {found: none, checked: '2026-10-18', note: "Connectors only"}
+electrical:
+  source: {kind: manufacturer, url: 'https://www.china-amass.com/biao/268.html', checked: 2026-10-18, note: "Amass's XT30U (20 A) and JST's GH (1 A a contact, https://www.jst-mfg.com/product/pdf/eng/eGH.pdf). The pin assignment is this design's own (the electrical spec)"}
+  connectors:
+    - name: POWER
+      family: amass-xt30
+      pins:
+        - {name: 5V, role: power, volts: 5.2}
+        - {name: GND, role: ground}
+    - name: SIGNAL
+      family: jst-gh
+      pins:
+        - {name: CAN_5V, role: power, volts: 5.0}
+        - {name: CAN_P, role: bus}
+        - {name: CAN_N, role: bus}
+        - {name: GND, role: ground}
+        - {name: TX, role: signal, direction: out, volts: 3.3, functions: [the flight controller's TELEM1 transmit]}
+        - {name: RX, role: signal, direction: in, volts: 3.3, functions: [the flight controller's TELEM1 receive]}
+        - {name: TAKEOVER, role: signal, direction: out, volts: 3.3, functions: [the safety monitor taking over the chute]}
+        - {name: CHUTE, role: signal, direction: out, volts: 3.3, functions: [the safety monitor's release signal]}

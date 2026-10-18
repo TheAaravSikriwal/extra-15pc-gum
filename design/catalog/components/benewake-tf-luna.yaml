@@ -34,3 +34,19 @@ cad:
     found: none
     checked: '2026-10-17'
     note: Benewake publishes 3D files for other sensors, not this one
+electrical:
+  source: {kind: manufacturer, url: 'https://en.benewake.com/uploadfiles/2025/04/20250430174515390.pdf', checked: 2026-10-18, note: "Benewake's TF-Luna manual: 3.7 to 5.2 V, 70 mA average, 150 mA peak, 0.35 W, LVTTL 3.3 V, and no polarity or overvoltage protection at all. Pins from Waveshare's wiki (https://www.waveshare.com/wiki/TF-Luna_LiDAR_Range_Sensor): 1 +5V, 2 RXD/SDA, 3 TXD/SCL, 4 GND, 5 mode (ground for I2C, open or 3.3 V for UART), 6 multiplexed output"}
+  estimates: ['connectors[J1]']
+  estimate_note: "The plug is 6-pin on a 1.25 mm pitch per a retailer's cable listing. Benewake doesn't name the family, so it's taken as GH-compatible"
+  connectors:
+    - name: J1
+      family: jst-gh
+      pins:
+        - {name: 5V, role: power, volts: 5.0, max_volts: 5.2}
+        - {name: RXD, role: signal, direction: in, volts: 3.3, functions: [UART RX, I2C SDA]}
+        - {name: TXD, role: signal, direction: out, volts: 3.3, functions: [UART TX, I2C SCL]}
+        - {name: GND, role: ground}
+        - {name: MODE, role: signal, direction: in, volts: 3.3, functions: [ground for I2C, open for UART]}
+        - {name: OUT, role: signal, direction: out, volts: 3.3, functions: [switched output]}
+  draws:
+    - {pin: J1.5V, min_v: 3.7, max_v: 5.2, typical_a: 0.07, worst_a: 0.15}

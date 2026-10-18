@@ -1,0 +1,25 @@
+# Researched 2026-10-18. A fuse family: the connection list picks a rating for each fuse.
+# mass_g is one fuse; the holder is its own part.
+type: component
+id: littelfuse-mini-297
+maker: Littelfuse
+model: MINI blade fuse, 32 V (297 series)
+part_number: 0297xxx
+checked: 2026-10-18
+source: {kind: manufacturer, url: 'https://atta.szlcsc.com/upload/public/pdf/source/20241028/EC0235DBD6F881A867CEA06A6175F69D.pdf', checked: 2026-10-18, note: "Littelfuse's MINI 32 V datasheet (revised 2024-09-27), hosted by LCSC because littelfuse.com refuses scripts: typical weight per fuse 0.57 g"}
+mass_g: 0.57
+electrical:
+  source: {kind: manufacturer, url: 'https://atta.szlcsc.com/upload/public/pdf/source/20241028/EC0235DBD6F881A867CEA06A6175F69D.pdf', checked: 2026-10-18, note: "32 V DC, interrupting 1000 A at 32 V DC, -40 to 125 °C. Cold resistance and I2t are Littelfuse's typical values"}
+  fuse:
+    volts: 32
+    interrupting_a: 1000
+    max_c: 125
+    ratings:
+      - {rated_a: 2, cold_mohm: 55.60, melting_i2t_a2s: 9}
+      - {rated_a: 3, cold_mohm: 33.75, melting_i2t_a2s: 20}
+      - {rated_a: 4, cold_mohm: 23.48, melting_i2t_a2s: 31}
+      - {rated_a: 5, cold_mohm: 17.75, melting_i2t_a2s: 37}
+      - {rated_a: 7.5, cold_mohm: 10.85, melting_i2t_a2s: 82}
+      - {rated_a: 10, cold_mohm: 7.42, melting_i2t_a2s: 122}
+      - {rated_a: 15, cold_mohm: 4.58, melting_i2t_a2s: 308}
+      - {rated_a: 20, cold_mohm: 3.21, melting_i2t_a2s: 442}

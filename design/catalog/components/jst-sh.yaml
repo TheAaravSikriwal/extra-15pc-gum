@@ -1,0 +1,19 @@
+# Researched 2026-10-18. A connector family: the 1.0 mm JST-SH plugs (the ESC's flight
+# controller plug, the ARK FPV's debug and extra PWM plugs). mass_g is an estimate for one
+# contact position, both halves.
+type: component
+id: jst-sh
+maker: JST
+model: SH series wire-to-board connector, 1.0 mm pitch
+part_number: SHR-08V-S (8-pin housing)
+checked: 2026-10-18
+source: {kind: estimate, checked: 2026-10-18, note: "JST publishes no mass. 0.03 g per contact position, both halves, is a guess from the size of the parts"}
+mass_g: 0.03
+electrical:
+  source: {kind: manufacturer, url: 'https://www.jst-mfg.com/product/pdf/eng/eSH.pdf', checked: 2026-10-18, note: "JST's SH datasheet: 1.0 A AC/DC per contact (AWG 28), 50 V, -25 to +85 °C including the rise from its own current, contact resistance 20 mOhm max new and 40 mOhm after testing, wire AWG 32 to 28"}
+  rating:
+    continuous_a: 1.0
+    wire_awg: 28
+    contact_mohm: 20
+    max_c: 85
+    volts: 50

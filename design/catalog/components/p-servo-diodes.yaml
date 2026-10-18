@@ -1,0 +1,34 @@
+# Researched 2026-10-18. In module P: the release servo takes power from the module supply
+# or, if that's gone, from the CAN bus's 5 V, whichever is higher.
+type: component
+id: p-servo-diodes
+maker: onsemi
+model: Two 1N5817 Schottky diodes (DO-41, soldered inline)
+checked: 2026-10-18
+source: {kind: manufacturer, url: 'https://www.onsemi.com/pdf/datasheet/1n5817-d.pdf', checked: 2026-10-18, note: "onsemi gives about 0.4 g each, so 0.8 g for two"}
+mass_g: 0.8
+cad:
+  shape: routed
+  source: {kind: estimate, checked: '2026-10-18', note: "Soldered inline in P's servo lead and sleeved, so they ride along with the wiring"}
+  existing: {found: none, checked: '2026-10-18', note: "Not worth modeling apart from the wire"}
+electrical:
+  source: {kind: manufacturer, url: 'https://www.onsemi.com/pdf/datasheet/1n5817-d.pdf', checked: 2026-10-18, note: "onsemi's 1N5817: 1.0 A average, 20 V reverse, 25 A surge, forward voltage at most 0.32 V at 0.1 A, 0.45 V at 1 A and 0.75 V at 3 A. One diode's numbers; the pair share them"}
+  connectors:
+    - name: D1
+      family: pads
+      pins:
+        - {name: A, role: power, max_volts: 20}
+        - {name: K, role: power}
+    - name: D2
+      family: pads
+      pins:
+        - {name: A, role: power, max_volts: 20}
+        - {name: K, role: power}
+  diode:
+    reverse_v: 20
+    continuous_a: 1.0
+    surge_a: 25
+    forward:
+      - {amps: 0.1, volts: 0.32}
+      - {amps: 1.0, volts: 0.45}
+      - {amps: 3.0, volts: 0.75}

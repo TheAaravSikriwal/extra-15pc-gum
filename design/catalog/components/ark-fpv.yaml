@@ -1,0 +1,131 @@
+# Researched 2026-10-18 for the electrical step, which picked it over the Kakute H7.
+type: component
+id: ark-fpv
+maker: ARK Electronics
+model: ARK FPV flight controller
+price_usd: 194.99
+checked: 2026-10-18
+source: {kind: manufacturer, url: 'https://docs.arkelectron.com/products/flight-controller/ark-fpv/hardware.md', checked: 2026-10-18, note: "ARK's hardware page: STM32H743, 36 x 36 x 8 mm, 30.5 mm mounting, 7.5 g with the microSD card. $194.99 and on backorder on ARK's shop (https://arkelectron.com/product/ark-fpv-flight-controller/)"}
+mass_g: 7.5
+power_w: 1.5
+power_source: {kind: manufacturer, url: 'https://docs.arkelectron.com/products/flight-controller/ark-fpv/hardware.md', checked: 2026-10-18, note: "ARK lists 500 mA in all: 300 mA for the board and 200 mA for a 1 W heater that warms the sensors in extreme cold. 300 mA at 5 V is the typical figure here"}
+cad:
+  shape: board
+  length_mm: 36
+  width_mm: 36
+  thickness_mm: 1.6
+  top_mm: 5
+  bottom_mm: 1.4
+  holes:
+  - {x_mm: 15.25, y_mm: 15.25, diameter_mm: 3.2}
+  - {x_mm: -15.25, y_mm: 15.25, diameter_mm: 3.2}
+  - {x_mm: -15.25, y_mm: -15.25, diameter_mm: 3.2}
+  - {x_mm: 15.25, y_mm: -15.25, diameter_mm: 3.2}
+  source:
+    kind: manufacturer
+    url: https://docs.arkelectron.com/products/flight-controller/ark-fpv/hardware.md
+    checked: '2026-10-18'
+    note: 36 x 36 x 8 mm overall, holes on a 30.5 mm square
+  estimates: [thickness_mm, top_mm, bottom_mm]
+  estimate_note: The 8 mm height is split as a 1.6 mm board, 5 mm of parts on top and 1.4 mm below. ARK doesn't give the hole size either; its own RIG5 build uses M3 screws, so the holes are taken as 3.2 mm
+  existing:
+    found: official
+    url: https://github.com/ARK-Electronics/ark-hardware/tree/main/ARK_FPV
+    format: STEP and 3D PDF
+    terms: No license file in the folder, so all rights reserved by default. Cache only
+    checked: '2026-10-18'
+electrical:
+  source: {kind: manufacturer, url: 'https://docs.arkelectron.com/products/flight-controller/ark-fpv/hardware.md', checked: 2026-10-18, note: "ARK's pinouts, signals 3.3 V. 5.5 to 54 V in (3S to 12S) on the ESC plug's VBAT pin or POWER AUX; a 5 V 2 A supply (the board uses 0.5 A of it) and a 12 V 2 A supply the processor switches on and off. Battery voltage through a 21:1 divider (BAT1_V_DIV 21); current from the ESC's sensor on CURR_IN_EXT. PX4's serial ports from its board files (https://github.com/PX4/PX4-Autopilot/tree/main/boards/ark/fpv): GPS1 USART1 ttyS0, TELEM3 USART2 ttyS1 (receive only), console USART3 ttyS2, TELEM4 UART4 ttyS3, TELEM2 UART5 ttyS4, RC USART6 ttyS5, TELEM1 UART7 ttyS6"}
+  estimates: ['outputs[5V].efficiency', 'outputs[12V].efficiency']
+  estimate_note: ARK doesn't publish its supplies' efficiencies; 85% is a guess for small buck converters at these currents. ARK also doesn't say whether the CAN port is terminated
+  connectors:
+    - name: ESC
+      family: jst-gh
+      pins:
+        - {name: VBAT, role: power, max_volts: 54}
+        - {name: CURR, role: signal, direction: in, volts: 3.3, functions: [CURR_IN_EXT, analog current sense]}
+        - {name: UART4_RX, role: signal, direction: in, volts: 3.3, functions: [TELEM4, ttyS3, ESC telemetry]}
+        - {name: CH1, role: signal, direction: both, volts: 3.3, functions: [FMU_CH1, bidirectional DShot]}
+        - {name: CH2, role: signal, direction: both, volts: 3.3, functions: [FMU_CH2, bidirectional DShot]}
+        - {name: CH3, role: signal, direction: both, volts: 3.3, functions: [FMU_CH3, bidirectional DShot]}
+        - {name: CH4, role: signal, direction: both, volts: 3.3, functions: [FMU_CH4, bidirectional DShot]}
+        - {name: GND, role: ground}
+    - name: PWM_EXTRA
+      family: jst-sh
+      pins:
+        - {name: CH5, role: signal, direction: out, volts: 3.3, functions: [FMU_CH5]}
+        - {name: CH6, role: signal, direction: out, volts: 3.3, functions: [FMU_CH6]}
+        - {name: CH7, role: signal, direction: out, volts: 3.3, functions: [FMU_CH7]}
+        - {name: CH8, role: signal, direction: out, volts: 3.3, functions: [FMU_CH8]}
+        - {name: CH9, role: signal, direction: out, volts: 3.3, functions: [FMU_CH9]}
+        - {name: GND, role: ground}
+    - name: RC
+      family: jst-gh
+      pins:
+        - {name: 5V, role: power, volts: 5.0}
+        - {name: USART6_RX, role: signal, direction: in, volts: 3.3, functions: [RC, ttyS5]}
+        - {name: USART6_TX, role: signal, direction: out, volts: 3.3, functions: [RC, ttyS5]}
+        - {name: GND, role: ground}
+    - name: POWER_AUX
+      family: jst-gh
+      pins:
+        - {name: 12V, role: power, volts: 12.0}
+        - {name: GND, role: ground}
+        - {name: VBAT, role: power, max_volts: 54}
+    - name: CAN
+      family: jst-gh
+      pins:
+        - {name: 5V, role: power, volts: 5.0}
+        - {name: CAN_P, role: bus, functions: [CAN1 high]}
+        - {name: CAN_N, role: bus, functions: [CAN1 low]}
+        - {name: GND, role: ground}
+    - name: GPS
+      family: jst-gh
+      pins:
+        - {name: 5V, role: power, volts: 5.0}
+        - {name: USART1_TX, role: signal, direction: out, volts: 3.3, functions: [GPS1, ttyS0]}
+        - {name: USART1_RX, role: signal, direction: in, volts: 3.3, functions: [GPS1, ttyS0]}
+        - {name: I2C1_SCL, role: signal, direction: both, volts: 3.3}
+        - {name: I2C1_SDA, role: signal, direction: both, volts: 3.3}
+        - {name: GND, role: ground}
+    - name: TELEM
+      family: jst-gh
+      pins:
+        - {name: 5V, role: power, volts: 5.0}
+        - {name: UART7_TX, role: signal, direction: out, volts: 3.3, functions: [TELEM1, ttyS6]}
+        - {name: UART7_RX, role: signal, direction: in, volts: 3.3, functions: [TELEM1, ttyS6]}
+        - {name: CTS, role: signal, direction: in, volts: 3.3}
+        - {name: RTS, role: signal, direction: out, volts: 3.3}
+        - {name: GND, role: ground}
+    - name: VTX
+      family: jst-gh
+      pins:
+        - {name: 12V, role: power, volts: 12.0}
+        - {name: GND, role: ground}
+        - {name: UART5_TX, role: signal, direction: out, volts: 3.3, functions: [TELEM2, ttyS4]}
+        - {name: UART5_RX, role: signal, direction: in, volts: 3.3, functions: [TELEM2, ttyS4]}
+        - {name: USART2_RX, role: signal, direction: in, volts: 3.3, functions: [TELEM3, ttyS1, receive only]}
+        - {name: GND2, role: ground}
+    - name: SPI
+      family: jst-sh
+      pins:
+        - {name: 5V, role: power, volts: 5.0}
+        - {name: SCK, role: signal, direction: out, volts: 3.3}
+        - {name: MISO, role: signal, direction: in, volts: 3.3}
+        - {name: MOSI, role: signal, direction: out, volts: 3.3}
+        - {name: nCS1, role: signal, direction: out, volts: 3.3}
+        - {name: DRDY1, role: signal, direction: in, volts: 3.3}
+        - {name: nRESET, role: signal, direction: out, volts: 3.3}
+        - {name: GND, role: ground}
+    - name: DEBUG
+      family: jst-sh
+      pins:
+        - {name: 3V3, role: power, volts: 3.3}
+        - {name: USART3_TX, role: signal, direction: out, volts: 3.3, functions: [PX4 console, ttyS2]}
+        - {name: USART3_RX, role: signal, direction: in, volts: 3.3, functions: [PX4 console, ttyS2]}
+        - {name: SWDIO, role: signal, direction: both, volts: 3.3}
+        - {name: SWCLK, role: signal, direction: in, volts: 3.3}
+        - {name: GND, role: ground}
+  outputs:
+    - {name: 5V, kind: switching, fed_from: ESC.VBAT, pins: [RC.5V, CAN.5V, GPS.5V, TELEM.5V, SPI.5V], volts: 5.0, continuous_a: 2.0, own_a: 0.5, efficiency: 0.85}
+    - {name: 12V, kind: switching, fed_from: ESC.VBAT, pins: [POWER_AUX.12V, VTX.12V], volts: 12.0, continuous_a: 2.0, efficiency: 0.85}

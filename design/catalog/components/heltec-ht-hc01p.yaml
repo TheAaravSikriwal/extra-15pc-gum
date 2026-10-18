@@ -7,8 +7,8 @@ price_usd: 18.8
 checked: 2026-10-17
 source: {kind: estimate, url: 'https://heltec.org/project/ht-hc01p/', checked: 2026-10-17, note: "Heltec's 35 g figure sits next to shipping dimensions, so 15 g is assumed for the mini-PCIe card, HAT and antenna. Card $12.90, HAT $5.90"}
 mass_g: 15
-power_w: 0.7
-power_source: {kind: manufacturer, url: 'https://resource.heltec.cn/download/HT-HC01P/Datasheet/HT-HC01P.pdf', checked: 2026-10-17, note: "Transmitting at 21 dBm: 57 mA plus 152 mA at 3.3 V, about 0.69 W"}
+power_w: 1.06
+power_source: {kind: manufacturer, url: 'https://resource.heltec.cn/download/HT-HC01P/Datasheet/HT-HC01P.pdf', checked: 2026-10-18, note: "Transmitting at 21 dBm: about 212 mA at 3.3 V. Heltec's Pi HAT feeds the card through a linear regulator from the Pi's 5 V, so the drone pays 5 V x 212 mA = 1.06 W (it was 0.69 W before the electrical step counted the regulator)"}
 cad:
   shape: board
   length_mm: 65
@@ -48,3 +48,16 @@ cad:
     found: none
     checked: '2026-10-17'
     note: Nothing on Heltec's pages, wiki or download server
+electrical:
+  source: {kind: manufacturer, url: 'https://resource.heltec.cn/download/HT-HC01P/Datasheet/HT-HC01P.pdf', checked: 2026-10-18, note: "Heltec's datasheet (the V1 card, 21 dBm): transmitting at 21 dBm, 100% duty, 3.3 V: 54 to 91.5 mA on VBAT plus 142.5 to 162 mA on the front end, 253.5 mA at most. Heltec's Pi HAT reference design feeds it from the Pi's 5 V through a 3.3 V linear regulator (CE6260B33M), so the 5 V side carries the same current (https://resource.heltec.cn/download/HT-HC01P/Reference_design/HT-HC01P_Raspberry_Pi_reference_design.PDF)"}
+  estimates: ['draws[HAT.5V]']
+  estimate_note: "Typical is 212 mA (2 MHz at 21 dBm, transmitting nonstop, the conservative case for video) and 4.5 to 5.5 V is an assumed range. These are the V1 card's numbers. The V2 card transmits at 27 dBm with a boost converter for its front end, and Heltec publishes no current for it"
+  connectors:
+    - name: HAT
+      family: pads
+      pins:
+        - {name: 5V, role: power, volts: 5.0}
+        - {name: GND, role: ground}
+        - {name: SPI, role: bus}
+  draws:
+    - {pin: HAT.5V, min_v: 4.5, max_v: 5.5, typical_a: 0.212, worst_a: 0.254}

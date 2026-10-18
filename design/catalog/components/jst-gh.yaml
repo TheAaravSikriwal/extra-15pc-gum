@@ -1,0 +1,18 @@
+# Researched 2026-10-18. A connector family: the 1.25 mm JST-GH plugs most drone boards use.
+# mass_g is an estimate for one contact position, both halves (housing, header and crimp).
+type: component
+id: jst-gh
+maker: JST
+model: GH series wire-to-board connector, 1.25 mm pitch
+part_number: GHR-08V-S (8-pin housing)
+checked: 2026-10-18
+source: {kind: estimate, checked: 2026-10-18, note: "JST publishes no mass. 0.05 g per contact position, both halves, is a guess from the size of the parts; a whole 8-pin pair would be about 0.4 g"}
+mass_g: 0.05
+electrical:
+  source: {kind: manufacturer, url: 'https://www.jst-mfg.com/product/pdf/eng/eGH.pdf', checked: 2026-10-18, note: "JST's GH datasheet: 1.0 A AC/DC per contact (AWG 26), 50 V, -40 to +105 °C including the rise from its own current, contact resistance 30 mOhm max new and 50 mOhm after testing, wire AWG 30 to 26 with insulation 0.76 to 1.0 mm across"}
+  rating:
+    continuous_a: 1.0
+    wire_awg: 26
+    contact_mohm: 30
+    max_c: 105
+    volts: 50

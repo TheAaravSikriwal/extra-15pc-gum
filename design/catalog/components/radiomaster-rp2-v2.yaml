@@ -25,3 +25,17 @@ cad:
     found: none
     checked: '2026-10-17'
     note: No CAD on RadioMaster's site; a 13 mm board is fine as a box
+electrical:
+  source: {kind: manufacturer, url: 'https://www.radiomasterrc.com/products/rp2-expresslrs-2-4ghz-nano-receiver', checked: 2026-10-18, note: "'Working voltage: 5v'. Pads 5V, GND, TX and RX, with the receiver's TX going to the flight controller's RX (https://www.expresslrs.org/quick-start/receivers/wiring-up/). RadioMaster publishes no current draw or input range"}
+  estimates: ['connectors[pads]', 'draws[pads.5V]']
+  estimate_note: "The draw is Matek's figure for its ELRS-R24, which has the same ESP8285 and SX128x chips: 40 to 45 mA before binding, 70 to 75 mA bound, 90 to 95 mA in WiFi mode (https://www.mateksys.com/?portfolio=elrs-r24). 4.5 to 5.5 V is an assumed range around RadioMaster's 5 V. The 3.3 V logic level is inferred from the ESP8285, which runs on 2.7 to 3.6 V"
+  connectors:
+    - name: pads
+      family: pads
+      pins:
+        - {name: 5V, role: power, volts: 5.0}
+        - {name: GND, role: ground}
+        - {name: TX, role: signal, direction: out, volts: 3.3, functions: [CRSF out]}
+        - {name: RX, role: signal, direction: in, volts: 3.3, functions: [CRSF in]}
+  draws:
+    - {pin: pads.5V, min_v: 4.5, max_v: 5.5, typical_a: 0.075, worst_a: 0.095}

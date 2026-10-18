@@ -1,0 +1,12 @@
+# Researched 2026-10-18. The signal leads in the JST plugs (UL 1061/1571-style thin PVC wire,
+# the kind pre-crimped JST-GH and JST-SH leads come with). Everything here is an estimate.
+type: wire
+id: thin-signal-lead
+maker: Various
+model: Thin PVC hookup lead for JST plugs
+checked: 2026-10-18
+source: {kind: estimate, checked: 2026-10-18, note: "No maker sheet found for pre-crimped JST leads. Resistance is NBS Handbook 100's solid copper value times 1.11 (UL3135's 26 AWG maximum over NBS's nominal, for stranding and tinning). Outer diameter is 1.0 mm, the most JST-GH crimps take. Mass is the copper plus a PVC ring at about 1.4 g/cm3. 80 °C is the usual rating for this kind of PVC wire, not a published one"}
+insulation_max_c: 80
+gauges:
+  - {awg: 26, resistance_mohm_per_m: 150, outer_diameter_mm: 1.0, mass_g_per_m: 2.0}
+  - {awg: 28, resistance_mohm_per_m: 238, outer_diameter_mm: 1.0, mass_g_per_m: 1.7}

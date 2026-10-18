@@ -1,0 +1,63 @@
+# Researched 2026-10-18. Base's half of the three module connectors, one per slot (V, P, C).
+type: component
+id: module-socket
+maker: Amass and JST
+model: Module sockets, three slots (an XT30U and an 8-pin JST-GH each)
+checked: 2026-10-18
+source: {kind: estimate, checked: 2026-10-18, note: "Three XT30U halves at 0.99 g (LCSC's listing) and three 8-pin JST-GH halves at about 0.2 g (the jst-gh estimate), about 3.6 g"}
+mass_g: 3.6
+cad:
+  shape: routed
+  source: {kind: estimate, checked: '2026-10-18', note: "Mounted in the module rail; placed with the module connector's wire route"}
+  existing: {found: none, checked: '2026-10-18', note: "Connectors only"}
+electrical:
+  source: {kind: manufacturer, url: 'https://www.china-amass.com/biao/268.html', checked: 2026-10-18, note: "Amass's XT30U (20 A) and JST's GH (1 A a contact, https://www.jst-mfg.com/product/pdf/eng/eGH.pdf). The pin assignment is this design's own (the electrical spec)"}
+  connectors:
+    - name: V_POWER
+      family: amass-xt30
+      pins:
+        - {name: 5V, role: power, volts: 5.2}
+        - {name: GND, role: ground}
+    - name: V_SIGNAL
+      family: jst-gh
+      pins:
+        - {name: CAN_5V, role: power, volts: 5.0}
+        - {name: CAN_P, role: bus}
+        - {name: CAN_N, role: bus}
+        - {name: GND, role: ground}
+        - {name: TX, role: signal, direction: out, volts: 3.3, functions: [the flight controller's TELEM1 transmit]}
+        - {name: RX, role: signal, direction: in, volts: 3.3, functions: [the flight controller's TELEM1 receive]}
+        - {name: TAKEOVER, role: signal, direction: out, volts: 3.3, functions: [the safety monitor taking over the chute]}
+        - {name: CHUTE, role: signal, direction: out, volts: 3.3, functions: [the safety monitor's release signal]}
+    - name: P_POWER
+      family: amass-xt30
+      pins:
+        - {name: 5V, role: power, volts: 5.2}
+        - {name: GND, role: ground}
+    - name: P_SIGNAL
+      family: jst-gh
+      pins:
+        - {name: CAN_5V, role: power, volts: 5.0}
+        - {name: CAN_P, role: bus}
+        - {name: CAN_N, role: bus}
+        - {name: GND, role: ground}
+        - {name: TX, role: signal, direction: out, volts: 3.3, functions: [the flight controller's TELEM1 transmit]}
+        - {name: RX, role: signal, direction: in, volts: 3.3, functions: [the flight controller's TELEM1 receive]}
+        - {name: TAKEOVER, role: signal, direction: out, volts: 3.3, functions: [the safety monitor taking over the chute]}
+        - {name: CHUTE, role: signal, direction: out, volts: 3.3, functions: [the safety monitor's release signal]}
+    - name: C_POWER
+      family: amass-xt30
+      pins:
+        - {name: 5V, role: power, volts: 5.2}
+        - {name: GND, role: ground}
+    - name: C_SIGNAL
+      family: jst-gh
+      pins:
+        - {name: CAN_5V, role: power, volts: 5.0}
+        - {name: CAN_P, role: bus}
+        - {name: CAN_N, role: bus}
+        - {name: GND, role: ground}
+        - {name: TX, role: signal, direction: out, volts: 3.3, functions: [the flight controller's TELEM1 transmit]}
+        - {name: RX, role: signal, direction: in, volts: 3.3, functions: [the flight controller's TELEM1 receive]}
+        - {name: TAKEOVER, role: signal, direction: out, volts: 3.3, functions: [the safety monitor taking over the chute]}
+        - {name: CHUTE, role: signal, direction: out, volts: 3.3, functions: [the safety monitor's release signal]}

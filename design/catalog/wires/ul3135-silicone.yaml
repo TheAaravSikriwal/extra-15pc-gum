@@ -1,0 +1,18 @@
+# Researched 2026-10-18. The power wiring: silicone-insulated, tinned stranded copper, UL style
+# 3135 (200 °C, 600 V). Drone-store silicone wire is the same idea, with no published specs.
+type: wire
+id: ul3135-silicone
+maker: Various (UL 3135)
+model: Silicone hookup wire, UL style 3135
+checked: 2026-10-18
+source: {kind: manufacturer, url: 'https://p.globalsources.com/IMAGES/PDT/SPEC/900/K1226291900.pdf', checked: 2026-10-18, note: "An unnamed maker's UL3135 sheet on Global Sources: 200 °C, 600 V, insulation 0.78 mm nominal, conductor resistance (the UL 758 maximum, tinned, 20 °C) and overall diameter per gauge. Letronic's UL3135 sheet lists the same resistances. Grams per meter aren't published: they're worked out from the copper area (NBS Handbook 100, at 8.89 g/cm3) and the insulation's ring at about 1.2 g/cm3 for silicone, so they're estimates"}
+insulation_max_c: 200
+gauges:
+  - {awg: 12, resistance_mohm_per_m: 5.64, outer_diameter_mm: 3.95, mass_g_per_m: 38.9}
+  - {awg: 14, resistance_mohm_per_m: 8.96, outer_diameter_mm: 3.46, mass_g_per_m: 26.4}
+  - {awg: 16, resistance_mohm_per_m: 14.6, outer_diameter_mm: 3.06, mass_g_per_m: 18.4}
+  - {awg: 18, resistance_mohm_per_m: 23.2, outer_diameter_mm: 2.7, mass_g_per_m: 12.9}
+  - {awg: 20, resistance_mohm_per_m: 36.7, outer_diameter_mm: 2.51, mass_g_per_m: 9.7}
+  - {awg: 22, resistance_mohm_per_m: 59.4, outer_diameter_mm: 2.32, mass_g_per_m: 7.4}
+  - {awg: 24, resistance_mohm_per_m: 94.2, outer_diameter_mm: 2.15, mass_g_per_m: 5.8}
+  - {awg: 26, resistance_mohm_per_m: 150.0, outer_diameter_mm: 2.05, mass_g_per_m: 4.9}

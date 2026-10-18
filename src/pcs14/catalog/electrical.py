@@ -11,6 +11,7 @@ Estimates are named like `draws[ESC.VBAT].worst_a`, `outputs[5V]` or `connectors
 whole pinout), so a check that rests on one can say so.
 """
 
+import math
 import re
 from collections.abc import Iterator
 from typing import Literal
@@ -80,8 +81,11 @@ class Output(Strict):
     """A supply on the part: a regulator, a BEC, or a rail it passes through."""
 
     name: str = Field(pattern=NAME)
+    # switching: input power is output power over the efficiency; linear: the input current is
+    # the output current; through: the same rail, passed straight on
+    kind: Literal["switching", "linear", "through"] = "switching"
     pins: list[str] = Field(min_length=1)  # where it comes out
-    fed_from: str | None = None  # the pin feeding it, for a regulator
+    fed_from: str | None = None  # the pin feeding it
     volts: float = Field(gt=0)
     continuous_a: float = Field(gt=0)
     peak_a: float | None = Field(default=None, gt=0)
@@ -143,6 +147,38 @@ class FuseFamily(Strict):
         raise KeyError(f"there's no {amps:g} A fuse in this family (it has {listed} A)")
 
 
+class ForwardPoint(Strict):
+    amps: float = Field(gt=0)
+    volts: float = Field(gt=0)  # the datasheet's maximum at that current
+
+
+class DiodeData(Strict):
+    reverse_v: float = Field(gt=0)
+    continuous_a: float = Field(gt=0)
+    surge_a: float | None = Field(default=None, gt=0)
+    forward: list[ForwardPoint] = Field(min_length=1)
+
+    @field_validator("forward")
+    @classmethod
+    def _rising(cls, points: list[ForwardPoint]) -> list[ForwardPoint]:
+        for low, high in zip(points, points[1:], strict=False):
+            if not (high.amps > low.amps and high.volts >= low.volts):
+                raise ValueError("forward points should rise in current and in voltage")
+        return points
+
+    def forward_volts(self, amps: float) -> float:
+        """The drop at a current: straight between the points on a log scale of current, and
+        held at the end points outside them."""
+        points = self.forward
+        if amps <= points[0].amps:
+            return points[0].volts
+        for low, high in zip(points, points[1:], strict=False):
+            if amps <= high.amps:
+                share = math.log(amps / low.amps) / math.log(high.amps / low.amps)
+                return low.volts + share * (high.volts - low.volts)
+        return points[-1].volts
+
+
 ESTIMATE = re.compile(r"^(\w+)(?:\[([^\]]+)\])?(?:\.(\w+))?$")
 
 
@@ -155,6 +191,7 @@ class ElectricalBlock(Strict):
     outputs: list[Output] = Field(default_factory=list)
     rating: Rating | None = None  # for connector families
     fuse: FuseFamily | None = None  # for fuse families
+    diode: DiodeData | None = None  # for diodes
 
     @model_validator(mode="after")
     def _everything_named_is_there(self):
@@ -187,7 +224,7 @@ class ElectricalBlock(Strict):
         if not match:
             return False
         section, key, field = match.groups()
-        if section in ("rating", "fuse"):
+        if section in ("rating", "fuse", "diode"):
             value = getattr(self, section)
             if key is not None or value is None:
                 return False

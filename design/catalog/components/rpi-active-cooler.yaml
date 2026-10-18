@@ -22,3 +22,17 @@ cad:
     found: none
     checked: '2026-10-17'
     note: Raspberry Pi publishes the drawing, not a 3D file
+electrical:
+  source: {kind: manufacturer, url: 'https://datasheets.raspberrypi.com/cooling/raspberry-pi-active-cooler-product-brief.pdf', checked: 2026-10-18, note: "5 V through the Pi 5's four-pin fan header, with PWM speed control and a tach line. No current figure"}
+  estimates: ['draws[FAN.5V]', 'connectors[FAN]']
+  estimate_note: "Raspberry Pi's figure for its case fan, about 60 mA at 5 V, stands in for typical, and the Pi 4 case fan's 0.18 A rating for the worst case. The pin order is a guess, and 4.5 to 5.5 V an assumed range"
+  connectors:
+    - name: FAN
+      family: jst-sh
+      pins:
+        - {name: 5V, role: power, volts: 5.1}
+        - {name: PWM, role: signal, direction: in, volts: 3.3}
+        - {name: GND, role: ground}
+        - {name: TACH, role: signal, direction: out, volts: 3.3}
+  draws:
+    - {pin: FAN.5V, min_v: 4.5, max_v: 5.5, typical_a: 0.06, worst_a: 0.18}

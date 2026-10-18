@@ -61,3 +61,12 @@ cad:
     checked: '2026-10-17'
     note: Nothing for this motor on Emax's site or shop. GrabCAD has other brands' 2814s (T-Motor AS2814,
       Cobra C-2814), which aren't this motor
+electrical:
+  source: {kind: manufacturer, url: 'https://emaxmodel.com/data/motor-e3-2814.js', checked: 2026-10-18, note: "Emax's motor data: 270 mm of 18 AWG silicone wire on each phase, and the 82 g is without it. The leads get cut to their routes, and their weight joins the wiring's"}
+  connectors:
+    - name: leads
+      family: pads
+      pins:
+        - {name: A, role: power}
+        - {name: B, role: power}
+        - {name: C, role: power}

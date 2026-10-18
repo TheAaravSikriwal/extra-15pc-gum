@@ -1,0 +1,37 @@
+# Researched 2026-10-18. A 3.3 V supply for each switch that isn't the Teensy's: one for the
+# motor cut switch (from the flight controller's 5 V), one for P's chute switch.
+type: component
+id: pololu-d36v6f3
+maker: Pololu
+model: D36V6F3 3.3 V 600 mA step-down regulator (item 3791)
+checked: 2026-10-18
+source: {kind: manufacturer, url: 'https://www.pololu.com/product/3791/specs', checked: 2026-10-18, note: "Pololu: 0.5 g without headers, 0.4 x 0.5 x 0.1 inches, pins SHDN, VIN, GND, VOUT on a 0.1 inch pitch. Pololu lists it as active and preferred"}
+mass_g: 0.5
+cad:
+  shape: box
+  length_mm: 12.7
+  width_mm: 10.2
+  height_mm: 2.5
+  source: {kind: manufacturer, url: 'https://www.pololu.com/product/3791/specs', checked: '2026-10-18', note: "0.4 x 0.5 x 0.1 inches"}
+  existing:
+    found: official
+    url: https://www.pololu.com/product/3791/resources
+    format: STEP
+    terms: Pololu's resources page states no license or terms, so cache only
+    checked: '2026-10-18'
+electrical:
+  source: {kind: manufacturer, url: 'https://www.pololu.com/product/3791/specs', checked: 2026-10-18, note: "4 to 50 V in for 3.3 V out, about 600 mA most, 0.1 mA quiescent at most (under 2 uA shut down)"}
+  estimates: ['outputs[3V3].efficiency']
+  estimate_note: "Pololu shows efficiency as curves; 80% is a round figure, and at the microamps these switches take, the quiescent current is what really counts"
+  connectors:
+    - name: J1
+      family: pads
+      pins:
+        - {name: SHDN, role: signal, direction: in, volts: 3.3, functions: [low shuts it down; leave open to run]}
+        - {name: VIN, role: power, max_volts: 50}
+        - {name: GND, role: ground}
+        - {name: VOUT, role: power, volts: 3.3}
+  draws:
+    - {pin: J1.VIN, min_v: 4, max_v: 50, typical_a: 0.0001, worst_a: 0.0001, note: "quiescent; what it supplies gets worked out from its output"}
+  outputs:
+    - {name: 3V3, kind: switching, fed_from: J1.VIN, pins: [J1.VOUT], volts: 3.3, continuous_a: 0.6, efficiency: 0.8}

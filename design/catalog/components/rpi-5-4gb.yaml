@@ -49,3 +49,34 @@ cad:
     terms: 'MIT license, in the zip: it can be shared, with the copyright notice. It''s 77 MB unzipped,
       so it stays in the local cache'
     checked: '2026-10-17'
+electrical:
+  source: {kind: manufacturer, url: 'https://www.raspberrypi.com/documentation/computers/raspberry-pi.html', checked: 2026-10-18, note: "Raspberry Pi's docs: a 5.1 V supply; low-voltage detection below 4.63 V (plus or minus 5%); USB devices limited to 600 mA unless the supply is a 5 A one, and the fan header shares that limit. MAVLink goes on UART0, GPIO 14 and 15 (header pins 8 and 10), with dtoverlay=uart0-pi5 and the console kept off those pins"}
+  estimates: ['draws[GPIO.5V]', 'outputs[CAM3V3]', 'connectors[FAN]']
+  estimate_note: "Typical is the 8 W the sizing model assumes (software video encoding keeps the CPU busy) and worst is Jeff Geerling's 9.8 W under stress-ng on the 4 GB board (https://www.jeffgeerling.com/blog/2024/new-2gb-pi-5-has-33-smaller-die-30-idle-power-savings/), both at 5.1 V. The 4.63 V floor is the undervoltage warning and 5.25 V is USB's ceiling: Raspberry Pi doesn't publish a range for the GPIO 5 V pins, or describe powering through them. The camera supply's rating and efficiency are guesses, and so is the fan header's pin order"
+  connectors:
+    - name: GPIO
+      family: pads
+      pins:
+        - {name: 5V, role: power, volts: 5.1, functions: [header pins 2 and 4]}
+        - {name: GND, role: ground, functions: [header pin 6]}
+        - {name: 3V3, role: power, volts: 3.3, functions: [header pins 1 and 17]}
+        - {name: GPIO14, role: signal, direction: out, volts: 3.3, functions: [TXD0, header pin 8, /dev/ttyAMA0]}
+        - {name: GPIO15, role: signal, direction: in, volts: 3.3, functions: [RXD0, header pin 10]}
+    - name: FAN
+      family: jst-sh
+      pins:
+        - {name: 5V, role: power, volts: 5.1}
+        - {name: PWM, role: signal, direction: out, volts: 3.3}
+        - {name: GND, role: ground}
+        - {name: TACH, role: signal, direction: in, volts: 3.3}
+    - name: CAM0
+      family: pads
+      pins:
+        - {name: 3V3, role: power, volts: 3.3}
+        - {name: GND, role: ground}
+        - {name: CSI, role: bus}
+  draws:
+    - {pin: GPIO.5V, min_v: 4.63, max_v: 5.25, typical_a: 1.57, worst_a: 1.92}
+  outputs:
+    - {name: FAN5V, kind: through, fed_from: GPIO.5V, pins: [FAN.5V], volts: 5.1, continuous_a: 0.6}
+    - {name: CAM3V3, kind: switching, fed_from: GPIO.5V, pins: [CAM0.3V3], volts: 3.3, continuous_a: 0.5, efficiency: 0.9}

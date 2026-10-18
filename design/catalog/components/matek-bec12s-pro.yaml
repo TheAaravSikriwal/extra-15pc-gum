@@ -22,3 +22,17 @@ cad:
     found: none
     checked: '2026-10-17'
     note: No download on Matek's page, unlike the GPS
+electrical:
+  source: {kind: manufacturer, url: 'https://www.mateksys.com/?portfolio=bec12s-pro', checked: 2026-10-18, note: "9 to 55 V in with TVS protection but no reverse-input protection; 5.2 V out by default; 5 A continuous, 9 A peak; 88 to 96% efficient (the low end is used); standby 5 to 10 mA; overcurrent protection that recovers by itself; pads IN, G, G, OUT on a 3.81 mm pitch"}
+  connectors:
+    - name: pads
+      family: pads
+      pins:
+        - {name: IN, role: power, max_volts: 55}
+        - {name: G, role: ground}
+        - {name: G2, role: ground}
+        - {name: OUT, role: power, volts: 5.2}
+  draws:
+    - {pin: pads.IN, min_v: 9, max_v: 55, typical_a: 0.005, worst_a: 0.01, note: "standby only; what it supplies gets worked out from its output"}
+  outputs:
+    - {name: 5V, kind: switching, fed_from: pads.IN, pins: [pads.OUT], volts: 5.2, continuous_a: 5, peak_a: 9, efficiency: 0.88}

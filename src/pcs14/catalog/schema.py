@@ -307,7 +307,7 @@ class Wire(Part):
 
     type: Literal["wire"]
     mass_g: None = None
-    insulation_max_c: float
+    insulation_max_c: float | None  # None for bare wire
     gauges: list[WireGauge] = Field(min_length=1)
 
     @model_validator(mode="after")

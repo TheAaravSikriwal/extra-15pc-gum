@@ -1,0 +1,17 @@
+# Researched 2026-10-18. Bare copper wire, for the pack's cell fuse links: a short length of thin
+# copper between each cell and its busbar that melts on a dead short.
+type: wire
+id: bare-copper
+maker: Various
+model: Bare annealed copper wire (fuse wire)
+checked: 2026-10-18
+source: {kind: manufacturer, url: 'https://nvlpubs.nist.gov/nistpubs/Legacy/hb/nbshandbook100.pdf', checked: 2026-10-18, note: "NBS Handbook 100, Copper Wire Tables (US National Bureau of Standards, 1966), table 11: standard annealed copper, diameter and ohms per kilometer at 20 °C. Mass is the area times NBS's 8.89 g/cm3. The source kind is the closest fit: it's the US standard, not a wire maker"}
+insulation_max_c: null
+gauges:
+  - {awg: 16, resistance_mohm_per_m: 13.2, outer_diameter_mm: 1.29, mass_g_per_m: 11.65}
+  - {awg: 18, resistance_mohm_per_m: 21, outer_diameter_mm: 1.02, mass_g_per_m: 7.32}
+  - {awg: 20, resistance_mohm_per_m: 33.2, outer_diameter_mm: 0.813, mass_g_per_m: 4.61}
+  - {awg: 22, resistance_mohm_per_m: 53.2, outer_diameter_mm: 0.643, mass_g_per_m: 2.88}
+  - {awg: 24, resistance_mohm_per_m: 84.2, outer_diameter_mm: 0.511, mass_g_per_m: 1.82}
+  - {awg: 26, resistance_mohm_per_m: 135, outer_diameter_mm: 0.404, mass_g_per_m: 1.14}
+  - {awg: 28, resistance_mohm_per_m: 214, outer_diameter_mm: 0.32, mass_g_per_m: 0.71}

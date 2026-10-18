@@ -33,3 +33,56 @@ cad:
     terms: Its author, Zack Kummer, says in the PJRC forum it can be included with credit
     checked: '2026-10-17'
     note: Also on GrabCAD, and in the blackketter/teensy.pretty repo on GitHub (19 MB)
+electrical:
+  source: {kind: manufacturer, url: 'https://www.pjrc.com/store/teensy41.html', checked: 2026-10-18, note: "PJRC: VIN 3.6 to 5.5 V (the pinout card), about 100 mA at 600 MHz, 250 mA the most to take from the 3.3 V pin, 4 mA recommended per output, and the pins are not 5 V tolerant (don't put more than 3.3 V on any pin but VIN and VUSB). Pin functions from PJRC's PWM page (https://www.pjrc.com/teensy/td_pulse.html), UART page (https://www.pjrc.com/teensy/td_uart.html) and pinout cards. Pins on the same timer share one PWM frequency"}
+  connectors:
+    - name: pins
+      family: pads
+      pins:
+        - {name: VIN, role: power, max_volts: 5.5}
+        - {name: GND, role: ground}
+        - {name: 3V3, role: power, volts: 3.3}
+        - {name: '0', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [FlexPWM1.1, RX1, CS1, CRX2]}
+        - {name: '1', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [FlexPWM1.0, TX1, MISO1, CTX2]}
+        - {name: '2', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [FlexPWM4.2]}
+        - {name: '3', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [FlexPWM4.2]}
+        - {name: '4', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [FlexPWM2.0]}
+        - {name: '5', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [FlexPWM2.1]}
+        - {name: '6', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [FlexPWM2.2]}
+        - {name: '7', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [FlexPWM1.3, RX2]}
+        - {name: '8', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [FlexPWM1.3, TX2]}
+        - {name: '9', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [FlexPWM2.2]}
+        - {name: '10', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [QuadTimer1.0, CS]}
+        - {name: '11', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [QuadTimer1.2, MOSI, CTX1]}
+        - {name: '12', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [QuadTimer1.1, MISO]}
+        - {name: '13', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [QuadTimer2.0, SCK, LED]}
+        - {name: '14', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [QuadTimer3.2, TX3]}
+        - {name: '15', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [QuadTimer3.3, RX3]}
+        - {name: '16', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [RX4, SCL1]}
+        - {name: '17', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [TX4, SDA1]}
+        - {name: '18', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [QuadTimer3.1, SDA]}
+        - {name: '19', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [QuadTimer3.0, CTS3, SCL]}
+        - {name: '20', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [TX5]}
+        - {name: '21', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [RX5]}
+        - {name: '22', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [FlexPWM4.0, CTX1]}
+        - {name: '23', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [FlexPWM4.1, CRX1]}
+        - {name: '24', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [FlexPWM1.2, TX6, SCL2]}
+        - {name: '25', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [FlexPWM1.3, RX6, SDA2]}
+        - {name: '26', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [MOSI1]}
+        - {name: '27', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [SCK1]}
+        - {name: '28', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [FlexPWM3.1, RX7]}
+        - {name: '29', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [FlexPWM3.1, TX7]}
+        - {name: '30', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [CRX3]}
+        - {name: '31', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [CTX3]}
+        - {name: '32', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: []}
+        - {name: '33', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [FlexPWM2.0]}
+        - {name: '34', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [RX8]}
+        - {name: '35', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [TX8]}
+        - {name: '36', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [FlexPWM2.3, CS]}
+        - {name: '37', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [FlexPWM2.3, CS]}
+        - {name: '38', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [CS1 (alternate)]}
+        - {name: '39', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: [MISO1 (alternate)]}
+        - {name: '40', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: []}
+        - {name: '41', role: signal, direction: both, volts: 3.3, max_volts: 3.3, functions: []}
+  outputs:
+    - {name: 3V3, kind: linear, fed_from: pins.VIN, pins: [pins.3V3], volts: 3.3, continuous_a: 0.35, own_a: 0.1}

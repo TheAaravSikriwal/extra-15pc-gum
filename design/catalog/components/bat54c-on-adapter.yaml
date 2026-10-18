@@ -1,0 +1,31 @@
+# Researched 2026-10-18. The Teensy's two feeds (the flight controller's 5 V and the module
+# supply) meet through this pair of diodes, so either one can keep it alive.
+type: component
+id: bat54c-on-adapter
+maker: Diodes Incorporated (diode)
+model: BAT54C dual Schottky diode (common cathode) on a SOT-23 adapter
+checked: 2026-10-18
+source: {kind: manufacturer, url: 'https://www.diodes.com/assets/Datasheets/ds11005.pdf', checked: 2026-10-18, note: "The diode itself is 0.008 g (Diodes Inc). The adapter board's mass isn't published; 0.15 g is a guess"}
+mass_g: 0.16
+cad:
+  shape: box
+  length_mm: 12
+  width_mm: 9
+  height_mm: 3
+  source: {kind: estimate, checked: '2026-10-18', note: "The size of a small SOT-23 adapter board"}
+  existing: {found: none, checked: '2026-10-18', note: "A plain adapter board"}
+electrical:
+  source: {kind: manufacturer, url: 'https://www.diodes.com/assets/Datasheets/ds11005.pdf', checked: 2026-10-18, note: "Diodes Inc's BAT54/A/C/S datasheet: 30 V reverse, 200 mA continuous, 300 mA repetitive peak, 600 mA surge under 1 s, forward voltage 800 mV at most at 100 mA (onsemi's BAT54C lists 0.52 V typical at 100 mA, https://www.onsemi.com/download/data-sheet/pdf/bat54clt1-d.pdf). BAT54C pins: 1 and 2 the anodes, 3 the shared cathode"}
+  connectors:
+    - name: D1
+      family: pads
+      pins:
+        - {name: A1, role: power, max_volts: 30}
+        - {name: A2, role: power, max_volts: 30}
+        - {name: K, role: power}
+  diode:
+    reverse_v: 30
+    continuous_a: 0.2
+    surge_a: 0.6
+    forward:
+      - {amps: 0.1, volts: 0.8}

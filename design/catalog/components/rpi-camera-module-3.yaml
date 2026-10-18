@@ -45,3 +45,16 @@ cad:
     format: STEP
     terms: No license file; Raspberry Pi's site terms reserve all rights.
     checked: '2026-10-17'
+electrical:
+  source: {kind: manufacturer, url: 'https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#typical-power-requirements', checked: 2026-10-18, note: "Raspberry Pi's table of typical peripheral currents lists 250 mA for a Camera Module, not specific to the Camera Module 3"}
+  estimates: ['draws[CSI.3V3]']
+  estimate_note: "250 mA is taken as the draw at 3.3 V on the camera connector, 300 mA as the worst case, and 3.1 to 3.5 V as its range: all guesses, since Raspberry Pi publishes nothing specific to the Camera Module 3"
+  connectors:
+    - name: CSI
+      family: pads
+      pins:
+        - {name: 3V3, role: power, volts: 3.3}
+        - {name: GND, role: ground}
+        - {name: DATA, role: bus}
+  draws:
+    - {pin: CSI.3V3, min_v: 3.1, max_v: 3.5, typical_a: 0.25, worst_a: 0.30}

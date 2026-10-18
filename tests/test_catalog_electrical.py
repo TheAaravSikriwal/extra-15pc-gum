@@ -150,6 +150,38 @@ def test_a_fuse_family_lists_each_rating_once():
         ElectricalBlock.model_validate(fuse_block([twice, twice]))
 
 
+def diode_block(points):
+    return {
+        "source": MADE_UP,
+        "diode": {"reverse_v": 20, "continuous_a": 1.0, "surge_a": 25, "forward": points},
+    }
+
+
+def test_a_diode_drops_more_at_higher_current_between_its_points():
+    diode = ElectricalBlock.model_validate(
+        diode_block([{"amps": 0.1, "volts": 0.32}, {"amps": 1.0, "volts": 0.45}])
+    ).diode
+    assert diode.forward_volts(0.1) == pytest.approx(0.32)
+    assert diode.forward_volts(1.0) == pytest.approx(0.45)
+    # halfway on a log scale of current: 0.1 to 1 A, so about 0.316 A
+    assert diode.forward_volts(0.316) == pytest.approx(0.385, abs=0.002)
+
+
+def test_a_diode_holds_its_end_points_outside_them():
+    # below the first point it keeps the first point's drop, which errs high; above the last
+    # it keeps the last, and the current check catches anything past the rating
+    diode = ElectricalBlock.model_validate(diode_block([{"amps": 0.1, "volts": 0.8}])).diode
+    assert diode.forward_volts(0.01) == pytest.approx(0.8)
+    assert diode.forward_volts(0.5) == pytest.approx(0.8)
+
+
+def test_a_diodes_points_rise():
+    with pytest.raises(ValidationError, match="forward"):
+        ElectricalBlock.model_validate(
+            diode_block([{"amps": 1.0, "volts": 0.45}, {"amps": 0.1, "volts": 0.32}])
+        )
+
+
 def wire(gauges):
     return {
         "type": "wire",
@@ -180,6 +212,22 @@ def test_thicker_wire_has_less_resistance():
     backwards = [dict(GAUGES[0], resistance_mohm_per_m=60), GAUGES[1]]
     with pytest.raises(ValidationError, match="resistance"):
         Wire.model_validate(wire(backwards))
+
+
+def test_bare_wire_has_no_insulation_rating():
+    bare = dict(wire(GAUGES), insulation_max_c=None)
+    assert Wire.model_validate(bare).insulation_max_c is None
+
+
+@pytest.mark.parametrize("kind", ["switching", "linear", "through"])
+def test_a_supply_says_what_kind_it_is(kind):
+    block = board()
+    block["outputs"][0]["kind"] = kind
+    assert ElectricalBlock.model_validate(block).output("5V").kind == kind
+
+
+def test_a_supply_is_switching_unless_it_says_otherwise():
+    assert ElectricalBlock.model_validate(board()).output("5V").kind == "switching"
 
 
 def test_a_wire_table_has_no_single_mass():

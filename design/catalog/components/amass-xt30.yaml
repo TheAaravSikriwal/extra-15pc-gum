@@ -1,0 +1,19 @@
+# Researched 2026-10-18. A connector family: the module connector's 5 V. mass_g is one half;
+# each module connector uses both halves.
+type: component
+id: amass-xt30
+maker: Amass
+model: XT30U connector
+part_number: XT30U-M
+checked: 2026-10-18
+source: {kind: manufacturer, url: 'https://www.china-amass.com/biao/268.html', checked: 2026-10-18, note: "Amass's XT30U (gold) page: 20 A MAX (16 AWG, rise under 85 K), 80 V DC rated, contact resistance 1.2 mOhm max. The nickel XT30UPB is 15 A. Mass 0.99 g from LCSC's listing for XT30U-M (https://www.lcsc.com/product-detail/C99101.html), not from Amass"}
+mass_g: 0.99
+electrical:
+  source: {kind: manufacturer, url: 'https://www.china-amass.com/biao/268.html', checked: 2026-10-18}
+  rating:
+    continuous_a: 20
+    wire_awg: 16
+    temp_rise_c: 85
+    contact_mohm: 1.2
+    max_c: 120
+    volts: 80
