@@ -189,6 +189,14 @@ The CAD talk (step 2a) started on 2026-10-17. Seven questions, one at a time: wh
 - **Materials, to start:** TPU for parts that take hits (the legs and the GPS mast mount, like the TPU mounts that come with the XL10), and carbon-filled PETG for the rigid parts. Each material's density and print settings go in one file, and a printed part's mass comes from its geometry, replacing the catalog's guesses. The structure side track checks that the legs and tray are strong enough.
 - **Why:** the simple brackets cost little to do properly and give real weights. The parachute ejector belongs to the modules step and the claws are a placeholder by decision, so designing those now would mean designing them twice.
 
+**The check numbers (2026-10-17): limits based on what each one costs.** These are my engineering estimates, not taken from a standard, and they live in one settings file so they're easy to change.
+- **Center of gravity:** judged by its effect. In a hover, no motor may work more than 5% harder than the average (about a 7 mm offset on a true X with this wheelbase; the frame's real motor positions set the exact number).
+- **Rigid parts:** at least 10 mm from the prop disk, because 10" blades flex under load and the motors vibrate.
+- **Moving parts** (antennas, wires, straps): at least 20 mm from the prop disk.
+- **The parachute:** nothing inside a cone above it, starting at a 30° half-angle and reaching 500 mm up.
+- **The module rail:** every module combination fits on it.
+- **Every module combination:** all of the above runs on all eight, with the pack slid to its best trim inside its range. If no position works, that combination fails.
+
 ## Layer 3: Aerodynamics (`aero/`)
 
 The virtual wind tunnel. It runs as a side track, instead of inside the loop. At a 10 m/s cruise, drag is roughly 10% of the power, so even a 30% drag error moves flight time by about 3%, which is well inside the thrust data's uncertainty. Its numbers still go back into the sizing model and Gazebo whenever they're ready, and the targets get rechecked.
