@@ -197,6 +197,11 @@ The CAD talk (step 2a) started on 2026-10-17. Seven questions, one at a time: wh
 - **The module rail:** every module combination fits on it.
 - **Every module combination:** all of the above runs on all eight, with the pack slid to its best trim inside its range. If no position works, that combination fails.
 
+**Watching it (2026-10-17): Rerun, plus post-ready stills on every run.**
+- **In Rerun:** the drone builds up part by part on a timeline, then steps through all eight module combinations, with the pack sliding to its trim in each. The center of gravity and the center of thrust are drawn as markers, any clearance problem lights up in the style's magenta, and the prop disks and the parachute cone show as see-through shapes. An exploded view comes apart and goes back together on the same timeline. Each plot and view opens on the whole run.
+- **Stills:** every run writes front, side, top, three-quarter and exploded views in the project's look (`media/style.yaml`), at the post sizes.
+- **Why:** one viewer for the whole project, with saved recordings, and it runs in the browser pane so the work can be watched live. Blender still does the hero shots.
+
 ## Layer 3: Aerodynamics (`aero/`)
 
 The virtual wind tunnel. It runs as a side track, instead of inside the loop. At a 10 m/s cruise, drag is roughly 10% of the power, so even a 30% drag error moves flight time by about 3%, which is well inside the thrust data's uncertainty. Its numbers still go back into the sizing model and Gazebo whenever they're ready, and the targets get rechecked.
