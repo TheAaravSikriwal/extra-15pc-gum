@@ -86,7 +86,17 @@ git push
 
 ## 8. Later: the Windows tools
 
-KiCad (with ngspice), FreeCAD (with CalculiX), Blender and ParaView install on the Windows side. `scripts/setup-windows.ps1` will install them at pinned versions. It gets written when the CAD or electrical step needs them.
+FreeCAD (with CalculiX), Blender and ParaView install on the Windows side. `scripts/setup-windows.ps1` will install them at pinned versions when a step needs them.
+
+The electrical step's tools went on the PC on 2026-10-18:
+
+| Tool | Version | How | Where |
+|---|---|---|---|
+| Graphviz (WireViz draws with it) | 16.1.0 | `winget install Graphviz.Graphviz` | `C:\Program Files\Graphviz` |
+| ngspice | 47 | `ngspice-47_64.7z` from [ngspice.sourceforge.io](https://ngspice.sourceforge.io), unpacked | `%LOCALAPPDATA%\Programs\ngspice` |
+| KiCad | 10.0.6 | `winget install KiCad.KiCad` | `%LOCALAPPDATA%\Programs\KiCad` (a per-user install) |
+
+None of them needs to be on the PATH: `pcs14` looks in those places too. `pcs14 electrical --tools` says what it found, and an environment variable (`PCS14_DOT`, `PCS14_NGSPICE`, `PCS14_KICAD_CLI`) can point it anywhere else. On Ubuntu, `scripts/setup-dev.sh` installs Graphviz and ngspice with apt.
 
 ## Picking up where things left off
 

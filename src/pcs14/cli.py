@@ -4,6 +4,8 @@
     pcs14 sweep    try every build the catalog allows, and rank them
     pcs14 report   write the full sizing report: Markdown, charts and the data file
     pcs14 validate the honesty check: the model against published builds and cell curves
+    pcs14 cad      build the drone in CAD, check every module combination, export it
+    pcs14 electrical  every wire, pin and connector, checked in every combination
 
 Every run saves a Rerun recording to outputs/rerun/ (or wherever --record says), and --live
 opens the viewer and streams into it as the run happens.
@@ -67,6 +69,13 @@ def build_parser() -> argparse.ArgumentParser:
         "--update-catalog",
         action="store_true",
         help="write the printed parts' weights into the catalog (then rerun pcs14 report)",
+    )
+    electrical = add(
+        "electrical",
+        "The electrical design: every wire, pin and connector, checked in every combination.",
+    )
+    electrical.add_argument(
+        "--tools", action="store_true", help="say where the outside tools are, then stop"
     )
     report = add("report", "Write the sizing report: Markdown, charts and the data file.")
     report.add_argument("--out", type=Path, help="report folder (default: docs/reports/sizing)")
@@ -308,10 +317,20 @@ def run_cad(args) -> int:
     return 0
 
 
+def run_electrical(args) -> int:
+    from pcs14.electrical import tools
+
+    print("Outside tools:")
+    for line in tools.describe():
+        print(f"  {line}")
+    return 0
+
+
 COMMANDS = {
     "size": run_size,
     "sweep": run_sweep,
     "report": run_report,
     "validate": run_validate,
     "cad": run_cad,
+    "electrical": run_electrical,
 }

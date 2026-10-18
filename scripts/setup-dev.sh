@@ -18,6 +18,8 @@ echo "==> System packages"
 need=()
 python3 -c 'import ensurepip' 2>/dev/null || need+=(python3-venv)
 command -v git-lfs >/dev/null 2>&1 || need+=(git-lfs)
+command -v dot >/dev/null 2>&1 || need+=(graphviz)
+command -v ngspice >/dev/null 2>&1 || need+=(ngspice)
 if [ ${#need[@]} -gt 0 ]; then
   echo "    Installing ${need[*]} (this needs sudo)"
   sudo apt-get update -qq
@@ -36,6 +38,9 @@ echo "==> Python venv at ${venv/#$HOME/\~}"
 "$venv/bin/python" -m pip install -q --upgrade pip
 "$venv/bin/python" -m pip install -q --group dev -e .
 echo "    $("$venv/bin/python" --version), $("$venv/bin/python" -m pip --version | cut -d' ' -f1-2)"
+
+echo "==> Outside tools (KiCad is optional here; CI checks the schematic)"
+"$venv/bin/pcs14" electrical --tools | tail -n +2
 
 echo "==> Lint (same as CI)"
 "$venv/bin/ruff" check .

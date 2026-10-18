@@ -14,6 +14,7 @@ dependencies = [
     "pydantic==2.13.5",
     "pyyaml==6.0.3",
     "rerun-sdk==0.38.1",
+    "wireviz==0.4.1",
 ]
 
 [project.scripts]
@@ -31,6 +32,7 @@ packages = ["src/pcs14"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = ["kicad: needs KiCad's command line (CI runs these in their own job)"]
 
 [tool.ruff]
 line-length = 100

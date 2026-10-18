@@ -20,6 +20,9 @@ if (-not (Test-Path $py)) { python -m venv $venv }
 & $py -m pip install -q --group dev -e .
 Write-Host "    $(& $py --version)"
 
+Write-Host "==> Outside tools (Graphviz, ngspice, KiCad)"
+& (Join-Path $venv "Scripts\pcs14.exe") electrical --tools | Select-Object -Skip 1 | ForEach-Object { Write-Host $_ }
+
 Write-Host "==> Lint (same as CI)"
 & (Join-Path $venv "Scripts\ruff.exe") check .
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
