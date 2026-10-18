@@ -202,6 +202,12 @@ The CAD talk (step 2a) started on 2026-10-17. Seven questions, one at a time: wh
 - **Stills:** every run writes front, side, top, three-quarter and exploded views in the project's look (`media/style.yaml`), at the post sizes.
 - **Why:** one viewer for the whole project, with saved recordings, and it runs in the browser pane so the work can be watched live. Blender still does the hero shots.
 
+**What comes out (2026-10-17): the full set from the start.**
+- **Generated on every run, never committed:** the STEP assembly, a simplified Gazebo mesh, a watertight CFD mesh, a GLB file for the project site (every part named, so the site can explode the drone, switch modules and show a part's specs), and print-ready 3MF files for our printed parts, in their print orientation. Curated copies follow the repo rules: LFS for the baseline, a GitHub Release for hero STEP files.
+- **Committed:** `cad.json`, next to `sizing.json`, with mass, center of gravity, inertia and the pack's trim position for each module combination.
+- **Back into the model:** the printed parts' computed weights replace the catalog's guesses, marked as coming from the CAD, and the sizing report reruns on them. Center of gravity and inertia feed the Gazebo generator in step 4.
+- **Why:** each extra format is a few lines once the model exists, the GLB lets the project site start, and the print files make our parts real.
+
 ## Layer 3: Aerodynamics (`aero/`)
 
 The virtual wind tunnel. It runs as a side track, instead of inside the loop. At a 10 m/s cruise, drag is roughly 10% of the power, so even a 30% drag error moves flight time by about 3%, which is well inside the thrust data's uncertainty. Its numbers still go back into the sizing model and Gazebo whenever they're ready, and the targets get rechecked.
