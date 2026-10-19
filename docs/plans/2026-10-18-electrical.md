@@ -103,4 +103,6 @@ Each one is test-first: write the tests with hand-checked numbers, make them pas
 
 **Rerun's coloring (changed during the build, 2026-10-18).** Task 12 colors each wire by the share of its heating limit it uses, not by its current over its continuous rating. In the burst every power wire passes its continuous rating while staying well under its temperature limit, so current would have lit them all magenta while they pass. Rerun shows one timeline at a time, so the wires, the scope traces and the burst temperatures each get a tab.
 
+**The wiring's catalog entries (changed during the build, 2026-10-19).** Task 14 gives each module its own wiring entry (v-wiring, p-wiring, c-wiring) next to base-wiring, because the module plug is one part shared by all three modules and can't carry a weight for each. The CAD spreads each entry over its module's routes.
+
 **Done when:** every connection is specified, every current, voltage and temperature is inside its rating with the spec's margins in every module combination, the ngspice runs show DShot passing with the Teensy on, off and cutting, and the new weights are back in the sizing model with the targets rechecked.

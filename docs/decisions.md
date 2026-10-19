@@ -125,7 +125,10 @@ And one from the plan: **the GPS is the ARK GPS on DroneCAN** (16 g, 8 g over th
 - **No cell fuse links** (decided 2026-10-18): the checks showed none can both survive flat-out flight and open a dead short before the battery leads' insulation burns. A dead short in the leads is on the unproven list.
 - **After a takeover, the safety monitor holds the DShot line high between its stop frames** and lets go only while the ESC answers, the way a flight controller does. The ngspice runs showed a floating line between frames breaks bidirectional DShot. A requirement for the monitor's firmware in step 5.
 - **Rerun colors each wire by the share of its heating limit it uses,** not its current over its rating (the talk said current). In the 10 s burst every power wire passes its continuous rating while staying cool, so current would light them all magenta while they pass the check.
-- **The weight now:** Mission 2320 g with a pessimistic hover of 21.2 min against 21; Max 2526 g, over its 2.5 kg limit. The wiring's real weight comes in step 3d.
+- **The wiring is weighed from the connection list** (2026-10-19): each wire's length times its gauge's grams per meter, the wire's half of each plug, heat shrink on soldered ends and sleeving on the battery leads, into base-wiring and one wiring entry per module. Base's is 59.7 g, against the 45 g guess.
+- **The main path is 3.8 mOhm** from the pack's terminals to the ESC and back, worked out from the connection list, and the electrical cases start at the pack's own terminals so the leads' drop counts once.
+- **C's socket and the fuse holders sit on the frame's plates,** not flush with its back edge: touching along a bare edge broke the fused body for the wind tunnel.
+- **The weight now** (2026-10-19): Mission 2340 g with a pessimistic hover of 20.92 min against 21, marginal; Max 2549 g, over its 2.5 kg limit. The decisions are step 3d's.
 
 ### The parts (picked 2026-10-17)
 
