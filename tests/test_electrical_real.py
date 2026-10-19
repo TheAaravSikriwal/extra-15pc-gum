@@ -115,3 +115,21 @@ def test_the_pi_sees_more_than_5v_on_a_normal_day(loads):
     for (setup, case), result in loads.items():
         if "V" in result.modules and case != "worst":
             assert result.volts("pi.GPIO.5V") > 5.0, (setup, case)
+
+
+def test_the_real_drones_open_findings(real, loads):
+    """What the checks find on the real drone right now. When one gets fixed (or a new one
+    turns up), this changes on purpose."""
+    from pcs14.electrical.checks import check_design
+
+    catalog, build, design, settings, _ = real
+    targets = load_targets(ROOT / "design" / "targets.yaml")
+    findings = check_design(design, catalog, build, targets, settings, loads)
+    failing = sorted({(f.check, f.subject) for f in findings if not f.passed})
+    assert failing == [
+        ("backup: load voltage", "chute.servo.V+"),  # 4.55 V from the CAN bus's 5 V
+        ("cell link holds the burst", "18 AWG cell links"),  # 257 C against 163
+        ("load voltage", "chute.servo.V+"),  # 4.79 V through its diode, against 4.9
+        ("load voltage", "pi.GPIO.5V"),  # 5.185 V against a guessed 5.25 V ceiling
+    ]
+    assert len(findings) > 250

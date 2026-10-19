@@ -291,7 +291,9 @@ wires:
 
 # The pack's fuse links, one per cell between the cell and its busbar. The gauge is a first
 # guess; the fuse check sizes it (task 6).
-cell_links: {wire: bare-copper, awg: 20, length_mm: 8}
+# joint_max_c is leaded solder's melting point (Sn63Pb37, 183 C): the link is soldered to its
+# busbar, and the spec keeps every part 20 C under its maximum.
+cell_links: {wire: bare-copper, awg: 18, length_mm: 8, joint_max_c: 183}
 
 # The check numbers, from the spec's "The check numbers" (2026-10-18)
 checks:
@@ -301,9 +303,11 @@ checks:
   temp_margin_c: 20 # every part this far under its rated maximum
   main_drop_share: 0.02 # of the pack's nominal voltage, lost between pack and ESC at the cap
   load_margin_v: 0.1 # every load this far inside its voltage range, at both ends
-  pi_min_v: 4.75 # the Pi's undervoltage warning (4.63 V) plus about 0.1 V
+  pin_minimums:
+    pi.GPIO.5V: 4.75 # the Pi's undervoltage warning (4.63 V) plus about 0.1 V
   supply_typical_share: 0.8 # typical draw against a supply's continuous rating
   fuse_hold_factor: 1.25 # a fuse holds this times its branch's highest steady current
   cell_link_blow_s: 1.0 # a dead short melts a cell link this fast
+  backups: [bec.5V] # with the module supply dead, the safety monitor and the chute have to carry on
   rise_share: 0.1 # signal edges, as a share of a bit
   threshold_margin_share: 0.1 # of the supply, past each logic threshold

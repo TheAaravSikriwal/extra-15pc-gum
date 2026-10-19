@@ -86,6 +86,7 @@ class CellLinks(Strict):
     wire: str
     awg: int
     length_mm: float = Field(gt=0)
+    joint_max_c: float  # the hottest the joint on the cell can get
 
 
 class CheckNumbers(Strict):
@@ -97,10 +98,11 @@ class CheckNumbers(Strict):
     temp_margin_c: float = Field(ge=0)  # under every rated maximum
     main_drop_share: float = Field(gt=0, lt=1)  # of the pack's nominal voltage, at the cap
     load_margin_v: float = Field(ge=0)  # inside every load's range, at both ends
-    pi_min_v: float = Field(gt=0)
+    pin_minimums: dict[str, float] = Field(default_factory=dict)  # firmer floors, like the Pi's
     supply_typical_share: float = Field(gt=0, le=1)  # of a supply's continuous rating
     fuse_hold_factor: float = Field(ge=1)
     cell_link_blow_s: float = Field(gt=0)  # a dead short melts the link this fast
+    backups: list[str] = Field(default_factory=list)  # supplies to switch off, one at a time
     rise_share: float = Field(gt=0, lt=1)  # of a bit
     threshold_margin_share: float = Field(ge=0, lt=1)  # of the supply
 

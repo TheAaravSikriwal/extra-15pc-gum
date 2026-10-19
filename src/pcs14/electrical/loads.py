@@ -40,6 +40,7 @@ class Case:
     draw: Literal["typical", "worst"]
     battery_amps: float | None = None  # the sizing model's total, when there's an ESC
     motor_amps: float = 0.0  # in each motor lead
+    off: frozenset[str] = frozenset()  # supplies switched off (board.output), for backup cases
 
 
 @dataclass
@@ -223,6 +224,8 @@ class _Solver:
             if draw.pin == local:
                 amps += draw.typical_a if self.case.draw == "typical" else draw.worst_a
         for output in board.block.outputs:
+            if f"{board.name}.{output.name}" in self.case.off:
+                continue
             if output.fed_from == local and output.kind != "through":
                 out_net = self.net_of[board.full(output.pins[0])]
                 out = self.net_demand(out_net, seen) + output.own_a
@@ -267,7 +270,7 @@ class _Solver:
         fixed_at = {self.net_of[self.plus]: {self.plus: self.case.pack_volts}}
         for board in self.boards:
             for output in board.block.outputs:
-                if output.kind == "through":
+                if output.kind == "through" or f"{board.name}.{output.name}" in self.case.off:
                     continue
                 for ref in output.pins:
                     held = output.volts + self.ground[board.name]
