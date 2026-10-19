@@ -203,6 +203,10 @@ Four things came up in the electrical talk (2026-10-18). DShot, and the bidirect
 - [ ] **Read:** TI's technical article on partial power-down ([ti.com/lit/pdf/ssztap0](https://ti.com/lit/pdf/ssztap0)), then look up "Ioff" in any 74LVC datasheet.
 - [ ] **Read:** Signal Integrity Journal's piece on how traces fuse ([signalintegrityjournal.com](https://www.signalintegrityjournal.com/articles/1704-how-do-traces-fuse-melt)), on Onderdonk's equation and where it stops being right. For the deep version: Douglas Brooks and Johannes Adam, *PCB Design Guide to Via and Trace Currents and Temperatures* (Artech House, 2021), chapter 12.
 
+One more came up in the build (2026-10-18): how a wire sheds heat. The heat checks treat each wire as copper in a ring of insulation, losing heat from its surface by natural convection and radiation, and a 10 s burst as heat piling into the copper faster than it can leave. It's the same physics as a heat sink.
+
+- [ ] **Read:** Bergman, Lavine, Incropera and DeWitt, *Fundamentals of Heat and Mass Transfer* (Wiley), the chapters on conduction through a cylinder wall and on free convection (the horizontal cylinder is the case a wire is).
+
 ## 16. Structure: stress and vibration
 
 *Needed for the structure side track.*

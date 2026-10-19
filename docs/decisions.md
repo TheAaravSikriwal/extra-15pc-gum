@@ -123,6 +123,8 @@ And one from the plan: **the GPS is the ARK GPS on DroneCAN** (16 g, 8 g over th
 - **The module plugs sit under the Pi and under the parachute tube,** so the Pi stack rose 6 mm in the V housing and the tube stands on a printed lip 6 mm above the rail. V's and P's sockets sink into the rail. C's socket and the two fuse holders hang off the frame's back edge.
 - **The HaLow card costs 1.06 W, not 0.69 W:** its Pi HAT feeds it through a linear regulator from 5 V.
 - **No cell fuse links** (decided 2026-10-18): the checks showed none can both survive flat-out flight and open a dead short before the battery leads' insulation burns. A dead short in the leads is on the unproven list.
+- **After a takeover, the safety monitor holds the DShot line high between its stop frames** and lets go only while the ESC answers, the way a flight controller does. The ngspice runs showed a floating line between frames breaks bidirectional DShot. A requirement for the monitor's firmware in step 5.
+- **Rerun colors each wire by the share of its heating limit it uses,** not its current over its rating (the talk said current). In the 10 s burst every power wire passes its continuous rating while staying cool, so current would light them all magenta while they pass the check.
 - **The weight now:** Mission 2320 g with a pessimistic hover of 21.2 min against 21; Max 2526 g, over its 2.5 kg limit. The wiring's real weight comes in step 3d.
 
 ### The parts (picked 2026-10-17)
