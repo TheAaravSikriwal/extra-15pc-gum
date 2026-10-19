@@ -89,5 +89,7 @@ electrical:
         - {name: M4A, role: power}
         - {name: M4B, role: power}
         - {name: M4C, role: power}
+  joined:
+    - [BAT.VBAT, FC.VBAT] # the plug passes the battery voltage on
   draws:
     - {pin: BAT.VBAT, min_v: 12, max_v: 25.2, typical_a: 0.05, worst_a: 0.05, note: "its own electronics; the motors' current comes from the sizing model"}

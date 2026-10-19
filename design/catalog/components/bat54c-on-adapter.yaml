@@ -29,3 +29,6 @@ electrical:
     surge_a: 0.6
     forward:
       - {amps: 0.1, volts: 0.8}
+  elements:
+    - {name: D_FC, kind: diode, between: [D1.A1, D1.K], note: "from the flight controller's 5 V"}
+    - {name: D_MODULE, kind: diode, between: [D1.A2, D1.K], note: "from the module supply"}

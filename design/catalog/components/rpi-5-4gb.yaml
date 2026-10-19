@@ -74,7 +74,7 @@ electrical:
       pins:
         - {name: 3V3, role: power, volts: 3.3}
         - {name: GND, role: ground}
-        - {name: CSI, role: bus}
+        - {name: DATA, role: bus}
   draws:
     - {pin: GPIO.5V, min_v: 4.63, max_v: 5.25, typical_a: 1.57, worst_a: 1.92}
   outputs:

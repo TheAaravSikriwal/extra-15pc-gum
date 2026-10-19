@@ -6,8 +6,8 @@ maker: Texas Instruments (chip), various (board)
 model: TS3A5018 quad two-way analog switch on a CJMCU-5018 breakout
 price_usd: 1.2
 checked: 2026-10-18
-source: {kind: manufacturer, url: 'https://store.siqma.com/ts3a5018-4channel-switch-module.html', checked: 2026-10-18, note: "Siqma's listing: 26 x 18 mm, 18 pins, 1.8 to 3.6 V, $1.20. NOYITO sells the same board on Amazon (https://www.amazon.com/dp/B07PS18HST). Nobody publishes its mass; 1.0 g is a guess"}
-mass_g: 1.0
+source: {kind: manufacturer, url: 'https://store.siqma.com/ts3a5018-4channel-switch-module.html', checked: 2026-10-18, note: "Siqma's listing: 26 x 18 mm, 18 pins, 1.8 to 3.6 V, $1.20. NOYITO sells the same board on Amazon (https://www.amazon.com/dp/B07PS18HST). Nobody publishes its mass; 1.0 g is a guess, plus 0.1 g for the pull-down resistor added to it"}
+mass_g: 1.1
 cad:
   shape: box
   length_mm: 26
@@ -45,3 +45,10 @@ electrical:
         - {name: GND2, role: ground}
   draws:
     - {pin: J1.VCC, min_v: 1.65, max_v: 3.6, typical_a: 0.00001, worst_a: 0.003}
+  switches:
+    - {control: J1.IN, enable: J1.EN, common: J1.CM1, low: J1.NC1, high: J1.NO1}
+    - {control: J1.IN, enable: J1.EN, common: J1.CM2, low: J1.NC2, high: J1.NO2}
+    - {control: J1.IN, enable: J1.EN, common: J1.CM3, low: J1.NC3, high: J1.NO3}
+    - {control: J1.IN, enable: J1.EN, common: J1.CM4, low: J1.NC4, high: J1.NO4}
+  elements:
+    - {name: R_PD, kind: resistor, between: [J1.IN, J1.GND], ohms: 10000, watts: 0.25, note: "added: a 10 kOhm pull-down soldered across IN and GND, so the switch passes the flight controller's lines whatever the board's own resistors do"}

@@ -35,3 +35,6 @@ electrical:
       - {amps: 0.1, volts: 0.32}
       - {amps: 1.0, volts: 0.45}
       - {amps: 3.0, volts: 0.75}
+  elements:
+    - {name: D_MODULE, kind: diode, between: [D1.A, D1.K], note: "from the module supply"}
+    - {name: D_CAN, kind: diode, between: [D2.A, D2.K], note: "from the CAN bus's 5 V, the backup"}

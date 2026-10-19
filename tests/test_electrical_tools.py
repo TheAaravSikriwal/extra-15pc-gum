@@ -7,6 +7,7 @@ so tests that need one skip cleanly when it isn't installed. CI installs them on
 import os
 import subprocess
 import sys
+from pathlib import Path
 
 import pytest
 
@@ -14,6 +15,7 @@ from pcs14.cli import main
 from pcs14.electrical import tools
 
 EXE = ".exe" if sys.platform == "win32" else ""
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def fake_program(folder, name, suffix=EXE):
@@ -72,6 +74,22 @@ def test_require_says_how_to_fix_it(tmp_path):
         tools.require("ngspice", {"PATH": str(tmp_path)})
     assert isinstance(missing.value, OSError)  # so the command line reports it cleanly
     assert "ngspice" in str(missing.value) and "PCS14_NGSPICE" in str(missing.value)
+
+
+def test_the_command_checks_the_connection_list(capsys):
+    assert main(["electrical", "--no-record"]) == 0
+    out = capsys.readouterr().out
+    assert "connection list" in out and "every rule" in out
+
+
+def test_the_command_says_what_breaks_a_rule(tmp_path, capsys):
+    broken = tmp_path / "electrical.yaml"
+    text = (ROOT / "design" / "electrical.yaml").read_text(encoding="utf-8")
+    broken.write_text(
+        text.replace("teensy_feed.D1.K, teensy.pins.VIN", "teensy_feed.D1.K, teensy.pins.3V3")
+    )
+    assert main(["electrical", "--no-record", "--electrical", str(broken)]) == 1
+    assert "isn't powered" in capsys.readouterr().out
 
 
 def test_the_command_lists_the_tools(capsys):

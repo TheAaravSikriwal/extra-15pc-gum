@@ -17,3 +17,11 @@ cad:
     found: none
     checked: '2026-10-17'
     note: Wires, so there's nothing to look for
+electrical:
+  source: {kind: manufacturer, url: 'https://datasheet.lcsc.com/datasheet/pdf/bf4ed80d93eda3bacf37967ce1d2662b.pdf', checked: 2026-10-18, note: "The drone's half of the battery connector, an Amass XT60, on the end of the battery leads"}
+  connectors:
+    - name: XT60
+      family: amass-xt60
+      pins:
+        - {name: '+', role: power}
+        - {name: '-', role: ground}

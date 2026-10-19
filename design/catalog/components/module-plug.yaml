@@ -28,7 +28,7 @@ electrical:
         - {name: CAN_P, role: bus}
         - {name: CAN_N, role: bus}
         - {name: GND, role: ground}
-        - {name: TX, role: signal, direction: out, volts: 3.3, functions: [the flight controller's TELEM1 transmit]}
-        - {name: RX, role: signal, direction: in, volts: 3.3, functions: [the flight controller's TELEM1 receive]}
-        - {name: TAKEOVER, role: signal, direction: out, volts: 3.3, functions: [the safety monitor taking over the chute]}
-        - {name: CHUTE, role: signal, direction: out, volts: 3.3, functions: [the safety monitor's release signal]}
+        - {name: TX, role: signal, direction: both, volts: 3.3, functions: [the flight controller's TELEM1 transmit]}
+        - {name: RX, role: signal, direction: both, volts: 3.3, functions: [the flight controller's TELEM1 receive]}
+        - {name: TAKEOVER, role: signal, direction: both, volts: 3.3, functions: [the safety monitor taking over the chute]}
+        - {name: CHUTE, role: signal, direction: both, volts: 3.3, functions: [the safety monitor's release signal]}

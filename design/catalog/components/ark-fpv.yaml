@@ -126,6 +126,8 @@ electrical:
         - {name: SWDIO, role: signal, direction: both, volts: 3.3}
         - {name: SWCLK, role: signal, direction: in, volts: 3.3}
         - {name: GND, role: ground}
+  joined:
+    - [ESC.VBAT, POWER_AUX.VBAT] # one battery rail, on two plugs
   outputs:
     - {name: 5V, kind: switching, fed_from: ESC.VBAT, pins: [RC.5V, CAN.5V, GPS.5V, TELEM.5V, SPI.5V], volts: 5.0, continuous_a: 2.0, own_a: 0.5, efficiency: 0.85}
     - {name: 12V, kind: switching, fed_from: ESC.VBAT, pins: [POWER_AUX.12V, VTX.12V], volts: 12.0, continuous_a: 2.0, efficiency: 0.85}

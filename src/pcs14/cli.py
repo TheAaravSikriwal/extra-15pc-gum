@@ -77,6 +77,13 @@ def build_parser() -> argparse.ArgumentParser:
     electrical.add_argument(
         "--tools", action="store_true", help="say where the outside tools are, then stop"
     )
+    electrical.add_argument(
+        "--electrical",
+        type=Path,
+        default=Path("design/electrical.yaml"),
+        help="the connection list",
+    )
+    electrical.add_argument("--cad", type=Path, default=Path("design/cad.yaml"))
     report = add("report", "Write the sizing report: Markdown, charts and the data file.")
     report.add_argument("--out", type=Path, help="report folder (default: docs/reports/sizing)")
     report.add_argument(
@@ -318,11 +325,32 @@ def run_cad(args) -> int:
 
 
 def run_electrical(args) -> int:
+    from pcs14.cad.settings import load_settings
     from pcs14.electrical import tools
+    from pcs14.electrical.model import load_connection_list
+    from pcs14.electrical.validate import validate_design
 
-    print("Outside tools:")
-    for line in tools.describe():
-        print(f"  {line}")
+    if args.tools:
+        print("Outside tools:")
+        for line in tools.describe():
+            print(f"  {line}")
+        return 0
+    catalog, build, targets = _load(args)
+    design = load_connection_list(args.electrical)
+    combinations = targets.combinations()
+    problems = validate_design(
+        design, catalog, build, load_settings(args.cad), [s.modules for s in combinations]
+    )
+    print(
+        _made_up_line(args) + f"The connection list: {len(design.boards)} boards, "
+        f"{len(design.wires)} wires, {len(design.requires)} safety paths"
+    )
+    if problems:
+        print(f"\n{len(problems)} problem(s):")
+        for problem in problems:
+            print(f"  {problem}")
+        return 1
+    print(f"It passes every rule in all {len(combinations)} module combinations.")
     return 0
 
 

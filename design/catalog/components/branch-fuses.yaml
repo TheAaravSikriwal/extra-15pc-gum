@@ -14,3 +14,19 @@ cad:
   height_mm: 10
   source: {kind: estimate, checked: '2026-10-18', note: "One inline MINI holder with its fuse; there are two. No maker publishes the holder's size, so it's a guess"}
   existing: {found: none, checked: '2026-10-18', note: "Small enough that a box will do"}
+electrical:
+  source: {kind: manufacturer, url: 'https://atta.szlcsc.com/upload/public/pdf/source/20241028/EC0235DBD6F881A867CEA06A6175F69D.pdf', checked: 2026-10-18, note: "Two MINI fuse holders; each fuse's rating is picked in design/electrical.yaml from littelfuse-mini-297"}
+  connectors:
+    - name: F1
+      family: pads
+      pins:
+        - {name: A, role: power}
+        - {name: B, role: power}
+    - name: F2
+      family: pads
+      pins:
+        - {name: A, role: power}
+        - {name: B, role: power}
+  elements:
+    - {name: F1, kind: fuse, between: [F1.A, F1.B]}
+    - {name: F2, kind: fuse, between: [F2.A, F2.B]}

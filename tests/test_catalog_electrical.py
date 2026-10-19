@@ -182,6 +182,72 @@ def test_a_diodes_points_rise():
         )
 
 
+def switch_board(**changes):
+    block = {
+        "source": MADE_UP,
+        "connectors": [
+            {
+                "name": "J1",
+                "family": "test-gh",
+                "pins": [
+                    {"name": "VCC", "role": "power", "volts": 3.3},
+                    {"name": "GND", "role": "ground"},
+                    {"name": "IN", "role": "signal", "direction": "in", "volts": 3.3},
+                    {"name": "CM1", "role": "signal", "direction": "both", "volts": 3.3},
+                    {"name": "NC1", "role": "signal", "direction": "both", "volts": 3.3},
+                    {"name": "NO1", "role": "signal", "direction": "both", "volts": 3.3},
+                ],
+            }
+        ],
+        "switches": [{"control": "J1.IN", "common": "J1.CM1", "low": "J1.NC1", "high": "J1.NO1"}],
+        "elements": [
+            {"name": "R1", "kind": "resistor", "between": ["J1.IN", "J1.GND"], "ohms": 10000}
+        ],
+    }
+    block.update(changes)
+    return block
+
+
+def test_a_switch_and_a_resistor_load():
+    block = ElectricalBlock.model_validate(switch_board())
+    assert block.switches[0].low == "J1.NC1"
+    assert block.element("R1").ohms == 10000
+
+
+def test_a_switch_on_a_pin_that_isnt_there_fails():
+    bad = switch_board(
+        switches=[{"control": "J1.IN", "common": "J1.CM2", "low": "J1.NC1", "high": "J1.NO1"}]
+    )
+    with pytest.raises(ValidationError, match="J1.CM2 isn't a pin"):
+        ElectricalBlock.model_validate(bad)
+
+
+def test_a_resistor_needs_its_ohms_and_a_diode_its_data():
+    with pytest.raises(ValidationError, match="ohms"):
+        ElectricalBlock.model_validate(
+            switch_board(
+                elements=[{"name": "R1", "kind": "resistor", "between": ["J1.IN", "J1.GND"]}]
+            )
+        )
+    with pytest.raises(ValidationError, match="diode"):
+        ElectricalBlock.model_validate(
+            switch_board(elements=[{"name": "D1", "kind": "diode", "between": ["J1.IN", "J1.GND"]}])
+        )
+
+
+def test_an_element_on_a_pin_that_isnt_there_fails():
+    bad = switch_board(elements=[{"name": "F1", "kind": "fuse", "between": ["J1.IN", "J1.OUT"]}])
+    with pytest.raises(ValidationError, match="J1.OUT isn't a pin"):
+        ElectricalBlock.model_validate(bad)
+
+
+def test_pins_joined_on_the_board_must_exist():
+    block = ElectricalBlock.model_validate(board(joined=[["ESC.VBAT", "CAN.5V"]]))
+    assert block.joined == [["ESC.VBAT", "CAN.5V"]]
+    with pytest.raises(ValidationError, match="CAN.12V isn't a pin"):
+        ElectricalBlock.model_validate(board(joined=[["ESC.VBAT", "CAN.12V"]]))
+
+
 def wire(gauges):
     return {
         "type": "wire",

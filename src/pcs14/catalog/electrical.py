@@ -179,6 +179,35 @@ class DiodeData(Strict):
         return points[-1].volts
 
 
+class Switch(Strict):
+    """One channel of an analog switch: common joins `low` with the control pin low, and
+    `high` with it high. With `enable` given and high, the channel is open."""
+
+    control: str
+    common: str
+    low: str
+    high: str
+    enable: str | None = None
+
+
+class Element(Strict):
+    """A two-terminal part inside a board: a resistor soldered across two pins, a fuse in its
+    holder, a diode (its `between` is anode then cathode, and the block's diode data applies)."""
+
+    name: str = Field(pattern=NAME)
+    kind: Literal["resistor", "fuse", "diode"]
+    between: tuple[str, str]
+    ohms: float | None = Field(default=None, gt=0)
+    watts: float | None = Field(default=None, gt=0)
+    note: str | None = None
+
+    @model_validator(mode="after")
+    def _resistors_say_how_much(self):
+        if self.kind == "resistor" and self.ohms is None:
+            raise ValueError(f"resistor {self.name} needs its ohms")
+        return self
+
+
 ESTIMATE = re.compile(r"^(\w+)(?:\[([^\]]+)\])?(?:\.(\w+))?$")
 
 
@@ -192,6 +221,9 @@ class ElectricalBlock(Strict):
     rating: Rating | None = None  # for connector families
     fuse: FuseFamily | None = None  # for fuse families
     diode: DiodeData | None = None  # for diodes
+    joined: list[list[str]] = Field(default_factory=list)  # pins that are one net on the board
+    switches: list[Switch] = Field(default_factory=list)
+    elements: list[Element] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def _everything_named_is_there(self):
@@ -206,6 +238,23 @@ class ElectricalBlock(Strict):
                 self._known(ref, refs, f"output {output.name}")
             if output.fed_from is not None:
                 self._known(output.fed_from, refs, f"output {output.name}")
+        for n, switch in enumerate(self.switches, start=1):
+            for ref in (switch.control, switch.common, switch.low, switch.high, switch.enable):
+                if ref is not None:
+                    self._known(ref, refs, f"switch {n}")
+        for group in self.joined:
+            for ref in group:
+                self._known(ref, refs, "joined")
+        names = [e.name for e in self.elements]
+        if len(names) != len(set(names)):
+            raise ValueError("two elements share a name")
+        for element in self.elements:
+            for ref in element.between:
+                self._known(ref, refs, f"element {element.name}")
+            if element.kind == "diode" and self.diode is None:
+                raise ValueError(
+                    f"element {element.name} is a diode, so the block needs diode data"
+                )
         for path in self.estimates:
             if not self._resolves(path):
                 raise ValueError(f"estimates names {path}, which isn't in this block")
@@ -233,6 +282,7 @@ class ElectricalBlock(Strict):
             "connectors": {c.name: c for c in self.connectors},
             "draws": {d.pin: d for d in self.draws},
             "outputs": {o.name: o for o in self.outputs},
+            "elements": {e.name: e for e in self.elements},
         }.get(section)
         if items is None or key not in items:
             return False
@@ -260,6 +310,12 @@ class ElectricalBlock(Strict):
             if output.name == name:
                 return output
         raise KeyError(f"{name} isn't a supply on this part")
+
+    def element(self, name: str) -> Element:
+        for element in self.elements:
+            if element.name == name:
+                return element
+        raise KeyError(f"{name} isn't an element on this part")
 
     def families(self) -> set[str]:
         return {c.family for c in self.connectors if c.family != PADS}

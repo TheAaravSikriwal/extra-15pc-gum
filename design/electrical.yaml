@@ -1,0 +1,309 @@
+# The connection list: every board, every wire, what plugs into what. The harness diagrams,
+# pin maps, schematic and every electrical check get generated from this one file (decided in
+# the electrical talk, 2026-10-18). Pins are BOARD.CONNECTOR.PIN, with the connector and pin
+# names from each part's catalog block. The battery is `pack`, with pins pack.XT60.+ and -.
+#
+# Wires with a `route` follow that wire route in design/cad.yaml and take its length. The rest
+# give a length_mm, an estimate until they get routes of their own in the CAD (task 8).
+
+boards:
+  # Base: the power path
+  lead: {part: base-wiring} # the drone's XT60 on the battery leads
+  esc: {part: holybro-tekko32-f4-50a}
+  m1: {part: emax-e3-2814-850kv} # front right (PX4's quad X numbering)
+  m2: {part: emax-e3-2814-850kv} # back left
+  m3: {part: emax-e3-2814-850kv} # front left
+  m4: {part: emax-e3-2814-850kv} # back right
+  fuses: {part: branch-fuses} # F1 feeds the module supply, F2 the flight controller
+  bec: {part: matek-bec12s-pro} # the module supply
+  # Base: flying
+  fc: {part: ark-fpv}
+  rx: {part: radiomaster-rp2-v2}
+  lidar: {part: benewake-tf-luna}
+  sockets: {part: module-socket} # the module bus harness: the FC's CAN plug and the three slots
+  # Base: the safety monitor
+  teensy:
+    part: pjrc-teensy-41
+    modes:
+      pins.22: both # DShot to motor 1 when it takes over (it lets go of the line for the reply)
+      pins.23: both # motor 2
+      pins.2: both # motor 3
+      pins.4: both # motor 4
+      pins.5: in # listening to the flight controller's DShot, motor 1
+      pins.6: in # motor 2
+      pins.24: in # motor 3
+      pins.28: in # motor 4
+      pins.7: in # RX2: the receiver's CRSF
+      pins.15: in # RX3: the flight controller's serial
+      pins.14: out # TX3: to the flight controller
+      pins.13: out # SPI SCK to its IMU
+      pins.11: out # SPI MOSI
+      pins.12: in # SPI MISO
+      pins.10: out # SPI CS
+      pins.40: in # the IMU's interrupt
+      pins.30: out # takes the ESC lines (high) from the flight controller
+      pins.31: out # takes the chute's release servo (high) from P's CAN node
+      pins.37: out # its own release signal for the chute
+  imu: {part: adafruit-lsm6dsox}
+  cut: {part: cjmcu-5018} # the motor cut switch
+  cut_3v3: {part: pololu-d36v6f3, module: base} # its supply, from the flight controller's side
+  taps: {part: safety-monitor-buffers} # B1 CRSF, B2 to B5 DShot, B6 the FC's serial
+  teensy_feed: {part: bat54c-on-adapter} # the Teensy's two feeds
+  # V
+  vplug: {part: module-plug, module: V}
+  gps: {part: ark-gps, terminator: false} # mid-bus, so its terminator stays off
+  pi: {part: rpi-5-4gb}
+  fan: {part: rpi-active-cooler}
+  camera: {part: rpi-camera-module-3}
+  halow: {part: heltec-ht-hc01p}
+  # P
+  pplug: {part: module-plug, module: P}
+  p_node: {part: ark-cannode, module: P, terminator: false}
+  chute: {part: fruity-chutes-harrier-40-42}
+  p_switch: {part: p-chute-switch}
+  p_3v3: {part: pololu-d36v6f3, module: P}
+  p_diodes: {part: p-servo-diodes}
+  # C
+  cplug: {part: module-plug, module: C}
+  c_node: {part: ark-cannode, module: C, terminator: false}
+  claws: {part: claws-placeholder}
+
+mates:
+  - {a: pack.XT60, b: lead.XT60}
+  - {a: fc.CAN, b: sockets.FC_CAN}
+  - {a: sockets.V_POWER, b: vplug.POWER}
+  - {a: sockets.V_SIGNAL, b: vplug.SIGNAL}
+  - {a: sockets.P_POWER, b: pplug.POWER}
+  - {a: sockets.P_SIGNAL, b: pplug.SIGNAL}
+  - {a: sockets.C_POWER, b: cplug.POWER}
+  - {a: sockets.C_SIGNAL, b: cplug.SIGNAL}
+  - {a: pi.FAN, b: fan.FAN} # the Active Cooler's lead in the Pi's fan header
+  - {a: pi.CAM0, b: camera.CSI} # through the 22-pin camera ribbon
+
+links:
+  - {name: the HaLow HAT on the Pi's header (5 V), pins: [pi.GPIO.5V, halow.HAT.5V]}
+  - {name: the HaLow HAT on the Pi's header (ground), pins: [pi.GPIO.GND, halow.HAT.GND]}
+  - {name: the motor cut switch always enabled, pins: [cut.J1.EN, cut.J1.GND]}
+  - name: the buffers always enabled
+    pins: [taps.B1.OE, taps.B2.OE, taps.B3.OE, taps.B4.OE, taps.B5.OE, taps.B6.OE, taps.B1.GND]
+  - name: the buffers' 3.3 V, a short bus on the Teensy's carrier
+    pins: [teensy.pins.3V3, taps.B1.VCC, taps.B2.VCC, taps.B3.VCC, taps.B4.VCC, taps.B5.VCC, taps.B6.VCC]
+
+fuses:
+  - {element: fuses.F1, family: littelfuse-mini-297, rated_a: 3} # the module supply's feed
+  - {element: fuses.F2, family: littelfuse-mini-297, rated_a: 2} # the flight controller's feed
+
+# The safety design's paths (the electrical spec, "The motor cut and chute circuit"): each one
+# has to be connected whenever its boards are fitted, so no wire on them can go missing quietly.
+requires:
+  - {name: the kill switch reaches the flight controller, pins: [rx.pads.TX, fc.RC.USART6_RX]}
+  - {name: the kill switch reaches the safety monitor's buffer, pins: [rx.pads.TX, taps.B1.A]}
+  - {name: the buffer passes the receiver to the safety monitor, pins: [taps.B1.Y, teensy.pins.7]}
+  - {name: motor 1's line passes the switch, pins: [fc.ESC.CH1, cut.J1.NC1]}
+  - {name: motor 2's line passes the switch, pins: [fc.ESC.CH2, cut.J1.NC2]}
+  - {name: motor 3's line passes the switch, pins: [fc.ESC.CH3, cut.J1.NC3]}
+  - {name: motor 4's line passes the switch, pins: [fc.ESC.CH4, cut.J1.NC4]}
+  - {name: the switch reaches motor 1, pins: [cut.J1.CM1, esc.FC.M1]}
+  - {name: the switch reaches motor 2, pins: [cut.J1.CM2, esc.FC.M2]}
+  - {name: the switch reaches motor 3, pins: [cut.J1.CM3, esc.FC.M3]}
+  - {name: the switch reaches motor 4, pins: [cut.J1.CM4, esc.FC.M4]}
+  - {name: the safety monitor can stop motor 1, pins: [teensy.pins.22, cut.J1.NO1]}
+  - {name: the safety monitor can stop motor 2, pins: [teensy.pins.23, cut.J1.NO2]}
+  - {name: the safety monitor can stop motor 3, pins: [teensy.pins.2, cut.J1.NO3]}
+  - {name: the safety monitor can stop motor 4, pins: [teensy.pins.4, cut.J1.NO4]}
+  - {name: the safety monitor controls the switch, pins: [teensy.pins.30, cut.J1.IN]}
+  - {name: the switch runs off the flight controller's side, pins: [fc.SPI.5V, cut_3v3.J1.VIN]}
+  - {name: the safety monitor lives off the flight controller's 5 V, pins: [fc.TELEM.5V, teensy_feed.D1.A1]}
+  - {name: the safety monitor lives off the module supply too, pins: [bec.pads.OUT, teensy_feed.D1.A2]}
+  - {name: the diodes feed the safety monitor, pins: [teensy_feed.D1.K, teensy.pins.VIN]}
+  - {name: the safety monitor can take over the chute, pins: [teensy.pins.31, p_switch.U1.S]}
+  - {name: the safety monitor's release signal reaches the chute switch, pins: [teensy.pins.37, p_switch.U1.I1]}
+  - {name: the CAN node's release signal reaches the chute switch, pins: [p_node.PWM.PWM1, p_switch.U1.I0]}
+  - {name: the chute switch drives the release servo, pins: [p_switch.U1.Y, chute.servo.SIG]}
+  - {name: the release servo has the module supply, pins: [pplug.POWER.5V, p_diodes.D1.A]}
+  - {name: the release servo has the CAN bus's 5 V as a backup, pins: [pplug.SIGNAL.CAN_5V, p_diodes.D2.A]}
+  - {name: the diodes feed the release servo, pins: [p_diodes.D1.K, p_diodes.D2.K, chute.servo.V+]}
+
+wires:
+  # The main power path: 12 AWG from the XT60 to the ESC's pads
+  - {ends: [lead.XT60.+, esc.BAT.VBAT], wire: ul3135-silicone, awg: 12, route: battery leads, harness: main power}
+  - {ends: [lead.XT60.-, esc.BAT.GND], wire: ul3135-silicone, awg: 12, route: battery leads, harness: main power}
+
+  # The motors: their own 18 AWG leads, cut to the routes along the arms
+  - {ends: [esc.MOTORS.M1A, m1.leads.A], wire: ul3135-silicone, awg: 18, route: motor leads front right, harness: motors}
+  - {ends: [esc.MOTORS.M1B, m1.leads.B], wire: ul3135-silicone, awg: 18, route: motor leads front right, harness: motors}
+  - {ends: [esc.MOTORS.M1C, m1.leads.C], wire: ul3135-silicone, awg: 18, route: motor leads front right, harness: motors}
+  - {ends: [esc.MOTORS.M2A, m2.leads.A], wire: ul3135-silicone, awg: 18, route: motor leads back left, harness: motors}
+  - {ends: [esc.MOTORS.M2B, m2.leads.B], wire: ul3135-silicone, awg: 18, route: motor leads back left, harness: motors}
+  - {ends: [esc.MOTORS.M2C, m2.leads.C], wire: ul3135-silicone, awg: 18, route: motor leads back left, harness: motors}
+  - {ends: [esc.MOTORS.M3A, m3.leads.A], wire: ul3135-silicone, awg: 18, route: motor leads front left, harness: motors}
+  - {ends: [esc.MOTORS.M3B, m3.leads.B], wire: ul3135-silicone, awg: 18, route: motor leads front left, harness: motors}
+  - {ends: [esc.MOTORS.M3C, m3.leads.C], wire: ul3135-silicone, awg: 18, route: motor leads front left, harness: motors}
+  - {ends: [esc.MOTORS.M4A, m4.leads.A], wire: ul3135-silicone, awg: 18, route: motor leads back right, harness: motors}
+  - {ends: [esc.MOTORS.M4B, m4.leads.B], wire: ul3135-silicone, awg: 18, route: motor leads back right, harness: motors}
+  - {ends: [esc.MOTORS.M4C, m4.leads.C], wire: ul3135-silicone, awg: 18, route: motor leads back right, harness: motors}
+
+  # The two fused branches, tapped off the ESC's battery pads
+  - {ends: [esc.BAT.VBAT, fuses.F1.A], wire: ul3135-silicone, awg: 20, length_mm: 90, harness: battery taps}
+  - {ends: [fuses.F1.B, bec.pads.IN], wire: ul3135-silicone, awg: 20, route: bec feed, harness: battery taps}
+  - {ends: [esc.BAT.GND, bec.pads.G], wire: ul3135-silicone, awg: 20, route: bec feed, harness: battery taps}
+  - {ends: [esc.BAT.VBAT, fuses.F2.A], wire: ul3135-silicone, awg: 22, length_mm: 90, harness: battery taps}
+  # into a JST-GH, so 26 AWG: the flight controller takes its battery on POWER AUX, and the
+  # ESC plug's battery pin stays empty
+  - {ends: [fuses.F2.B, fc.POWER_AUX.VBAT], wire: thin-signal-lead, awg: 26, length_mm: 70, harness: battery taps}
+  - {ends: [esc.BAT.GND, fc.POWER_AUX.GND], wire: thin-signal-lead, awg: 26, length_mm: 90, harness: battery taps}
+
+  # The module supply, out to the three slots
+  - {ends: [bec.pads.OUT, sockets.V_POWER.5V], wire: ul3135-silicone, awg: 18, length_mm: 60, harness: module power}
+  - {ends: [bec.pads.G2, sockets.V_POWER.GND], wire: ul3135-silicone, awg: 18, length_mm: 60, harness: module power}
+  - {ends: [bec.pads.OUT, sockets.P_POWER.5V], wire: ul3135-silicone, awg: 18, length_mm: 100, harness: module power}
+  - {ends: [bec.pads.G2, sockets.P_POWER.GND], wire: ul3135-silicone, awg: 18, length_mm: 100, harness: module power}
+  - {ends: [bec.pads.OUT, sockets.C_POWER.5V], wire: ul3135-silicone, awg: 18, length_mm: 50, harness: module power}
+  - {ends: [bec.pads.G2, sockets.C_POWER.GND], wire: ul3135-silicone, awg: 18, length_mm: 50, harness: module power}
+
+  # The ESC cable, re-pinned: the flight controller's four DShot lines go through the motor cut
+  # switch; current, telemetry and ground go straight to the ESC
+  - {ends: [fc.ESC.CH1, cut.J1.NC1], wire: thin-signal-lead, awg: 28, length_mm: 70, harness: esc cable}
+  - {ends: [fc.ESC.CH2, cut.J1.NC2], wire: thin-signal-lead, awg: 28, length_mm: 70, harness: esc cable}
+  - {ends: [fc.ESC.CH3, cut.J1.NC3], wire: thin-signal-lead, awg: 28, length_mm: 70, harness: esc cable}
+  - {ends: [fc.ESC.CH4, cut.J1.NC4], wire: thin-signal-lead, awg: 28, length_mm: 70, harness: esc cable}
+  - {ends: [cut.J1.CM1, esc.FC.M1], wire: thin-signal-lead, awg: 28, length_mm: 70, harness: esc cable}
+  - {ends: [cut.J1.CM2, esc.FC.M2], wire: thin-signal-lead, awg: 28, length_mm: 70, harness: esc cable}
+  - {ends: [cut.J1.CM3, esc.FC.M3], wire: thin-signal-lead, awg: 28, length_mm: 70, harness: esc cable}
+  - {ends: [cut.J1.CM4, esc.FC.M4], wire: thin-signal-lead, awg: 28, length_mm: 70, harness: esc cable}
+  - {ends: [esc.FC.CURRENT, fc.ESC.CURR], wire: thin-signal-lead, awg: 28, length_mm: 60, harness: esc cable}
+  - {ends: [esc.FC.TLM, fc.ESC.UART4_RX], wire: thin-signal-lead, awg: 28, length_mm: 60, harness: esc cable}
+  - {ends: [esc.FC.GND, fc.ESC.GND], wire: thin-signal-lead, awg: 28, length_mm: 60, harness: esc cable}
+
+  # The receiver: CRSF both ways with the flight controller, its transmit line also into the
+  # safety monitor through buffer B1
+  - {ends: [fc.RC.5V, rx.pads.5V], wire: thin-signal-lead, awg: 26, route: receiver, harness: receiver}
+  - {ends: [fc.RC.GND, rx.pads.GND], wire: thin-signal-lead, awg: 26, route: receiver, harness: receiver}
+  - {ends: [rx.pads.TX, fc.RC.USART6_RX], wire: thin-signal-lead, awg: 26, route: receiver, harness: receiver}
+  - {ends: [fc.RC.USART6_TX, rx.pads.RX], wire: thin-signal-lead, awg: 26, route: receiver, harness: receiver}
+  - {ends: [rx.pads.TX, taps.B1.A], wire: thin-signal-lead, awg: 26, length_mm: 120, harness: receiver}
+
+  # The lidar, on the GPS port now that the GPS is on CAN; its mode pin stays open for UART
+  - {ends: [fc.GPS.5V, lidar.J1.5V], wire: thin-signal-lead, awg: 26, route: lidar, harness: lidar}
+  - {ends: [fc.GPS.GND, lidar.J1.GND], wire: thin-signal-lead, awg: 26, route: lidar, harness: lidar}
+  - {ends: [fc.GPS.USART1_TX, lidar.J1.RXD], wire: thin-signal-lead, awg: 26, route: lidar, harness: lidar}
+  - {ends: [lidar.J1.TXD, fc.GPS.USART1_RX], wire: thin-signal-lead, awg: 26, route: lidar, harness: lidar}
+
+  # The safety monitor: power from both sides, through the diode pair
+  - {ends: [fc.TELEM.5V, teensy_feed.D1.A1], wire: thin-signal-lead, awg: 26, length_mm: 70, harness: safety monitor}
+  - {ends: [bec.pads.OUT, teensy_feed.D1.A2], wire: thin-signal-lead, awg: 26, length_mm: 110, harness: safety monitor}
+  - {ends: [teensy_feed.D1.K, teensy.pins.VIN], wire: thin-signal-lead, awg: 26, length_mm: 30, harness: safety monitor}
+  - {ends: [fc.VTX.GND, teensy.pins.GND], wire: thin-signal-lead, awg: 26, route: safety monitor, harness: safety monitor}
+  # its serial link with the flight controller (the flight controller's side through buffer B6)
+  - {ends: [fc.VTX.UART5_TX, taps.B6.A], wire: thin-signal-lead, awg: 26, route: safety monitor, harness: safety monitor}
+  - {ends: [teensy.pins.14, fc.VTX.UART5_RX], wire: thin-signal-lead, awg: 26, route: safety monitor, harness: safety monitor}
+  # listening: the receiver, the flight controller's serial, its four DShot lines
+  - {ends: [taps.B1.Y, teensy.pins.7], wire: thin-signal-lead, awg: 28, length_mm: 30, harness: safety monitor}
+  - {ends: [taps.B6.Y, teensy.pins.15], wire: thin-signal-lead, awg: 28, length_mm: 30, harness: safety monitor}
+  - {ends: [fc.ESC.CH1, taps.B2.A], wire: thin-signal-lead, awg: 28, length_mm: 90, harness: safety monitor}
+  - {ends: [fc.ESC.CH2, taps.B3.A], wire: thin-signal-lead, awg: 28, length_mm: 90, harness: safety monitor}
+  - {ends: [fc.ESC.CH3, taps.B4.A], wire: thin-signal-lead, awg: 28, length_mm: 90, harness: safety monitor}
+  - {ends: [fc.ESC.CH4, taps.B5.A], wire: thin-signal-lead, awg: 28, length_mm: 90, harness: safety monitor}
+  - {ends: [taps.B2.Y, teensy.pins.5], wire: thin-signal-lead, awg: 28, length_mm: 30, harness: safety monitor}
+  - {ends: [taps.B3.Y, teensy.pins.6], wire: thin-signal-lead, awg: 28, length_mm: 30, harness: safety monitor}
+  - {ends: [taps.B4.Y, teensy.pins.24], wire: thin-signal-lead, awg: 28, length_mm: 30, harness: safety monitor}
+  - {ends: [taps.B5.Y, teensy.pins.28], wire: thin-signal-lead, awg: 28, length_mm: 30, harness: safety monitor}
+  - {ends: [teensy.pins.GND, taps.B1.GND], wire: thin-signal-lead, awg: 28, length_mm: 30, harness: safety monitor}
+  # taking over: its own DShot into the switch's other side, and the switch's control
+  - {ends: [teensy.pins.22, cut.J1.NO1], wire: thin-signal-lead, awg: 28, length_mm: 30, harness: safety monitor}
+  - {ends: [teensy.pins.23, cut.J1.NO2], wire: thin-signal-lead, awg: 28, length_mm: 30, harness: safety monitor}
+  - {ends: [teensy.pins.2, cut.J1.NO3], wire: thin-signal-lead, awg: 28, length_mm: 30, harness: safety monitor}
+  - {ends: [teensy.pins.4, cut.J1.NO4], wire: thin-signal-lead, awg: 28, length_mm: 30, harness: safety monitor}
+  - {ends: [teensy.pins.30, cut.J1.IN], wire: thin-signal-lead, awg: 28, length_mm: 30, harness: safety monitor}
+  # the switch's own 3.3 V, from the flight controller's side so it never depends on the Teensy
+  - {ends: [fc.SPI.5V, cut_3v3.J1.VIN], wire: thin-signal-lead, awg: 28, length_mm: 70, harness: safety monitor}
+  - {ends: [fc.SPI.GND, cut_3v3.J1.GND], wire: thin-signal-lead, awg: 28, length_mm: 70, harness: safety monitor}
+  - {ends: [cut_3v3.J1.VOUT, cut.J1.VCC], wire: thin-signal-lead, awg: 28, length_mm: 15, harness: safety monitor}
+  - {ends: [cut_3v3.J1.GND, cut.J1.GND], wire: thin-signal-lead, awg: 28, length_mm: 15, harness: safety monitor}
+  # its IMU, on SPI
+  - {ends: [teensy.pins.3V3, imu.J1.VIN], wire: thin-signal-lead, awg: 28, length_mm: 40, harness: safety monitor}
+  - {ends: [teensy.pins.GND, imu.J1.GND], wire: thin-signal-lead, awg: 28, length_mm: 40, harness: safety monitor}
+  - {ends: [teensy.pins.13, imu.J1.SCK], wire: thin-signal-lead, awg: 28, length_mm: 40, harness: safety monitor}
+  - {ends: [teensy.pins.11, imu.J1.MOSI], wire: thin-signal-lead, awg: 28, length_mm: 40, harness: safety monitor}
+  - {ends: [imu.J1.MISO, teensy.pins.12], wire: thin-signal-lead, awg: 28, length_mm: 40, harness: safety monitor}
+  - {ends: [teensy.pins.10, imu.J1.CS], wire: thin-signal-lead, awg: 28, length_mm: 40, harness: safety monitor}
+  - {ends: [imu.J1.INT1, teensy.pins.40], wire: thin-signal-lead, awg: 28, length_mm: 40, harness: safety monitor}
+  # its two chute lines, up to P's slot
+  - {ends: [teensy.pins.31, sockets.P_SIGNAL.TAKEOVER], wire: thin-signal-lead, awg: 26, length_mm: 60, harness: safety monitor}
+  - {ends: [teensy.pins.37, sockets.P_SIGNAL.CHUTE], wire: thin-signal-lead, awg: 26, length_mm: 60, harness: safety monitor}
+
+  # The module bus harness: from the flight controller's CAN plug through V's and P's slots to
+  # C's, with the terminators at both ends (on the harness), and the Pi's serial pair to V's slot
+  - {ends: [sockets.FC_CAN.CAN_P, sockets.V_SIGNAL.CAN_P], wire: thin-signal-lead, awg: 26, route: module connector, harness: module bus}
+  - {ends: [sockets.FC_CAN.CAN_N, sockets.V_SIGNAL.CAN_N], wire: thin-signal-lead, awg: 26, route: module connector, harness: module bus}
+  - {ends: [sockets.FC_CAN.5V, sockets.V_SIGNAL.CAN_5V], wire: thin-signal-lead, awg: 26, route: module connector, harness: module bus}
+  - {ends: [sockets.FC_CAN.GND, sockets.V_SIGNAL.GND], wire: thin-signal-lead, awg: 26, route: module connector, harness: module bus}
+  - {ends: [sockets.V_SIGNAL.CAN_P, sockets.P_SIGNAL.CAN_P], wire: thin-signal-lead, awg: 26, length_mm: 50, harness: module bus}
+  - {ends: [sockets.V_SIGNAL.CAN_N, sockets.P_SIGNAL.CAN_N], wire: thin-signal-lead, awg: 26, length_mm: 50, harness: module bus}
+  - {ends: [sockets.V_SIGNAL.CAN_5V, sockets.P_SIGNAL.CAN_5V], wire: thin-signal-lead, awg: 26, length_mm: 50, harness: module bus}
+  - {ends: [sockets.P_SIGNAL.CAN_P, sockets.C_SIGNAL.CAN_P], wire: thin-signal-lead, awg: 26, length_mm: 130, harness: module bus}
+  - {ends: [sockets.P_SIGNAL.CAN_N, sockets.C_SIGNAL.CAN_N], wire: thin-signal-lead, awg: 26, length_mm: 130, harness: module bus}
+  - {ends: [sockets.P_SIGNAL.CAN_5V, sockets.C_SIGNAL.CAN_5V], wire: thin-signal-lead, awg: 26, length_mm: 130, harness: module bus}
+  - {ends: [fc.TELEM.UART7_TX, sockets.V_SIGNAL.TX], wire: thin-signal-lead, awg: 26, length_mm: 50, harness: module bus}
+  - {ends: [sockets.V_SIGNAL.RX, fc.TELEM.UART7_RX], wire: thin-signal-lead, awg: 26, length_mm: 50, harness: module bus}
+
+  # V: the Pi on the module supply, MAVLink on its UART0, the GPS at the end of a CAN stub
+  - {ends: [vplug.POWER.5V, pi.GPIO.5V], wire: ul3135-silicone, awg: 20, length_mm: 40, harness: v}
+  - {ends: [vplug.POWER.GND, pi.GPIO.GND], wire: ul3135-silicone, awg: 20, length_mm: 40, harness: v}
+  - {ends: [vplug.SIGNAL.TX, pi.GPIO.GPIO15], wire: thin-signal-lead, awg: 26, length_mm: 40, harness: v}
+  - {ends: [pi.GPIO.GPIO14, vplug.SIGNAL.RX], wire: thin-signal-lead, awg: 26, length_mm: 40, harness: v}
+  - {ends: [vplug.SIGNAL.CAN_P, gps.CAN1.CAN_P], wire: thin-signal-lead, awg: 26, route: gps, harness: v}
+  - {ends: [vplug.SIGNAL.CAN_N, gps.CAN1.CAN_N], wire: thin-signal-lead, awg: 26, route: gps, harness: v}
+  - {ends: [vplug.SIGNAL.CAN_5V, gps.CAN1.5V], wire: thin-signal-lead, awg: 26, route: gps, harness: v}
+  - {ends: [vplug.SIGNAL.GND, gps.CAN1.GND], wire: thin-signal-lead, awg: 26, route: gps, harness: v}
+
+  # P: the release servo powered from the module supply or, through the diodes, the CAN bus's
+  # 5 V; its signal from the CAN node unless the safety monitor takes over
+  - {ends: [pplug.POWER.5V, p_diodes.D1.A], wire: ul3135-silicone, awg: 22, length_mm: 40, harness: p}
+  - {ends: [pplug.SIGNAL.CAN_5V, p_diodes.D2.A], wire: thin-signal-lead, awg: 26, length_mm: 40, harness: p}
+  - {ends: [p_diodes.D1.K, chute.servo.V+], wire: ul3135-silicone, awg: 22, route: chute servo, harness: p}
+  - {ends: [p_diodes.D2.K, p_diodes.D1.K], wire: thin-signal-lead, awg: 26, length_mm: 10, harness: p}
+  - {ends: [pplug.POWER.GND, chute.servo.GND], wire: ul3135-silicone, awg: 22, route: chute servo, harness: p}
+  - {ends: [p_diodes.D1.K, p_3v3.J1.VIN], wire: thin-signal-lead, awg: 28, length_mm: 20, harness: p}
+  - {ends: [pplug.POWER.GND, p_3v3.J1.GND], wire: thin-signal-lead, awg: 28, length_mm: 30, harness: p}
+  - {ends: [p_3v3.J1.VOUT, p_switch.U1.VCC], wire: thin-signal-lead, awg: 28, length_mm: 15, harness: p}
+  - {ends: [p_3v3.J1.GND, p_switch.U1.GND], wire: thin-signal-lead, awg: 28, length_mm: 15, harness: p}
+  - {ends: [pplug.SIGNAL.CAN_P, p_node.CAN1.CAN_P], wire: thin-signal-lead, awg: 26, length_mm: 50, harness: p}
+  - {ends: [pplug.SIGNAL.CAN_N, p_node.CAN1.CAN_N], wire: thin-signal-lead, awg: 26, length_mm: 50, harness: p}
+  - {ends: [pplug.SIGNAL.CAN_5V, p_node.CAN1.5V], wire: thin-signal-lead, awg: 26, length_mm: 50, harness: p}
+  - {ends: [pplug.SIGNAL.GND, p_node.CAN1.GND], wire: thin-signal-lead, awg: 26, length_mm: 50, harness: p}
+  - {ends: [p_node.PWM.PWM1, p_switch.U1.I0], wire: thin-signal-lead, awg: 28, length_mm: 50, harness: p}
+  - {ends: [pplug.SIGNAL.CHUTE, p_switch.U1.I1], wire: thin-signal-lead, awg: 28, length_mm: 40, harness: p}
+  - {ends: [pplug.SIGNAL.TAKEOVER, p_switch.U1.S], wire: thin-signal-lead, awg: 28, length_mm: 40, harness: p}
+  - {ends: [p_switch.U1.Y, chute.servo.SIG], wire: thin-signal-lead, awg: 28, route: chute servo, harness: p}
+
+  # C: two servos on the module supply, driven by C's CAN node
+  - {ends: [cplug.POWER.5V, claws.servo1.V+], wire: ul3135-silicone, awg: 20, length_mm: 80, harness: c}
+  - {ends: [cplug.POWER.5V, claws.servo2.V+], wire: ul3135-silicone, awg: 20, length_mm: 80, harness: c}
+  - {ends: [cplug.POWER.GND, claws.servo1.GND], wire: ul3135-silicone, awg: 20, length_mm: 80, harness: c}
+  - {ends: [cplug.POWER.GND, claws.servo2.GND], wire: ul3135-silicone, awg: 20, length_mm: 80, harness: c}
+  - {ends: [cplug.SIGNAL.CAN_P, c_node.CAN1.CAN_P], wire: thin-signal-lead, awg: 26, length_mm: 60, harness: c}
+  - {ends: [cplug.SIGNAL.CAN_N, c_node.CAN1.CAN_N], wire: thin-signal-lead, awg: 26, length_mm: 60, harness: c}
+  - {ends: [cplug.SIGNAL.CAN_5V, c_node.CAN1.5V], wire: thin-signal-lead, awg: 26, length_mm: 60, harness: c}
+  - {ends: [cplug.SIGNAL.GND, c_node.CAN1.GND], wire: thin-signal-lead, awg: 26, length_mm: 60, harness: c}
+  - {ends: [c_node.PWM.PWM1, claws.servo1.SIG], wire: thin-signal-lead, awg: 28, length_mm: 80, harness: c}
+  - {ends: [c_node.PWM.PWM2, claws.servo2.SIG], wire: thin-signal-lead, awg: 28, length_mm: 80, harness: c}
+
+# The pack's fuse links, one per cell between the cell and its busbar. The gauge is a first
+# guess; the fuse check sizes it (task 6).
+cell_links: {wire: bare-copper, awg: 20, length_mm: 8}
+
+# The check numbers, from the spec's "The check numbers" (2026-10-18)
+checks:
+  continuous_share: 0.8 # every wire, connector, fuse and supply at no more than 80% of its rating
+  burst_s: 10 # a burst at the current cap, for the heat check
+  air_c: 40 # a hot day, inside the frame
+  temp_margin_c: 20 # every part this far under its rated maximum
+  main_drop_share: 0.02 # of the pack's nominal voltage, lost between pack and ESC at the cap
+  load_margin_v: 0.1 # every load this far inside its voltage range, at both ends
+  pi_min_v: 4.75 # the Pi's undervoltage warning (4.63 V) plus about 0.1 V
+  supply_typical_share: 0.8 # typical draw against a supply's continuous rating
+  fuse_hold_factor: 1.25 # a fuse holds this times its branch's highest steady current
+  cell_link_blow_s: 1.0 # a dead short melts a cell link this fast
+  rise_share: 0.1 # signal edges, as a share of a bit
+  threshold_margin_share: 0.1 # of the supply, past each logic threshold

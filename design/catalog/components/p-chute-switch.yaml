@@ -28,3 +28,5 @@ electrical:
         - {name: S, role: signal, direction: in, volts: 3.3, max_volts: 5.5, functions: [low picks I0, high picks I1]}
   draws:
     - {pin: U1.VCC, min_v: 1.65, max_v: 5.5, typical_a: 0.0000001, worst_a: 0.000004}
+  elements:
+    - {name: R_PD, kind: resistor, between: [U1.S, U1.GND], ohms: 10000, watts: 0.25, note: "added: a 10 kOhm pull-down, so the CAN node drives the release servo unless the safety monitor takes over"}

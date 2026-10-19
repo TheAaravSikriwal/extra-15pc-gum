@@ -53,6 +53,9 @@ electrical:
         - {name: SWDIO, role: signal, direction: both, volts: 3.3}
         - {name: SWCLK, role: signal, direction: in, volts: 3.3}
         - {name: GND, role: ground}
+  joined:
+    - [CAN1.CAN_P, CAN2.CAN_P] # the two plugs are one bus on the board
+    - [CAN1.CAN_N, CAN2.CAN_N]
   draws:
     - {pin: CAN1.5V, min_v: 4.75, max_v: 5.25, typical_a: 0.11, worst_a: 0.117}
   outputs:
