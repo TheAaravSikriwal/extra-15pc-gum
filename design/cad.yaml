@@ -88,10 +88,10 @@ place:
   module-socket: # one per slot: V's and P's sunk into the rail, C's off the frame's back edge
     - {at_mm: [-5, 0, 35]}
     - {at_mm: [38, 0, 35]}
-    - {at_mm: [-70, 15, 3]}
+    - {at_mm: [-64, 15, 3]} # C's, with 6 mm of it on the bottom plate's back edge
   branch-fuses: # two holders hanging off the back edge, beside the battery leads
-    - {at_mm: [-74, -14, 3]}
-    - {at_mm: [-98, -14, 3]}
+    - {at_mm: [-69, -14, 13]} # with 5 mm of it on the second plate, behind the standoff
+    - {at_mm: [-93, -14, 13]} # end to end with the first
   ruko-r111: {at_mm: [86.5, 0, 35]} # on the front of the top plate, away from the GPS and the belly
   benewake-tf-luna: {at_mm: [135, 0, -3], turn_deg: [180, 0, 0]} # under the nose, looking down
   rpi-camera-module-3: {at_mm: [162, 0, 17.5], turn_deg: [0, 90, 0]} # in front of the plates, looking forward
@@ -109,7 +109,7 @@ place:
   p-servo-diodes: {at_mm: [38, -30.1, 49.5]}
   claws-placeholder: {at_mm: [-125, 0, -53]} # behind the pack, far enough back to let it slide
   ark-cannode@C: {at_mm: [-125, 0, -3]} # on top of the claws
-  module-plug@C: {at_mm: [-86, 15, 3]} # mated to C's socket from behind
+  module-plug@C: {at_mm: [-80, 15, 3]} # mated to C's socket from behind
 
 # Rough wire routes: a tube about the thickness of each run's likely gauge, through these
 # points. Step 3 picks the real gauges and connectors and sends back exact thicknesses.
@@ -159,10 +159,10 @@ wires:
     path_mm: [[38, -26, 46], [30, -18, 70], [26, -16, 120]]
   - name: battery taps
     diameter_mm: 4.1 # from the electrical connection list
-    path_mm: [[-22, -10, 15], [-50, -14, 11], [-62, -14, 8], [-86, -14, 8]]
+    path_mm: [[-22, -10, 15], [-46, -14, 17], [-57, -14, 18], [-81, -14, 18]]
   - name: fc battery feed
     diameter_mm: 1.0 # from the electrical connection list
-    path_mm: [[-98, -14, 12], [-62, -16, 14], [-30, -16, 22], [-10, -16, 24]]
+    path_mm: [[-93, -14, 18], [-60, -18, 22], [-30, -16, 22], [-10, -16, 24]]
   - name: module power to V
     diameter_mm: 4.4 # from the electrical connection list
     path_mm: [[-36, 10, 18.5], [-20, 10, 28], [-8, 8, 34]]
@@ -171,7 +171,7 @@ wires:
     path_mm: [[-36, 10, 18.5], [10, 12, 29], [32, 8, 34]]
   - name: module power to C
     diameter_mm: 4.4 # from the electrical connection list
-    path_mm: [[-48, 12, 15], [-58, 14, 10], [-62, 15, 6]]
+    path_mm: [[-48, 12, 15], [-54, 14, 10], [-56, 15, 6]]
   - name: esc cable to switch
     diameter_mm: 2.3 # from the electrical connection list
     path_mm: [[0, 15, 25], [30, 12, 28], [55, 8, 28]]
@@ -198,11 +198,11 @@ wires:
     path_mm: [[-5, -6, 31], [38, -6, 31]]
   - name: module bus p to c
     diameter_mm: 2.0 # from the electrical connection list
-    path_mm: [[38, -6, 31], [-55, -12, 30], [-62, 15, 8]]
+    path_mm: [[38, -6, 31], [-50, -12, 30], [-56, 15, 8]]
   - name: claws
     module: C
     diameter_mm: 6.0 # from the electrical connection list
-    path_mm: [[-94, 15, 6], [-110, 10, 2], [-125, 0, -10]]
+    path_mm: [[-88, 15, 6], [-110, 10, 2], [-125, 0, -10]]
   - name: esc cable from switch
     diameter_mm: 2.3 # from the electrical connection list
     path_mm: [[55, -8, 28], [30, -12, 24], [18, -10, 18]]

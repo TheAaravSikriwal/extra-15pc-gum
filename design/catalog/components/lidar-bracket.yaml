@@ -3,7 +3,7 @@ type: component
 id: lidar-bracket
 maker: Printed
 model: Lidar bracket
-source: {kind: cad, checked: 2026-10-18, note: "From the CAD: lidar bracket, weighed from their geometry in petg_cf at the density and fill in design/cad.yaml"}
+source: {kind: cad, checked: 2026-10-19, note: "From the CAD: lidar bracket, weighed from their geometry in petg_cf at the density and fill in design/cad.yaml"}
 mass_g: 2.4
 cad:
   shape: printed

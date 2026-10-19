@@ -1,0 +1,18 @@
+# Module V's wiring, added by pcs14 electrical --update-catalog.
+type: component
+id: v-wiring
+maker: Various
+model: Module V's wiring
+checked: 2026-10-19
+source: {kind: estimate, checked: 2026-10-19, note: "From the connection list (pcs14 electrical --update-catalog): 0.71 m of wire, 2.0 g at each gauge's grams per meter; 0.1 g of plugs, the wire's half of each; 0.1 g of heat shrink on 4 soldered ends at 0.03 g each. The grams per meter and the heat shrink are estimates"}
+mass_g: 2.3
+cad:
+  shape: routed
+  source:
+    kind: estimate
+    checked: '2026-10-19'
+    note: Module V's wire routes in design/cad.yaml
+  existing:
+    found: none
+    checked: '2026-10-19'
+    note: Wires, so there's nothing to look for

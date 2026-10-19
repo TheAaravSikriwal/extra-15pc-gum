@@ -3,7 +3,7 @@ type: component
 id: safety-monitor-carrier
 maker: Printed
 model: Safety monitor carrier
-source: {kind: cad, checked: 2026-10-18, note: "From the CAD: safety monitor carrier, weighed from their geometry in petg_cf at the density and fill in design/cad.yaml"}
+source: {kind: cad, checked: 2026-10-19, note: "From the CAD: safety monitor carrier, weighed from their geometry in petg_cf at the density and fill in design/cad.yaml"}
 mass_g: 2.8
 cad:
   shape: printed

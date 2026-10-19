@@ -9,8 +9,8 @@ pack:
   series: 6
   parallel: 2
   overhead_g: 60
-  wiring_mohm: 3
-  note: "Both pack numbers are estimates until the electrical step: 60 g of nickel strip, balance and power leads, an XT60 and wrap for a 6S2P 18650 pack, and 3 mOhm from battery to ESC"
+  wiring_mohm: 3.8
+  note: "overhead_g is an estimate: nickel strip, balance and power leads, the pack's XT60 half and wrap for a 6S2P 18650 pack. wiring_mohm is the drone's side, the leads and the XT60 from the pack's terminals to the ESC, worked out from the connection list (pcs14 electrical --update-catalog); the pack's own strip and leads aren't in it"
 base:
   - ark-fpv # replaced the Kakute H7 in the electrical talk
   - radiomaster-rp2-v2
@@ -45,6 +45,7 @@ modules:
     - halow-antenna-915
     - camera-bracket # printed
     - module-plug
+    - v-wiring # its wires, from the connection list
   P:
     - fruity-chutes-harrier-40-42
     - p-mount
@@ -53,10 +54,12 @@ modules:
     - pololu-d36v6f3 # 3.3 V for the chute switch
     - p-servo-diodes # the release servo's backup feed
     - module-plug
+    - p-wiring # its wires, from the connection list
   C:
     - claws-placeholder
     - ark-cannode # DroneCAN servo node for the claws
     - module-plug
+    - c-wiring # its wires, from the connection list
 firmware:
   # My flight controller caps the total battery current at the pack's continuous rating, so
   # full throttle can't overdraw the cells (decided 2026-10-17). 1.0 means 100% of the rating.

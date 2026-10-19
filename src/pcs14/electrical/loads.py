@@ -366,7 +366,11 @@ def flight_cases(build, targets, setup) -> list[Case]:
     """The phases each combination gets checked in, from the sizing model. Hover and cruise use
     the pessimistic power model at the reserve, where the pack is lowest and the current
     highest; the burst is full throttle at the reserve, which the firmware caps; and "worst"
-    is a hover with every 5 V part at its worst (servos stalled, the Pi flat out)."""
+    is a hover with every 5 V part at its worst (servos stalled, the Pi flat out).
+
+    The sizing model's voltage is after the wiring to the ESC, and the solve works the wiring
+    out itself, so each case starts from the pack's own terminals: the wiring's drop goes back
+    on."""
     from pcs14.sizing.battery import Pack
     from pcs14.sizing.flight import avionics_power, fly, power_model
 
@@ -375,15 +379,17 @@ def flight_cases(build, targets, setup) -> list[Case]:
     pack = Pack(build.pack)
     reserve = pack.soc_at_reserve(targets.reserve_fraction)
     avionics = avionics_power(build, setup)
+    wiring = build.pack.wiring_resistance
     cases = []
     for name, speed in (("hover", 0.0), ("cruise", targets.cruise_speed)):
         end = fly(model, pack, speed, targets.reserve_fraction).samples[-1]
         motors = max(end.current - avionics / end.voltage, 0.0) / MOTORS
-        cases.append(Case(name, end.voltage, "typical", end.current, motors))
+        terminals = end.voltage + end.current * wiring
+        cases.append(Case(name, terminals, "typical", end.current, motors))
     full = model.rotor.full_throttle(pack, reserve)
     volts = pack.terminal_voltage(reserve, full.current)
     motors = max(full.current - avionics / volts, 0.0) / MOTORS
-    cases.append(Case("burst", volts, "typical", full.current, motors))
+    cases.append(Case("burst", volts + full.current * wiring, "typical", full.current, motors))
     hover = cases[0]
     cases.append(Case("worst", hover.pack_volts, "worst", hover.battery_amps, hover.motor_amps))
     return cases

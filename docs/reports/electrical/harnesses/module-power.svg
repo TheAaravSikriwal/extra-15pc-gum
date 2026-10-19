@@ -160,7 +160,7 @@
 <polygon fill="none" stroke="black" points="422.88,-476.25 422.88,-500 545.38,-500 545.38,-476.25 422.88,-476.25"/>
 <text xml:space="preserve" text-anchor="start" x="458.25" y="-483.25" font-family="Arial" font-size="14.00">18 AWG</text>
 <polygon fill="none" stroke="black" points="545.38,-476.25 545.38,-500 665.62,-500 665.62,-476.25 545.38,-476.25"/>
-<text xml:space="preserve" text-anchor="start" x="580.75" y="-483.25" font-family="Arial" font-size="14.00">0.017 m</text>
+<text xml:space="preserve" text-anchor="start" x="580.75" y="-483.25" font-family="Arial" font-size="14.00">0.013 m</text>
 <text xml:space="preserve" text-anchor="start" x="387.88" y="-461.5" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="339.88" y="-441.75" font-family="Arial" font-size="14.00">bec&#45;pads:4:OUT</text>
 <text xml:space="preserve" text-anchor="start" x="443.62" y="-441.75" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:RD &#160;&#160;&#160;</text>
@@ -188,7 +188,7 @@
 <polygon fill="none" stroke="black" points="422.5,-339.25 422.5,-363 545.75,-363 545.75,-339.25 422.5,-339.25"/>
 <text xml:space="preserve" text-anchor="start" x="458.25" y="-346.25" font-family="Arial" font-size="14.00">18 AWG</text>
 <polygon fill="none" stroke="black" points="545.75,-339.25 545.75,-363 666.75,-363 666.75,-339.25 545.75,-339.25"/>
-<text xml:space="preserve" text-anchor="start" x="581.5" y="-346.25" font-family="Arial" font-size="14.00">0.017 m</text>
+<text xml:space="preserve" text-anchor="start" x="581.5" y="-346.25" font-family="Arial" font-size="14.00">0.013 m</text>
 <text xml:space="preserve" text-anchor="start" x="381.5" y="-324.5" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="338.75" y="-304.75" font-family="Arial" font-size="14.00">bec&#45;pads:3:G2</text>
 <text xml:space="preserve" text-anchor="start" x="432" y="-304.75" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:BK &#160;&#160;&#160;</text>

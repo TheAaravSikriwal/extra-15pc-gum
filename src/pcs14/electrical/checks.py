@@ -233,7 +233,8 @@ def load_voltages(ctx: Context, solutions) -> list[Finding]:
     return findings
 
 
-def main_drop(ctx: Context, solutions) -> list[Finding]:
+def _esc(ctx: Context):
+    """The ESC's board and its battery pin, or (None, None)."""
     esc = next(
         (
             b
@@ -243,17 +244,40 @@ def main_drop(ctx: Context, solutions) -> list[Finding]:
         None,
     )
     if esc is None or not esc.block.draws:
+        return None, None
+    return esc, esc.full(esc.block.draws[0].pin)
+
+
+def _main_drops(ctx: Context, solutions):
+    """(volts lost from the pack's terminals to the ESC and back, where, amps) for each burst."""
+    esc, pin = _esc(ctx)
+    if esc is None:
         return []
-    pin = esc.full(esc.block.draws[0].pin)
-    worst = None
+    out = []
     for key, solution in solutions.items():
         if key[1] != "burst" or pin not in solution.absolute:
             continue
         drop = (
             solution.absolute[f"{PACK}.XT60.+"] - solution.absolute[pin] + solution.ground[esc.name]
         )
-        if worst is None or drop > worst[0]:
-            worst = (drop, _where(key), solution.case.battery_amps)
+        out.append((drop, _where(key), solution.case.battery_amps))
+    return out
+
+
+def main_path_ohms(ctx: Context, solutions) -> float:
+    """The main path's resistance, out and back: the battery leads and the XT60, from the pack's
+    terminals to the ESC. From the burst with the biggest current."""
+    drops = _main_drops(ctx, solutions)
+    if not drops:
+        raise ValueError("no burst reaches the ESC, so there's no main path to measure")
+    drop, _, amps = max(drops, key=lambda d: d[2])
+    return drop / amps
+
+
+def main_drop(ctx: Context, solutions) -> list[Finding]:
+    _, pin = _esc(ctx)
+    drops = _main_drops(ctx, solutions)
+    worst = max(drops, key=lambda d: d[0]) if drops else None
     if worst is None:
         return []
     drop, where, amps = worst
@@ -441,14 +465,7 @@ def check_design(design: ConnectionList, catalog, build, targets, cad_settings, 
         pack = Pack(cells)
         bursts = [s for k, s in solutions.items() if k[1] == "burst"]
         burst = max(bursts, key=lambda s: s.case.battery_amps)
-        esc_pin = next(
-            b.full(b.block.draws[0].pin)
-            for b in ctx.wiring.boards.values()
-            if getattr(parts.get(ctx.part_id(b.name)), "type", "") == "esc"
-        )
-        esc_board = esc_pin.split(".")[0]
-        lost = burst.absolute[f"{PACK}.XT60.+"] - burst.absolute[esc_pin] + burst.ground[esc_board]
-        leads = lost / burst.case.battery_amps
+        leads = main_path_ohms(ctx, solutions)
         cells_only = pack.resistance - cells.wiring_resistance
         short = pack.ocv(1.0) / (cells_only + leads)
         links = design.cell_links

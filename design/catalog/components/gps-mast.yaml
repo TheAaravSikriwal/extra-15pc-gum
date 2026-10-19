@@ -4,7 +4,7 @@ id: gps-mast
 maker: Various
 model: Folding GPS mast
 checked: 2026-10-17
-source: {kind: cad, checked: 2026-10-18, note: "From the CAD: gps mast, weighed from their geometry in tpu at the density and fill in design/cad.yaml"}
+source: {kind: cad, checked: 2026-10-19, note: "From the CAD: gps mast, weighed from their geometry in tpu at the density and fill in design/cad.yaml"}
 mass_g: 5.2
 drag_area_cm2: 12
 drag_source: {kind: estimate, checked: 2026-10-17, note: "The GPS puck and mast, about 20 x 60 mm frontal, at a drag coefficient of 1.0"}

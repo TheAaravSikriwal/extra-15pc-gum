@@ -106,3 +106,22 @@ def test_the_trimmed_pack_never_hits_anything(results):
     for name, result in results.items():
         hits = [f for f in result.findings if f.check == "collisions" and "pack" in f.parts]
         assert hits == [], name
+
+
+def test_the_real_layout_passes_every_check_in_every_combination(results):
+    for name, result in results.items():
+        failing = [f.detail for f in result.findings if not f.passed]
+        assert failing == [], name
+
+
+def test_the_real_drone_fuses_into_one_closed_skin_for_the_wind_tunnel():
+    # a part touching another along just an edge breaks the fused skin (C's socket and the
+    # fuse holders did, flush with the frame's back edge), and the CFD export refuses it
+    from pcs14.cad.assembly import Drone
+    from pcs14.cad.checks import trim
+    from pcs14.cad.export import cfd_body, is_watertight
+    from pcs14.cad.settings import load_settings
+
+    build = load_build(ROOT / "design" / "build.yaml", load_catalog(ROOT / "design" / "catalog"))
+    drone = Drone(build, load_settings(ROOT / "design" / "cad.yaml"))
+    assert is_watertight(cfd_body(trim(drone, {"V", "P", "C"}).pieces))

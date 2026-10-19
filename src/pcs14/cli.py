@@ -99,6 +99,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="where the sims work and the build outputs too big to commit go",
     )
     electrical.add_argument(
+        "--update-catalog",
+        action="store_true",
+        help="write the wiring's weight and the main path's resistance into the catalog and build",
+    )
+    electrical.add_argument(
         "--quick",
         action="store_true",
         help="just the checks and the report: no sims, diagrams, schematic or stills",
@@ -389,6 +394,18 @@ def run_electrical(args) -> int:
     text = report.summary(run)
     print("\n" + text)
     print(f"\nReport written to {Path(args.out).resolve()}")
+    if args.update_catalog:
+        from pcs14.electrical import mass
+        from pcs14.electrical.checks import design_context, main_path_ohms
+
+        masses = mass.masses_for(design, catalog, build, settings)
+        ohms = main_path_ohms(design_context(design, catalog, build, settings), analysis.solutions)
+        changed = mass.update_catalog(masses, args.catalog, args.build, ohms)
+        print("\nThe wiring, from the connection list:")
+        for module, m in masses.items():
+            print(f"  {module:5s}{m.meters:6.2f} m  {m.total * 1000:6.1f} g")
+        print(f"  the main path: {ohms * 1000:.1f} mOhm out and back")
+        print(f"The catalog and build took them ({len(changed)} files). Rerun pcs14 cad, report.")
     recorder = _recorder(args, ElectricalRecorder)
     if recorder is not None:
         from pcs14.cad.assembly import Drone

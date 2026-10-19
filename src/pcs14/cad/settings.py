@@ -18,6 +18,10 @@ from pcs14.design import _explain
 Point = tuple[float, float, float]
 
 
+# the catalog entries holding each module's wiring, spread over its wire routes
+WIRING_PARTS = {"base": "base-wiring", "V": "v-wiring", "P": "p-wiring", "C": "c-wiring"}
+
+
 class SettingsError(Exception):
     """design/cad.yaml is broken."""
 

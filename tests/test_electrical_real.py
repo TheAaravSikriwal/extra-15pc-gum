@@ -158,3 +158,29 @@ def test_the_xt60_is_the_one_part_past_its_limit_in_the_burst(real, loads):
     assert hot == {"pack.XT60.+", "pack.XT60.-"}
     wires = thermal.wire_working(ctx, loads)
     assert max(max(shares.values()) for shares in wires.values()) < 1
+
+
+def test_the_cases_start_at_the_packs_own_terminals(real, loads):
+    # the sizing model's voltage is after the wiring; the solve adds the wiring itself, so the
+    # cases hand it the voltage before, or the leads' drop would count twice
+    from pcs14.sizing.battery import Pack
+
+    _, build, _, _, _ = real
+    targets = load_targets(ROOT / "design" / "targets.yaml")
+    pack = Pack(build.pack)
+    burst = loads[("max", "burst")].case
+    reserve = pack.soc_at_reserve(targets.reserve_fraction)
+    cells_only = pack.resistance - build.pack.wiring_resistance
+    expected = pack.ocv(reserve) - burst.battery_amps * cells_only
+    assert burst.pack_volts == pytest.approx(expected, rel=1e-6)
+
+
+def test_the_main_paths_resistance_is_its_drop_over_its_current(real, loads):
+    from pcs14.electrical import checks
+
+    catalog, build, design, settings, _ = real
+    ctx = checks.design_context(design, catalog, build, settings)
+    ohms = checks.main_path_ohms(ctx, loads)
+    drop = checks.main_drop(ctx, loads)[0]
+    assert ohms == pytest.approx(drop.value / 90.0, rel=0.01)  # every burst sits at the cap
+    assert 2e-3 < ohms < 6e-3  # 12 AWG leads and an XT60, out and back

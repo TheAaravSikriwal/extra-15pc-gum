@@ -61,7 +61,13 @@ def test_printed_weights_come_from_the_cad(build):
 
 def test_wiring_comes_from_the_wire_routes(build):
     routed = sorted(part.id for part in parts(build) if part.cad.shape == "routed")
-    assert routed == ["base-wiring", "rpi-camera-cable-standard-mini"]
+    assert routed == [
+        "base-wiring",
+        "c-wiring",
+        "p-wiring",
+        "rpi-camera-cable-standard-mini",
+        "v-wiring",
+    ]
 
 
 def test_the_pieces_the_research_found_missing_are_in_the_build(build):

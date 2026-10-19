@@ -19,7 +19,7 @@ from pcs14.cad.frame import FrameModel, build_frame
 from pcs14.cad.locate import placed
 from pcs14.cad.parts import build_part, pack_layout, pack_solid, prop_disk, prop_look
 from pcs14.cad.printed import build_printed
-from pcs14.cad.settings import CadSettings, Wire
+from pcs14.cad.settings import WIRING_PARTS, CadSettings, Wire
 from pcs14.design import Build
 
 MM = 0.001
@@ -77,6 +77,10 @@ def wire_tube(wire: Wire):
 
 def wire_length(wire: Wire) -> float:
     return sum(math.dist(a, b) for a, b in zip(wire.path, wire.path[1:], strict=False))
+
+
+def _volume(wire: Wire) -> float:
+    return wire_length(wire) * wire.diameter**2
 
 
 class Drone:
@@ -190,15 +194,20 @@ class Drone:
                 )
             )
 
-        wiring = {"base": catalog_parts.get("base-wiring"), "V": None, "P": None, "C": None}
-        base_wires = [w for w in settings.wires if w.module == "base"]
-        base_volume = sum(wire_length(w) * w.diameter**2 for w in base_wires)
+        # each module's wiring entry spreads over its routes by volume; a route with a part of
+        # its own (the camera's ribbon) weighs that part instead
+        own = {"camera cable": catalog_parts.get("rpi-camera-cable-standard-mini")}
+        volume = {}
+        for wire in settings.wires:
+            if own.get(wire.name) is None:
+                volume[wire.module] = volume.get(wire.module, 0.0) + _volume(wire)
         for wire in settings.wires:
             tube = wire_tube(wire)
-            if wire.module == "base" and wiring["base"] is not None:
-                mass = wiring["base"].mass * wire_length(wire) * wire.diameter**2 / base_volume
-            elif wire.name == "camera cable" and "rpi-camera-cable-standard-mini" in catalog_parts:
-                mass = catalog_parts["rpi-camera-cable-standard-mini"].mass
+            wiring = catalog_parts.get(WIRING_PARTS[wire.module])
+            if own.get(wire.name) is not None:
+                mass = own[wire.name].mass
+            elif wiring is not None:
+                mass = wiring.mass * _volume(wire) / volume[wire.module]
             else:
                 mass = 0.0
             pieces.append(

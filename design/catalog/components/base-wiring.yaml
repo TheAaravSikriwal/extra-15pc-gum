@@ -2,10 +2,10 @@
 type: component
 id: base-wiring
 maker: Various
-model: Wiring, XT60 lead, battery strap and hardware
-checked: 2026-10-17
-source: {kind: estimate, checked: 2026-10-17, note: "Silicone power leads, an XT60 pigtail, signal wiring, a battery strap and screws. Worked out properly in the electrical step"}
-mass_g: 45
+model: Base's wiring and the XT60 lead
+checked: 2026-10-19
+source: {kind: estimate, checked: 2026-10-19, note: "From the connection list (pcs14 electrical --update-catalog): 6.49 m of wire, 51.7 g at each gauge's grams per meter; 4.1 g of plugs, the wire's half of each; 3.4 g of heat shrink on 114 soldered ends at 0.03 g each, and 0.5 g of sleeving on the battery leads at 3 g/m. The grams per meter, the heat shrink and the sleeving are estimates"}
+mass_g: 59.7
 cad:
   shape: routed
   source:
