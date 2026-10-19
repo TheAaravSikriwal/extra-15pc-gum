@@ -31,7 +31,7 @@ Where to look:
 
 **Step 3b, the electrical plan, is done (2026-10-18).** The research picked the parts (the ARK GPS on DroneCAN, ARK CANnodes in P and C, a TI TS3A5018 board for the motor cut, single-gate buffers that stay quiet when the Teensy is off) and the 14 tasks. The catch: the lightest DroneCAN GPS is 8 g over the old one, so with the servo nodes Max lands around 2514 g, over its limit. The [log](docs/log/2026-10-18-electrical-plan.md) has the story.
 
-**Step 3c is under way (2026-10-18).** Done: task 1 (Graphviz, ngspice 47 and KiCad 10 on the PC and in CI, `pcs14 electrical --tools`), task 2 (the catalog's electrical block and wire tables), task 3 (every part's pins, draws, supplies and ratings), and the first half of task 8 (the new parts in the build and the CAD, all eight combinations passing). Mission is now 2320 g, with a pessimistic hover of 21.2 min against 21, and Max 2526 g. The [build log](docs/log/2026-10-18-electrical-build.md) has the findings.
+**Step 3c is under way (2026-10-18).** Done: tasks 1 to 7 and the first half of task 8. The connection list (`design/electrical.yaml`, 33 boards, 128 wires, 27 safety paths) passes every rule in all eight combinations; every wire's current comes from a DC solve; and the checks cover connectors, supplies, voltages, fuses, heat, the ESC and motors, and a backup case with the module supply dead. The cell fuse links came out (none can work at 90 A). Open findings: the release servo sits under its range through its diode, the Pi's 5.2 V crowds a guessed ceiling, and the XT60 overheats through a 10 s burst on a guessed contact mass. Mission is 2320 g, pessimistic hover 21.2 min against 21. The logs: [part 1](docs/log/2026-10-18-electrical-build.md), [the checks](docs/log/2026-10-18-electrical-checks.md).
 
 **The parts research added two missing parts (2026-10-17).** The camera needs a 22-pin cable for the Pi 5, and the HaLow card comes with no antenna, so both went into module V (14 g together). Mission is now 2268 g and hovers 25.5 min (21.9 pessimistic, against 21), and Max is 2468 g. Everything still passes, with a thinner margin.
 
@@ -42,7 +42,7 @@ Where to look:
 ## Up next
 
 1. **Set up WSL2 on the PC** with [docs/setup-pc.md](docs/setup-pc.md). The `wsl --install` step needs an admin PowerShell and one reboot. Then commit `docs/machines/pc.md`.
-2. **Step 3c, task 4: the connection list** (`design/electrical.yaml`) and its rules, then the loads, checks and heat (tasks 5 to 7).
+2. **Step 3c, the rest:** task 8's wire routes, then DShot and the ngspice runs (task 9), the diagrams and pin maps (10), the KiCad schematic (11), Rerun (12), the report (13), and step 3d with the open findings and the weight.
 3. **The project site's spec** (what it's built with), so its first pages can come with the sizing model.
 4. **Write the first half of `scripts/setup-ubuntu.sh`** (inside WSL2): Gazebo, PX4 and the Python tools, with pinned versions.
 
