@@ -35,6 +35,22 @@ def route_diameters(design: ConnectionList, parts) -> dict[str, float]:
     return {route: bundle_diameter(sizes) for route, sizes in inside.items()}
 
 
+def route_shares(design: ConnectionList, working: dict) -> dict:
+    """{(setup, case): {route: share}}: each route at its hardest working wire, from
+    thermal.wire_working."""
+    inside: dict[str, list[str]] = {}
+    for run in design.wires:
+        if run.route is not None:
+            inside.setdefault(run.route, []).append(run.label)
+    return {
+        key: {
+            route: max(shares.get(label, 0.0) for label in labels)
+            for route, labels in inside.items()
+        }
+        for key, shares in working.items()
+    }
+
+
 def update_cad_routes(cad_path: Path, diameters: dict[str, float]) -> list[str]:
     """Write the thicknesses into design/cad.yaml, leaving everything else as it is. Returns the
     routes that changed."""

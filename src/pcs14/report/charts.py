@@ -7,6 +7,7 @@ line at the bottom. A chart made from made-up test parts says so in magenta.
 
 import logging
 import math
+import textwrap
 from functools import cache
 from pathlib import Path
 
@@ -42,8 +43,12 @@ def _c(name: str) -> str:
 class Canvas:
     """One post-sized figure with the project's header, footer and plot area."""
 
-    def __init__(self, title: str, subtitle: str, made_up: bool, rows: int = 1):
-        width, height = style.load()["sizes"]["portrait"]
+    def __init__(
+        self, title: str, subtitle: str, made_up: bool, rows: int = 1, size: str = "portrait"
+    ):
+        """`size` is one of the post sizes in media/style.yaml: portrait, square, vertical or
+        wide. The header and footer keep their distance from the edges in pixels."""
+        width, height = style.load()["sizes"][size]
         self.width, self.height = width, height
         self.fig = plt.figure(
             figsize=(width / DPI, height / DPI), dpi=DPI, facecolor=_c("background")
@@ -83,15 +88,18 @@ class Canvas:
         x = style.load()["layout"]["margin_px"] / self.width
         fonts = _fonts()
         self._text(x, 215 / self.height, number, 44, color, fonts["numbers"], weight="bold")
+        # matplotlib wraps at the figure's edge, not the margin, so wrap by hand: 15 pt text
+        # runs about 11 px a character
+        margin = style.load()["layout"]["margin_px"]
+        width = int((self.width - 2 * margin) / 11)
         self.fig.text(
             x,
             150 / self.height,
-            caption,
+            textwrap.fill(caption, width),
             fontsize=15,
             color=_c("muted"),
             family=fonts["body"],
             va="top",
-            wrap=True,
         )
 
     def save(self, path: Path) -> None:

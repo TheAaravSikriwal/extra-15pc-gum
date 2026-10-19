@@ -17,9 +17,9 @@ from pathlib import Path
 import numpy as np
 import rerun as rr
 import rerun.blueprint as rrb
-from matplotlib import colormaps
 
 from pcs14 import style
+from pcs14.electrical.routes import route_shares
 from pcs14.electrical.spice.switch import CASES as SWITCH_CASES
 from pcs14.viz.cad_log import HIDDEN, _color, _mesh
 from pcs14.viz.rerun_log import WHOLE_RUN, Recorder, _safe
@@ -36,18 +36,13 @@ TRACES = {
 SCOPES = (*SWITCH_CASES, "Receiver, Teensy off")
 MODULES = ("V", "P", "C")
 CASES = ("hover", "cruise", "burst", "worst")
-# turbo's bottom tenth is close to black, which vanishes on the black background
-TURBO_FROM = 0.1
 GLASS = 70  # the parts' alpha, so the wires inside show through
 SHOWN = 0.05  # connectors working less than this aren't marked
 
 
 def share_color(share: float) -> tuple[int, int, int]:
     """Turbo for 0 to 100% of a limit; magenta past it."""
-    if share > 1.0:
-        return style.rgb("pop")
-    r, g, b, _ = colormaps["turbo"](TURBO_FROM + (1 - TURBO_FROM) * max(share, 0.0))
-    return int(r * 255), int(g * 255), int(b * 255)
+    return style.share_rgb(share)
 
 
 def thin(times, volts, step: float = 0.01):
@@ -207,21 +202,6 @@ class ElectricalRecorder(Recorder):
         self.rec.log(
             "summary", rr.TextDocument(text, media_type=rr.MediaType.MARKDOWN), static=True
         )
-
-
-def route_shares(design, working: dict) -> dict:
-    """{(setup, case): {route: share}}: each route at its hardest working wire."""
-    inside: dict[str, list[str]] = {}
-    for run in design.wires:
-        if run.route is not None:
-            inside.setdefault(run.route, []).append(run.label)
-    return {
-        key: {
-            route: max(shares.get(label, 0.0) for label in labels)
-            for route, labels in inside.items()
-        }
-        for key, shares in working.items()
-    }
 
 
 def connector_points(design, cad_wires, near) -> dict:

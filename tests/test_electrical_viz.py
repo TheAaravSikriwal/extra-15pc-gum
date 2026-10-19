@@ -45,7 +45,7 @@ def _cad_wires():
 
 
 def test_a_route_works_as_hard_as_its_hardest_wire():
-    from pcs14.viz.electrical_log import route_shares
+    from pcs14.electrical.routes import route_shares
 
     design = ConnectionList.model_validate(good())
     working = {("base", "hover"): {"pack.XT60.+ to reg.J.VIN": 0.3, "reg.J.VOUT to load.J.5V": 0.1}}

@@ -76,10 +76,16 @@ def test_require_says_how_to_fix_it(tmp_path):
     assert "ngspice" in str(missing.value) and "PCS14_NGSPICE" in str(missing.value)
 
 
-def test_the_command_checks_the_connection_list(capsys):
-    assert main(["electrical", "--no-record"]) == 0
+def test_the_command_checks_the_connection_list(tmp_path, capsys):
+    assert main(["electrical", "--no-record", "--quick", "--out", str(tmp_path)]) == 0
     out = capsys.readouterr().out
     assert "connection list" in out and "every rule" in out
+    # and the report, with every combination's cases in its data file
+    import json
+
+    assert (tmp_path / "README.md").is_file()
+    data = json.loads((tmp_path / "electrical.json").read_text(encoding="utf-8"))
+    assert len(data["combinations"]) == 8 and len(data["cases"]) == 8 * 4
 
 
 def test_the_command_says_what_breaks_a_rule(tmp_path, capsys):

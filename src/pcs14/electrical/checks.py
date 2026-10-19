@@ -148,7 +148,7 @@ def connector_currents(ctx: Context, solutions) -> list[Finding]:
                 limit,
                 "A",
                 where,
-                f"{amps:.2f} A through a {connector.family} contact rated "
+                f"{amps:.2f} A through one {connector.family} contact, rated "
                 f"{rating.continuous_a:g} A",
                 ctx.rests_on(board, f"connectors[{connector.name}]"),
             )
@@ -401,6 +401,19 @@ def backups(ctx: Context, design, parts, listed, lengths, combinations, cases, p
 LI_ION_NOMINAL = 3.6  # V a cell, the usual figure for Li-ion and the P42A's own
 
 
+def design_context(design: ConnectionList, catalog, build, cad_settings) -> Context:
+    """The context every check on the real drone runs in."""
+    from pcs14.cad.assembly import wire_length
+    from pcs14.electrical.validate import listed_in
+
+    parts = {part.id: part for part in catalog.all_parts()}
+    lengths = {wire.name: wire_length(wire) for wire in cad_settings.wires}
+    cells = build.pack
+    pack_max = cells.cell.max_voltage_v * cells.series
+    wiring = Wiring(design, parts, listed_in(build), set(lengths), pack_max)
+    return Context(design, parts, wiring, design.checks, LI_ION_NOMINAL * cells.series)
+
+
 def check_design(design: ConnectionList, catalog, build, targets, cad_settings, solutions=None):
     """Every check on the real drone. `solutions` can come from solve_all, to save a rerun."""
     from pcs14.cad.assembly import wire_length
@@ -414,13 +427,7 @@ def check_design(design: ConnectionList, catalog, build, targets, cad_settings, 
     cells = build.pack
     pack_max = cells.cell.max_voltage_v * cells.series
     numbers = design.checks
-    ctx = Context(
-        design,
-        parts,
-        Wiring(design, parts, listed, set(lengths), pack_max),
-        numbers,
-        LI_ION_NOMINAL * cells.series,
-    )
+    ctx = design_context(design, catalog, build, cad_settings)
     if solutions is None:
         solutions = solve_all(design, catalog, build, targets, cad_settings)
     findings = [

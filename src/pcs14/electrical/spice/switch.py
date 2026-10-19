@@ -71,7 +71,6 @@ class Wiring:
 
     @classmethod
     def from_design(cls, root: Path) -> "Wiring":
-        from pcs14.cad.assembly import wire_length
         from pcs14.cad.settings import load_settings
         from pcs14.catalog import load_catalog
         from pcs14.electrical.model import load_connection_list
@@ -80,6 +79,13 @@ class Wiring:
         design = load_connection_list(root / "design" / "electrical.yaml")
         settings = load_settings(root / "design" / "cad.yaml")
         catalog = load_catalog(root / "design" / "catalog")
+        return cls.from_loaded(design, catalog, settings)
+
+    @classmethod
+    def from_loaded(cls, design, catalog, settings) -> "Wiring":
+        """The same, from a connection list, catalog and CAD settings already loaded."""
+        from pcs14.cad.assembly import wire_length
+
         routes = {w.name: wire_length(w) for w in settings.wires}
         runs = {run.label: run for run in design.wires}
 
@@ -176,9 +182,15 @@ def _channel(wiring: Wiring, case: dict):
     fc_starts, teensy_starts = case["fc_frames"], case.get("teensy_frames", [])
     answered = case["replies_after"]
     replies = [s + FRAME + REPLY_GAP for s in answered]
-    released = [(r - 5e-6, r + 21 / REPLY_RATE + 5e-6) for r in replies]
+
+    def released(starts):
+        """Where a sender lets go of the line: while an answer to each of its own frames is
+        due, whether or not one comes."""
+        due = [s + FRAME + REPLY_GAP for s in starts]
+        return [(r - 5e-6, min(r + 21 / REPLY_RATE + 5e-6, stop)) for r in due if r < stop]
+
     fc_enable = [(0.0, stop)]
-    for a, b in sorted(released):  # the flight controller lets go while the ESC answers
+    for a, b in sorted(released(fc_starts)):  # the flight controller waits for its answers
         last = fc_enable.pop()
         fc_enable += [(last[0], a), (b, last[1])]
     lines = [
@@ -215,7 +227,7 @@ def _channel(wiring: Wiring, case: dict):
         # once it takes over, the Teensy holds the line high between its frames and lets go
         # only while the ESC answers, the way a flight controller does
         windows = [(case.get("teensy_from", 0.0), stop)]
-        for a, b in sorted(released):
+        for a, b in sorted(released(teensy_starts)):
             last = windows.pop()
             windows += [(last[0], a), (b, last[1])] if a > last[0] else [(b, last[1])]
         text += _driver(
@@ -316,21 +328,22 @@ def _check_channel(name, case, wiring, waves, frame_windows, reply_windows) -> R
     reached = [
         w for w in frame_windows if signals.frames(times, esc, windows=[w]) not in ([], [None])
     ]
-    slowest = signals.edge_times(times, esc, reached, VDD)
     limit = wiring.rise_share * BIT
-    result.findings.append(
-        Finding(
-            "signal edges",
-            "esc.FC.M1",
-            slowest <= limit,
-            slowest * 1e9,
-            limit * 1e9,
-            "ns",
-            where,
-            f"the slowest edge at the ESC takes {slowest * 1e9:.1f} ns, against "
-            f"{wiring.rise_share:.0%} of a bit",
+    if reached:
+        slowest = signals.edge_times(times, esc, reached, VDD)
+        result.findings.append(
+            Finding(
+                "signal edges",
+                "esc.FC.M1",
+                slowest <= limit,
+                slowest * 1e9,
+                limit * 1e9,
+                "ns",
+                where,
+                f"the slowest edge at the ESC takes {slowest * 1e9:.1f} ns, against "
+                f"{wiring.rise_share:.0%} of a bit",
+            )
         )
-    )
     low, high = signals.frame_levels(times, esc, [w[0] + 2e-7 for w in reached])
     if low is not None:
         ok = low <= VIL - margin and high >= VIH + margin

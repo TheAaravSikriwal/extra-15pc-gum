@@ -52,6 +52,23 @@ def hex_to_rgb(value: str) -> tuple[int, int, int]:
     return int(value[0:2], 16), int(value[2:4], 16), int(value[4:6], 16)
 
 
+# turbo's bottom tenth is close to black, which vanishes on the black background
+SHARE_FROM = 0.1
+
+
+def share_rgb(share: float) -> tuple[int, int, int]:
+    """A share of a limit as a color: the field colormap (turbo) from 0 to 100%, the pop color
+    (magenta) past it."""
+    if share > 1.0:
+        return rgb("pop")
+    from matplotlib import colormaps
+
+    r, g, b, _ = colormaps[load()["data"]["field_colormap"]](
+        SHARE_FROM + (1 - SHARE_FROM) * max(share, 0.0)
+    )
+    return int(r * 255), int(g * 255), int(b * 255)
+
+
 def verdict_color(verdict: str) -> str:
     """Spearmint for pass, magenta for fail, the muted gray for marginal."""
     data = load()["data"]

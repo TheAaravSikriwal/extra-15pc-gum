@@ -89,6 +89,20 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="write each wire route's thickness, from the wires in it, into the CAD settings",
     )
+    electrical.add_argument(
+        "--out", type=Path, default=Path("docs/reports/electrical"), help="report folder"
+    )
+    electrical.add_argument(
+        "--exports",
+        type=Path,
+        default=Path("outputs/electrical"),
+        help="where the sims work and the build outputs too big to commit go",
+    )
+    electrical.add_argument(
+        "--quick",
+        action="store_true",
+        help="just the checks and the report: no sims, diagrams, schematic or stills",
+    )
     report = add("report", "Write the sizing report: Markdown, charts and the data file.")
     report.add_argument("--out", type=Path, help="report folder (default: docs/reports/sizing)")
     report.add_argument(
@@ -362,6 +376,37 @@ def run_electrical(args) -> int:
         parts = {part.id: part for part in catalog.all_parts()}
         changed = update_cad_routes(args.cad, route_diameters(design, parts))
         print(f"\n{args.cad} took {len(changed)} wire route thicknesses from the list.")
+    from pcs14.electrical import pipeline, report
+    from pcs14.viz.electrical_log import ElectricalRecorder, record
+
+    settings = load_settings(args.cad)
+    sims = None if args.quick else Path(args.exports) / "spice"
+    analysis = pipeline.analyze(design, catalog, build, targets, settings, sims)
+    run = pipeline.to_run(analysis)
+    if not args.quick:
+        run = pipeline.make_files(args.out, analysis, run, exports=args.exports)
+    pipeline.write(args.out, run, date.today().isoformat())
+    text = report.summary(run)
+    print("\n" + text)
+    print(f"\nReport written to {Path(args.out).resolve()}")
+    recorder = _recorder(args, ElectricalRecorder)
+    if recorder is not None:
+        from pcs14.cad.assembly import Drone
+
+        pieces = Drone(build, settings).combination(pipeline.EVERYTHING).pieces
+        record(
+            recorder,
+            pieces,
+            settings.wires,
+            design,
+            analysis.setups,
+            analysis.working,
+            analysis.connectors,
+            analysis.curves,
+            analysis.sims,
+            f"```\n{text}\n```",
+        )
+        recorder.close()
     return 0
 
 
