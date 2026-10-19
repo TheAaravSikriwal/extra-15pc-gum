@@ -84,6 +84,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="the connection list",
     )
     electrical.add_argument("--cad", type=Path, default=Path("design/cad.yaml"))
+    electrical.add_argument(
+        "--update-cad",
+        action="store_true",
+        help="write each wire route's thickness, from the wires in it, into the CAD settings",
+    )
     report = add("report", "Write the sizing report: Markdown, charts and the data file.")
     report.add_argument("--out", type=Path, help="report folder (default: docs/reports/sizing)")
     report.add_argument(
@@ -351,6 +356,12 @@ def run_electrical(args) -> int:
             print(f"  {problem}")
         return 1
     print(f"It passes every rule in all {len(combinations)} module combinations.")
+    if args.update_cad:
+        from pcs14.electrical.routes import route_diameters, update_cad_routes
+
+        parts = {part.id: part for part in catalog.all_parts()}
+        changed = update_cad_routes(args.cad, route_diameters(design, parts))
+        print(f"\n{args.cad} took {len(changed)} wire route thicknesses from the list.")
     return 0
 
 

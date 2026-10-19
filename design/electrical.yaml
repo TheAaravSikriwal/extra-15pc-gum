@@ -144,33 +144,33 @@ wires:
   - {ends: [esc.MOTORS.M4C, m4.leads.C], wire: ul3135-silicone, awg: 18, route: motor leads back right, harness: motors}
 
   # The two fused branches, tapped off the ESC's battery pads
-  - {ends: [esc.BAT.VBAT, fuses.F1.A], wire: ul3135-silicone, awg: 20, length_mm: 90, harness: battery taps}
+  - {ends: [esc.BAT.VBAT, fuses.F1.A], wire: ul3135-silicone, awg: 20, route: battery taps, harness: battery taps}
   - {ends: [fuses.F1.B, bec.pads.IN], wire: ul3135-silicone, awg: 20, route: bec feed, harness: battery taps}
   - {ends: [esc.BAT.GND, bec.pads.G], wire: ul3135-silicone, awg: 20, route: bec feed, harness: battery taps}
-  - {ends: [esc.BAT.VBAT, fuses.F2.A], wire: ul3135-silicone, awg: 22, length_mm: 90, harness: battery taps}
+  - {ends: [esc.BAT.VBAT, fuses.F2.A], wire: ul3135-silicone, awg: 22, route: battery taps, harness: battery taps}
   # into a JST-GH, so 26 AWG: the flight controller takes its battery on POWER AUX, and the
   # ESC plug's battery pin stays empty
-  - {ends: [fuses.F2.B, fc.POWER_AUX.VBAT], wire: thin-signal-lead, awg: 26, length_mm: 70, harness: battery taps}
-  - {ends: [esc.BAT.GND, fc.POWER_AUX.GND], wire: thin-signal-lead, awg: 26, length_mm: 90, harness: battery taps}
+  - {ends: [fuses.F2.B, fc.POWER_AUX.VBAT], wire: thin-signal-lead, awg: 26, route: fc battery feed, harness: battery taps}
+  - {ends: [esc.BAT.GND, fc.POWER_AUX.GND], wire: thin-signal-lead, awg: 26, route: battery taps, harness: battery taps}
 
   # The module supply, out to the three slots
-  - {ends: [bec.pads.OUT, sockets.V_POWER.5V], wire: ul3135-silicone, awg: 18, length_mm: 60, harness: module power}
-  - {ends: [bec.pads.G2, sockets.V_POWER.GND], wire: ul3135-silicone, awg: 18, length_mm: 60, harness: module power}
-  - {ends: [bec.pads.OUT, sockets.P_POWER.5V], wire: ul3135-silicone, awg: 18, length_mm: 100, harness: module power}
-  - {ends: [bec.pads.G2, sockets.P_POWER.GND], wire: ul3135-silicone, awg: 18, length_mm: 100, harness: module power}
-  - {ends: [bec.pads.OUT, sockets.C_POWER.5V], wire: ul3135-silicone, awg: 18, length_mm: 50, harness: module power}
-  - {ends: [bec.pads.G2, sockets.C_POWER.GND], wire: ul3135-silicone, awg: 18, length_mm: 50, harness: module power}
+  - {ends: [bec.pads.OUT, sockets.V_POWER.5V], wire: ul3135-silicone, awg: 18, route: module power to V, harness: module power}
+  - {ends: [bec.pads.G2, sockets.V_POWER.GND], wire: ul3135-silicone, awg: 18, route: module power to V, harness: module power}
+  - {ends: [bec.pads.OUT, sockets.P_POWER.5V], wire: ul3135-silicone, awg: 18, route: module power to P, harness: module power}
+  - {ends: [bec.pads.G2, sockets.P_POWER.GND], wire: ul3135-silicone, awg: 18, route: module power to P, harness: module power}
+  - {ends: [bec.pads.OUT, sockets.C_POWER.5V], wire: ul3135-silicone, awg: 18, route: module power to C, harness: module power}
+  - {ends: [bec.pads.G2, sockets.C_POWER.GND], wire: ul3135-silicone, awg: 18, route: module power to C, harness: module power}
 
   # The ESC cable, re-pinned: the flight controller's four DShot lines go through the motor cut
   # switch; current, telemetry and ground go straight to the ESC
-  - {ends: [fc.ESC.CH1, cut.J1.NC1], wire: thin-signal-lead, awg: 28, length_mm: 70, harness: esc cable}
-  - {ends: [fc.ESC.CH2, cut.J1.NC2], wire: thin-signal-lead, awg: 28, length_mm: 70, harness: esc cable}
-  - {ends: [fc.ESC.CH3, cut.J1.NC3], wire: thin-signal-lead, awg: 28, length_mm: 70, harness: esc cable}
-  - {ends: [fc.ESC.CH4, cut.J1.NC4], wire: thin-signal-lead, awg: 28, length_mm: 70, harness: esc cable}
-  - {ends: [cut.J1.CM1, esc.FC.M1], wire: thin-signal-lead, awg: 28, length_mm: 70, harness: esc cable}
-  - {ends: [cut.J1.CM2, esc.FC.M2], wire: thin-signal-lead, awg: 28, length_mm: 70, harness: esc cable}
-  - {ends: [cut.J1.CM3, esc.FC.M3], wire: thin-signal-lead, awg: 28, length_mm: 70, harness: esc cable}
-  - {ends: [cut.J1.CM4, esc.FC.M4], wire: thin-signal-lead, awg: 28, length_mm: 70, harness: esc cable}
+  - {ends: [fc.ESC.CH1, cut.J1.NC1], wire: thin-signal-lead, awg: 28, route: esc cable to switch, harness: esc cable}
+  - {ends: [fc.ESC.CH2, cut.J1.NC2], wire: thin-signal-lead, awg: 28, route: esc cable to switch, harness: esc cable}
+  - {ends: [fc.ESC.CH3, cut.J1.NC3], wire: thin-signal-lead, awg: 28, route: esc cable to switch, harness: esc cable}
+  - {ends: [fc.ESC.CH4, cut.J1.NC4], wire: thin-signal-lead, awg: 28, route: esc cable to switch, harness: esc cable}
+  - {ends: [cut.J1.CM1, esc.FC.M1], wire: thin-signal-lead, awg: 28, route: esc cable from switch, harness: esc cable}
+  - {ends: [cut.J1.CM2, esc.FC.M2], wire: thin-signal-lead, awg: 28, route: esc cable from switch, harness: esc cable}
+  - {ends: [cut.J1.CM3, esc.FC.M3], wire: thin-signal-lead, awg: 28, route: esc cable from switch, harness: esc cable}
+  - {ends: [cut.J1.CM4, esc.FC.M4], wire: thin-signal-lead, awg: 28, route: esc cable from switch, harness: esc cable}
   - {ends: [esc.FC.CURRENT, fc.ESC.CURR], wire: thin-signal-lead, awg: 28, length_mm: 60, harness: esc cable}
   - {ends: [esc.FC.TLM, fc.ESC.UART4_RX], wire: thin-signal-lead, awg: 28, length_mm: 60, harness: esc cable}
   - {ends: [esc.FC.GND, fc.ESC.GND], wire: thin-signal-lead, awg: 28, length_mm: 60, harness: esc cable}
@@ -181,7 +181,7 @@ wires:
   - {ends: [fc.RC.GND, rx.pads.GND], wire: thin-signal-lead, awg: 26, route: receiver, harness: receiver}
   - {ends: [rx.pads.TX, fc.RC.USART6_RX], wire: thin-signal-lead, awg: 26, route: receiver, harness: receiver}
   - {ends: [fc.RC.USART6_TX, rx.pads.RX], wire: thin-signal-lead, awg: 26, route: receiver, harness: receiver}
-  - {ends: [rx.pads.TX, taps.B1.A], wire: thin-signal-lead, awg: 26, length_mm: 120, harness: receiver}
+  - {ends: [rx.pads.TX, taps.B1.A], wire: thin-signal-lead, awg: 26, route: crsf tap, harness: receiver}
 
   # The lidar, on the GPS port now that the GPS is on CAN; its mode pin stays open for UART
   - {ends: [fc.GPS.5V, lidar.J1.5V], wire: thin-signal-lead, awg: 26, route: lidar, harness: lidar}
@@ -190,8 +190,8 @@ wires:
   - {ends: [lidar.J1.TXD, fc.GPS.USART1_RX], wire: thin-signal-lead, awg: 26, route: lidar, harness: lidar}
 
   # The safety monitor: power from both sides, through the diode pair
-  - {ends: [fc.TELEM.5V, teensy_feed.D1.A1], wire: thin-signal-lead, awg: 26, length_mm: 70, harness: safety monitor}
-  - {ends: [bec.pads.OUT, teensy_feed.D1.A2], wire: thin-signal-lead, awg: 26, length_mm: 110, harness: safety monitor}
+  - {ends: [fc.TELEM.5V, teensy_feed.D1.A1], wire: thin-signal-lead, awg: 26, route: teensy feed from fc, harness: safety monitor}
+  - {ends: [bec.pads.OUT, teensy_feed.D1.A2], wire: thin-signal-lead, awg: 26, route: teensy feed from bec, harness: safety monitor}
   - {ends: [teensy_feed.D1.K, teensy.pins.VIN], wire: thin-signal-lead, awg: 26, length_mm: 30, harness: safety monitor}
   - {ends: [fc.VTX.GND, teensy.pins.GND], wire: thin-signal-lead, awg: 26, route: safety monitor, harness: safety monitor}
   # its serial link with the flight controller (the flight controller's side through buffer B6)
@@ -200,10 +200,10 @@ wires:
   # listening: the receiver, the flight controller's serial, its four DShot lines
   - {ends: [taps.B1.Y, teensy.pins.7], wire: thin-signal-lead, awg: 28, length_mm: 30, harness: safety monitor}
   - {ends: [taps.B6.Y, teensy.pins.15], wire: thin-signal-lead, awg: 28, length_mm: 30, harness: safety monitor}
-  - {ends: [fc.ESC.CH1, taps.B2.A], wire: thin-signal-lead, awg: 28, length_mm: 90, harness: safety monitor}
-  - {ends: [fc.ESC.CH2, taps.B3.A], wire: thin-signal-lead, awg: 28, length_mm: 90, harness: safety monitor}
-  - {ends: [fc.ESC.CH3, taps.B4.A], wire: thin-signal-lead, awg: 28, length_mm: 90, harness: safety monitor}
-  - {ends: [fc.ESC.CH4, taps.B5.A], wire: thin-signal-lead, awg: 28, length_mm: 90, harness: safety monitor}
+  - {ends: [fc.ESC.CH1, taps.B2.A], wire: thin-signal-lead, awg: 28, route: dshot taps, harness: safety monitor}
+  - {ends: [fc.ESC.CH2, taps.B3.A], wire: thin-signal-lead, awg: 28, route: dshot taps, harness: safety monitor}
+  - {ends: [fc.ESC.CH3, taps.B4.A], wire: thin-signal-lead, awg: 28, route: dshot taps, harness: safety monitor}
+  - {ends: [fc.ESC.CH4, taps.B5.A], wire: thin-signal-lead, awg: 28, route: dshot taps, harness: safety monitor}
   - {ends: [taps.B2.Y, teensy.pins.5], wire: thin-signal-lead, awg: 28, length_mm: 30, harness: safety monitor}
   - {ends: [taps.B3.Y, teensy.pins.6], wire: thin-signal-lead, awg: 28, length_mm: 30, harness: safety monitor}
   - {ends: [taps.B4.Y, teensy.pins.24], wire: thin-signal-lead, awg: 28, length_mm: 30, harness: safety monitor}
@@ -216,8 +216,8 @@ wires:
   - {ends: [teensy.pins.4, cut.J1.NO4], wire: thin-signal-lead, awg: 28, length_mm: 30, harness: safety monitor}
   - {ends: [teensy.pins.30, cut.J1.IN], wire: thin-signal-lead, awg: 28, length_mm: 30, harness: safety monitor}
   # the switch's own 3.3 V, from the flight controller's side so it never depends on the Teensy
-  - {ends: [fc.SPI.5V, cut_3v3.J1.VIN], wire: thin-signal-lead, awg: 28, length_mm: 70, harness: safety monitor}
-  - {ends: [fc.SPI.GND, cut_3v3.J1.GND], wire: thin-signal-lead, awg: 28, length_mm: 70, harness: safety monitor}
+  - {ends: [fc.SPI.5V, cut_3v3.J1.VIN], wire: thin-signal-lead, awg: 28, route: cut supply, harness: safety monitor}
+  - {ends: [fc.SPI.GND, cut_3v3.J1.GND], wire: thin-signal-lead, awg: 28, route: cut supply, harness: safety monitor}
   - {ends: [cut_3v3.J1.VOUT, cut.J1.VCC], wire: thin-signal-lead, awg: 28, length_mm: 15, harness: safety monitor}
   - {ends: [cut_3v3.J1.GND, cut.J1.GND], wire: thin-signal-lead, awg: 28, length_mm: 15, harness: safety monitor}
   # its IMU, on SPI
@@ -229,8 +229,8 @@ wires:
   - {ends: [teensy.pins.10, imu.J1.CS], wire: thin-signal-lead, awg: 28, length_mm: 40, harness: safety monitor}
   - {ends: [imu.J1.INT1, teensy.pins.40], wire: thin-signal-lead, awg: 28, length_mm: 40, harness: safety monitor}
   # its two chute lines, up to P's slot
-  - {ends: [teensy.pins.31, sockets.P_SIGNAL.TAKEOVER], wire: thin-signal-lead, awg: 26, length_mm: 60, harness: safety monitor}
-  - {ends: [teensy.pins.37, sockets.P_SIGNAL.CHUTE], wire: thin-signal-lead, awg: 26, length_mm: 60, harness: safety monitor}
+  - {ends: [teensy.pins.31, sockets.P_SIGNAL.TAKEOVER], wire: thin-signal-lead, awg: 26, route: chute lines, harness: safety monitor}
+  - {ends: [teensy.pins.37, sockets.P_SIGNAL.CHUTE], wire: thin-signal-lead, awg: 26, route: chute lines, harness: safety monitor}
 
   # The module bus harness: from the flight controller's CAN plug through V's and P's slots to
   # C's, with the terminators at both ends (on the harness), and the Pi's serial pair to V's slot
@@ -238,12 +238,12 @@ wires:
   - {ends: [sockets.FC_CAN.CAN_N, sockets.V_SIGNAL.CAN_N], wire: thin-signal-lead, awg: 26, route: module connector, harness: module bus}
   - {ends: [sockets.FC_CAN.5V, sockets.V_SIGNAL.CAN_5V], wire: thin-signal-lead, awg: 26, route: module connector, harness: module bus}
   - {ends: [sockets.FC_CAN.GND, sockets.V_SIGNAL.GND], wire: thin-signal-lead, awg: 26, route: module connector, harness: module bus}
-  - {ends: [sockets.V_SIGNAL.CAN_P, sockets.P_SIGNAL.CAN_P], wire: thin-signal-lead, awg: 26, length_mm: 50, harness: module bus}
-  - {ends: [sockets.V_SIGNAL.CAN_N, sockets.P_SIGNAL.CAN_N], wire: thin-signal-lead, awg: 26, length_mm: 50, harness: module bus}
-  - {ends: [sockets.V_SIGNAL.CAN_5V, sockets.P_SIGNAL.CAN_5V], wire: thin-signal-lead, awg: 26, length_mm: 50, harness: module bus}
-  - {ends: [sockets.P_SIGNAL.CAN_P, sockets.C_SIGNAL.CAN_P], wire: thin-signal-lead, awg: 26, length_mm: 130, harness: module bus}
-  - {ends: [sockets.P_SIGNAL.CAN_N, sockets.C_SIGNAL.CAN_N], wire: thin-signal-lead, awg: 26, length_mm: 130, harness: module bus}
-  - {ends: [sockets.P_SIGNAL.CAN_5V, sockets.C_SIGNAL.CAN_5V], wire: thin-signal-lead, awg: 26, length_mm: 130, harness: module bus}
+  - {ends: [sockets.V_SIGNAL.CAN_P, sockets.P_SIGNAL.CAN_P], wire: thin-signal-lead, awg: 26, route: module bus v to p, harness: module bus}
+  - {ends: [sockets.V_SIGNAL.CAN_N, sockets.P_SIGNAL.CAN_N], wire: thin-signal-lead, awg: 26, route: module bus v to p, harness: module bus}
+  - {ends: [sockets.V_SIGNAL.CAN_5V, sockets.P_SIGNAL.CAN_5V], wire: thin-signal-lead, awg: 26, route: module bus v to p, harness: module bus}
+  - {ends: [sockets.P_SIGNAL.CAN_P, sockets.C_SIGNAL.CAN_P], wire: thin-signal-lead, awg: 26, route: module bus p to c, harness: module bus}
+  - {ends: [sockets.P_SIGNAL.CAN_N, sockets.C_SIGNAL.CAN_N], wire: thin-signal-lead, awg: 26, route: module bus p to c, harness: module bus}
+  - {ends: [sockets.P_SIGNAL.CAN_5V, sockets.C_SIGNAL.CAN_5V], wire: thin-signal-lead, awg: 26, route: module bus p to c, harness: module bus}
   - {ends: [fc.TELEM.UART7_TX, sockets.V_SIGNAL.TX], wire: thin-signal-lead, awg: 26, length_mm: 50, harness: module bus}
   - {ends: [sockets.V_SIGNAL.RX, fc.TELEM.UART7_RX], wire: thin-signal-lead, awg: 26, length_mm: 50, harness: module bus}
 
@@ -278,16 +278,16 @@ wires:
   - {ends: [p_switch.U1.Y, chute.servo.SIG], wire: thin-signal-lead, awg: 28, route: chute servo, harness: p}
 
   # C: two servos on the module supply, driven by C's CAN node
-  - {ends: [cplug.POWER.5V, claws.servo1.V+], wire: ul3135-silicone, awg: 20, length_mm: 80, harness: c}
-  - {ends: [cplug.POWER.5V, claws.servo2.V+], wire: ul3135-silicone, awg: 20, length_mm: 80, harness: c}
-  - {ends: [cplug.POWER.GND, claws.servo1.GND], wire: ul3135-silicone, awg: 20, length_mm: 80, harness: c}
-  - {ends: [cplug.POWER.GND, claws.servo2.GND], wire: ul3135-silicone, awg: 20, length_mm: 80, harness: c}
+  - {ends: [cplug.POWER.5V, claws.servo1.V+], wire: ul3135-silicone, awg: 20, route: claws, harness: c}
+  - {ends: [cplug.POWER.5V, claws.servo2.V+], wire: ul3135-silicone, awg: 20, route: claws, harness: c}
+  - {ends: [cplug.POWER.GND, claws.servo1.GND], wire: ul3135-silicone, awg: 20, route: claws, harness: c}
+  - {ends: [cplug.POWER.GND, claws.servo2.GND], wire: ul3135-silicone, awg: 20, route: claws, harness: c}
   - {ends: [cplug.SIGNAL.CAN_P, c_node.CAN1.CAN_P], wire: thin-signal-lead, awg: 26, length_mm: 60, harness: c}
   - {ends: [cplug.SIGNAL.CAN_N, c_node.CAN1.CAN_N], wire: thin-signal-lead, awg: 26, length_mm: 60, harness: c}
   - {ends: [cplug.SIGNAL.CAN_5V, c_node.CAN1.5V], wire: thin-signal-lead, awg: 26, length_mm: 60, harness: c}
   - {ends: [cplug.SIGNAL.GND, c_node.CAN1.GND], wire: thin-signal-lead, awg: 26, length_mm: 60, harness: c}
-  - {ends: [c_node.PWM.PWM1, claws.servo1.SIG], wire: thin-signal-lead, awg: 28, length_mm: 80, harness: c}
-  - {ends: [c_node.PWM.PWM2, claws.servo2.SIG], wire: thin-signal-lead, awg: 28, length_mm: 80, harness: c}
+  - {ends: [c_node.PWM.PWM1, claws.servo1.SIG], wire: thin-signal-lead, awg: 28, route: claws, harness: c}
+  - {ends: [c_node.PWM.PWM2, claws.servo2.SIG], wire: thin-signal-lead, awg: 28, route: claws, harness: c}
 
 # No cell fuse links (decided 2026-10-18, in the build). The checks showed no gauge both
 # survives flat-out flight and opens a dead short before the battery leads' insulation burns:

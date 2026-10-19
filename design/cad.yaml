@@ -116,38 +116,38 @@ place:
 # A wire belongs to Base unless it says otherwise, and only shows up when its module is on.
 wires:
   - name: battery leads
-    diameter_mm: 8 # two 12 AWG leads side by side
+    diameter_mm: 6.4 # from the electrical connection list
     path_mm: [[30, 0, -5], [-60, 0, -5], [-70, 0, 5], [-70, 0, 16], [-26, 0, 16]]
   - name: motor leads front left
-    diameter_mm: 5 # three 18 AWG
+    diameter_mm: 5.4 # from the electrical connection list
     path_mm: [[20, 15, 16], [30, 30, 12], [130, 130, 12], [146, 146, 12]]
   - name: motor leads front right
-    diameter_mm: 5
+    diameter_mm: 5.4 # from the electrical connection list
     path_mm: [[20, -15, 16], [30, -30, 12], [130, -130, 12], [146, -146, 12]]
   - name: motor leads back left
-    diameter_mm: 5
+    diameter_mm: 5.4 # from the electrical connection list
     path_mm: [[-20, 15, 16], [-30, 30, 12], [-130, 130, 12], [-146, 146, 12]]
   - name: motor leads back right
-    diameter_mm: 5
+    diameter_mm: 5.4 # from the electrical connection list
     path_mm: [[-20, -15, 16], [-30, -30, 12], [-130, -130, 12], [-146, -146, 12]]
   - name: receiver
-    diameter_mm: 3
+    diameter_mm: 2.3 # from the electrical connection list
     path_mm: [[-10, 0, 25], [-50, 0, 18]]
   - name: gps
     module: V
-    diameter_mm: 3
+    diameter_mm: 2.3 # from the electrical connection list
     path_mm: [[-10, 5, 28], [-55, 5, 30], [-55, 5, 40], [-55, 5, 122]]
   - name: lidar
-    diameter_mm: 3
+    diameter_mm: 2.3 # from the electrical connection list
     path_mm: [[10, 0, 24], [118, 8, 16], [140, 8, 8], [140, 8, -6]]
   - name: safety monitor
-    diameter_mm: 3
+    diameter_mm: 2.0 # from the electrical connection list
     path_mm: [[15, 0, 26], [35, 0, 24]]
   - name: bec feed
-    diameter_mm: 3
+    diameter_mm: 4.1 # from the electrical connection list
     path_mm: [[-70, 6, 10], [-60, 6, 16], [-49, 6, 16]]
   - name: module connector
-    diameter_mm: 4
+    diameter_mm: 2.3 # from the electrical connection list
     path_mm: [[-5, 0, 28], [-5, 0, 35]]
   - name: camera cable
     module: V
@@ -155,5 +155,54 @@ wires:
     path_mm: [[158, 0, 17.5], [150, 0, 38], [12, 0, 44], [-5, 0, 52]]
   - name: chute servo
     module: P
-    diameter_mm: 3
-    path_mm: [[0, 8, 29], [8, 8, 38], [11, 0, 44]]
+    diameter_mm: 3.9 # from the electrical connection list
+    path_mm: [[38, -26, 46], [30, -18, 70], [26, -16, 120]]
+  - name: battery taps
+    diameter_mm: 4.1 # from the electrical connection list
+    path_mm: [[-22, -10, 15], [-50, -14, 11], [-62, -14, 8], [-86, -14, 8]]
+  - name: fc battery feed
+    diameter_mm: 1.0 # from the electrical connection list
+    path_mm: [[-98, -14, 12], [-62, -16, 14], [-30, -16, 22], [-10, -16, 24]]
+  - name: module power to V
+    diameter_mm: 4.4 # from the electrical connection list
+    path_mm: [[-36, 10, 18.5], [-20, 10, 28], [-8, 8, 34]]
+  - name: module power to P
+    diameter_mm: 4.4 # from the electrical connection list
+    path_mm: [[-36, 10, 18.5], [10, 12, 29], [32, 8, 34]]
+  - name: module power to C
+    diameter_mm: 4.4 # from the electrical connection list
+    path_mm: [[-48, 12, 15], [-58, 14, 10], [-62, 15, 6]]
+  - name: esc cable to switch
+    diameter_mm: 2.3 # from the electrical connection list
+    path_mm: [[0, 15, 25], [30, 12, 28], [55, 8, 28]]
+  - name: dshot taps
+    diameter_mm: 2.3 # from the electrical connection list
+    path_mm: [[0, 15, 25], [40, 12, 29], [80, 10, 28]]
+  - name: crsf tap
+    diameter_mm: 1.0 # from the electrical connection list
+    path_mm: [[-56, 4, 20], [-30, 14, 29], [40, 13, 29], [85, 10, 27]]
+  - name: teensy feed from fc
+    diameter_mm: 1.0 # from the electrical connection list
+    path_mm: [[0, -15, 25], [30, -12, 24], [45, -6, 23]]
+  - name: teensy feed from bec
+    diameter_mm: 1.0 # from the electrical connection list
+    path_mm: [[-36, -10, 18.5], [-10, -14, 27], [30, -12, 25], [45, -6, 23]]
+  - name: cut supply
+    diameter_mm: 1.6 # from the electrical connection list
+    path_mm: [[0, -15, 26], [40, -10, 29], [60, -6, 28]]
+  - name: chute lines
+    diameter_mm: 1.6 # from the electrical connection list
+    path_mm: [[50, 0, 23], [42, -4, 30], [38, -4, 35]]
+  - name: module bus v to p
+    diameter_mm: 2.0 # from the electrical connection list
+    path_mm: [[-5, -6, 31], [38, -6, 31]]
+  - name: module bus p to c
+    diameter_mm: 2.0 # from the electrical connection list
+    path_mm: [[38, -6, 31], [-55, -12, 30], [-62, 15, 8]]
+  - name: claws
+    module: C
+    diameter_mm: 6.0 # from the electrical connection list
+    path_mm: [[-94, 15, 6], [-110, 10, 2], [-125, 0, -10]]
+  - name: esc cable from switch
+    diameter_mm: 2.3 # from the electrical connection list
+    path_mm: [[55, -8, 28], [30, -12, 24], [18, -10, 18]]
