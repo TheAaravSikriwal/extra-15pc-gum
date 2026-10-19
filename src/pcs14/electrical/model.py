@@ -115,6 +115,7 @@ class ConnectionList(Strict):
     fuses: list[FuseChoice] = Field(default_factory=list)
     requires: list[Requirement] = Field(default_factory=list)
     cell_links: CellLinks | None = None
+    unproven: list[str] = Field(default_factory=list)  # what the design knowingly doesn't cover
     checks: CheckNumbers | None = None
 
     @model_validator(mode="after")

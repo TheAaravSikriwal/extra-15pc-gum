@@ -289,11 +289,18 @@ wires:
   - {ends: [c_node.PWM.PWM1, claws.servo1.SIG], wire: thin-signal-lead, awg: 28, length_mm: 80, harness: c}
   - {ends: [c_node.PWM.PWM2, claws.servo2.SIG], wire: thin-signal-lead, awg: 28, length_mm: 80, harness: c}
 
-# The pack's fuse links, one per cell between the cell and its busbar. The gauge is a first
-# guess; the fuse check sizes it (task 6).
-# joint_max_c is leaded solder's melting point (Sn63Pb37, 183 C): the link is soldered to its
-# busbar, and the spec keeps every part 20 C under its maximum.
-cell_links: {wire: bare-copper, awg: 18, length_mm: 8, joint_max_c: 183}
+# No cell fuse links (decided 2026-10-18, in the build). The checks showed no gauge both
+# survives flat-out flight and opens a dead short before the battery leads' insulation burns:
+# the pack can only push about five times the current cap into a short. The leads are kept
+# short, sleeved and routed away from crush points instead.
+
+# What this design knowingly doesn't cover; it goes in the report's unproven list.
+unproven:
+  - "A dead short in the battery leads. Nothing electrical stops it; only the leads' routing and sleeving protect against it."
+  - "The motor cut board's two undocumented 1 kOhm resistors. Check them with a meter; pull-ups would make the board fail the wrong way, which the added pull-down only partly covers."
+  - "Powering the Pi 5 through its GPIO 5 V pins, which Raspberry Pi's docs don't describe."
+  - "The ESC cable's re-pinning: Holybro doesn't say which end of its plug is pin 1."
+  - "Whether the ARK FPV terminates its CAN port. If it does, the harness's terminator at that end comes off."
 
 # The check numbers, from the spec's "The check numbers" (2026-10-18)
 checks:

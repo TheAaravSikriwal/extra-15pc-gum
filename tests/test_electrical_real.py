@@ -128,7 +128,6 @@ def test_the_real_drones_open_findings(real, loads):
     failing = sorted({(f.check, f.subject) for f in findings if not f.passed})
     assert failing == [
         ("backup: load voltage", "chute.servo.V+"),  # 4.55 V from the CAN bus's 5 V
-        ("cell link holds the burst", "18 AWG cell links"),  # 257 C against 163
         ("load voltage", "chute.servo.V+"),  # 4.79 V through its diode, against 4.9
         ("load voltage", "pi.GPIO.5V"),  # 5.185 V against a guessed 5.25 V ceiling
     ]
