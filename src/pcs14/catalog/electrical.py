@@ -107,6 +107,7 @@ class Rating(Strict):
     contact_mohm: float | None = Field(default=None, gt=0)
     max_c: float | None = None  # the hottest it's rated for
     volts: float | None = Field(default=None, gt=0)
+    contact_mass_g: float | None = Field(default=None, gt=0)  # the metal that heats, both halves
 
     @property
     def contact_resistance(self) -> float | None:

@@ -308,6 +308,7 @@ class Wire(Part):
     type: Literal["wire"]
     mass_g: None = None
     insulation_max_c: float | None  # None for bare wire
+    insulation: Literal["silicone", "pvc"] | None = None  # the material, for the heat model
     gauges: list[WireGauge] = Field(min_length=1)
 
     @model_validator(mode="after")

@@ -10,6 +10,8 @@ source: {kind: manufacturer, url: 'https://www.china-amass.com/biao/268.html', c
 mass_g: 0.99
 electrical:
   source: {kind: manufacturer, url: 'https://www.china-amass.com/biao/268.html', checked: 2026-10-18}
+  estimates: ['rating.contact_mass_g']
+  estimate_note: "Amass publishes no contact mass; about 0.8 g of brass in the mated contacts is a guess from the parts' size, for the heat model"
   rating:
     continuous_a: 20
     wire_awg: 16
@@ -17,3 +19,4 @@ electrical:
     contact_mohm: 1.2
     max_c: 120
     volts: 80
+    contact_mass_g: 0.8

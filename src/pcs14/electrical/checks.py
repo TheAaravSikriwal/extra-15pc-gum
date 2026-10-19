@@ -453,6 +453,11 @@ def check_design(design: ConnectionList, catalog, build, targets, cad_settings, 
             short / cells.parallel,
             links.joint_max_c,
         )
+    from pcs14.electrical import thermal
+
+    findings += thermal.wire_heat(ctx, solutions)
+    findings += thermal.connector_heat(ctx, solutions)
+    findings += thermal.esc_and_motors(ctx, solutions, build)
     setups = targets.combinations()
     cases = {s.name: flight_cases(build, targets, s) for s in setups}
     findings += backups(

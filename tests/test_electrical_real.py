@@ -128,7 +128,12 @@ def test_the_real_drones_open_findings(real, loads):
     failing = sorted({(f.check, f.subject) for f in findings if not f.passed})
     assert failing == [
         ("backup: load voltage", "chute.servo.V+"),  # 4.55 V from the CAN bus's 5 V
+        ("connector burst", "pack.XT60.+"),  # 128 C after 10 s at 90 A, against 100
+        ("connector burst", "pack.XT60.-"),
         ("load voltage", "chute.servo.V+"),  # 4.79 V through its diode, against 4.9
         ("load voltage", "pi.GPIO.5V"),  # 5.185 V against a guessed 5.25 V ceiling
     ]
     assert len(findings) > 250
+    heat = {f.check for f in findings}
+    assert {"wire current", "wire temperature", "wire burst", "connector temperature"} <= heat
+    assert {"ESC current", "ESC burst", "motor current"} <= heat

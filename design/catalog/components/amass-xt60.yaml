@@ -10,6 +10,8 @@ source: {kind: manufacturer, url: 'https://datasheet.lcsc.com/datasheet/pdf/bf4e
 mass_g: 3.29
 electrical:
   source: {kind: manufacturer, url: 'https://www.china-amass.com/biao/267.html', checked: 2026-10-18, note: "Amass's XT60 page and catalog agree on 35 A MAX at 12 AWG with under 85 K rise. Retailers quote 60 A / 100 A, about 1.7x Amass's own figure; Amass's 2016 catalog said 30 A rated, 60 A momentary"}
+  estimates: ['rating.contact_mass_g']
+  estimate_note: "Amass publishes no contact mass; about 2.5 g of brass in the mated contacts is a guess from the parts' size, for the heat model"
   rating:
     continuous_a: 35
     wire_awg: 12
@@ -17,3 +19,4 @@ electrical:
     contact_mohm: 1.0
     max_c: 120
     volts: 500
+    contact_mass_g: 2.5

@@ -6,6 +6,7 @@ maker: Various (UL 3135)
 model: Silicone hookup wire, UL style 3135
 checked: 2026-10-18
 source: {kind: manufacturer, url: 'https://p.globalsources.com/IMAGES/PDT/SPEC/900/K1226291900.pdf', checked: 2026-10-18, note: "An unnamed maker's UL3135 sheet on Global Sources: 200 °C, 600 V, insulation 0.78 mm nominal, conductor resistance (the UL 758 maximum, tinned, 20 °C) and overall diameter per gauge. Letronic's UL3135 sheet lists the same resistances. Grams per meter aren't published: they're worked out from the copper area (NBS Handbook 100, at 8.89 g/cm3) and the insulation's ring at about 1.2 g/cm3 for silicone, so they're estimates"}
+insulation: silicone
 insulation_max_c: 200
 gauges:
   - {awg: 12, resistance_mohm_per_m: 5.64, outer_diameter_mm: 3.95, mass_g_per_m: 38.9}
