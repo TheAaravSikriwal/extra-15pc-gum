@@ -71,3 +71,47 @@ def test_losing_a_wire_on_a_safety_path_is_caught(real):
     )
     assert any("take over the chute" in p.message for p in problems)
     assert all(p.combination is None or "P" in p.combination for p in problems)
+
+
+@pytest.fixture(scope="module")
+def loads(real):
+    from pcs14.electrical.loads import solve_all
+
+    catalog, build, design, settings, _ = real
+    targets = load_targets(ROOT / "design" / "targets.yaml")
+    return solve_all(design, catalog, build, targets, settings)
+
+
+def test_every_combination_gets_every_flight_case(loads):
+    assert len(loads) == 8 * 4
+    assert {case for _, case in loads} == {"hover", "cruise", "burst", "worst"}
+
+
+def test_the_battery_leads_carry_the_sizing_models_current(loads):
+    for (setup, case), result in loads.items():
+        lead = result.wire_amps("lead.XT60.+ to esc.BAT.VBAT")
+        assert lead == pytest.approx(result.case.battery_amps, rel=0.01), (setup, case)
+        ground = result.wire_amps("lead.XT60.- to esc.BAT.GND")
+        assert ground == pytest.approx(lead, rel=0.02), (setup, case)
+
+
+def test_the_burst_is_the_current_cap(loads):
+    assert loads[("max", "burst")].case.battery_amps == pytest.approx(90.0)
+
+
+def test_the_module_supply_carries_what_the_talk_worked_out(loads):
+    # the talk's table: about 2.5 A typical in Max, 5.6 A with every servo stalled
+    assert 2.3 <= loads[("max", "hover")].supply_amps("bec.5V") <= 2.9
+    assert 5.4 <= loads[("max", "worst")].supply_amps("bec.5V") <= 6.3
+
+
+def test_the_safety_monitor_runs_off_the_higher_supply(loads):
+    result = loads[("base", "hover")]
+    assert result.element_amps("teensy_feed.D_MODULE") > 0.05  # the module supply's 5.2 V
+    assert result.element_amps("teensy_feed.D_FC") == pytest.approx(0.0)
+
+
+def test_the_pi_sees_more_than_5v_on_a_normal_day(loads):
+    for (setup, case), result in loads.items():
+        if "V" in result.modules and case != "worst":
+            assert result.volts("pi.GPIO.5V") > 5.0, (setup, case)

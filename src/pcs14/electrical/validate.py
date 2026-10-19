@@ -65,7 +65,7 @@ class _Nets:
 
 
 @dataclass
-class _Board:
+class Board:
     name: str
     module: str
     block: ElectricalBlock
@@ -108,12 +108,12 @@ def _pack_block(volts: float) -> ElectricalBlock:
     )
 
 
-class _Check:
+class Wiring:
     def __init__(self, design: ConnectionList, parts, listed, routes, pack_volts):
         self.design, self.parts, self.listed, self.routes = design, parts, listed, routes
         self.pack_volts = pack_volts
         self.problems: list[Problem] = []
-        self.boards: dict[str, _Board] = {PACK: _Board(PACK, "base", _pack_block(pack_volts))}
+        self.boards: dict[str, Board] = {PACK: Board(PACK, "base", _pack_block(pack_volts))}
         self._boards()
 
     def add(self, rule, message, combination=None):
@@ -148,7 +148,7 @@ class _Check:
                 where = ", ".join(sorted(places))
                 self.add("boards", f"{name}: {board.part} is in {where}, so say which with module")
                 continue
-            self.boards[name] = _Board(name, module, part.electrical, board.modes, board.terminator)
+            self.boards[name] = Board(name, module, part.electrical, board.modes, board.terminator)
         for name, board in self.boards.items():
             for local in board.modes:
                 pin = board.pin(f"{name}.{local}")
@@ -159,7 +159,7 @@ class _Check:
         board = self.boards.get(ref.split(".", 1)[0])
         return None if board is None or "." not in ref else board.pin(ref)
 
-    def board_of(self, ref: str) -> _Board | None:
+    def board_of(self, ref: str) -> Board | None:
         return self.boards.get(ref.split(".", 1)[0])
 
     def static(self):
@@ -455,7 +455,7 @@ def validate(
     """Every problem with the connection list. `parts` maps catalog ids to parts (wire tables
     included), `listed` maps each part id to where the build lists it (base, V, P, C), `routes`
     is the CAD's wire route names, and `pack_volts` the pack's fully charged voltage."""
-    check = _Check(design, parts, listed, routes, pack_volts)
+    check = Wiring(design, parts, listed, routes, pack_volts)
     check.static()
     for modules in combinations:
         check.combination(frozenset(modules))
