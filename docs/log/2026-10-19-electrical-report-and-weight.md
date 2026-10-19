@@ -67,6 +67,12 @@ With the P45B and the hardware in (steel where it carries load, nylon elsewhere,
 
 Every required setup passes again. One caveat I found while comparing cells: the catalog rates the P45B's capacity to 2.5 V but the P42A's, measured by HKJ, to 2.8 V. On equal terms the P45B's lead is about 2% smaller, which still leaves Mission well clear. The heavier drone hovers on more current, so the XT60's burst got a little worse: 94 K over the air at the end, against 88.
 
+## The release servo
+
+The parachute's release servo got 4.79 to 4.88 V through its Schottky diode, and 4.54 V on its backup feed, against the 4.9 V it needs (a stand-in servo's 4.8 V rating plus the margin). I couldn't find the Harrier's real servo: Fruity Chutes only calls it a "patent pending servo release". So the fix had to work on the stand-in's numbers.
+
+The diodes are now an ideal-diode OR: TI's LM66200, which passes whichever of its two inputs is higher through a MOSFET instead of a diode junction, on Adafruit's half-gram breakout. On TI's worst-case on-resistance (60 mOhm, hot), a stalled servo loses 27 mV instead of about 0.4 V. The servo now sees 5.16 to 5.20 V, and 4.92 V on the backup. That's two of the eight findings gone, and 0.3 g lighter than the diodes. I still want the real servo's range, so asking Fruity Chutes is on my list.
+
 ## Next
 
-The other three findings: the release servo's voltage, the Pi's 5 V ceiling, and the XT60 in the burst.
+The last two findings: the Pi's 5 V ceiling and the XT60 in the burst.

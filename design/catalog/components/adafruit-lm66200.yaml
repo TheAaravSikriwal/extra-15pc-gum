@@ -1,0 +1,44 @@
+# Researched 2026-10-19. In module P: the release servo's supply, from the module supply or, if
+# that's gone, the CAN bus's 5 V, whichever is higher. An ideal-diode OR in place of the two
+# 1N5817 Schottkys, which dropped the servo under its range (decided 2026-10-19).
+type: component
+id: adafruit-lm66200
+maker: Adafruit (board), Texas Instruments (chip)
+model: LM66200 Ideal Dual Diodes Breakout
+part_number: '5830'
+checked: 2026-10-19
+source: {kind: manufacturer, url: 'https://www.adafruit.com/product/5830', checked: 2026-10-19, note: "Adafruit's page: 16.5 by 10.0 by 2.2 mm and 0.5 g, six 0.1 in pads, and a 1 MOhm pull-down on the enable pin that holds the chip on"}
+mass_g: 0.5
+cad:
+  shape: box
+  length_mm: 16.5
+  width_mm: 10.0
+  height_mm: 2.2
+  source: {kind: manufacturer, url: 'https://www.adafruit.com/product/5830', checked: '2026-10-19', note: "Adafruit's board size; it rides inline on the servo's leads, in heat shrink"}
+  existing: {found: none, checked: '2026-10-19', note: "Small enough that a box will do"}
+electrical:
+  source: {kind: manufacturer, url: 'https://www.ti.com/lit/ds/symlink/lm66200.pdf', checked: 2026-10-19, note: "TI's LM66200 datasheet (SLVSG04, November 2021): 1.6 to 5.5 V in, 6 V absolute; 2.5 A a channel continuous and 4 A for 1 ms; on-resistance at 5 V and 200 mA of 37 mOhm typical, 46 mOhm max at 25 C and 60 mOhm max from -40 to 105 C. It passes whichever input is higher and blocks reverse current once the output is 42 to 70 mV above an input. The forward points are the 60 mOhm worst case, a channel's drop at each current"}
+  connectors:
+    - name: pads
+      family: pads
+      pins:
+        - {name: VIN1, role: power, max_volts: 5.5}
+        - {name: VIN2, role: power, max_volts: 5.5}
+        - {name: VOUT, role: power}
+        - {name: GND, role: ground}
+        - {name: 'ON', role: signal, direction: in, volts: 5.0, max_volts: 5.5}
+        - {name: ST, role: signal, direction: out, volts: 5.0, max_volts: 5.5}
+  diode:
+    reverse_v: 5.5
+    continuous_a: 2.5
+    surge_a: 4
+    forward:
+      - {amps: 0.05, volts: 0.003}
+      - {amps: 0.1, volts: 0.006}
+      - {amps: 0.2, volts: 0.012}
+      - {amps: 0.5, volts: 0.030}
+      - {amps: 1.0, volts: 0.060}
+      - {amps: 2.5, volts: 0.150}
+  elements:
+    - {name: D_MODULE, kind: diode, between: [pads.VIN1, pads.VOUT], note: "from the module supply"}
+    - {name: D_CAN, kind: diode, between: [pads.VIN2, pads.VOUT], note: "from the CAN bus's 5 V, the backup"}

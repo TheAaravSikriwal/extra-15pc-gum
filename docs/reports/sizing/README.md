@@ -28,12 +28,12 @@ The motors and battery are sized for **mission**, carrying an extra 200 g of gro
 |---|---|---|---|---|---|---|---|
 | base | none | yes | 1875 g | 39.0 / 33.2 min | 52.3 / 44.8 min | 3.26 / 2.93:1 | pass |
 | V | V | yes | 2039 g | 33.0 / 28.2 min | 42.5 / 36.6 min | 3.00 / 2.70:1 | pass |
-| P | P | yes | 2050 g | 34.0 / 28.9 min | 44.8 / 38.3 min | 2.98 / 2.68:1 | pass |
+| P | P | yes | 2050 g | 34.0 / 29.0 min | 44.8 / 38.4 min | 2.98 / 2.68:1 | pass |
 | C | C | optional | 2284 g | 28.7 / 24.6 min | 37.2 / 32.0 min | 2.67 / 2.41:1 | pass |
 | mission | V+P | yes | 2414 g (with 200 g margin) | 25.7 / 22.2 min | 32.6 / 28.2 min | 2.53 / 2.28:1 | pass |
 | V+C | V+C | optional | 2448 g | 25.1 / 21.7 min | 31.6 / 27.4 min | 2.50 / 2.25:1 | pass |
 | P+C | P+C | optional | 2459 g | 25.7 / 22.1 min | 32.8 / 28.4 min | 2.48 / 2.24:1 | pass |
-| max | V+P+C | optional | 2623 g | 22.8 / 19.7 min | 28.3 / 24.6 min | 2.33 / 2.10:1 | fail |
+| max | V+P+C | optional | 2623 g | 22.8 / 19.7 min | 28.3 / 24.7 min | 2.33 / 2.10:1 | fail |
 
 Every check, setup by setup:
 
@@ -79,8 +79,8 @@ Every check, setup by setup:
 
 | Check | Published / pessimistic | Target | Margin | Verdict |
 |---|---|---|---|---|
-| Hover time | 34.0 / 28.9 min | at least 21.0 min | +62% | pass |
-| Cruise time at 10 m/s | 44.8 / 38.3 min | at least 25.0 min | +79% | pass |
+| Hover time | 34.0 / 29.0 min | at least 21.0 min | +62% | pass |
+| Cruise time at 10 m/s | 44.8 / 38.4 min | at least 25.0 min | +79% | pass |
 | Thrust-to-weight at the reserve | 2.98 / 2.68:1 | at least 2.00:1 | +49% | pass |
 | Full-throttle current | 90.0 A | at most 90.0 A | +0% | pass |
 | Top speed at half charge | 113 / 110 km/h | at least 80 km/h | +41% | pass |
@@ -159,7 +159,7 @@ Every check, setup by setup:
 | Cruise time at 10 m/s | 32.8 / 28.4 min | at least 20.0 min | +64% | pass |
 | Thrust-to-weight at the reserve | 2.48 / 2.24:1 | at least 2.00:1 | +24% | pass |
 | Full-throttle current | 90.0 A | at most 90.0 A | +0% | pass |
-| Takeoff weight | 2460 g | at most 2500 g | +2% | pass |
+| Takeoff weight | 2459 g | at most 2500 g | +2% | pass |
 
 - Thrust-to-weight at the reserve: Full throttle at 20% charge, with the pack sagging under the load
 - Full-throttle current: All four motors flat out on a full pack. The firmware caps it at 90 A; without the cap it would pull 130 A
@@ -174,7 +174,7 @@ Every check, setup by setup:
 | Check | Published / pessimistic | Target | Margin | Verdict |
 |---|---|---|---|---|
 | Hover time | 22.8 / 19.7 min | at least 17.0 min | +34% | pass |
-| Cruise time at 10 m/s | 28.3 / 24.6 min | at least 20.0 min | +42% | pass |
+| Cruise time at 10 m/s | 28.3 / 24.7 min | at least 20.0 min | +42% | pass |
 | Thrust-to-weight at the reserve | 2.33 / 2.10:1 | at least 2.00:1 | +17% | pass |
 | Full-throttle current | 90.0 A | at most 90.0 A | +0% | pass |
 | Takeoff weight | 2623 g | at most 2500 g | -5% | fail |
@@ -234,7 +234,7 @@ Every check, setup by setup:
 | ARK CANnode (DroneCAN node with 8 PWM outputs) | 5 g |
 | 74LVC1G157 two-input multiplexer on a SOT-23-6 adapter | 0 g |
 | D36V6F3 3.3 V 600 mA step-down regulator (item 3791) | 0 g |
-| Two 1N5817 Schottky diodes (DO-41, soldered inline) | 1 g |
+| LM66200 Ideal Dual Diodes Breakout | 0 g |
 | Module plug (an XT30U and an 8-pin JST-GH) | 1 g |
 | Module P's wiring | 3 g |
 | Module P's screws, nuts and spacers | 2 g |
@@ -259,9 +259,9 @@ The cruise targets are checked at 10 m/s for now. The speed that actually costs 
 
 | Rank | Build | Frame | Verdict | Tightest margin | mission cruise |
 |---|---|---|---|---|---|
-| 1 | XRotor 3115 900KV / MacroQuad 10x5x3 / 6S3P Molicel INR-21700-P42A | Nazgul XL10 V6 10-inch frame | pass | +45% | 37.7 min |
+| 1 | XRotor 3115 900KV / MacroQuad 10x5x3 / 6S3P Molicel INR-21700-P42A | Nazgul XL10 V6 10-inch frame | pass | +45% | 37.8 min |
 | 2 | XRotor 3115 900KV / MacroQuad 10x5x3 / 6S3P Molicel INR-21700-P45B | Nazgul XL10 V6 10-inch frame | pass | +43% | 40.5 min |
-| 3 | XRotor 3115 900KV / MacroQuad 10x4.5x3 / 6S3P Molicel INR-21700-P45B | Nazgul XL10 V6 10-inch frame | pass | +33% | 34.6 min |
+| 3 | XRotor 3115 900KV / MacroQuad 10x4.5x3 / 6S3P Molicel INR-21700-P45B | Nazgul XL10 V6 10-inch frame | pass | +33% | 34.7 min |
 | 4 | XRotor 3115 900KV / MacroQuad 10x5x3 / 6S3P Samsung SDI INR21700-40T | Nazgul XL10 V6 10-inch frame | pass | +31% | 36.3 min |
 | 5 | E3 2814 850KV / 1050 3-blade / 6S3P Molicel INR-21700-P42A | Nazgul XL10 V6 10-inch frame | pass | +30% | 36.3 min |
 | 6 | E3 2814 850KV / 1050 3-blade / 6S3P Samsung SDI INR21700-40T | Nazgul XL10 V6 10-inch frame | pass | +29% | 35.0 min |

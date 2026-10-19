@@ -54,7 +54,7 @@ modules:
     - ark-cannode # DroneCAN servo node for the release servo
     - p-chute-switch # lets the safety monitor take over the release servo
     - pololu-d36v6f3 # 3.3 V for the chute switch
-    - p-servo-diodes # the release servo's backup feed
+    - adafruit-lm66200 # the release servo's ideal-diode feed, with its backup
     - module-plug
     - p-wiring # its wires, from the connection list
     - p-hardware # its screws, nuts and spacers

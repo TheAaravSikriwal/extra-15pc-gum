@@ -1818,35 +1818,35 @@
    ],
    "passed": true,
    "trim_x_mm": -17.0,
-   "mass_g": 2050.247,
+   "mass_g": 2049.947,
    "center_of_gravity_mm": [
-    0.14,
-    0.037,
-    7.431
+    0.135,
+    0.041,
+    7.424
    ],
    "inertia_kg_m2": [
     [
-     0.01562079488384446,
-     -5.710030476666619e-06,
-     -0.001305827414542833
+     0.015619899444943968,
+     -6.052368336657784e-06,
+     -0.00130530977016267
     ],
     [
-     -5.710030476666619e-06,
-     0.018606829755507818,
-     -2.588423413162799e-06
+     -6.052368336657784e-06,
+     0.01860577859290844,
+     -3.0004708634104952e-06
     ],
     [
-     -0.001305827414542833,
-     -2.588423413162799e-06,
-     0.02635797835952127
+     -0.00130530977016267,
+     -3.0004708634104952e-06,
+     0.026357277430611344
     ]
    ],
-   "busiest_motor_extra": 0.001191,
+   "busiest_motor_extra": 0.001183,
    "findings": [
     {
      "check": "balance",
      "passed": true,
-     "value": 0.001190668415041131,
+     "value": 0.001183056895124626,
      "limit": 0.05,
      "detail": "with the pack at x = -17 mm, the center of gravity sits +0.1 mm along x and +0.0 mm along y, so the busiest motor works 0.1% harder",
      "parts": []
@@ -2148,12 +2148,12 @@
     {
      "check": "prop clearance",
      "passed": true,
-     "value": 0.027933189999815262,
+     "value": 0.025680565584488252,
      "limit": 0.01,
-     "detail": "p-servo-diodes is 27.9 mm from prop 2's disk (needs 10)",
+     "detail": "adafruit-lm66200 is 25.7 mm from prop 2's disk (needs 10)",
      "parts": [
       "prop disk 2",
-      "p-servo-diodes"
+      "adafruit-lm66200"
      ]
     },
     {
@@ -3504,35 +3504,35 @@
    ],
    "passed": true,
    "trim_x_mm": -13.0,
-   "mass_g": 2213.795,
+   "mass_g": 2213.495,
    "center_of_gravity_mm": [
-    -0.001,
-    0.23,
-    12.535
+    -0.006,
+    0.234,
+    12.53
    ],
    "inertia_kg_m2": [
     [
-     0.016578261970218125,
-     5.027396756426855e-05,
-     -0.0007751242101900369
+     0.01657749479250021,
+     4.992815356173794e-05,
+     -0.000774662840330457
     ],
     [
-     5.027396756426855e-05,
-     0.019955054503922928,
-     -4.001295022273869e-05
+     4.992815356173794e-05,
+     0.019954131901323717,
+     -4.0381187052867965e-05
     ],
     [
-     -0.0007751242101900369,
-     -4.001295022273869e-05,
-     0.026946026824441516
+     -0.000774662840330457,
+     -4.0381187052867965e-05,
+     0.02694531918494785
     ]
    ],
-   "busiest_motor_extra": 0.001553,
+   "busiest_motor_extra": 0.001615,
    "findings": [
     {
      "check": "balance",
      "passed": true,
-     "value": 0.0015529636645792316,
+     "value": 0.001615330491820228,
      "limit": 0.05,
      "detail": "with the pack at x = -13 mm, the center of gravity sits -0.0 mm along x and +0.2 mm along y, so the busiest motor works 0.2% harder",
      "parts": []
@@ -3911,12 +3911,12 @@
     {
      "check": "prop clearance",
      "passed": true,
-     "value": 0.027933189999815262,
+     "value": 0.025680565584488252,
      "limit": 0.01,
-     "detail": "p-servo-diodes is 27.9 mm from prop 2's disk (needs 10)",
+     "detail": "adafruit-lm66200 is 25.7 mm from prop 2's disk (needs 10)",
      "parts": [
       "prop disk 2",
-      "p-servo-diodes"
+      "adafruit-lm66200"
      ]
     },
     {
@@ -5717,35 +5717,35 @@
    ],
    "passed": true,
    "trim_x_mm": 5.0,
-   "mass_g": 2209.147,
+   "mass_g": 2208.847,
    "center_of_gravity_mm": [
-    0.147,
-    0.053,
-    5.007
+    0.142,
+    0.057,
+    5.0
    ],
    "inertia_kg_m2": [
     [
-     0.015873650144385507,
-     -1.7604510155931202e-06,
-     -0.00134153444057961
+     0.015872686364536173,
+     -2.10291210031222e-06,
+     -0.0013409893600717844
     ],
     [
-     -1.7604510155931202e-06,
-     0.02116297462309121,
-     -2.724177321180408e-06
+     -2.10291210031222e-06,
+     0.021161855570007222,
+     -3.1583773072705204e-06
     ],
     [
-     -0.00134153444057961,
-     -2.724177321180408e-06,
-     0.02875312884143645
+     -0.0013409893600717844,
+     -3.1583773072705204e-06,
+     0.028752427773207752
     ]
    ],
-   "busiest_motor_extra": 0.001346,
+   "busiest_motor_extra": 0.001339,
    "findings": [
     {
      "check": "balance",
      "passed": true,
-     "value": 0.0013462965438301802,
+     "value": 0.001339253718421709,
      "limit": 0.05,
      "detail": "with the pack at x = 5 mm, the center of gravity sits +0.1 mm along x and +0.1 mm along y, so the busiest motor works 0.1% harder",
      "parts": []
@@ -6047,12 +6047,12 @@
     {
      "check": "prop clearance",
      "passed": true,
-     "value": 0.027933189999815262,
+     "value": 0.025680565584488252,
      "limit": 0.01,
-     "detail": "p-servo-diodes is 27.9 mm from prop 2's disk (needs 10)",
+     "detail": "adafruit-lm66200 is 25.7 mm from prop 2's disk (needs 10)",
      "parts": [
       "prop disk 2",
-      "p-servo-diodes"
+      "adafruit-lm66200"
      ]
     },
     {
@@ -6631,35 +6631,35 @@
    ],
    "passed": true,
    "trim_x_mm": 9.0,
-   "mass_g": 2372.695,
+   "mass_g": 2372.395,
    "center_of_gravity_mm": [
-    0.015,
-    0.232,
-    9.936
+    0.01,
+    0.236,
+    9.931
    ],
    "inertia_kg_m2": [
     [
-     0.01688687610543802,
-     5.4225437556817374e-05,
-     -0.0008099472867975883
+     0.016886043758256704,
+     5.387974189110253e-05,
+     -0.000809456491230228
     ],
     [
-     5.4225437556817374e-05,
-     0.02272537260516304,
-     -4.1081822896508254e-05
+     5.387974189110253e-05,
+     0.022724385234311837,
+     -4.147373748497137e-05
     ],
     [
-     -0.0008099472867975883,
-     -4.1081822896508254e-05,
-     0.029499576592817135
+     -0.000809456491230228,
+     -4.147373748497137e-05,
+     0.029498869272985163
     ]
    ],
-   "busiest_motor_extra": 0.001664,
+   "busiest_motor_extra": 0.001658,
    "findings": [
     {
      "check": "balance",
      "passed": true,
-     "value": 0.0016641089486420177,
+     "value": 0.0016575918311490766,
      "limit": 0.05,
      "detail": "with the pack at x = 9 mm, the center of gravity sits +0.0 mm along x and +0.2 mm along y, so the busiest motor works 0.2% harder",
      "parts": []
@@ -7038,12 +7038,12 @@
     {
      "check": "prop clearance",
      "passed": true,
-     "value": 0.027933189999815262,
+     "value": 0.025680565584488252,
      "limit": 0.01,
-     "detail": "p-servo-diodes is 27.9 mm from prop 2's disk (needs 10)",
+     "detail": "adafruit-lm66200 is 25.7 mm from prop 2's disk (needs 10)",
      "parts": [
       "prop disk 2",
-      "p-servo-diodes"
+      "adafruit-lm66200"
      ]
     },
     {
@@ -8190,6 +8190,12 @@
    "compared": null
   },
   {
+   "part": "base-hardware",
+   "found": "none",
+   "terms": null,
+   "compared": null
+  },
+  {
    "part": "ark-gps",
    "found": "official",
    "terms": "BSD-3-Clause (the folder's LICENSE file)",
@@ -8262,6 +8268,12 @@
    "compared": null
   },
   {
+   "part": "v-hardware",
+   "found": "none",
+   "terms": null,
+   "compared": null
+  },
+  {
    "part": "fruity-chutes-harrier-40-42",
    "found": "none",
    "terms": null,
@@ -8286,13 +8298,19 @@
    "compared": null
   },
   {
-   "part": "p-servo-diodes",
+   "part": "adafruit-lm66200",
    "found": "none",
    "terms": null,
    "compared": null
   },
   {
    "part": "p-wiring",
+   "found": "none",
+   "terms": null,
+   "compared": null
+  },
+  {
+   "part": "p-hardware",
    "found": "none",
    "terms": null,
    "compared": null

@@ -62,7 +62,7 @@ boards:
   chute: {part: fruity-chutes-harrier-40-42}
   p_switch: {part: p-chute-switch}
   p_3v3: {part: pololu-d36v6f3, module: P}
-  p_diodes: {part: p-servo-diodes}
+  p_diodes: {part: adafruit-lm66200} # an ideal-diode OR, since 2026-10-19
   # C
   cplug: {part: module-plug, module: C}
   c_node: {part: ark-cannode, module: C, terminator: false}
@@ -120,9 +120,9 @@ requires:
   - {name: the safety monitor's release signal reaches the chute switch, pins: [teensy.pins.37, p_switch.U1.I1]}
   - {name: the CAN node's release signal reaches the chute switch, pins: [p_node.PWM.PWM1, p_switch.U1.I0]}
   - {name: the chute switch drives the release servo, pins: [p_switch.U1.Y, chute.servo.SIG]}
-  - {name: the release servo has the module supply, pins: [pplug.POWER.5V, p_diodes.D1.A]}
-  - {name: the release servo has the CAN bus's 5 V as a backup, pins: [pplug.SIGNAL.CAN_5V, p_diodes.D2.A]}
-  - {name: the diodes feed the release servo, pins: [p_diodes.D1.K, p_diodes.D2.K, chute.servo.V+]}
+  - {name: the release servo has the module supply, pins: [pplug.POWER.5V, p_diodes.pads.VIN1]}
+  - {name: the release servo has the CAN bus's 5 V as a backup, pins: [pplug.SIGNAL.CAN_5V, p_diodes.pads.VIN2]}
+  - {name: the diodes feed the release servo, pins: [p_diodes.pads.VOUT, chute.servo.V+]}
 
 wires:
   # The main power path: 12 AWG from the XT60 to the ESC's pads
@@ -257,14 +257,14 @@ wires:
   - {ends: [vplug.SIGNAL.CAN_5V, gps.CAN1.5V], wire: thin-signal-lead, awg: 26, route: gps, harness: v}
   - {ends: [vplug.SIGNAL.GND, gps.CAN1.GND], wire: thin-signal-lead, awg: 26, route: gps, harness: v}
 
-  # P: the release servo powered from the module supply or, through the diodes, the CAN bus's
-  # 5 V; its signal from the CAN node unless the safety monitor takes over
-  - {ends: [pplug.POWER.5V, p_diodes.D1.A], wire: ul3135-silicone, awg: 22, length_mm: 40, harness: p}
-  - {ends: [pplug.SIGNAL.CAN_5V, p_diodes.D2.A], wire: thin-signal-lead, awg: 26, length_mm: 40, harness: p}
-  - {ends: [p_diodes.D1.K, chute.servo.V+], wire: ul3135-silicone, awg: 22, route: chute servo, harness: p}
-  - {ends: [p_diodes.D2.K, p_diodes.D1.K], wire: thin-signal-lead, awg: 26, length_mm: 10, harness: p}
+  # P: the release servo powered from the module supply or, through the ideal diodes, the CAN
+  # bus's 5 V; its signal from the CAN node unless the safety monitor takes over
+  - {ends: [pplug.POWER.5V, p_diodes.pads.VIN1], wire: ul3135-silicone, awg: 22, length_mm: 40, harness: p}
+  - {ends: [pplug.SIGNAL.CAN_5V, p_diodes.pads.VIN2], wire: thin-signal-lead, awg: 26, length_mm: 40, harness: p}
+  - {ends: [p_diodes.pads.VOUT, chute.servo.V+], wire: ul3135-silicone, awg: 22, route: chute servo, harness: p}
+  - {ends: [pplug.POWER.GND, p_diodes.pads.GND], wire: thin-signal-lead, awg: 28, length_mm: 20, harness: p}
   - {ends: [pplug.POWER.GND, chute.servo.GND], wire: ul3135-silicone, awg: 22, route: chute servo, harness: p}
-  - {ends: [p_diodes.D1.K, p_3v3.J1.VIN], wire: thin-signal-lead, awg: 28, length_mm: 20, harness: p}
+  - {ends: [p_diodes.pads.VOUT, p_3v3.J1.VIN], wire: thin-signal-lead, awg: 28, length_mm: 20, harness: p}
   - {ends: [pplug.POWER.GND, p_3v3.J1.GND], wire: thin-signal-lead, awg: 28, length_mm: 30, harness: p}
   - {ends: [p_3v3.J1.VOUT, p_switch.U1.VCC], wire: thin-signal-lead, awg: 28, length_mm: 15, harness: p}
   - {ends: [p_3v3.J1.GND, p_switch.U1.GND], wire: thin-signal-lead, awg: 28, length_mm: 15, harness: p}

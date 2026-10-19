@@ -6,18 +6,13 @@
 
 ## The verdict
 
-**Fail.** 8 of 438 checks miss.
+**Fail.** 3 of 438 checks miss.
 
 | Check | Where | In | What it found | Rests on |
 |---|---|---|---|---|
-| load voltage | chute.servo.V+ | max, worst | 4.787 to 4.879 V across the cases, inside 4.90 to 5.90 V (4.8 to 6 V, less the margin) | fruity-chutes-harrier-40-42: its whole electrical block |
 | load voltage | pi.GPIO.5V | V, cruise | 5.183 to 5.187 V across the cases, inside 4.75 to 5.15 V (4.63 to 5.25 V, less the margin) | rpi-5-4gb: draws[GPIO.5V] |
-| connector burst | pack.XT60.+ | P, burst | 90 A for 10 s ends 94 K over the air (heating with a 98 s time constant) | amass-xt60: rating.contact_mass_g |
-| connector burst | pack.XT60.- | C, burst | 90 A for 10 s ends 94 K over the air (heating with a 98 s time constant) | amass-xt60: rating.contact_mass_g |
-| backup: load voltage | chute.servo.V+ | P, bec.5V off | 4.550 to 4.550 V across the cases, inside 4.90 to 5.90 V (4.8 to 6 V, less the margin) | fruity-chutes-harrier-40-42: its whole electrical block |
-| backup: load voltage | chute.servo.V+ | mission, bec.5V off | 4.546 to 4.546 V across the cases, inside 4.90 to 5.90 V (4.8 to 6 V, less the margin) | fruity-chutes-harrier-40-42: its whole electrical block |
-| backup: load voltage | chute.servo.V+ | P+C, bec.5V off | 4.547 to 4.547 V across the cases, inside 4.90 to 5.90 V (4.8 to 6 V, less the margin) | fruity-chutes-harrier-40-42: its whole electrical block |
-| backup: load voltage | chute.servo.V+ | max, bec.5V off | 4.543 to 4.543 V across the cases, inside 4.90 to 5.90 V (4.8 to 6 V, less the margin) | fruity-chutes-harrier-40-42: its whole electrical block |
+| connector burst | pack.XT60.+ | max, burst | 90 A for 10 s ends 94 K over the air (heating with a 98 s time constant) | amass-xt60: rating.contact_mass_g |
+| connector burst | pack.XT60.- | P, burst | 90 A for 10 s ends 94 K over the air (heating with a 98 s time constant) | amass-xt60: rating.contact_mass_g |
 
 Built from E3 2814 850KV / 1050 3-blade / 6S2P Molicel INR-21700-P45B. The connection list has 33 boards, 128 wires and 27 safety paths.
 It passes every rule in all 8 module combinations: every pin exists, one driver per line, no supplies tied together, no pin over its voltage, every board powered and grounded, two CAN terminators, and every safety path there.
@@ -43,10 +38,10 @@ Every rating gets 80% at most, steady. Heat is checked in 40 °C air, steady and
 
 | Check | How many | Passed | Tightest |
 |---|---|---|---|
-| connector current | 51 | 51 | pack.XT60.+, max, hover: 25.07 A through one amass-xt60 contact, rated 35 A |
+| connector current | 51 | 51 | lead.XT60.+, max, hover: 25.07 A through one amass-xt60 contact, rated 35 A |
 | supply, typical | 13 | 13 | bec.5V, max, hover: 2.57 A against 80% of its 5 A |
 | supply, worst | 13 | 13 | bec.5V, max, worst: 5.93 A against its 9 A peak rating |
-| load voltage | 25 | 23 | chute.servo.V+, max, worst: 4.787 to 4.879 V across the cases, inside 4.90 to 5.90 V (4.8 to 6 V, less the margin) |
+| load voltage | 25 | 24 | pi.GPIO.5V, V, cruise: 5.183 to 5.187 V across the cases, inside 4.75 to 5.15 V (4.63 to 5.25 V, less the margin) |
 | main path drop | 1 | 1 | pack to esc.BAT.VBAT, base, burst: 342 mV lost out and back at 90 A, against 2% of the pack's nominal 21.6 V |
 | fuse holds | 2 | 2 | fuses.F1, max, hover: 0.81 A steady, so it needs 1.01 A; it's a 3 A fuse |
 | fuse protects its wire | 2 | 2 | fuses.F2, on a short: it lets through 9 A2s; fuses.F2.B to fc.POWER_AUX.VBAT (26 AWG) takes 115 A2s to go from 40 to 80 C |
@@ -54,11 +49,11 @@ Every rating gets 80% at most, steady. Heat is checked in 40 °C air, steady and
 | wire temperature | 54 | 54 | lead.XT60.+ to esc.BAT.VBAT, max, hover: 64 C at 25.07 A in 12 AWG silicone, good to 200 C |
 | wire burst | 14 | 14 | lead.XT60.+ to esc.BAT.VBAT, max, burst: 90.0 A for 10 s from 64 C ends at 83 C in 12 AWG silicone |
 | connector temperature | 8 | 8 | pack.XT60.+, max, hover: 25.1 A rises 44 K over the 40 C air; Amass rates 85 K at 35 A |
-| connector burst | 2 | 0 | pack.XT60.+, P, burst: 90 A for 10 s ends 94 K over the air (heating with a 98 s time constant) |
+| connector burst | 2 | 0 | pack.XT60.+, max, burst: 90 A for 10 s ends 94 K over the air (heating with a 98 s time constant) |
 | ESC current | 1 | 1 | holybro-tekko32-f4-50a, max, hover: 6.0 A a motor, against 80% of its 50 A |
 | ESC burst | 1 | 1 | holybro-tekko32-f4-50a, base, burst: 22.4 A a motor at the cap, against its 60 A burst |
 | motor current | 1 | 1 | emax-e3-2814-850kv, base, burst: 22.4 A at the cap, against its 58.4 A peak |
-| backup: load voltage | 132 | 128 | chute.servo.V+, P, bec.5V off: 4.550 to 4.550 V across the cases, inside 4.90 to 5.90 V (4.8 to 6 V, less the margin) |
+| backup: load voltage | 132 | 132 | chute.servo.V+, max, bec.5V off: 4.921 to 4.921 V across the cases, inside 4.90 to 5.90 V (4.8 to 6 V, less the margin) |
 | backup: supply | 64 | 64 | fc.5V, max, bec.5V off: 1.59 A with bec.5V off, against its 2 A |
 
 Every check, one by one:
@@ -68,16 +63,16 @@ Every check, one by one:
 
 | What | In | Found | Verdict |
 |---|---|---|---|
-| pack.XT60.+ | max, hover | 25.07 A through one amass-xt60 contact, rated 35 A | pass |
 | lead.XT60.+ | max, hover | 25.07 A through one amass-xt60 contact, rated 35 A | pass |
+| pack.XT60.+ | max, hover | 25.07 A through one amass-xt60 contact, rated 35 A | pass |
 | lead.XT60.- | max, hover | 25.07 A through one amass-xt60 contact, rated 35 A | pass |
 | pack.XT60.- | max, hover | 25.07 A through one amass-xt60 contact, rated 35 A | pass |
 | fc.POWER_AUX.VBAT | max, hover | 0.26 A through one jst-gh contact, rated 1 A | pass |
+| fc.CAN.5V | max, hover | 0.19 A through one jst-gh contact, rated 1 A | pass |
 | sockets.FC_CAN.5V | max, hover | 0.19 A through one jst-gh contact, rated 1 A | pass |
 | sockets.V_SIGNAL.CAN_5V | max, hover | 0.19 A through one jst-gh contact, rated 1 A | pass |
-| fc.CAN.5V | max, hover | 0.19 A through one jst-gh contact, rated 1 A | pass |
 | fc.POWER_AUX.GND | base, hover | 0.15 A through one jst-gh contact, rated 1 A | pass |
-| fc.VTX.GND | max, cruise | 0.11 A through one jst-gh contact, rated 1 A | pass |
+| fc.VTX.GND | P, cruise | 0.11 A through one jst-gh contact, rated 1 A | pass |
 | gps.CAN1.5V | V, hover | 0.11 A through one jst-gh contact, rated 1 A | pass |
 | vplug.SIGNAL.CAN_5V | V, hover | 0.11 A through one jst-gh contact, rated 1 A | pass |
 | gps.CAN1.GND | V, hover | 0.11 A through one jst-gh contact, rated 1 A | pass |
@@ -92,32 +87,32 @@ Every check, one by one:
 | sockets.V_SIGNAL.GND | V, hover | 0.08 A through one jst-gh contact, rated 1 A | pass |
 | sockets.P_SIGNAL.CAN_5V | P+C, hover | 0.08 A through one jst-gh contact, rated 1 A | pass |
 | fc.RC.5V | base, hover | 0.08 A through one jst-gh contact, rated 1 A | pass |
-| fc.RC.GND | max, hover | 0.08 A through one jst-gh contact, rated 1 A | pass |
+| fc.RC.GND | C, hover | 0.08 A through one jst-gh contact, rated 1 A | pass |
 | fc.GPS.5V | base, hover | 0.07 A through one jst-gh contact, rated 1 A | pass |
 | lidar.J1.5V | base, hover | 0.07 A through one jst-gh contact, rated 1 A | pass |
 | fc.GPS.GND | V+C, hover | 0.07 A through one jst-gh contact, rated 1 A | pass |
 | lidar.J1.GND | V+C, hover | 0.07 A through one jst-gh contact, rated 1 A | pass |
-| pi.FAN.5V | V+C, cruise | 0.06 A through one jst-sh contact, rated 1 A | pass |
+| pi.FAN.5V | max, hover | 0.06 A through one jst-sh contact, rated 1 A | pass |
 | pi.FAN.GND | V, hover | 0.06 A through one jst-sh contact, rated 1 A | pass |
 | fc.CAN.GND | base, hover | 0.05 A through one jst-gh contact, rated 1 A | pass |
 | p_node.CAN1.5V | P+C, hover | 0.04 A through one jst-gh contact, rated 1 A | pass |
 | pplug.SIGNAL.CAN_5V | P+C, hover | 0.04 A through one jst-gh contact, rated 1 A | pass |
+| p_node.CAN1.GND | max, hover | 0.04 A through one jst-gh contact, rated 1 A | pass |
+| pplug.SIGNAL.GND | max, hover | 0.04 A through one jst-gh contact, rated 1 A | pass |
 | c_node.CAN1.GND | C, hover | 0.04 A through one jst-gh contact, rated 1 A | pass |
 | cplug.SIGNAL.GND | C, hover | 0.04 A through one jst-gh contact, rated 1 A | pass |
-| p_node.CAN1.GND | P+C, cruise | 0.04 A through one jst-gh contact, rated 1 A | pass |
-| pplug.SIGNAL.GND | P+C, cruise | 0.04 A through one jst-gh contact, rated 1 A | pass |
 | sockets.C_SIGNAL.CAN_5V | V+C, cruise | 0.04 A through one jst-gh contact, rated 1 A | pass |
 | c_node.CAN1.5V | V+C, cruise | 0.04 A through one jst-gh contact, rated 1 A | pass |
 | cplug.SIGNAL.CAN_5V | V+C, cruise | 0.04 A through one jst-gh contact, rated 1 A | pass |
 | sockets.C_POWER.5V | max, hover | 0.40 A through one amass-xt30 contact, rated 20 A | pass |
-| sockets.C_SIGNAL.GND | max, cruise | 0.02 A through one jst-gh contact, rated 1 A | pass |
+| sockets.C_SIGNAL.GND | C, cruise | 0.02 A through one jst-gh contact, rated 1 A | pass |
 | sockets.P_POWER.GND | max, hover | 0.30 A through one amass-xt30 contact, rated 20 A | pass |
-| cplug.POWER.GND | max, hover | 0.20 A through one amass-xt30 contact, rated 20 A | pass |
+| cplug.POWER.GND | P+C, hover | 0.20 A through one amass-xt30 contact, rated 20 A | pass |
 | cplug.POWER.5V | C, hover | 0.20 A through one amass-xt30 contact, rated 20 A | pass |
 | sockets.P_SIGNAL.GND | mission, hover | 0.00 A through one jst-gh contact, rated 1 A | pass |
 | sockets.P_POWER.5V | max, hover | 0.04 A through one amass-xt30 contact, rated 20 A | pass |
 | pplug.POWER.5V | max, hover | 0.04 A through one amass-xt30 contact, rated 20 A | pass |
-| pplug.POWER.GND | max, hover | 0.04 A through one amass-xt30 contact, rated 20 A | pass |
+| pplug.POWER.GND | P, cruise | 0.04 A through one amass-xt30 contact, rated 20 A | pass |
 | sockets.FC_CAN.GND | V, hover | 0.00 A through one jst-gh contact, rated 1 A | pass |
 
 </details>
@@ -134,12 +129,12 @@ Every check, one by one:
 | pi.FAN5V | V, hover | 0.06 A against 80% of its 0.6 A | pass |
 | cut_3v3.3V3 | base, hover | 0.00 A against 80% of its 0.6 A | pass |
 | p_3v3.3V3 | P, hover | 0.00 A against 80% of its 0.6 A | pass |
-| p_node.5V_OUT | P+C, cruise | 0.00 A against 80% of its 0.5 A | pass |
 | c_node.5V_OUT | V+C, cruise | 0.00 A against 80% of its 0.5 A | pass |
+| p_node.5V_OUT | P, hover | 0.00 A against 80% of its 0.5 A | pass |
 | c_node.CAN_THROUGH | V+C, cruise | 0.00 A against 80% of its 1 A | pass |
-| p_node.CAN_THROUGH | P, hover | 0.00 A against 80% of its 1 A | pass |
+| gps.CAN_THROUGH | max, cruise | 0.00 A against 80% of its 1 A | pass |
+| p_node.CAN_THROUGH | mission, hover | 0.00 A against 80% of its 1 A | pass |
 | fc.12V | base, hover | 0.00 A against 80% of its 2 A | pass |
-| gps.CAN_THROUGH | V, hover | 0.00 A against 80% of its 1 A | pass |
 
 </details>
 
@@ -155,45 +150,45 @@ Every check, one by one:
 | pi.FAN5V | V, worst | 0.18 A against its 0.6 A continuous rating | pass |
 | cut_3v3.3V3 | base, worst | 0.00 A against its 0.6 A continuous rating | pass |
 | p_3v3.3V3 | P, worst | 0.00 A against its 0.6 A continuous rating | pass |
+| p_node.5V_OUT | P+C, worst | 0.00 A against its 0.5 A continuous rating | pass |
 | c_node.5V_OUT | P+C, worst | 0.00 A against its 0.5 A continuous rating | pass |
-| p_node.5V_OUT | P, worst | 0.00 A against its 0.5 A continuous rating | pass |
+| c_node.CAN_THROUGH | P+C, worst | 0.00 A against its 1 A continuous rating | pass |
 | p_node.CAN_THROUGH | P, worst | 0.00 A against its 1 A continuous rating | pass |
-| c_node.CAN_THROUGH | C, worst | 0.00 A against its 1 A continuous rating | pass |
 | fc.12V | base, worst | 0.00 A against its 2 A continuous rating | pass |
 | gps.CAN_THROUGH | V, worst | 0.00 A against its 1 A continuous rating | pass |
 
 </details>
 
 <details>
-<summary>load voltage: 25 checked, 2 miss</summary>
+<summary>load voltage: 25 checked, 1 miss</summary>
 
 | What | In | Found | Verdict |
 |---|---|---|---|
 | pi.GPIO.5V | V, cruise | 5.183 to 5.187 V across the cases, inside 4.75 to 5.15 V (4.63 to 5.25 V, less the margin) | fail |
-| chute.servo.V+ | max, worst | 4.787 to 4.879 V across the cases, inside 4.90 to 5.90 V (4.8 to 6 V, less the margin) | fail |
 | gps.CAN1.5V | max, worst | 4.978 to 4.987 V across the cases, inside 4.85 to 5.15 V (4.75 to 5.25 V, less the margin) | pass |
 | c_node.CAN1.5V | max, worst | 4.980 to 4.997 V across the cases, inside 4.85 to 5.15 V (4.75 to 5.25 V, less the margin) | pass |
 | p_node.CAN1.5V | max, worst | 4.985 to 4.998 V across the cases, inside 4.85 to 5.15 V (4.75 to 5.25 V, less the margin) | pass |
 | camera.CSI.3V3 | V+C, worst | 3.299 to 3.299 V across the cases, inside 3.20 to 3.40 V (3.1 to 3.5 V, less the margin) | pass |
+| chute.servo.V+ | max, worst | 5.164 to 5.196 V across the cases, inside 4.90 to 5.90 V (4.8 to 6 V, less the margin) | pass |
 | claws.servo1.V+ | max, worst | 5.187 to 5.198 V across the cases, inside 4.90 to 5.90 V (4.8 to 6 V, less the margin) | pass |
 | claws.servo2.V+ | max, worst | 5.187 to 5.198 V across the cases, inside 4.90 to 5.90 V (4.8 to 6 V, less the margin) | pass |
-| imu.J1.VIN | mission, worst | 3.300 to 3.300 V across the cases, inside 3.10 to 5.40 V (3 to 5.5 V, less the margin) | pass |
+| imu.J1.VIN | V, worst | 3.300 to 3.300 V across the cases, inside 3.10 to 5.40 V (3 to 5.5 V, less the margin) | pass |
 | rx.pads.5V | max, worst | 4.999 to 4.999 V across the cases, inside 4.60 to 5.40 V (4.5 to 5.5 V, less the margin) | pass |
 | fan.FAN.5V | max, worst | 5.176 to 5.185 V across the cases, inside 4.60 to 5.40 V (4.5 to 5.5 V, less the margin) | pass |
 | halow.HAT.5V | max, worst | 5.183 to 5.187 V across the cases, inside 4.60 to 5.40 V (4.5 to 5.5 V, less the margin) | pass |
-| p_3v3.J1.VIN | max, worst | 4.791 to 4.880 V across the cases, inside 4.10 to 49.90 V (4 to 50 V, less the margin) | pass |
 | cut_3v3.J1.VIN | max, worst | 5.000 to 5.000 V across the cases, inside 4.10 to 49.90 V (4 to 50 V, less the margin) | pass |
+| p_3v3.J1.VIN | max, worst | 5.168 to 5.197 V across the cases, inside 4.10 to 49.90 V (4 to 50 V, less the margin) | pass |
 | esc.BAT.VBAT | base, burst | 15.708 to 19.566 V across the cases, inside 12.10 to 25.10 V (12 to 25.2 V, less the margin) | pass |
 | lidar.J1.5V | max, worst | 4.993 to 4.997 V across the cases, inside 3.80 to 5.10 V (3.7 to 5.2 V, less the margin) | pass |
 | bec.pads.IN | max, burst | 15.672 to 19.565 V across the cases, inside 9.10 to 54.90 V (9 to 55 V, less the margin) | pass |
-| cut.J1.VCC | mission, worst | 3.300 to 3.300 V across the cases, inside 1.75 to 3.50 V (1.65 to 3.6 V, less the margin) | pass |
+| cut.J1.VCC | V, worst | 3.300 to 3.300 V across the cases, inside 1.75 to 3.50 V (1.65 to 3.6 V, less the margin) | pass |
 | taps.B6.VCC | V, worst | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
 | taps.B5.VCC | V, worst | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
 | taps.B4.VCC | V, worst | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
 | taps.B3.VCC | V, worst | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
 | taps.B2.VCC | V, worst | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
 | taps.B1.VCC | V, worst | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
-| p_switch.U1.VCC | mission, worst | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
+| p_switch.U1.VCC | max, worst | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
 
 </details>
 
@@ -256,34 +251,34 @@ Every check, one by one:
 | esc.BAT.VBAT to fuses.F1.A | max, hover | 0.81 A in 20 AWG silicone, which carries 21.2 A to its 200 C limit in 40 C air | pass |
 | fuses.F1.B to bec.pads.IN | max, hover | 0.81 A in 20 AWG silicone, which carries 21.2 A to its 200 C limit in 40 C air | pass |
 | esc.FC.GND to fc.ESC.GND | base, hover | 0.10 A in 28 AWG PVC, which carries 2.9 A to its 80 C limit in 40 C air | pass |
-| fc.VTX.GND to teensy.pins.GND | max, cruise | 0.11 A in 26 AWG PVC, which carries 3.7 A to its 80 C limit in 40 C air | pass |
+| fc.VTX.GND to teensy.pins.GND | P, cruise | 0.11 A in 26 AWG PVC, which carries 3.7 A to its 80 C limit in 40 C air | pass |
 | teensy_feed.D1.K to teensy.pins.VIN | max, cruise | 0.11 A in 26 AWG PVC, which carries 3.7 A to its 80 C limit in 40 C air | pass |
 | bec.pads.OUT to teensy_feed.D1.A2 | max, cruise | 0.11 A in 26 AWG PVC, which carries 3.7 A to its 80 C limit in 40 C air | pass |
 | vplug.SIGNAL.CAN_5V to gps.CAN1.5V | V, hover | 0.11 A in 26 AWG PVC, which carries 3.7 A to its 80 C limit in 40 C air | pass |
 | vplug.SIGNAL.GND to gps.CAN1.GND | V, hover | 0.11 A in 26 AWG PVC, which carries 3.7 A to its 80 C limit in 40 C air | pass |
 | bec.pads.G2 to sockets.V_POWER.GND | max, hover | 0.67 A in 18 AWG silicone, which carries 27.7 A to its 200 C limit in 40 C air | pass |
 | sockets.V_SIGNAL.CAN_5V to sockets.P_SIGNAL.CAN_5V | P+C, hover | 0.08 A in 26 AWG PVC, which carries 3.7 A to its 80 C limit in 40 C air | pass |
-| fc.RC.5V to rx.pads.5V | max, cruise | 0.08 A in 26 AWG PVC, which carries 3.7 A to its 80 C limit in 40 C air | pass |
-| fc.RC.GND to rx.pads.GND | max, hover | 0.08 A in 26 AWG PVC, which carries 3.7 A to its 80 C limit in 40 C air | pass |
-| fc.GPS.5V to lidar.J1.5V | max, cruise | 0.07 A in 26 AWG PVC, which carries 3.7 A to its 80 C limit in 40 C air | pass |
-| fc.GPS.GND to lidar.J1.GND | max, hover | 0.07 A in 26 AWG PVC, which carries 3.7 A to its 80 C limit in 40 C air | pass |
+| fc.RC.5V to rx.pads.5V | max, hover | 0.08 A in 26 AWG PVC, which carries 3.7 A to its 80 C limit in 40 C air | pass |
+| fc.RC.GND to rx.pads.GND | P+C, cruise | 0.08 A in 26 AWG PVC, which carries 3.7 A to its 80 C limit in 40 C air | pass |
+| fc.GPS.5V to lidar.J1.5V | max, hover | 0.07 A in 26 AWG PVC, which carries 3.7 A to its 80 C limit in 40 C air | pass |
+| fc.GPS.GND to lidar.J1.GND | V+C, hover | 0.07 A in 26 AWG PVC, which carries 3.7 A to its 80 C limit in 40 C air | pass |
 | esc.BAT.VBAT to fuses.F2.A | max, hover | 0.26 A in 22 AWG silicone, which carries 16.0 A to its 200 C limit in 40 C air | pass |
-| bec.pads.OUT to sockets.C_POWER.5V | max, hover | 0.40 A in 18 AWG silicone, which carries 27.7 A to its 200 C limit in 40 C air | pass |
+| bec.pads.OUT to sockets.C_POWER.5V | P+C, cruise | 0.40 A in 18 AWG silicone, which carries 27.7 A to its 200 C limit in 40 C air | pass |
 | bec.pads.G2 to sockets.P_POWER.GND | max, hover | 0.30 A in 18 AWG silicone, which carries 27.7 A to its 200 C limit in 40 C air | pass |
 | pplug.SIGNAL.CAN_5V to p_node.CAN1.5V | P+C, hover | 0.04 A in 26 AWG PVC, which carries 3.7 A to its 80 C limit in 40 C air | pass |
+| pplug.SIGNAL.GND to p_node.CAN1.GND | max, hover | 0.04 A in 26 AWG PVC, which carries 3.7 A to its 80 C limit in 40 C air | pass |
 | cplug.SIGNAL.GND to c_node.CAN1.GND | C, hover | 0.04 A in 26 AWG PVC, which carries 3.7 A to its 80 C limit in 40 C air | pass |
-| pplug.SIGNAL.GND to p_node.CAN1.GND | P+C, cruise | 0.04 A in 26 AWG PVC, which carries 3.7 A to its 80 C limit in 40 C air | pass |
 | sockets.P_SIGNAL.CAN_5V to sockets.C_SIGNAL.CAN_5V | V+C, cruise | 0.04 A in 26 AWG PVC, which carries 3.7 A to its 80 C limit in 40 C air | pass |
 | cplug.SIGNAL.CAN_5V to c_node.CAN1.5V | V+C, cruise | 0.04 A in 26 AWG PVC, which carries 3.7 A to its 80 C limit in 40 C air | pass |
-| cplug.POWER.GND to claws.servo1.GND | max, hover | 0.20 A in 20 AWG silicone, which carries 21.2 A to its 200 C limit in 40 C air | pass |
+| cplug.POWER.GND to claws.servo1.GND | P+C, hover | 0.20 A in 20 AWG silicone, which carries 21.2 A to its 200 C limit in 40 C air | pass |
 | cplug.POWER.5V to claws.servo1.V+ | max, cruise | 0.20 A in 20 AWG silicone, which carries 21.2 A to its 200 C limit in 40 C air | pass |
-| cplug.POWER.5V to claws.servo2.V+ | V+C, cruise | 0.20 A in 20 AWG silicone, which carries 21.2 A to its 200 C limit in 40 C air | pass |
-| cplug.POWER.GND to claws.servo2.GND | max, hover | 0.20 A in 20 AWG silicone, which carries 21.2 A to its 200 C limit in 40 C air | pass |
+| cplug.POWER.5V to claws.servo2.V+ | max, cruise | 0.20 A in 20 AWG silicone, which carries 21.2 A to its 200 C limit in 40 C air | pass |
+| cplug.POWER.GND to claws.servo2.GND | P+C, hover | 0.20 A in 20 AWG silicone, which carries 21.2 A to its 200 C limit in 40 C air | pass |
 | teensy.pins.3V3 to imu.J1.VIN | max, cruise | 0.01 A in 28 AWG PVC, which carries 2.9 A to its 80 C limit in 40 C air | pass |
-| teensy.pins.GND to imu.J1.GND | max, cruise | 0.01 A in 28 AWG PVC, which carries 2.9 A to its 80 C limit in 40 C air | pass |
-| pplug.POWER.5V to p_diodes.D1.A | max, hover | 0.04 A in 22 AWG silicone, which carries 16.0 A to its 200 C limit in 40 C air | pass |
-| pplug.POWER.GND to chute.servo.GND | max, hover | 0.04 A in 22 AWG silicone, which carries 16.0 A to its 200 C limit in 40 C air | pass |
-| p_diodes.D1.K to chute.servo.V+ | max, cruise | 0.04 A in 22 AWG silicone, which carries 16.0 A to its 200 C limit in 40 C air | pass |
+| teensy.pins.GND to imu.J1.GND | max, hover | 0.01 A in 28 AWG PVC, which carries 2.9 A to its 80 C limit in 40 C air | pass |
+| pplug.POWER.5V to p_diodes.pads.VIN1 | max, cruise | 0.04 A in 22 AWG silicone, which carries 16.0 A to its 200 C limit in 40 C air | pass |
+| pplug.POWER.GND to chute.servo.GND | P+C, cruise | 0.04 A in 22 AWG silicone, which carries 16.0 A to its 200 C limit in 40 C air | pass |
+| p_diodes.pads.VOUT to chute.servo.V+ | max, hover | 0.04 A in 22 AWG silicone, which carries 16.0 A to its 200 C limit in 40 C air | pass |
 | bec.pads.OUT to sockets.P_POWER.5V | max, cruise | 0.04 A in 18 AWG silicone, which carries 27.7 A to its 200 C limit in 40 C air | pass |
 
 </details>
@@ -315,7 +310,7 @@ Every check, one by one:
 | esc.BAT.GND to fc.POWER_AUX.GND | base, hover | 40 C at 0.15 A in 26 AWG PVC, good to 80 C | pass |
 | bec.pads.G2 to sockets.C_POWER.GND | max, hover | 41 C at 1.67 A in 18 AWG silicone, good to 200 C | pass |
 | esc.FC.GND to fc.ESC.GND | base, hover | 40 C at 0.10 A in 28 AWG PVC, good to 80 C | pass |
-| fc.VTX.GND to teensy.pins.GND | max, cruise | 40 C at 0.11 A in 26 AWG PVC, good to 80 C | pass |
+| fc.VTX.GND to teensy.pins.GND | P, cruise | 40 C at 0.11 A in 26 AWG PVC, good to 80 C | pass |
 | teensy_feed.D1.K to teensy.pins.VIN | max, cruise | 40 C at 0.11 A in 26 AWG PVC, good to 80 C | pass |
 | bec.pads.OUT to teensy_feed.D1.A2 | max, cruise | 40 C at 0.11 A in 26 AWG PVC, good to 80 C | pass |
 | vplug.SIGNAL.CAN_5V to gps.CAN1.5V | V, hover | 40 C at 0.11 A in 26 AWG PVC, good to 80 C | pass |
@@ -324,28 +319,28 @@ Every check, one by one:
 | esc.BAT.VBAT to fuses.F1.A | max, hover | 40 C at 0.81 A in 20 AWG silicone, good to 200 C | pass |
 | fuses.F1.B to bec.pads.IN | max, hover | 40 C at 0.81 A in 20 AWG silicone, good to 200 C | pass |
 | sockets.V_SIGNAL.CAN_5V to sockets.P_SIGNAL.CAN_5V | P+C, hover | 40 C at 0.08 A in 26 AWG PVC, good to 80 C | pass |
-| fc.RC.5V to rx.pads.5V | max, cruise | 40 C at 0.08 A in 26 AWG PVC, good to 80 C | pass |
-| fc.RC.GND to rx.pads.GND | max, hover | 40 C at 0.08 A in 26 AWG PVC, good to 80 C | pass |
-| fc.GPS.5V to lidar.J1.5V | max, cruise | 40 C at 0.07 A in 26 AWG PVC, good to 80 C | pass |
-| fc.GPS.GND to lidar.J1.GND | max, hover | 40 C at 0.07 A in 26 AWG PVC, good to 80 C | pass |
+| fc.RC.5V to rx.pads.5V | max, hover | 40 C at 0.08 A in 26 AWG PVC, good to 80 C | pass |
+| fc.RC.GND to rx.pads.GND | P+C, cruise | 40 C at 0.08 A in 26 AWG PVC, good to 80 C | pass |
+| fc.GPS.5V to lidar.J1.5V | max, hover | 40 C at 0.07 A in 26 AWG PVC, good to 80 C | pass |
+| fc.GPS.GND to lidar.J1.GND | V+C, hover | 40 C at 0.07 A in 26 AWG PVC, good to 80 C | pass |
 | bec.pads.G2 to sockets.V_POWER.GND | max, hover | 40 C at 0.67 A in 18 AWG silicone, good to 200 C | pass |
 | esc.BAT.VBAT to fuses.F2.A | max, hover | 40 C at 0.26 A in 22 AWG silicone, good to 200 C | pass |
 | pplug.SIGNAL.CAN_5V to p_node.CAN1.5V | P+C, hover | 40 C at 0.04 A in 26 AWG PVC, good to 80 C | pass |
+| pplug.SIGNAL.GND to p_node.CAN1.GND | max, hover | 40 C at 0.04 A in 26 AWG PVC, good to 80 C | pass |
 | cplug.SIGNAL.GND to c_node.CAN1.GND | C, hover | 40 C at 0.04 A in 26 AWG PVC, good to 80 C | pass |
-| pplug.SIGNAL.GND to p_node.CAN1.GND | P+C, cruise | 40 C at 0.04 A in 26 AWG PVC, good to 80 C | pass |
 | sockets.P_SIGNAL.CAN_5V to sockets.C_SIGNAL.CAN_5V | V+C, cruise | 40 C at 0.04 A in 26 AWG PVC, good to 80 C | pass |
 | cplug.SIGNAL.CAN_5V to c_node.CAN1.5V | V+C, cruise | 40 C at 0.04 A in 26 AWG PVC, good to 80 C | pass |
-| bec.pads.OUT to sockets.C_POWER.5V | max, hover | 40 C at 0.40 A in 18 AWG silicone, good to 200 C | pass |
+| bec.pads.OUT to sockets.C_POWER.5V | P+C, cruise | 40 C at 0.40 A in 18 AWG silicone, good to 200 C | pass |
 | bec.pads.G2 to sockets.P_POWER.GND | max, hover | 40 C at 0.30 A in 18 AWG silicone, good to 200 C | pass |
-| cplug.POWER.GND to claws.servo1.GND | max, hover | 40 C at 0.20 A in 20 AWG silicone, good to 200 C | pass |
+| cplug.POWER.GND to claws.servo1.GND | P+C, hover | 40 C at 0.20 A in 20 AWG silicone, good to 200 C | pass |
 | cplug.POWER.5V to claws.servo1.V+ | max, cruise | 40 C at 0.20 A in 20 AWG silicone, good to 200 C | pass |
-| cplug.POWER.5V to claws.servo2.V+ | V+C, cruise | 40 C at 0.20 A in 20 AWG silicone, good to 200 C | pass |
-| cplug.POWER.GND to claws.servo2.GND | max, hover | 40 C at 0.20 A in 20 AWG silicone, good to 200 C | pass |
+| cplug.POWER.5V to claws.servo2.V+ | max, cruise | 40 C at 0.20 A in 20 AWG silicone, good to 200 C | pass |
+| cplug.POWER.GND to claws.servo2.GND | P+C, hover | 40 C at 0.20 A in 20 AWG silicone, good to 200 C | pass |
 | teensy.pins.3V3 to imu.J1.VIN | max, cruise | 40 C at 0.01 A in 28 AWG PVC, good to 80 C | pass |
-| teensy.pins.GND to imu.J1.GND | max, cruise | 40 C at 0.01 A in 28 AWG PVC, good to 80 C | pass |
-| pplug.POWER.5V to p_diodes.D1.A | max, hover | 40 C at 0.04 A in 22 AWG silicone, good to 200 C | pass |
-| p_diodes.D1.K to chute.servo.V+ | max, cruise | 40 C at 0.04 A in 22 AWG silicone, good to 200 C | pass |
-| pplug.POWER.GND to chute.servo.GND | max, hover | 40 C at 0.04 A in 22 AWG silicone, good to 200 C | pass |
+| teensy.pins.GND to imu.J1.GND | max, hover | 40 C at 0.01 A in 28 AWG PVC, good to 80 C | pass |
+| pplug.POWER.5V to p_diodes.pads.VIN1 | max, cruise | 40 C at 0.04 A in 22 AWG silicone, good to 200 C | pass |
+| p_diodes.pads.VOUT to chute.servo.V+ | max, hover | 40 C at 0.04 A in 22 AWG silicone, good to 200 C | pass |
+| pplug.POWER.GND to chute.servo.GND | P+C, cruise | 40 C at 0.04 A in 22 AWG silicone, good to 200 C | pass |
 | bec.pads.OUT to sockets.P_POWER.5V | max, cruise | 40 C at 0.04 A in 18 AWG silicone, good to 200 C | pass |
 
 </details>
@@ -356,7 +351,7 @@ Every check, one by one:
 | What | In | Found | Verdict |
 |---|---|---|---|
 | lead.XT60.+ to esc.BAT.VBAT | max, burst | 90.0 A for 10 s from 64 C ends at 83 C in 12 AWG silicone | pass |
-| lead.XT60.- to esc.BAT.GND | C, burst | 90.0 A for 10 s from 64 C ends at 83 C in 12 AWG silicone | pass |
+| lead.XT60.- to esc.BAT.GND | P, burst | 90.0 A for 10 s from 64 C ends at 83 C in 12 AWG silicone | pass |
 | esc.MOTORS.M1A to m1.leads.A | base, burst | 22.4 A for 10 s from 49 C ends at 60 C in 18 AWG silicone | pass |
 | esc.MOTORS.M1B to m1.leads.B | base, burst | 22.4 A for 10 s from 49 C ends at 60 C in 18 AWG silicone | pass |
 | esc.MOTORS.M1C to m1.leads.C | base, burst | 22.4 A for 10 s from 49 C ends at 60 C in 18 AWG silicone | pass |
@@ -381,10 +376,10 @@ Every check, one by one:
 | pack.XT60.- | max, hover | 25.1 A rises 44 K over the 40 C air; Amass rates 85 K at 35 A | pass |
 | sockets.V_POWER.GND | max, cruise | 2.0 A rises 1 K over the 40 C air; Amass rates 85 K at 20 A | pass |
 | sockets.V_POWER.5V | max, hover | 2.0 A rises 1 K over the 40 C air; Amass rates 85 K at 20 A | pass |
-| sockets.C_POWER.GND | max, cruise | 0.4 A rises 0 K over the 40 C air; Amass rates 85 K at 20 A | pass |
-| sockets.C_POWER.5V | max, cruise | 0.4 A rises 0 K over the 40 C air; Amass rates 85 K at 20 A | pass |
+| sockets.C_POWER.GND | C, cruise | 0.4 A rises 0 K over the 40 C air; Amass rates 85 K at 20 A | pass |
+| sockets.C_POWER.5V | max, hover | 0.4 A rises 0 K over the 40 C air; Amass rates 85 K at 20 A | pass |
 | sockets.P_POWER.GND | P+C, cruise | 0.1 A rises 0 K over the 40 C air; Amass rates 85 K at 20 A | pass |
-| sockets.P_POWER.5V | max, cruise | 0.0 A rises 0 K over the 40 C air; Amass rates 85 K at 20 A | pass |
+| sockets.P_POWER.5V | max, hover | 0.0 A rises 0 K over the 40 C air; Amass rates 85 K at 20 A | pass |
 
 </details>
 
@@ -393,8 +388,8 @@ Every check, one by one:
 
 | What | In | Found | Verdict |
 |---|---|---|---|
-| pack.XT60.+ | P, burst | 90 A for 10 s ends 94 K over the air (heating with a 98 s time constant) | fail |
-| pack.XT60.- | C, burst | 90 A for 10 s ends 94 K over the air (heating with a 98 s time constant) | fail |
+| pack.XT60.+ | max, burst | 90 A for 10 s ends 94 K over the air (heating with a 98 s time constant) | fail |
+| pack.XT60.- | P, burst | 90 A for 10 s ends 94 K over the air (heating with a 98 s time constant) | fail |
 
 </details>
 
@@ -426,14 +421,14 @@ Every check, one by one:
 </details>
 
 <details>
-<summary>backup: load voltage: 132 checked, 4 miss</summary>
+<summary>backup: load voltage: 132 checked</summary>
 
 | What | In | Found | Verdict |
 |---|---|---|---|
-| chute.servo.V+ | P, bec.5V off | 4.550 to 4.550 V across the cases, inside 4.90 to 5.90 V (4.8 to 6 V, less the margin) | fail |
-| chute.servo.V+ | P+C, bec.5V off | 4.547 to 4.547 V across the cases, inside 4.90 to 5.90 V (4.8 to 6 V, less the margin) | fail |
-| chute.servo.V+ | mission, bec.5V off | 4.546 to 4.546 V across the cases, inside 4.90 to 5.90 V (4.8 to 6 V, less the margin) | fail |
-| chute.servo.V+ | max, bec.5V off | 4.543 to 4.543 V across the cases, inside 4.90 to 5.90 V (4.8 to 6 V, less the margin) | fail |
+| chute.servo.V+ | max, bec.5V off | 4.921 to 4.921 V across the cases, inside 4.90 to 5.90 V (4.8 to 6 V, less the margin) | pass |
+| chute.servo.V+ | mission, bec.5V off | 4.924 to 4.924 V across the cases, inside 4.90 to 5.90 V (4.8 to 6 V, less the margin) | pass |
+| chute.servo.V+ | P+C, bec.5V off | 4.925 to 4.925 V across the cases, inside 4.90 to 5.90 V (4.8 to 6 V, less the margin) | pass |
+| chute.servo.V+ | P, bec.5V off | 4.928 to 4.928 V across the cases, inside 4.90 to 5.90 V (4.8 to 6 V, less the margin) | pass |
 | p_node.CAN1.5V | max, bec.5V off | 4.954 to 4.954 V across the cases, inside 4.85 to 5.15 V (4.75 to 5.25 V, less the margin) | pass |
 | p_node.CAN1.5V | mission, bec.5V off | 4.957 to 4.957 V across the cases, inside 4.85 to 5.15 V (4.75 to 5.25 V, less the margin) | pass |
 | p_node.CAN1.5V | P+C, bec.5V off | 4.958 to 4.958 V across the cases, inside 4.85 to 5.15 V (4.75 to 5.25 V, less the margin) | pass |
@@ -447,16 +442,16 @@ Every check, one by one:
 | gps.CAN1.5V | V, bec.5V off | 4.989 to 4.989 V across the cases, inside 4.85 to 5.15 V (4.75 to 5.25 V, less the margin) | pass |
 | c_node.CAN1.5V | C, bec.5V off | 4.993 to 4.993 V across the cases, inside 4.85 to 5.15 V (4.75 to 5.25 V, less the margin) | pass |
 | camera.CSI.3V3 | mission, bec.5V off | 3.299 to 3.299 V across the cases, inside 3.20 to 3.40 V (3.1 to 3.5 V, less the margin) | pass |
-| camera.CSI.3V3 | V, bec.5V off | 3.299 to 3.299 V across the cases, inside 3.20 to 3.40 V (3.1 to 3.5 V, less the margin) | pass |
 | camera.CSI.3V3 | max, bec.5V off | 3.299 to 3.299 V across the cases, inside 3.20 to 3.40 V (3.1 to 3.5 V, less the margin) | pass |
+| camera.CSI.3V3 | V, bec.5V off | 3.299 to 3.299 V across the cases, inside 3.20 to 3.40 V (3.1 to 3.5 V, less the margin) | pass |
 | camera.CSI.3V3 | V+C, bec.5V off | 3.299 to 3.299 V across the cases, inside 3.20 to 3.40 V (3.1 to 3.5 V, less the margin) | pass |
 | imu.J1.VIN | mission, bec.5V off | 3.300 to 3.300 V across the cases, inside 3.10 to 5.40 V (3 to 5.5 V, less the margin) | pass |
 | imu.J1.VIN | P, bec.5V off | 3.300 to 3.300 V across the cases, inside 3.10 to 5.40 V (3 to 5.5 V, less the margin) | pass |
-| imu.J1.VIN | base, bec.5V off | 3.300 to 3.300 V across the cases, inside 3.10 to 5.40 V (3 to 5.5 V, less the margin) | pass |
 | imu.J1.VIN | max, bec.5V off | 3.300 to 3.300 V across the cases, inside 3.10 to 5.40 V (3 to 5.5 V, less the margin) | pass |
+| imu.J1.VIN | P+C, bec.5V off | 3.300 to 3.300 V across the cases, inside 3.10 to 5.40 V (3 to 5.5 V, less the margin) | pass |
+| imu.J1.VIN | base, bec.5V off | 3.300 to 3.300 V across the cases, inside 3.10 to 5.40 V (3 to 5.5 V, less the margin) | pass |
 | imu.J1.VIN | V, bec.5V off | 3.300 to 3.300 V across the cases, inside 3.10 to 5.40 V (3 to 5.5 V, less the margin) | pass |
 | imu.J1.VIN | V+C, bec.5V off | 3.300 to 3.300 V across the cases, inside 3.10 to 5.40 V (3 to 5.5 V, less the margin) | pass |
-| imu.J1.VIN | P+C, bec.5V off | 3.300 to 3.300 V across the cases, inside 3.10 to 5.40 V (3 to 5.5 V, less the margin) | pass |
 | imu.J1.VIN | C, bec.5V off | 3.300 to 3.300 V across the cases, inside 3.10 to 5.40 V (3 to 5.5 V, less the margin) | pass |
 | rx.pads.5V | max, bec.5V off | 4.999 to 4.999 V across the cases, inside 4.60 to 5.40 V (4.5 to 5.5 V, less the margin) | pass |
 | rx.pads.5V | mission, bec.5V off | 4.999 to 4.999 V across the cases, inside 4.60 to 5.40 V (4.5 to 5.5 V, less the margin) | pass |
@@ -466,10 +461,10 @@ Every check, one by one:
 | rx.pads.5V | V, bec.5V off | 4.999 to 4.999 V across the cases, inside 4.60 to 5.40 V (4.5 to 5.5 V, less the margin) | pass |
 | rx.pads.5V | C, bec.5V off | 4.999 to 4.999 V across the cases, inside 4.60 to 5.40 V (4.5 to 5.5 V, less the margin) | pass |
 | rx.pads.5V | base, bec.5V off | 4.999 to 4.999 V across the cases, inside 4.60 to 5.40 V (4.5 to 5.5 V, less the margin) | pass |
-| p_3v3.J1.VIN | max, bec.5V off | 4.547 to 4.547 V across the cases, inside 4.10 to 49.90 V (4 to 50 V, less the margin) | pass |
-| p_3v3.J1.VIN | mission, bec.5V off | 4.550 to 4.550 V across the cases, inside 4.10 to 49.90 V (4 to 50 V, less the margin) | pass |
-| p_3v3.J1.VIN | P+C, bec.5V off | 4.551 to 4.551 V across the cases, inside 4.10 to 49.90 V (4 to 50 V, less the margin) | pass |
-| p_3v3.J1.VIN | P, bec.5V off | 4.554 to 4.554 V across the cases, inside 4.10 to 49.90 V (4 to 50 V, less the margin) | pass |
+| p_3v3.J1.VIN | max, bec.5V off | 4.925 to 4.925 V across the cases, inside 4.10 to 49.90 V (4 to 50 V, less the margin) | pass |
+| p_3v3.J1.VIN | mission, bec.5V off | 4.928 to 4.928 V across the cases, inside 4.10 to 49.90 V (4 to 50 V, less the margin) | pass |
+| p_3v3.J1.VIN | P+C, bec.5V off | 4.929 to 4.929 V across the cases, inside 4.10 to 49.90 V (4 to 50 V, less the margin) | pass |
+| p_3v3.J1.VIN | P, bec.5V off | 4.932 to 4.932 V across the cases, inside 4.10 to 49.90 V (4 to 50 V, less the margin) | pass |
 | cut_3v3.J1.VIN | max, bec.5V off | 5.000 to 5.000 V across the cases, inside 4.10 to 49.90 V (4 to 50 V, less the margin) | pass |
 | cut_3v3.J1.VIN | mission, bec.5V off | 5.000 to 5.000 V across the cases, inside 4.10 to 49.90 V (4 to 50 V, less the margin) | pass |
 | cut_3v3.J1.VIN | P+C, bec.5V off | 5.000 to 5.000 V across the cases, inside 4.10 to 49.90 V (4 to 50 V, less the margin) | pass |
@@ -489,67 +484,67 @@ Every check, one by one:
 | esc.BAT.VBAT | max, bec.5V off | 18.877 to 18.877 V across the cases, inside 12.10 to 25.10 V (12 to 25.2 V, less the margin) | pass |
 | esc.BAT.VBAT | V+C, bec.5V off | 18.989 to 18.989 V across the cases, inside 12.10 to 25.10 V (12 to 25.2 V, less the margin) | pass |
 | esc.BAT.VBAT | P+C, bec.5V off | 19.011 to 19.011 V across the cases, inside 12.10 to 25.10 V (12 to 25.2 V, less the margin) | pass |
-| esc.BAT.VBAT | mission, bec.5V off | 19.015 to 19.015 V across the cases, inside 12.10 to 25.10 V (12 to 25.2 V, less the margin) | pass |
+| esc.BAT.VBAT | mission, bec.5V off | 19.016 to 19.016 V across the cases, inside 12.10 to 25.10 V (12 to 25.2 V, less the margin) | pass |
 | esc.BAT.VBAT | C, bec.5V off | 19.121 to 19.121 V across the cases, inside 12.10 to 25.10 V (12 to 25.2 V, less the margin) | pass |
 | esc.BAT.VBAT | V, bec.5V off | 19.249 to 19.249 V across the cases, inside 12.10 to 25.10 V (12 to 25.2 V, less the margin) | pass |
-| esc.BAT.VBAT | P, bec.5V off | 19.270 to 19.270 V across the cases, inside 12.10 to 25.10 V (12 to 25.2 V, less the margin) | pass |
+| esc.BAT.VBAT | P, bec.5V off | 19.271 to 19.271 V across the cases, inside 12.10 to 25.10 V (12 to 25.2 V, less the margin) | pass |
 | esc.BAT.VBAT | base, bec.5V off | 19.377 to 19.377 V across the cases, inside 12.10 to 25.10 V (12 to 25.2 V, less the margin) | pass |
 | cut.J1.VCC | mission, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 3.50 V (1.65 to 3.6 V, less the margin) | pass |
 | cut.J1.VCC | max, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 3.50 V (1.65 to 3.6 V, less the margin) | pass |
-| cut.J1.VCC | V+C, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 3.50 V (1.65 to 3.6 V, less the margin) | pass |
 | cut.J1.VCC | P, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 3.50 V (1.65 to 3.6 V, less the margin) | pass |
+| cut.J1.VCC | P+C, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 3.50 V (1.65 to 3.6 V, less the margin) | pass |
+| cut.J1.VCC | V+C, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 3.50 V (1.65 to 3.6 V, less the margin) | pass |
 | cut.J1.VCC | base, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 3.50 V (1.65 to 3.6 V, less the margin) | pass |
 | cut.J1.VCC | V, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 3.50 V (1.65 to 3.6 V, less the margin) | pass |
-| cut.J1.VCC | P+C, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 3.50 V (1.65 to 3.6 V, less the margin) | pass |
 | cut.J1.VCC | C, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 3.50 V (1.65 to 3.6 V, less the margin) | pass |
+| taps.B6.VCC | P, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
 | taps.B6.VCC | mission, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
+| taps.B6.VCC | max, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
 | taps.B6.VCC | V, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
 | taps.B6.VCC | base, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
-| taps.B6.VCC | P, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
-| taps.B6.VCC | V+C, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
-| taps.B6.VCC | max, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
-| taps.B6.VCC | C, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
 | taps.B6.VCC | P+C, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
+| taps.B6.VCC | V+C, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
+| taps.B6.VCC | C, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
+| taps.B5.VCC | P, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
 | taps.B5.VCC | mission, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
+| taps.B5.VCC | max, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
 | taps.B5.VCC | V, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
 | taps.B5.VCC | base, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
-| taps.B5.VCC | P, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
-| taps.B5.VCC | V+C, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
-| taps.B5.VCC | max, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
-| taps.B5.VCC | C, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
 | taps.B5.VCC | P+C, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
+| taps.B5.VCC | V+C, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
+| taps.B5.VCC | C, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
+| taps.B4.VCC | P, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
 | taps.B4.VCC | mission, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
+| taps.B4.VCC | max, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
 | taps.B4.VCC | V, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
 | taps.B4.VCC | base, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
-| taps.B4.VCC | P, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
-| taps.B4.VCC | V+C, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
-| taps.B4.VCC | max, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
-| taps.B4.VCC | C, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
 | taps.B4.VCC | P+C, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
+| taps.B4.VCC | V+C, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
+| taps.B4.VCC | C, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
+| taps.B3.VCC | P, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
 | taps.B3.VCC | mission, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
+| taps.B3.VCC | max, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
 | taps.B3.VCC | V, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
 | taps.B3.VCC | base, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
-| taps.B3.VCC | P, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
-| taps.B3.VCC | V+C, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
-| taps.B3.VCC | max, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
-| taps.B3.VCC | C, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
 | taps.B3.VCC | P+C, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
+| taps.B3.VCC | V+C, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
+| taps.B3.VCC | C, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
+| taps.B2.VCC | P, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
 | taps.B2.VCC | mission, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
+| taps.B2.VCC | max, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
 | taps.B2.VCC | V, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
 | taps.B2.VCC | base, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
-| taps.B2.VCC | P, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
-| taps.B2.VCC | V+C, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
-| taps.B2.VCC | max, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
-| taps.B2.VCC | C, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
 | taps.B2.VCC | P+C, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
+| taps.B2.VCC | V+C, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
+| taps.B2.VCC | C, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
+| taps.B1.VCC | P, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
 | taps.B1.VCC | mission, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
+| taps.B1.VCC | max, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
 | taps.B1.VCC | V, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
 | taps.B1.VCC | base, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
-| taps.B1.VCC | P, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
-| taps.B1.VCC | V+C, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
-| taps.B1.VCC | max, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
-| taps.B1.VCC | C, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
 | taps.B1.VCC | P+C, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
+| taps.B1.VCC | V+C, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
+| taps.B1.VCC | C, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
 | p_switch.U1.VCC | mission, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
 | p_switch.U1.VCC | max, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
 | p_switch.U1.VCC | P, bec.5V off | 3.300 to 3.300 V across the cases, inside 1.75 to 5.40 V (1.65 to 5.5 V, less the margin) | pass |
@@ -557,7 +552,7 @@ Every check, one by one:
 | bec.pads.IN | max, bec.5V off | 18.876 to 18.876 V across the cases, inside 9.10 to 54.90 V (9 to 55 V, less the margin) | pass |
 | bec.pads.IN | V+C, bec.5V off | 18.988 to 18.988 V across the cases, inside 9.10 to 54.90 V (9 to 55 V, less the margin) | pass |
 | bec.pads.IN | P+C, bec.5V off | 19.010 to 19.010 V across the cases, inside 9.10 to 54.90 V (9 to 55 V, less the margin) | pass |
-| bec.pads.IN | mission, bec.5V off | 19.014 to 19.014 V across the cases, inside 9.10 to 54.90 V (9 to 55 V, less the margin) | pass |
+| bec.pads.IN | mission, bec.5V off | 19.015 to 19.015 V across the cases, inside 9.10 to 54.90 V (9 to 55 V, less the margin) | pass |
 | bec.pads.IN | C, bec.5V off | 19.121 to 19.121 V across the cases, inside 9.10 to 54.90 V (9 to 55 V, less the margin) | pass |
 | bec.pads.IN | V, bec.5V off | 19.249 to 19.249 V across the cases, inside 9.10 to 54.90 V (9 to 55 V, less the margin) | pass |
 | bec.pads.IN | P, bec.5V off | 19.270 to 19.270 V across the cases, inside 9.10 to 54.90 V (9 to 55 V, less the margin) | pass |
@@ -602,12 +597,13 @@ Every check, one by one:
 | p_3v3.3V3 | mission, bec.5V off | 0.00 A with bec.5V off, against its 0.6 A | pass |
 | p_3v3.3V3 | P+C, bec.5V off | 0.00 A with bec.5V off, against its 0.6 A | pass |
 | p_3v3.3V3 | max, bec.5V off | 0.00 A with bec.5V off, against its 0.6 A | pass |
+| p_node.5V_OUT | P, bec.5V off | 0.00 A with bec.5V off, against its 0.5 A | pass |
 | p_node.5V_OUT | mission, bec.5V off | 0.00 A with bec.5V off, against its 0.5 A | pass |
 | p_node.5V_OUT | P+C, bec.5V off | 0.00 A with bec.5V off, against its 0.5 A | pass |
 | c_node.5V_OUT | C, bec.5V off | 0.00 A with bec.5V off, against its 0.5 A | pass |
 | p_node.5V_OUT | max, bec.5V off | 0.00 A with bec.5V off, against its 0.5 A | pass |
-| p_node.CAN_THROUGH | P, bec.5V off | 0.00 A with bec.5V off, against its 1 A | pass |
 | c_node.CAN_THROUGH | C, bec.5V off | 0.00 A with bec.5V off, against its 1 A | pass |
+| gps.CAN_THROUGH | mission, bec.5V off | 0.00 A with bec.5V off, against its 1 A | pass |
 | gps.CAN_THROUGH | V+C, bec.5V off | 0.00 A with bec.5V off, against its 1 A | pass |
 | c_node.CAN_THROUGH | V+C, bec.5V off | 0.00 A with bec.5V off, against its 1 A | pass |
 | p_node.CAN_THROUGH | P+C, bec.5V off | 0.00 A with bec.5V off, against its 1 A | pass |
@@ -616,10 +612,9 @@ Every check, one by one:
 | gps.CAN_THROUGH | V, bec.5V off | 0.00 A with bec.5V off, against its 1 A | pass |
 | pi.FAN5V | V, bec.5V off | 0.00 A with bec.5V off, against its 0.6 A | pass |
 | fc.12V | P, bec.5V off | 0.00 A with bec.5V off, against its 2 A | pass |
-| p_node.5V_OUT | P, bec.5V off | 0.00 A with bec.5V off, against its 0.5 A | pass |
+| p_node.CAN_THROUGH | P, bec.5V off | 0.00 A with bec.5V off, against its 1 A | pass |
 | fc.12V | C, bec.5V off | 0.00 A with bec.5V off, against its 2 A | pass |
 | fc.12V | mission, bec.5V off | 0.00 A with bec.5V off, against its 2 A | pass |
-| gps.CAN_THROUGH | mission, bec.5V off | 0.00 A with bec.5V off, against its 1 A | pass |
 | pi.FAN5V | mission, bec.5V off | 0.00 A with bec.5V off, against its 0.6 A | pass |
 | p_node.CAN_THROUGH | mission, bec.5V off | 0.00 A with bec.5V off, against its 1 A | pass |
 | fc.12V | V+C, bec.5V off | 0.00 A with bec.5V off, against its 2 A | pass |

@@ -118,7 +118,7 @@ place:
   ark-cannode@P: {at_mm: [38, 39.1, 59], turn_deg: [90, 0, 0]} # strapped to the cradle's side
   p-chute-switch: {at_mm: [38, -30.6, 44]} # the other side of the cradle
   pololu-d36v6f3@P: {at_mm: [38, -31.2, 47]}
-  p-servo-diodes: {at_mm: [38, -30.1, 49.5]}
+  adafruit-lm66200: {at_mm: [38, -30.1, 49.5]} # inline on the servo's leads, where the diodes were
   claws-placeholder: {at_mm: [-125, 0, -53]} # behind the pack, far enough back to let it slide
   ark-cannode@C: {at_mm: [-125, 0, -3]} # on top of the claws
   module-plug@C: {at_mm: [-80, 15, 3]} # mated to C's socket from behind

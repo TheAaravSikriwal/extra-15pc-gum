@@ -18,10 +18,10 @@ Built from E3 2814 850KV / 1050 3-blade / 6S2P Molicel INR-21700-P45B.
 | V | V | 2039 g | -6 mm | -0.2, 0.2, 3.6 mm | +0.3% | pass |
 | P | P | 2050 g | -17 mm | 0.1, 0.0, 7.4 mm | +0.1% | pass |
 | C | C | 2034 g | 12 mm | 0.0, 0.0, -4.6 mm | +0.0% | pass |
-| mission | V+P | 2214 g | -13 mm | -0.0, 0.2, 12.5 mm | +0.2% | pass |
+| mission | V+P | 2213 g | -13 mm | -0.0, 0.2, 12.5 mm | +0.2% | pass |
 | V+C | V+C | 2198 g | 16 mm | -0.1, 0.2, 1.4 mm | +0.2% | pass |
 | P+C | P+C | 2209 g | 5 mm | 0.1, 0.1, 5.0 mm | +0.1% | pass |
-| max | V+P+C | 2373 g | 9 mm | 0.0, 0.2, 9.9 mm | +0.2% | pass |
+| max | V+P+C | 2372 g | 9 mm | 0.0, 0.2, 9.9 mm | +0.2% | pass |
 
 The pack's position is along x from the motors' center; it slides to balance each combination. The busiest motor column says how much harder the busiest motor works than the average in a hover (the limit is +5%).
 
@@ -236,7 +236,7 @@ Every check, setup by setup:
 | prop clearance | module-plug@P is 47.7 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | p-chute-switch is 27.2 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | pololu-d36v6f3@P is 26.1 mm from prop 2's disk (needs 10) | pass |
-| prop clearance | p-servo-diodes is 27.9 mm from prop 2's disk (needs 10) | pass |
+| prop clearance | adafruit-lm66200 is 25.7 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | module rail is 30.0 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | remote id mount is 11.9 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | p holder is 32.0 mm from prop 2's disk (needs 10) | pass |
@@ -408,7 +408,7 @@ Every check, setup by setup:
 | prop clearance | module-plug@P is 47.7 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | p-chute-switch is 27.2 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | pololu-d36v6f3@P is 26.1 mm from prop 2's disk (needs 10) | pass |
-| prop clearance | p-servo-diodes is 27.9 mm from prop 2's disk (needs 10) | pass |
+| prop clearance | adafruit-lm66200 is 25.7 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | module rail is 30.0 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | remote id mount is 11.9 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | camera bracket is 11.0 mm from prop 2's disk (needs 10) | pass |
@@ -614,7 +614,7 @@ Every check, setup by setup:
 | prop clearance | module-plug@P is 47.7 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | p-chute-switch is 27.2 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | pololu-d36v6f3@P is 26.1 mm from prop 2's disk (needs 10) | pass |
-| prop clearance | p-servo-diodes is 27.9 mm from prop 2's disk (needs 10) | pass |
+| prop clearance | adafruit-lm66200 is 25.7 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | module rail is 30.0 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | remote id mount is 11.9 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | p holder is 32.0 mm from prop 2's disk (needs 10) | pass |
@@ -710,7 +710,7 @@ Every check, setup by setup:
 | prop clearance | module-plug@P is 47.7 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | p-chute-switch is 27.2 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | pololu-d36v6f3@P is 26.1 mm from prop 2's disk (needs 10) | pass |
-| prop clearance | p-servo-diodes is 27.9 mm from prop 2's disk (needs 10) | pass |
+| prop clearance | adafruit-lm66200 is 25.7 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | module rail is 30.0 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | remote id mount is 11.9 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | camera bracket is 11.0 mm from prop 2's disk (needs 10) | pass |
@@ -793,10 +793,10 @@ Each part's weight spread over its solid, with the pack at its trim. Inertia is 
 | V | 2039 g | 14.1 g m² | 17.1 g m² | 26.5 g m² |
 | P | 2050 g | 15.6 g m² | 18.6 g m² | 26.4 g m² |
 | C | 2034 g | 13.1 g m² | 18.2 g m² | 28.6 g m² |
-| mission | 2214 g | 16.6 g m² | 20.0 g m² | 26.9 g m² |
+| mission | 2213 g | 16.6 g m² | 20.0 g m² | 26.9 g m² |
 | V+C | 2198 g | 14.3 g m² | 20.1 g m² | 29.4 g m² |
 | P+C | 2209 g | 15.9 g m² | 21.2 g m² | 28.8 g m² |
-| max | 2373 g | 16.9 g m² | 22.7 g m² | 29.5 g m² |
+| max | 2372 g | 16.9 g m² | 22.7 g m² | 29.5 g m² |
 
 ## My printed parts
 
@@ -804,11 +804,11 @@ Weighed from their geometry and material, next to what the catalog says for each
 
 | Part | Material | Weight | Its catalog entry |
 |---|---|---|---|
-| leg front left | tpu | 6.6 g | 26.4 g for all 4, from the CAD (landing-legs) |
-| leg front right | tpu | 6.6 g | 26.4 g for all 4, from the CAD (landing-legs) |
-| leg back left | tpu | 6.6 g | 26.4 g for all 4, from the CAD (landing-legs) |
-| leg back right | tpu | 6.6 g | 26.4 g for all 4, from the CAD (landing-legs) |
-| battery tray | petg_cf | 29.3 g | 29.4 g, from the CAD (battery-tray) |
+| leg front left | tpu | 6.6 g | 26.3 g for all 4, from the CAD (landing-legs) |
+| leg front right | tpu | 6.6 g | 26.3 g for all 4, from the CAD (landing-legs) |
+| leg back left | tpu | 6.6 g | 26.3 g for all 4, from the CAD (landing-legs) |
+| leg back right | tpu | 6.6 g | 26.3 g for all 4, from the CAD (landing-legs) |
+| battery tray | petg_cf | 29.3 g | 29.3 g, from the CAD (battery-tray) |
 | module rail | petg_cf | 11.6 g | 11.6 g, from the CAD (module-mount) |
 | gps mast | tpu | 5.2 g | 5.2 g, from the CAD (gps-mast) |
 | lidar bracket | petg_cf | 2.4 g | 2.4 g, from the CAD (lidar-bracket) |
@@ -938,6 +938,7 @@ Checked for every part before modeling it. They stay in a local cache that never
 | lidar-bracket | none |  |  |
 | remote-id-mount | none |  |  |
 | safety-monitor-carrier | none |  |  |
+| base-hardware | none |  |  |
 | ark-gps | official | BSD-3-Clause (the folder's LICENSE file) | not downloaded |
 | gps-mast | none |  |  |
 | rpi-camera-module-3 | official | No license file; Raspberry Pi's site terms reserve all rights. | mine 11.3 x 23.9 x 25.0 mm, theirs 10.2 x 23.9 x 25.0 mm; holes line up |
@@ -950,12 +951,14 @@ Checked for every part before modeling it. They stay in a local cache that never
 | camera-bracket | none |  |  |
 | module-plug | none |  |  |
 | v-wiring | none |  |  |
+| v-hardware | none |  |  |
 | fruity-chutes-harrier-40-42 | none |  |  |
 | p-mount | none |  |  |
 | ark-cannode | official | BSD-3-Clause (the folder's LICENSE file) | not downloaded |
 | p-chute-switch | none |  |  |
-| p-servo-diodes | none |  |  |
+| adafruit-lm66200 | none |  |  |
 | p-wiring | none |  |  |
+| p-hardware | none |  |  |
 | claws-placeholder | none |  |  |
 | c-wiring | none |  |  |
 

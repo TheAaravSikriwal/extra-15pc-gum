@@ -30,6 +30,7 @@ ELECTRICAL = [
     "fruity-chutes-harrier-40-42",
     "p-chute-switch",
     "p-servo-diodes",
+    "adafruit-lm66200",
     "claws-placeholder",
     "module-socket",
     "module-plug",
@@ -61,6 +62,9 @@ def test_the_diodes_know_their_drop(catalog):
     teensy = catalog.component("bat54c-on-adapter").electrical.diode
     assert servo.forward_volts(0.45) == pytest.approx(0.40, abs=0.01)  # a stalled servo
     assert teensy.forward_volts(0.1) == pytest.approx(0.8)
+    ideal = catalog.component("adafruit-lm66200").electrical.diode
+    # TI's worst case, 60 mOhm: a stalled servo's 0.45 A drops 27 mV
+    assert ideal.forward_volts(0.45) == pytest.approx(0.45 * 0.060, abs=0.002)
 
 
 @pytest.mark.parametrize("family", FAMILIES)
