@@ -1,21 +1,22 @@
-# Researched 2026-10-18. The two fuses on branches that tap the battery: the module supply's
-# feed and the flight controller's battery feed. Ratings come from littelfuse-mini-297.
+# Researched 2026-10-18; soldered inline since 2026-10-19. The two fuses on branches that tap
+# the battery: the module supply's feed and the flight controller's battery feed. Ratings come
+# from littelfuse-mini-297.
 type: component
 id: branch-fuses
-maker: Littelfuse (fuses), various (holders)
-model: Two MINI blade fuses in inline holders
-checked: 2026-10-18
-source: {kind: estimate, checked: 2026-10-18, note: "Two fuses at 0.57 g (Littelfuse) and two inline holders at about 3 g each. No maker publishes a holder's mass (Littelfuse's FHM and Bussmann's HHM don't), so the holders are a guess, and a heavy-ish one: 7.1 g in all. If weight decides it, a wire-leaded fuse soldered inline would drop the holders"}
-mass_g: 7.1
+maker: Littelfuse (fuses)
+model: Two MINI blade fuses, soldered inline under heat shrink
+checked: 2026-10-19
+source: {kind: estimate, checked: 2026-10-19, note: "Two fuses at 0.57 g (Littelfuse's datasheet) and a 25 mm sleeve of heat shrink over each, about 0.5 g, a guess from its size: polyolefin about 0.5 mm thick once shrunk around a MINI's body, about 11 by 4 mm. The wires' own solder joints are counted in the wiring. Soldered in, a blown fuse takes a soldering iron to replace; these only blow on a fault. The inline holders they replace were a 6 g guess (decided 2026-10-19, for the weight)"}
+mass_g: 2.1
 cad:
   shape: box
-  length_mm: 24
+  length_mm: 30
   width_mm: 12
-  height_mm: 10
-  source: {kind: estimate, checked: '2026-10-18', note: "One inline MINI holder with its fuse; there are two. No maker publishes the holder's size, so it's a guess"}
+  height_mm: 5
+  source: {kind: estimate, checked: '2026-10-19', note: "One MINI fuse soldered inline in its heat shrink, about 30 mm along the wire (the fuse's 16 mm with its blades, plus the two joints) and 12 by 5 across. A guess from the fuse's size; there are two"}
   existing: {found: none, checked: '2026-10-18', note: "Small enough that a box will do"}
 electrical:
-  source: {kind: manufacturer, url: 'https://atta.szlcsc.com/upload/public/pdf/source/20241028/EC0235DBD6F881A867CEA06A6175F69D.pdf', checked: 2026-10-18, note: "Two MINI fuse holders; each fuse's rating is picked in design/electrical.yaml from littelfuse-mini-297"}
+  source: {kind: manufacturer, url: 'https://atta.szlcsc.com/upload/public/pdf/source/20241028/EC0235DBD6F881A867CEA06A6175F69D.pdf', checked: 2026-10-18, note: "Two MINI fuses soldered inline; each fuse's rating is picked in design/electrical.yaml from littelfuse-mini-297"}
   connectors:
     - name: F1
       family: pads

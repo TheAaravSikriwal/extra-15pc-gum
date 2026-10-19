@@ -26,14 +26,14 @@ The motors and battery are sized for **mission**, carrying an extra 200 g of gro
 
 | Setup | Modules | Required | Weight | Hover | Cruise at 10 m/s | Thrust-to-weight at the reserve | Verdict |
 |---|---|---|---|---|---|---|---|
-| base | none | yes | 1806 g | 37.2 / 31.7 min | 50.1 / 42.9 min | 3.43 / 3.09:1 | pass |
-| V | V | yes | 1967 g | 31.3 / 26.8 min | 40.5 / 34.9 min | 3.15 / 2.84:1 | pass |
-| P | P | yes | 1979 g | 32.3 / 27.5 min | 42.7 / 36.6 min | 3.13 / 2.82:1 | pass |
-| C | C | optional | 2215 g | 27.0 / 23.1 min | 35.2 / 30.2 min | 2.80 / 2.52:1 | pass |
-| mission | V+P | yes | 2340 g (with 200 g margin) | 24.2 / 20.9 min | 30.7 / 26.6 min | 2.65 / 2.38:1 | marginal |
-| V+C | V+C | optional | 2376 g | 23.6 / 20.3 min | 29.7 / 25.8 min | 2.61 / 2.35:1 | pass |
-| P+C | P+C | optional | 2388 g | 24.1 / 20.7 min | 30.9 / 26.7 min | 2.59 / 2.33:1 | pass |
-| max | V+P+C | optional | 2549 g | 21.3 / 18.4 min | 26.6 / 23.1 min | 2.43 / 2.19:1 | fail |
+| base | none | yes | 1801 g | 37.3 / 31.8 min | 50.3 / 43.1 min | 3.44 / 3.10:1 | pass |
+| V | V | yes | 1962 g | 31.4 / 26.9 min | 40.6 / 35.0 min | 3.16 / 2.84:1 | pass |
+| P | P | yes | 1974 g | 32.4 / 27.6 min | 42.9 / 36.7 min | 3.14 / 2.82:1 | pass |
+| C | C | optional | 2210 g | 27.1 / 23.2 min | 35.3 / 30.3 min | 2.80 / 2.52:1 | pass |
+| mission | V+P | yes | 2335 g (with 200 g margin) | 24.3 / 20.9 min | 30.8 / 26.7 min | 2.65 / 2.39:1 | marginal |
+| V+C | V+C | optional | 2371 g | 23.7 / 20.4 min | 29.8 / 25.8 min | 2.61 / 2.35:1 | pass |
+| P+C | P+C | optional | 2383 g | 24.2 / 20.8 min | 31.0 / 26.8 min | 2.60 / 2.34:1 | pass |
+| max | V+P+C | optional | 2544 g | 21.4 / 18.5 min | 26.7 / 23.2 min | 2.43 / 2.19:1 | fail |
 
 Every check, setup by setup:
 
@@ -42,14 +42,14 @@ Every check, setup by setup:
 
 | Check | Published / pessimistic | Target | Margin | Verdict |
 |---|---|---|---|---|
-| Hover time | 37.2 / 31.7 min | at least 25.0 min | +49% | pass |
-| Cruise time at 10 m/s | 50.1 / 42.9 min | at least 30.0 min | +67% | pass |
-| Thrust-to-weight at the reserve | 3.43 / 3.09:1 | at least 2.00:1 | +72% | pass |
+| Hover time | 37.3 / 31.8 min | at least 25.0 min | +49% | pass |
+| Cruise time at 10 m/s | 50.3 / 43.1 min | at least 30.0 min | +68% | pass |
+| Thrust-to-weight at the reserve | 3.44 / 3.10:1 | at least 2.00:1 | +72% | pass |
 | Full-throttle current | 90.0 A | at most 90.0 A | +0% | pass |
 
 - Thrust-to-weight at the reserve: Full throttle at 20% charge, with the pack sagging under the load
 - Full-throttle current: All four motors flat out on a full pack. The firmware caps it at 90 A; without the cap it would pull 127 A
-- Cheapest speed: 12.1 m/s, for 51.2 min of cruise.
+- Cheapest speed: 12.1 m/s, for 51.4 min of cruise.
 - Top speed: 121 km/h on a full pack, 117 at half charge, 115 at the reserve.
 
 </details>
@@ -59,17 +59,17 @@ Every check, setup by setup:
 
 | Check | Published / pessimistic | Target | Margin | Verdict |
 |---|---|---|---|---|
-| Hover time | 31.3 / 26.8 min | at least 21.0 min | +49% | pass |
-| Cruise time at 10 m/s | 40.5 / 34.9 min | at least 25.0 min | +62% | pass |
-| Thrust-to-weight at the reserve | 3.15 / 2.84:1 | at least 2.00:1 | +58% | pass |
+| Hover time | 31.4 / 26.9 min | at least 21.0 min | +50% | pass |
+| Cruise time at 10 m/s | 40.6 / 35.0 min | at least 25.0 min | +63% | pass |
+| Thrust-to-weight at the reserve | 3.16 / 2.84:1 | at least 2.00:1 | +58% | pass |
 | Full-throttle current | 90.0 A | at most 90.0 A | +0% | pass |
 | Top speed at half charge | 105 / 102 km/h | at least 80 km/h | +31% | pass |
-| Holds position in 10 m/s wind | 3.05 / 2.74x | at least 1.30x | +135% | pass |
+| Holds position in 10 m/s wind | 3.06 / 2.75x | at least 1.30x | +135% | pass |
 
 - Thrust-to-weight at the reserve: Full throttle at 20% charge, with the pack sagging under the load
 - Full-throttle current: All four motors flat out on a full pack. The firmware caps it at 90 A; without the cap it would pull 127 A
 - Holds position in 10 m/s wind: Thrust available over thrust needed, at 10 m/s of airspeed and 20% charge
-- Cheapest speed: 11.5 m/s, for 40.9 min of cruise.
+- Cheapest speed: 11.4 m/s, for 41.0 min of cruise.
 - Top speed: 108 km/h on a full pack, 105 at half charge, 103 at the reserve.
 
 </details>
@@ -79,17 +79,17 @@ Every check, setup by setup:
 
 | Check | Published / pessimistic | Target | Margin | Verdict |
 |---|---|---|---|---|
-| Hover time | 32.3 / 27.5 min | at least 21.0 min | +54% | pass |
-| Cruise time at 10 m/s | 42.7 / 36.6 min | at least 25.0 min | +71% | pass |
-| Thrust-to-weight at the reserve | 3.13 / 2.82:1 | at least 2.00:1 | +57% | pass |
+| Hover time | 32.4 / 27.6 min | at least 21.0 min | +55% | pass |
+| Cruise time at 10 m/s | 42.9 / 36.7 min | at least 25.0 min | +72% | pass |
+| Thrust-to-weight at the reserve | 3.14 / 2.82:1 | at least 2.00:1 | +57% | pass |
 | Full-throttle current | 90.0 A | at most 90.0 A | +0% | pass |
 | Top speed at half charge | 112 / 110 km/h | at least 80 km/h | +40% | pass |
-| Holds position in 10 m/s wind | 3.05 / 2.74x | at least 1.30x | +135% | pass |
+| Holds position in 10 m/s wind | 3.06 / 2.75x | at least 1.30x | +136% | pass |
 
 - Thrust-to-weight at the reserve: Full throttle at 20% charge, with the pack sagging under the load
 - Full-throttle current: All four motors flat out on a full pack. The firmware caps it at 90 A; without the cap it would pull 127 A
 - Holds position in 10 m/s wind: Thrust available over thrust needed, at 10 m/s of airspeed and 20% charge
-- Cheapest speed: 12.1 m/s, for 43.6 min of cruise.
+- Cheapest speed: 12.1 m/s, for 43.8 min of cruise.
 - Top speed: 116 km/h on a full pack, 112 at half charge, 110 at the reserve.
 
 </details>
@@ -99,15 +99,15 @@ Every check, setup by setup:
 
 | Check | Published / pessimistic | Target | Margin | Verdict |
 |---|---|---|---|---|
-| Hover time | 27.0 / 23.1 min | at least 17.0 min | +59% | pass |
-| Cruise time at 10 m/s | 35.2 / 30.2 min | at least 20.0 min | +76% | pass |
+| Hover time | 27.1 / 23.2 min | at least 17.0 min | +60% | pass |
+| Cruise time at 10 m/s | 35.3 / 30.3 min | at least 20.0 min | +77% | pass |
 | Thrust-to-weight at the reserve | 2.80 / 2.52:1 | at least 2.00:1 | +40% | pass |
 | Full-throttle current | 90.0 A | at most 90.0 A | +0% | pass |
-| Takeoff weight | 2215 g | at most 2500 g | +11% | pass |
+| Takeoff weight | 2211 g | at most 2500 g | +12% | pass |
 
 - Thrust-to-weight at the reserve: Full throttle at 20% charge, with the pack sagging under the load
 - Full-throttle current: All four motors flat out on a full pack. The firmware caps it at 90 A; without the cap it would pull 127 A
-- Cheapest speed: 12.5 m/s, for 36.2 min of cruise.
+- Cheapest speed: 12.5 m/s, for 36.3 min of cruise.
 - Top speed: 114 km/h on a full pack, 111 at half charge, 108 at the reserve.
 
 </details>
@@ -117,9 +117,9 @@ Every check, setup by setup:
 
 | Check | Published / pessimistic | Target | Margin | Verdict |
 |---|---|---|---|---|
-| Hover time | 24.2 / 20.9 min | at least 21.0 min | +16% | marginal |
-| Cruise time at 10 m/s | 30.7 / 26.6 min | at least 25.0 min | +23% | pass |
-| Thrust-to-weight at the reserve | 2.65 / 2.38:1 | at least 2.00:1 | +33% | pass |
+| Hover time | 24.3 / 20.9 min | at least 21.0 min | +16% | marginal |
+| Cruise time at 10 m/s | 30.8 / 26.7 min | at least 25.0 min | +24% | pass |
+| Thrust-to-weight at the reserve | 2.65 / 2.39:1 | at least 2.00:1 | +33% | pass |
 | Full-throttle current | 90.0 A | at most 90.0 A | +0% | pass |
 | Top speed at half charge | 102 / 100 km/h | at least 80 km/h | +29% | pass |
 | Holds position in 10 m/s wind | 2.57 / 2.31x | at least 1.30x | +98% | pass |
@@ -127,7 +127,7 @@ Every check, setup by setup:
 - Thrust-to-weight at the reserve: Full throttle at 20% charge, with the pack sagging under the load
 - Full-throttle current: All four motors flat out on a full pack. The firmware caps it at 90 A; without the cap it would pull 127 A
 - Holds position in 10 m/s wind: Thrust available over thrust needed, at 10 m/s of airspeed and 20% charge
-- Cheapest speed: 12.1 m/s, for 31.3 min of cruise.
+- Cheapest speed: 12.1 m/s, for 31.4 min of cruise.
 - Top speed: 107 km/h on a full pack, 103 at half charge, 100 at the reserve.
 
 </details>
@@ -137,15 +137,15 @@ Every check, setup by setup:
 
 | Check | Published / pessimistic | Target | Margin | Verdict |
 |---|---|---|---|---|
-| Hover time | 23.6 / 20.3 min | at least 17.0 min | +39% | pass |
-| Cruise time at 10 m/s | 29.7 / 25.8 min | at least 20.0 min | +49% | pass |
+| Hover time | 23.7 / 20.4 min | at least 17.0 min | +39% | pass |
+| Cruise time at 10 m/s | 29.8 / 25.8 min | at least 20.0 min | +49% | pass |
 | Thrust-to-weight at the reserve | 2.61 / 2.35:1 | at least 2.00:1 | +31% | pass |
 | Full-throttle current | 90.0 A | at most 90.0 A | +0% | pass |
-| Takeoff weight | 2376 g | at most 2500 g | +5% | pass |
+| Takeoff weight | 2372 g | at most 2500 g | +5% | pass |
 
 - Thrust-to-weight at the reserve: Full throttle at 20% charge, with the pack sagging under the load
 - Full-throttle current: All four motors flat out on a full pack. The firmware caps it at 90 A; without the cap it would pull 127 A
-- Cheapest speed: 11.9 m/s, for 30.2 min of cruise.
+- Cheapest speed: 11.9 m/s, for 30.3 min of cruise.
 - Top speed: 104 km/h on a full pack, 101 at half charge, 98 at the reserve.
 
 </details>
@@ -155,15 +155,15 @@ Every check, setup by setup:
 
 | Check | Published / pessimistic | Target | Margin | Verdict |
 |---|---|---|---|---|
-| Hover time | 24.1 / 20.7 min | at least 17.0 min | +42% | pass |
-| Cruise time at 10 m/s | 30.9 / 26.7 min | at least 20.0 min | +55% | pass |
-| Thrust-to-weight at the reserve | 2.59 / 2.33:1 | at least 2.00:1 | +30% | pass |
+| Hover time | 24.2 / 20.8 min | at least 17.0 min | +43% | pass |
+| Cruise time at 10 m/s | 31.0 / 26.8 min | at least 20.0 min | +55% | pass |
+| Thrust-to-weight at the reserve | 2.60 / 2.34:1 | at least 2.00:1 | +30% | pass |
 | Full-throttle current | 90.0 A | at most 90.0 A | +0% | pass |
-| Takeoff weight | 2389 g | at most 2500 g | +4% | pass |
+| Takeoff weight | 2384 g | at most 2500 g | +5% | pass |
 
 - Thrust-to-weight at the reserve: Full throttle at 20% charge, with the pack sagging under the load
 - Full-throttle current: All four motors flat out on a full pack. The firmware caps it at 90 A; without the cap it would pull 127 A
-- Cheapest speed: 12.5 m/s, for 31.8 min of cruise.
+- Cheapest speed: 12.5 m/s, for 31.9 min of cruise.
 - Top speed: 110 km/h on a full pack, 106 at half charge, 103 at the reserve.
 
 </details>
@@ -173,11 +173,11 @@ Every check, setup by setup:
 
 | Check | Published / pessimistic | Target | Margin | Verdict |
 |---|---|---|---|---|
-| Hover time | 21.3 / 18.4 min | at least 17.0 min | +26% | pass |
-| Cruise time at 10 m/s | 26.6 / 23.1 min | at least 20.0 min | +33% | pass |
+| Hover time | 21.4 / 18.5 min | at least 17.0 min | +26% | pass |
+| Cruise time at 10 m/s | 26.7 / 23.2 min | at least 20.0 min | +34% | pass |
 | Thrust-to-weight at the reserve | 2.43 / 2.19:1 | at least 2.00:1 | +22% | pass |
 | Full-throttle current | 90.0 A | at most 90.0 A | +0% | pass |
-| Takeoff weight | 2550 g | at most 2500 g | -2% | fail |
+| Takeoff weight | 2545 g | at most 2500 g | -2% | fail |
 
 - Thrust-to-weight at the reserve: Full throttle at 20% charge, with the pack sagging under the load
 - Full-throttle current: All four motors flat out on a full pack. The firmware caps it at 90 A; without the cap it would pull 127 A
@@ -209,7 +209,7 @@ Every check, setup by setup:
 | Module mount and connector | 12 g |
 | BEC12S-PRO 5 V 5 A supply for the Pi | 5 g |
 | Module sockets, three slots (an XT30U and an 8-pin JST-GH each) | 4 g |
-| Two MINI blade fuses in inline holders | 7 g |
+| Two MINI blade fuses, soldered inline under heat shrink | 2 g |
 | Landing legs | 26 g |
 | Battery tray | 29 g |
 | Lidar bracket | 2 g |
@@ -236,7 +236,7 @@ Every check, setup by setup:
 | Module plug (an XT30U and an 8-pin JST-GH) | 1 g |
 | Module P's wiring | 3 g |
 | Growth margin | 200 g |
-| **Total** | **2340 g** |
+| **Total** | **2335 g** |
 
 ## One flight, start to reserve
 
@@ -246,27 +246,27 @@ Every check, setup by setup:
 
 ![Power against airspeed](charts/power.png)
 
-The cruise targets are checked at 10 m/s for now. The speed that actually costs mission the least is 12.1 m/s, where it cruises for 31.3 min.
+The cruise targets are checked at 10 m/s for now. The speed that actually costs mission the least is 12.1 m/s, where it cruises for 31.4 min.
 
 ## The sweep
 
-192 builds tried, ranked by verdict, then by how far their tightest required check clears its limit. The build in this report ranks #58 of 192.
+192 builds tried, ranked by verdict, then by how far their tightest required check clears its limit. The build in this report ranks #60 of 192.
 
 ![Every build the sweep tried](charts/sweep.png)
 
 | Rank | Build | Frame | Verdict | Tightest margin | mission cruise |
 |---|---|---|---|---|---|
-| 1 | XRotor 3115 900KV / MacroQuad 10x5x3 / 6S3P Molicel INR-21700-P42A | Nazgul XL10 V6 10-inch frame | pass | +45% | 38.4 min |
-| 2 | XRotor 3115 900KV / MacroQuad 10x5x3 / 6S3P Molicel INR-21700-P45B | Nazgul XL10 V6 10-inch frame | pass | +44% | 41.2 min |
-| 3 | XRotor 3115 900KV / MacroQuad 10x4.5x3 / 6S3P Molicel INR-21700-P45B | Nazgul XL10 V6 10-inch frame | pass | +35% | 35.2 min |
-| 4 | XRotor 3115 900KV / MacroQuad 10x5x3 / 6S3P Samsung SDI INR21700-40T | Nazgul XL10 V6 10-inch frame | pass | +33% | 36.9 min |
-| 5 | E3 2814 850KV / 1050 3-blade / 6S3P Molicel INR-21700-P42A | Nazgul XL10 V6 10-inch frame | pass | +31% | 36.9 min |
+| 1 | XRotor 3115 900KV / MacroQuad 10x5x3 / 6S3P Molicel INR-21700-P42A | Nazgul XL10 V6 10-inch frame | pass | +45% | 38.5 min |
+| 2 | XRotor 3115 900KV / MacroQuad 10x5x3 / 6S3P Molicel INR-21700-P45B | Nazgul XL10 V6 10-inch frame | pass | +45% | 41.3 min |
+| 3 | XRotor 3115 900KV / MacroQuad 10x4.5x3 / 6S3P Molicel INR-21700-P45B | Nazgul XL10 V6 10-inch frame | pass | +36% | 35.3 min |
+| 4 | XRotor 3115 900KV / MacroQuad 10x5x3 / 6S3P Samsung SDI INR21700-40T | Nazgul XL10 V6 10-inch frame | pass | +33% | 37.0 min |
+| 5 | E3 2814 850KV / 1050 3-blade / 6S3P Molicel INR-21700-P42A | Nazgul XL10 V6 10-inch frame | pass | +31% | 37.0 min |
 | 6 | E3 2814 850KV / 1050 3-blade / 6S3P Samsung SDI INR21700-40T | Nazgul XL10 V6 10-inch frame | pass | +31% | 35.6 min |
-| 7 | XRotor 3115 900KV / MacroQuad 9x5x3 / 6S3P Molicel INR-21700-P45B | Nazgul XL10 V6 10-inch frame | pass | +31% | 34.5 min |
-| 8 | XRotor 3115 900KV / MacroQuad 9x5x3 / 6S3P Molicel INR-21700-P45B | Chimera9 ECO 9-inch frame | pass | +29% | 33.9 min |
-| 9 | XRotor 3115 900KV / MacroQuad 10x5x3 / 6S2P Molicel INR-21700-P45B | Nazgul XL10 V6 10-inch frame | pass | +29% | 34.5 min |
-| 10 | E3 3115 900KV / 1050 3-blade / 6S3P Molicel INR-21700-P45B | Nazgul XL10 V6 10-inch frame | pass | +29% | 33.6 min |
-| 58 | **E3 2814 850KV / 1050 3-blade / 6S2P Molicel INR-21700-P42A** | Nazgul XL10 V6 10-inch frame | marginal | +16% | 30.7 min |
+| 7 | XRotor 3115 900KV / MacroQuad 9x5x3 / 6S3P Molicel INR-21700-P45B | Nazgul XL10 V6 10-inch frame | pass | +31% | 34.6 min |
+| 8 | XRotor 3115 900KV / MacroQuad 9x5x3 / 6S3P Molicel INR-21700-P45B | Chimera9 ECO 9-inch frame | pass | +29% | 34.0 min |
+| 9 | XRotor 3115 900KV / MacroQuad 10x5x3 / 6S2P Molicel INR-21700-P45B | Nazgul XL10 V6 10-inch frame | pass | +29% | 34.6 min |
+| 10 | E3 3115 900KV / 1050 3-blade / 6S3P Molicel INR-21700-P45B | Nazgul XL10 V6 10-inch frame | pass | +29% | 33.7 min |
+| 60 | **E3 2814 850KV / 1050 3-blade / 6S2P Molicel INR-21700-P42A** | Nazgul XL10 V6 10-inch frame | marginal | +16% | 30.8 min |
 
 ## What extra weight costs
 
@@ -276,10 +276,10 @@ Cruise minutes as extra grams go on:
 
 | Setup | +0 g | +100 g | +200 g | +300 g | +400 g | +500 g | +600 g |
 |---|---|---|---|---|---|---|---|
-| base | 50.1 | 46.0 | 42.3 | 39.1 | 36.2 | 33.7 | 31.4 |
-| V | 40.5 | 37.5 | 34.9 | 32.6 | 30.5 | 28.6 | 27.0 |
-| P | 42.7 | 39.5 | 36.6 | 34.0 | 31.7 | 29.7 | 28.0 |
-| mission | 35.2 | 32.9 | 30.7 | 28.9 | 27.2 | 25.7 | 24.3 |
+| base | 50.3 | 46.1 | 42.5 | 39.2 | 36.3 | 33.8 | 31.5 |
+| V | 40.6 | 37.7 | 35.0 | 32.7 | 30.6 | 28.7 | 27.0 |
+| P | 42.9 | 39.6 | 36.7 | 34.1 | 31.8 | 29.8 | 28.0 |
+| mission | 35.3 | 33.0 | 30.8 | 29.0 | 27.3 | 25.8 | 24.4 |
 
 ## How the numbers are made
 

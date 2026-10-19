@@ -4,8 +4,8 @@ id: base-wiring
 maker: Various
 model: Base's wiring and the XT60 lead
 checked: 2026-10-19
-source: {kind: estimate, checked: 2026-10-19, note: "From the connection list (pcs14 electrical --update-catalog): 6.49 m of wire, 51.7 g at each gauge's grams per meter; 4.1 g of plugs, the wire's half of each; 3.4 g of heat shrink on 114 soldered ends at 0.03 g each, and 0.5 g of sleeving on the battery leads at 3 g/m. The grams per meter, the heat shrink and the sleeving are estimates"}
-mass_g: 59.7
+source: {kind: estimate, checked: 2026-10-19, note: "From the connection list (pcs14 electrical --update-catalog): 6.52 m of wire, 51.9 g at each gauge's grams per meter; 4.1 g of plugs, the wire's half of each; 3.4 g of heat shrink on 114 soldered ends at 0.03 g each, and 0.5 g of sleeving on the battery leads at 3 g/m. The grams per meter, the heat shrink and the sleeving are estimates"}
+mass_g: 59.9
 cad:
   shape: routed
   source:

@@ -89,9 +89,9 @@ place:
     - {at_mm: [-5, 0, 35]}
     - {at_mm: [38, 0, 35]}
     - {at_mm: [-64, 15, 3]} # C's, with 6 mm of it on the bottom plate's back edge
-  branch-fuses: # two holders hanging off the back edge, beside the battery leads
-    - {at_mm: [-69, -14, 13]} # with 5 mm of it on the second plate, behind the standoff
-    - {at_mm: [-93, -14, 13]} # end to end with the first
+  branch-fuses: # two fuses soldered inline, off the back edge beside the battery leads
+    - {at_mm: [-72, -14, 13]} # with 5 mm of it on the second plate, behind the standoff
+    - {at_mm: [-102, -14, 13]} # end to end with the first
   ruko-r111: {at_mm: [86.5, 0, 35]} # on the front of the top plate, away from the GPS and the belly
   benewake-tf-luna: {at_mm: [135, 0, -3], turn_deg: [180, 0, 0]} # under the nose, looking down
   rpi-camera-module-3: {at_mm: [162, 0, 17.5], turn_deg: [0, 90, 0]} # in front of the plates, looking forward
@@ -159,10 +159,10 @@ wires:
     path_mm: [[38, -26, 46], [30, -18, 70], [26, -16, 120]]
   - name: battery taps
     diameter_mm: 4.1 # from the electrical connection list
-    path_mm: [[-22, -10, 15], [-46, -14, 17], [-57, -14, 18], [-81, -14, 18]]
+    path_mm: [[-22, -10, 15], [-46, -14, 16], [-57, -14, 15.5], [-87, -14, 15.5]]
   - name: fc battery feed
     diameter_mm: 1.0 # from the electrical connection list
-    path_mm: [[-93, -14, 18], [-60, -18, 22], [-30, -16, 22], [-10, -16, 24]]
+    path_mm: [[-102, -14, 15.5], [-60, -18, 22], [-30, -16, 22], [-10, -16, 24]]
   - name: module power to V
     diameter_mm: 4.4 # from the electrical connection list
     path_mm: [[-36, 10, 18.5], [-20, 10, 28], [-8, 8, 34]]

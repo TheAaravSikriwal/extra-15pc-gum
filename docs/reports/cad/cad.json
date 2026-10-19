@@ -9,37 +9,37 @@
    "modules": [],
    "passed": true,
    "trim_x_mm": -10.0,
-   "mass_g": 1805.925,
+   "mass_g": 1801.125,
    "center_of_gravity_mm": [
-    -0.1,
-    -0.029,
-    -2.223
+    0.109,
+    0.009,
+    -2.282
    ],
    "inertia_kg_m2": [
     [
-     0.012838460734269759,
-     -8.3053760412489e-06,
-     -0.0003591881420708993
+     0.0128351808272054,
+     -3.0360771073159853e-06,
+     -0.0003674791142392478
     ],
     [
-     -8.3053760412489e-06,
-     0.015345547169491134,
-     1.059765267204464e-06
+     -3.0360771073159853e-06,
+     0.015313168955816006,
+     -4.2095591520550654e-07
     ],
     [
-     -0.0003591881420708993,
-     1.059765267204464e-06,
-     0.025745890368746072
+     -0.0003674791142392478,
+     -4.2095591520550654e-07,
+     0.025714921077487646
     ]
    ],
-   "busiest_motor_extra": 0.000864,
+   "busiest_motor_extra": 0.000795,
    "findings": [
     {
      "check": "balance",
      "passed": true,
-     "value": 0.0008635588532797128,
+     "value": 0.0007946157647102102,
      "limit": 0.05,
-     "detail": "with the pack at x = -10 mm, the center of gravity sits -0.1 mm along x and -0.0 mm along y, so the busiest motor works 0.1% harder",
+     "detail": "with the pack at x = -10 mm, the center of gravity sits +0.1 mm along x and +0.0 mm along y, so the busiest motor works 0.1% harder",
      "parts": []
     },
     {
@@ -625,9 +625,9 @@
     {
      "check": "prop clearance",
      "passed": true,
-     "value": 0.03234610499977708,
+     "value": 0.032547546650192986,
      "limit": 0.02,
-     "detail": "wire battery taps is 32.3 mm from prop 4's disk (needs 20)",
+     "detail": "wire battery taps is 32.5 mm from prop 4's disk (needs 20)",
      "parts": [
       "prop disk 4",
       "wire battery taps"
@@ -636,9 +636,9 @@
     {
      "check": "prop clearance",
      "passed": true,
-     "value": 0.030596229828437443,
+     "value": 0.03093635642513247,
      "limit": 0.02,
-     "detail": "wire fc battery feed is 30.6 mm from prop 4's disk (needs 20)",
+     "detail": "wire fc battery feed is 30.9 mm from prop 4's disk (needs 20)",
      "parts": [
       "prop disk 4",
       "wire fc battery feed"
@@ -781,38 +781,38 @@
     "V"
    ],
    "passed": true,
-   "trim_x_mm": -5.0,
-   "mass_g": 1966.815,
+   "trim_x_mm": -6.0,
+   "mass_g": 1962.015,
    "center_of_gravity_mm": [
-    0.083,
-    0.194,
-    4.234
+    -0.162,
+    0.229,
+    4.196
    ],
    "inertia_kg_m2": [
     [
-     0.013989982349856671,
-     4.7715409349013765e-05,
-     0.00019038023675487065
+     0.013987838831305142,
+     5.288353368297566e-05,
+     0.00015972010849536842
     ],
     [
-     4.7715409349013765e-05,
-     0.016915691669132666,
-     -4.06812197809106e-05
+     5.288353368297566e-05,
+     0.016893883246218006,
+     -4.1743108089678555e-05
     ],
     [
-     0.00019038023675487065,
-     -4.06812197809106e-05,
-     0.026359977106184894
+     0.00015972010849536842,
+     -4.1743108089678555e-05,
+     0.026338381042162202
     ]
    ],
-   "busiest_motor_extra": 0.001866,
+   "busiest_motor_extra": 0.002637,
    "findings": [
     {
      "check": "balance",
      "passed": true,
-     "value": 0.001865562225063079,
+     "value": 0.002636781268729979,
      "limit": 0.05,
-     "detail": "with the pack at x = -5 mm, the center of gravity sits +0.1 mm along x and +0.2 mm along y, so the busiest motor works 0.2% harder",
+     "detail": "with the pack at x = -6 mm, the center of gravity sits -0.2 mm along x and +0.2 mm along y, so the busiest motor works 0.3% harder",
      "parts": []
     },
     {
@@ -1629,9 +1629,9 @@
     {
      "check": "prop clearance",
      "passed": true,
-     "value": 0.03234610499977708,
+     "value": 0.032547546650192986,
      "limit": 0.02,
-     "detail": "wire battery taps is 32.3 mm from prop 4's disk (needs 20)",
+     "detail": "wire battery taps is 32.5 mm from prop 4's disk (needs 20)",
      "parts": [
       "prop disk 4",
       "wire battery taps"
@@ -1640,9 +1640,9 @@
     {
      "check": "prop clearance",
      "passed": true,
-     "value": 0.030596229828437443,
+     "value": 0.03093635642513247,
      "limit": 0.02,
-     "detail": "wire fc battery feed is 30.6 mm from prop 4's disk (needs 20)",
+     "detail": "wire fc battery feed is 30.9 mm from prop 4's disk (needs 20)",
      "parts": [
       "prop disk 4",
       "wire fc battery feed"
@@ -1782,12 +1782,12 @@
     {
      "check": "compass distance",
      "passed": true,
-     "value": 0.10200000000000001,
+     "value": 0.1058,
      "limit": 0.1,
-     "detail": "the compass is 102 mm from branch-fuses 1 (Matek asks for 100)",
+     "detail": "the compass is 106 mm from wire battery leads (Matek asks for 100)",
      "parts": [
       "ark-gps",
-      "branch-fuses 1"
+      "wire battery leads"
      ]
     },
     {
@@ -1817,38 +1817,38 @@
     "P"
    ],
    "passed": true,
-   "trim_x_mm": -17.0,
-   "mass_g": 1979.091,
+   "trim_x_mm": -18.0,
+   "mass_g": 1974.291,
    "center_of_gravity_mm": [
-    0.187,
-    0.004,
-    8.194
+    -0.056,
+    0.038,
+    8.166
    ],
    "inertia_kg_m2": [
     [
-     0.01548426364427895,
-     -1.0991874367572815e-05,
-     -0.0012714819817620697
+     0.015482662575003595,
+     -5.724754574676795e-06,
+     -0.0013040567467910913
     ],
     [
-     -1.0991874367572815e-05,
-     0.018394369562160853,
-     -1.753270490026069e-06
+     -5.724754574676795e-06,
+     0.018393770798868253,
+     -2.5334317018315685e-06
     ],
     [
-     -0.0012714819817620697,
-     -1.753270490026069e-06,
-     0.02619937527669877
+     -0.0013040567467910913,
+     -2.5334317018315685e-06,
+     0.02619849828703541
     ]
    ],
-   "busiest_motor_extra": 0.001284,
+   "busiest_motor_extra": 0.000635,
    "findings": [
     {
      "check": "balance",
      "passed": true,
-     "value": 0.0012840839446939803,
+     "value": 0.0006352474811683536,
      "limit": 0.05,
-     "detail": "with the pack at x = -17 mm, the center of gravity sits +0.2 mm along x and +0.0 mm along y, so the busiest motor works 0.1% harder",
+     "detail": "with the pack at x = -18 mm, the center of gravity sits -0.1 mm along x and +0.0 mm along y, so the busiest motor works 0.1% harder",
      "parts": []
     },
     {
@@ -2555,9 +2555,9 @@
     {
      "check": "prop clearance",
      "passed": true,
-     "value": 0.03234610499977708,
+     "value": 0.032547546650192986,
      "limit": 0.02,
-     "detail": "wire battery taps is 32.3 mm from prop 4's disk (needs 20)",
+     "detail": "wire battery taps is 32.5 mm from prop 4's disk (needs 20)",
      "parts": [
       "prop disk 4",
       "wire battery taps"
@@ -2566,9 +2566,9 @@
     {
      "check": "prop clearance",
      "passed": true,
-     "value": 0.030596229828437443,
+     "value": 0.03093635642513247,
      "limit": 0.02,
-     "detail": "wire fc battery feed is 30.6 mm from prop 4's disk (needs 20)",
+     "detail": "wire fc battery feed is 30.9 mm from prop 4's disk (needs 20)",
      "parts": [
       "prop disk 4",
       "wire fc battery feed"
@@ -2730,37 +2730,37 @@
    ],
    "passed": true,
    "trim_x_mm": 13.0,
-   "mass_g": 1964.825,
+   "mass_g": 1960.025,
    "center_of_gravity_mm": [
-    -0.106,
-    -0.005,
-    -4.168
+    0.086,
+    0.029,
+    -4.227
    ],
    "inertia_kg_m2": [
     [
-     0.01300827809695462,
-     -4.366625098233759e-06,
-     -0.0003935625035998069
+     0.013004565882311943,
+     9.100499092271597e-07,
+     -0.00040258447302001193
     ],
     [
-     -4.366625098233759e-06,
-     0.01811545429309792,
-     8.192123010576895e-07
+     9.100499092271597e-07,
+     0.018082658213210825,
+     -7.949979539190837e-07
     ],
     [
-     -0.0003935625035998069,
-     8.192123010576895e-07,
-     0.02843785080595263
+     -0.00040258447302001193,
+     -7.949979539190837e-07,
+     0.02840688994803293
     ]
    ],
-   "busiest_motor_extra": 0.000749,
+   "busiest_motor_extra": 0.000775,
    "findings": [
     {
      "check": "balance",
      "passed": true,
-     "value": 0.000748660595775303,
+     "value": 0.0007753665211594527,
      "limit": 0.05,
-     "detail": "with the pack at x = 13 mm, the center of gravity sits -0.1 mm along x and -0.0 mm along y, so the busiest motor works 0.1% harder",
+     "detail": "with the pack at x = 13 mm, the center of gravity sits +0.1 mm along x and +0.0 mm along y, so the busiest motor works 0.1% harder",
      "parts": []
     },
     {
@@ -3346,9 +3346,9 @@
     {
      "check": "prop clearance",
      "passed": true,
-     "value": 0.03234610499977708,
+     "value": 0.032547546650192986,
      "limit": 0.02,
-     "detail": "wire battery taps is 32.3 mm from prop 4's disk (needs 20)",
+     "detail": "wire battery taps is 32.5 mm from prop 4's disk (needs 20)",
      "parts": [
       "prop disk 4",
       "wire battery taps"
@@ -3357,9 +3357,9 @@
     {
      "check": "prop clearance",
      "passed": true,
-     "value": 0.030596229828437443,
+     "value": 0.03093635642513247,
      "limit": 0.02,
-     "detail": "wire fc battery feed is 30.6 mm from prop 4's disk (needs 20)",
+     "detail": "wire fc battery feed is 30.9 mm from prop 4's disk (needs 20)",
      "parts": [
       "prop disk 4",
       "wire fc battery feed"
@@ -3504,37 +3504,37 @@
    ],
    "passed": true,
    "trim_x_mm": -13.0,
-   "mass_g": 2139.981,
+   "mass_g": 2135.181,
    "center_of_gravity_mm": [
-    -0.068,
-    0.206,
-    13.345
+    0.108,
+    0.238,
+    13.331
    ],
    "inertia_kg_m2": [
     [
-     0.0164138436304289,
-     4.49710173838182e-05,
-     -0.0007483693113832709
+     0.016412661346552383,
+     5.032886894343535e-05,
+     -0.0007507868515939987
     ],
     [
-     4.49710173838182e-05,
-     0.019704035421963348,
-     -3.916785503960266e-05
+     5.032886894343535e-05,
+     0.0196737748724138,
+     -3.960621400924051e-05
     ],
     [
-     -0.0007483693113832709,
-     -3.916785503960266e-05,
-     0.026774888536244313
+     -0.0007507868515939987,
+     -3.960621400924051e-05,
+     0.026743876224454576
     ]
    ],
-   "busiest_motor_extra": 0.001847,
+   "busiest_motor_extra": 0.002334,
    "findings": [
     {
      "check": "balance",
      "passed": true,
-     "value": 0.0018474459928894307,
+     "value": 0.002333623630622371,
      "limit": 0.05,
-     "detail": "with the pack at x = -13 mm, the center of gravity sits -0.1 mm along x and +0.2 mm along y, so the busiest motor works 0.2% harder",
+     "detail": "with the pack at x = -13 mm, the center of gravity sits +0.1 mm along x and +0.2 mm along y, so the busiest motor works 0.2% harder",
      "parts": []
     },
     {
@@ -4472,9 +4472,9 @@
     {
      "check": "prop clearance",
      "passed": true,
-     "value": 0.03234610499977708,
+     "value": 0.032547546650192986,
      "limit": 0.02,
-     "detail": "wire battery taps is 32.3 mm from prop 4's disk (needs 20)",
+     "detail": "wire battery taps is 32.5 mm from prop 4's disk (needs 20)",
      "parts": [
       "prop disk 4",
       "wire battery taps"
@@ -4483,9 +4483,9 @@
     {
      "check": "prop clearance",
      "passed": true,
-     "value": 0.030596229828437443,
+     "value": 0.03093635642513247,
      "limit": 0.02,
-     "detail": "wire fc battery feed is 30.6 mm from prop 4's disk (needs 20)",
+     "detail": "wire fc battery feed is 30.9 mm from prop 4's disk (needs 20)",
      "parts": [
       "prop disk 4",
       "wire fc battery feed"
@@ -4643,12 +4643,12 @@
     {
      "check": "compass distance",
      "passed": true,
-     "value": 0.10200000000000001,
+     "value": 0.1058,
      "limit": 0.1,
-     "detail": "the compass is 102 mm from branch-fuses 1 (Matek asks for 100)",
+     "detail": "the compass is 106 mm from wire battery leads (Matek asks for 100)",
      "parts": [
       "ark-gps",
-      "branch-fuses 1"
+      "wire battery leads"
      ]
     },
     {
@@ -4679,38 +4679,38 @@
     "V"
    ],
    "passed": true,
-   "trim_x_mm": 18.0,
-   "mass_g": 2125.715,
+   "trim_x_mm": 17.0,
+   "mass_g": 2120.915,
    "center_of_gravity_mm": [
-    0.063,
-    0.2,
-    1.954
+    -0.164,
+    0.232,
+    1.913
    ],
    "inertia_kg_m2": [
     [
-     0.014212142543878856,
-     5.165336539429907e-05,
-     0.00015510758740441052
+     0.014209632834329779,
+     5.681882703162709e-05,
+     0.00012554682231271307
     ],
     [
-     5.165336539429907e-05,
-     0.019935302848095127,
-     -4.1635840396386904e-05
+     5.681882703162709e-05,
+     0.019873650494491437,
+     -4.2854086644625367e-05
     ],
     [
-     0.00015510758740441052,
-     -4.1635840396386904e-05,
-     0.029249275002876374
+     0.00012554682231271307,
+     -4.2854086644625367e-05,
+     0.0291882001014552
     ]
    ],
-   "busiest_motor_extra": 0.001768,
+   "busiest_motor_extra": 0.002665,
    "findings": [
     {
      "check": "balance",
      "passed": true,
-     "value": 0.0017677587351402743,
+     "value": 0.002665253031419441,
      "limit": 0.05,
-     "detail": "with the pack at x = 18 mm, the center of gravity sits +0.1 mm along x and +0.2 mm along y, so the busiest motor works 0.2% harder",
+     "detail": "with the pack at x = 17 mm, the center of gravity sits -0.2 mm along x and +0.2 mm along y, so the busiest motor works 0.3% harder",
      "parts": []
     },
     {
@@ -5527,9 +5527,9 @@
     {
      "check": "prop clearance",
      "passed": true,
-     "value": 0.03234610499977708,
+     "value": 0.032547546650192986,
      "limit": 0.02,
-     "detail": "wire battery taps is 32.3 mm from prop 4's disk (needs 20)",
+     "detail": "wire battery taps is 32.5 mm from prop 4's disk (needs 20)",
      "parts": [
       "prop disk 4",
       "wire battery taps"
@@ -5538,9 +5538,9 @@
     {
      "check": "prop clearance",
      "passed": true,
-     "value": 0.030596229828437443,
+     "value": 0.03093635642513247,
      "limit": 0.02,
-     "detail": "wire fc battery feed is 30.6 mm from prop 4's disk (needs 20)",
+     "detail": "wire fc battery feed is 30.9 mm from prop 4's disk (needs 20)",
      "parts": [
       "prop disk 4",
       "wire fc battery feed"
@@ -5680,12 +5680,12 @@
     {
      "check": "compass distance",
      "passed": true,
-     "value": 0.10200000000000001,
+     "value": 0.1058,
      "limit": 0.1,
-     "detail": "the compass is 102 mm from branch-fuses 1 (Matek asks for 100)",
+     "detail": "the compass is 106 mm from wire battery leads (Matek asks for 100)",
      "parts": [
       "ark-gps",
-      "branch-fuses 1"
+      "wire battery leads"
      ]
     },
     {
@@ -5716,38 +5716,38 @@
     "P"
    ],
    "passed": true,
-   "trim_x_mm": 6.0,
-   "mass_g": 2137.991,
+   "trim_x_mm": 5.0,
+   "mass_g": 2133.191,
    "center_of_gravity_mm": [
-    0.159,
-    0.023,
-    5.632
+    -0.066,
+    0.055,
+    5.6
    ],
    "inertia_kg_m2": [
     [
-     0.0157443379990825,
-     -7.042471675535381e-06,
-     -0.0013074379800670337
+     0.01574241775190518,
+     -1.7853476078812803e-06,
+     -0.001338778625745055
     ],
     [
-     -7.042471675535381e-06,
-     0.020978279314602926,
-     -1.700373665144574e-06
+     -1.7853476078812803e-06,
+     0.020937878088322148,
+     -2.6547116655287523e-06
     ],
     [
-     -0.0013074379800670337,
-     -1.700373665144574e-06,
-     0.028615076230837318
+     -0.001338778625745055,
+     -2.6547116655287523e-06,
+     0.02857471104333412
     ]
    ],
-   "busiest_motor_extra": 0.00123,
+   "busiest_motor_extra": 0.000813,
    "findings": [
     {
      "check": "balance",
      "passed": true,
-     "value": 0.0012300586932410525,
+     "value": 0.0008126483604287095,
      "limit": 0.05,
-     "detail": "with the pack at x = 6 mm, the center of gravity sits +0.2 mm along x and +0.0 mm along y, so the busiest motor works 0.1% harder",
+     "detail": "with the pack at x = 5 mm, the center of gravity sits -0.1 mm along x and +0.1 mm along y, so the busiest motor works 0.1% harder",
      "parts": []
     },
     {
@@ -6454,9 +6454,9 @@
     {
      "check": "prop clearance",
      "passed": true,
-     "value": 0.03234610499977708,
+     "value": 0.032547546650192986,
      "limit": 0.02,
-     "detail": "wire battery taps is 32.3 mm from prop 4's disk (needs 20)",
+     "detail": "wire battery taps is 32.5 mm from prop 4's disk (needs 20)",
      "parts": [
       "prop disk 4",
       "wire battery taps"
@@ -6465,9 +6465,9 @@
     {
      "check": "prop clearance",
      "passed": true,
-     "value": 0.030596229828437443,
+     "value": 0.03093635642513247,
      "limit": 0.02,
-     "detail": "wire fc battery feed is 30.6 mm from prop 4's disk (needs 20)",
+     "detail": "wire fc battery feed is 30.9 mm from prop 4's disk (needs 20)",
      "parts": [
       "prop disk 4",
       "wire fc battery feed"
@@ -6631,37 +6631,37 @@
    ],
    "passed": true,
    "trim_x_mm": 10.0,
-   "mass_g": 2298.881,
+   "mass_g": 2294.081,
    "center_of_gravity_mm": [
-    -0.076,
-    0.21,
-    10.607
+    0.088,
+    0.24,
+    10.588
    ],
    "inertia_kg_m2": [
     [
-     0.016731341996160227,
-     4.890720422924397e-05,
-     -0.0007831233945905802
+     0.016729954062601304,
+     5.42652188029104e-05,
+     -0.000786573105591525
     ],
     [
-     4.890720422924397e-05,
-     0.022503232590751043,
-     -4.00948186827465e-05
+     5.42652188029104e-05,
+     0.022472777369130656,
+     -4.0720864118880945e-05
     ],
     [
-     -0.0007831233945905802,
-     -4.00948186827465e-05,
-     0.029348433800328196
+     -0.000786573105591525,
+     -4.0720864118880945e-05,
+     0.029317431650289997
     ]
    ],
-   "busiest_motor_extra": 0.001928,
+   "busiest_motor_extra": 0.002211,
    "findings": [
     {
      "check": "balance",
      "passed": true,
-     "value": 0.0019282729458939797,
+     "value": 0.0022105777136549568,
      "limit": 0.05,
-     "detail": "with the pack at x = 10 mm, the center of gravity sits -0.1 mm along x and +0.2 mm along y, so the busiest motor works 0.2% harder",
+     "detail": "with the pack at x = 10 mm, the center of gravity sits +0.1 mm along x and +0.2 mm along y, so the busiest motor works 0.2% harder",
      "parts": []
     },
     {
@@ -7599,9 +7599,9 @@
     {
      "check": "prop clearance",
      "passed": true,
-     "value": 0.03234610499977708,
+     "value": 0.032547546650192986,
      "limit": 0.02,
-     "detail": "wire battery taps is 32.3 mm from prop 4's disk (needs 20)",
+     "detail": "wire battery taps is 32.5 mm from prop 4's disk (needs 20)",
      "parts": [
       "prop disk 4",
       "wire battery taps"
@@ -7610,9 +7610,9 @@
     {
      "check": "prop clearance",
      "passed": true,
-     "value": 0.030596229828437443,
+     "value": 0.03093635642513247,
      "limit": 0.02,
-     "detail": "wire fc battery feed is 30.6 mm from prop 4's disk (needs 20)",
+     "detail": "wire fc battery feed is 30.9 mm from prop 4's disk (needs 20)",
      "parts": [
       "prop disk 4",
       "wire fc battery feed"
@@ -7770,12 +7770,12 @@
     {
      "check": "compass distance",
      "passed": true,
-     "value": 0.10200000000000001,
+     "value": 0.1058,
      "limit": 0.1,
-     "detail": "the compass is 102 mm from branch-fuses 1 (Matek asks for 100)",
+     "detail": "the compass is 106 mm from wire battery leads (Matek asks for 100)",
      "parts": [
       "ark-gps",
-      "branch-fuses 1"
+      "wire battery leads"
      ]
     },
     {
@@ -7907,8 +7907,8 @@
   "module connector": 7.0,
   "camera cable": 178.924,
   "chute servo": 76.733,
-  "battery taps": 59.458,
-  "fc battery feed": 83.648,
+  "battery taps": 65.363,
+  "fc battery feed": 92.854,
   "module power to V": 32.172,
   "module power to P": 70.138,
   "module power to C": 12.645,

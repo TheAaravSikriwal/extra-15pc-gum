@@ -14,14 +14,14 @@ Built from E3 2814 850KV / 1050 3-blade / 6S2P Molicel INR-21700-P42A.
 
 | Setup | Modules | Weight | Pack at | Center of gravity (x, y, z) | Busiest motor | Verdict |
 |---|---|---|---|---|---|---|
-| base | none | 1806 g | -10 mm | -0.1, -0.0, -2.2 mm | +0.1% | pass |
-| V | V | 1967 g | -5 mm | 0.1, 0.2, 4.2 mm | +0.2% | pass |
-| P | P | 1979 g | -17 mm | 0.2, 0.0, 8.2 mm | +0.1% | pass |
-| C | C | 1965 g | 13 mm | -0.1, -0.0, -4.2 mm | +0.1% | pass |
-| mission | V+P | 2140 g | -13 mm | -0.1, 0.2, 13.3 mm | +0.2% | pass |
-| V+C | V+C | 2126 g | 18 mm | 0.1, 0.2, 2.0 mm | +0.2% | pass |
-| P+C | P+C | 2138 g | 6 mm | 0.2, 0.0, 5.6 mm | +0.1% | pass |
-| max | V+P+C | 2299 g | 10 mm | -0.1, 0.2, 10.6 mm | +0.2% | pass |
+| base | none | 1801 g | -10 mm | 0.1, 0.0, -2.3 mm | +0.1% | pass |
+| V | V | 1962 g | -6 mm | -0.2, 0.2, 4.2 mm | +0.3% | pass |
+| P | P | 1974 g | -18 mm | -0.1, 0.0, 8.2 mm | +0.1% | pass |
+| C | C | 1960 g | 13 mm | 0.1, 0.0, -4.2 mm | +0.1% | pass |
+| mission | V+P | 2135 g | -13 mm | 0.1, 0.2, 13.3 mm | +0.2% | pass |
+| V+C | V+C | 2121 g | 17 mm | -0.2, 0.2, 1.9 mm | +0.3% | pass |
+| P+C | P+C | 2133 g | 5 mm | -0.1, 0.1, 5.6 mm | +0.1% | pass |
+| max | V+P+C | 2294 g | 10 mm | 0.1, 0.2, 10.6 mm | +0.2% | pass |
 
 The pack's position is along x from the motors' center; it slides to balance each combination. The busiest motor column says how much harder the busiest motor works than the average in a hover (the limit is +5%).
 
@@ -32,7 +32,7 @@ Every check, setup by setup:
 
 | Check | Result | Verdict |
 |---|---|---|
-| balance | with the pack at x = -10 mm, the center of gravity sits -0.1 mm along x and -0.0 mm along y, so the busiest motor works 0.1% harder | pass |
+| balance | with the pack at x = -10 mm, the center of gravity sits +0.1 mm along x and +0.0 mm along y, so the busiest motor works 0.1% harder | pass |
 | collisions | nothing overlaps | pass |
 | prop clearance | frame is 10.6 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | module-socket 2 is 47.8 mm from prop 1's disk (needs 10) | pass |
@@ -86,8 +86,8 @@ Every check, setup by setup:
 | prop clearance | wire motor leads back right is 28.3 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire receiver is 55.9 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire module connector is 78.8 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire battery taps is 32.3 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire fc battery feed is 30.6 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire battery taps is 32.5 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire fc battery feed is 30.9 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire teensy feed from fc is 74.6 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire teensy feed from bec is 56.5 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire cut supply is 74.1 mm from prop 4's disk (needs 20) | pass |
@@ -108,7 +108,7 @@ Every check, setup by setup:
 
 | Check | Result | Verdict |
 |---|---|---|
-| balance | with the pack at x = -5 mm, the center of gravity sits +0.1 mm along x and +0.2 mm along y, so the busiest motor works 0.2% harder | pass |
+| balance | with the pack at x = -6 mm, the center of gravity sits -0.2 mm along x and +0.2 mm along y, so the busiest motor works 0.3% harder | pass |
 | collisions | nothing overlaps | pass |
 | prop clearance | frame is 10.6 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | module-socket 2 is 47.8 mm from prop 1's disk (needs 10) | pass |
@@ -183,8 +183,8 @@ Every check, setup by setup:
 | prop clearance | wire receiver is 55.9 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire module connector is 78.8 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire camera cable is 78.3 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire battery taps is 32.3 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire fc battery feed is 30.6 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire battery taps is 32.5 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire fc battery feed is 30.9 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire teensy feed from fc is 74.6 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire teensy feed from bec is 56.5 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire cut supply is 74.1 mm from prop 4's disk (needs 20) | pass |
@@ -197,7 +197,7 @@ Every check, setup by setup:
 | prop clearance | props 2 and 4 are 43.0 mm apart | pass |
 | prop clearance | props 3 and 4 are 43.0 mm apart | pass |
 | module rail | v housing spans x = -50 to 12 mm, on a rail from -50 to 66 | pass |
-| compass distance | the compass is 102 mm from branch-fuses 1 (Matek asks for 100) | pass |
+| compass distance | the compass is 106 mm from wire battery leads (Matek asks for 100) | pass |
 | remote id distance | the Remote ID module is 129 mm from the GPS | pass |
 | lidar view | the lidar sits 50 mm off the ground when landed, so it can't read the last 150 mm of a landing | pass |
 
@@ -208,7 +208,7 @@ Every check, setup by setup:
 
 | Check | Result | Verdict |
 |---|---|---|
-| balance | with the pack at x = -17 mm, the center of gravity sits +0.2 mm along x and +0.0 mm along y, so the busiest motor works 0.1% harder | pass |
+| balance | with the pack at x = -18 mm, the center of gravity sits -0.1 mm along x and +0.0 mm along y, so the busiest motor works 0.1% harder | pass |
 | collisions | nothing overlaps | pass |
 | prop clearance | frame is 10.6 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | module-socket 2 is 47.8 mm from prop 1's disk (needs 10) | pass |
@@ -273,8 +273,8 @@ Every check, setup by setup:
 | prop clearance | wire motor leads back right is 28.3 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire receiver is 55.9 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire module connector is 78.8 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire battery taps is 32.3 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire fc battery feed is 30.6 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire battery taps is 32.5 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire fc battery feed is 30.9 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire teensy feed from fc is 74.6 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire teensy feed from bec is 56.5 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire cut supply is 74.1 mm from prop 4's disk (needs 20) | pass |
@@ -297,7 +297,7 @@ Every check, setup by setup:
 
 | Check | Result | Verdict |
 |---|---|---|
-| balance | with the pack at x = 13 mm, the center of gravity sits -0.1 mm along x and -0.0 mm along y, so the busiest motor works 0.1% harder | pass |
+| balance | with the pack at x = 13 mm, the center of gravity sits +0.1 mm along x and +0.0 mm along y, so the busiest motor works 0.1% harder | pass |
 | collisions | nothing overlaps | pass |
 | prop clearance | frame is 10.6 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | module-socket 2 is 47.8 mm from prop 1's disk (needs 10) | pass |
@@ -351,8 +351,8 @@ Every check, setup by setup:
 | prop clearance | wire motor leads back right is 28.3 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire receiver is 55.9 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire module connector is 78.8 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire battery taps is 32.3 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire fc battery feed is 30.6 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire battery taps is 32.5 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire fc battery feed is 30.9 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire teensy feed from fc is 74.6 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire teensy feed from bec is 56.5 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire cut supply is 74.1 mm from prop 4's disk (needs 20) | pass |
@@ -373,7 +373,7 @@ Every check, setup by setup:
 
 | Check | Result | Verdict |
 |---|---|---|
-| balance | with the pack at x = -13 mm, the center of gravity sits -0.1 mm along x and +0.2 mm along y, so the busiest motor works 0.2% harder | pass |
+| balance | with the pack at x = -13 mm, the center of gravity sits +0.1 mm along x and +0.2 mm along y, so the busiest motor works 0.2% harder | pass |
 | collisions | nothing overlaps | pass |
 | prop clearance | frame is 10.6 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | module-socket 2 is 47.8 mm from prop 1's disk (needs 10) | pass |
@@ -459,8 +459,8 @@ Every check, setup by setup:
 | prop clearance | wire receiver is 55.9 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire module connector is 78.8 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire camera cable is 78.3 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire battery taps is 32.3 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire fc battery feed is 30.6 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire battery taps is 32.5 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire fc battery feed is 30.9 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire teensy feed from fc is 74.6 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire teensy feed from bec is 56.5 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire cut supply is 74.1 mm from prop 4's disk (needs 20) | pass |
@@ -475,7 +475,7 @@ Every check, setup by setup:
 | parachute cone | nothing in the chute's way | pass |
 | module rail | v housing spans x = -50 to 12 mm, on a rail from -50 to 66 | pass |
 | module rail | p holder spans x = 12 to 64 mm, on a rail from -50 to 66 | pass |
-| compass distance | the compass is 102 mm from branch-fuses 1 (Matek asks for 100) | pass |
+| compass distance | the compass is 106 mm from wire battery leads (Matek asks for 100) | pass |
 | remote id distance | the Remote ID module is 129 mm from the GPS | pass |
 | lidar view | the lidar sits 50 mm off the ground when landed, so it can't read the last 150 mm of a landing | pass |
 
@@ -486,7 +486,7 @@ Every check, setup by setup:
 
 | Check | Result | Verdict |
 |---|---|---|
-| balance | with the pack at x = 18 mm, the center of gravity sits +0.1 mm along x and +0.2 mm along y, so the busiest motor works 0.2% harder | pass |
+| balance | with the pack at x = 17 mm, the center of gravity sits -0.2 mm along x and +0.2 mm along y, so the busiest motor works 0.3% harder | pass |
 | collisions | nothing overlaps | pass |
 | prop clearance | frame is 10.6 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | module-socket 2 is 47.8 mm from prop 1's disk (needs 10) | pass |
@@ -561,8 +561,8 @@ Every check, setup by setup:
 | prop clearance | wire receiver is 55.9 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire module connector is 78.8 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire camera cable is 78.3 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire battery taps is 32.3 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire fc battery feed is 30.6 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire battery taps is 32.5 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire fc battery feed is 30.9 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire teensy feed from fc is 74.6 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire teensy feed from bec is 56.5 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire cut supply is 74.1 mm from prop 4's disk (needs 20) | pass |
@@ -575,7 +575,7 @@ Every check, setup by setup:
 | prop clearance | props 2 and 4 are 43.0 mm apart | pass |
 | prop clearance | props 3 and 4 are 43.0 mm apart | pass |
 | module rail | v housing spans x = -50 to 12 mm, on a rail from -50 to 66 | pass |
-| compass distance | the compass is 102 mm from branch-fuses 1 (Matek asks for 100) | pass |
+| compass distance | the compass is 106 mm from wire battery leads (Matek asks for 100) | pass |
 | remote id distance | the Remote ID module is 129 mm from the GPS | pass |
 | lidar view | the lidar sits 50 mm off the ground when landed, so it can't read the last 150 mm of a landing | pass |
 
@@ -586,7 +586,7 @@ Every check, setup by setup:
 
 | Check | Result | Verdict |
 |---|---|---|
-| balance | with the pack at x = 6 mm, the center of gravity sits +0.2 mm along x and +0.0 mm along y, so the busiest motor works 0.1% harder | pass |
+| balance | with the pack at x = 5 mm, the center of gravity sits -0.1 mm along x and +0.1 mm along y, so the busiest motor works 0.1% harder | pass |
 | collisions | nothing overlaps | pass |
 | prop clearance | frame is 10.6 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | module-socket 2 is 47.8 mm from prop 1's disk (needs 10) | pass |
@@ -651,8 +651,8 @@ Every check, setup by setup:
 | prop clearance | wire motor leads back right is 28.3 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire receiver is 55.9 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire module connector is 78.8 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire battery taps is 32.3 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire fc battery feed is 30.6 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire battery taps is 32.5 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire fc battery feed is 30.9 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire teensy feed from fc is 74.6 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire teensy feed from bec is 56.5 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire cut supply is 74.1 mm from prop 4's disk (needs 20) | pass |
@@ -675,7 +675,7 @@ Every check, setup by setup:
 
 | Check | Result | Verdict |
 |---|---|---|
-| balance | with the pack at x = 10 mm, the center of gravity sits -0.1 mm along x and +0.2 mm along y, so the busiest motor works 0.2% harder | pass |
+| balance | with the pack at x = 10 mm, the center of gravity sits +0.1 mm along x and +0.2 mm along y, so the busiest motor works 0.2% harder | pass |
 | collisions | nothing overlaps | pass |
 | prop clearance | frame is 10.6 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | module-socket 2 is 47.8 mm from prop 1's disk (needs 10) | pass |
@@ -761,8 +761,8 @@ Every check, setup by setup:
 | prop clearance | wire receiver is 55.9 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire module connector is 78.8 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire camera cable is 78.3 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire battery taps is 32.3 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire fc battery feed is 30.6 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire battery taps is 32.5 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire fc battery feed is 30.9 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire teensy feed from fc is 74.6 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire teensy feed from bec is 56.5 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire cut supply is 74.1 mm from prop 4's disk (needs 20) | pass |
@@ -777,7 +777,7 @@ Every check, setup by setup:
 | parachute cone | nothing in the chute's way | pass |
 | module rail | v housing spans x = -50 to 12 mm, on a rail from -50 to 66 | pass |
 | module rail | p holder spans x = 12 to 64 mm, on a rail from -50 to 66 | pass |
-| compass distance | the compass is 102 mm from branch-fuses 1 (Matek asks for 100) | pass |
+| compass distance | the compass is 106 mm from wire battery leads (Matek asks for 100) | pass |
 | remote id distance | the Remote ID module is 129 mm from the GPS | pass |
 | lidar view | the lidar sits 50 mm off the ground when landed, so it can't read the last 150 mm of a landing | pass |
 
@@ -789,14 +789,14 @@ Each part's weight spread over its solid, with the pack at its trim. Inertia is 
 
 | Setup | Weight | Ixx | Iyy | Izz |
 |---|---|---|---|---|
-| base | 1806 g | 12.8 g m² | 15.3 g m² | 25.7 g m² |
-| V | 1967 g | 14.0 g m² | 16.9 g m² | 26.4 g m² |
-| P | 1979 g | 15.5 g m² | 18.4 g m² | 26.2 g m² |
-| C | 1965 g | 13.0 g m² | 18.1 g m² | 28.4 g m² |
-| mission | 2140 g | 16.4 g m² | 19.7 g m² | 26.8 g m² |
-| V+C | 2126 g | 14.2 g m² | 19.9 g m² | 29.2 g m² |
-| P+C | 2138 g | 15.7 g m² | 21.0 g m² | 28.6 g m² |
-| max | 2299 g | 16.7 g m² | 22.5 g m² | 29.3 g m² |
+| base | 1801 g | 12.8 g m² | 15.3 g m² | 25.7 g m² |
+| V | 1962 g | 14.0 g m² | 16.9 g m² | 26.3 g m² |
+| P | 1974 g | 15.5 g m² | 18.4 g m² | 26.2 g m² |
+| C | 1960 g | 13.0 g m² | 18.1 g m² | 28.4 g m² |
+| mission | 2135 g | 16.4 g m² | 19.7 g m² | 26.7 g m² |
+| V+C | 2121 g | 14.2 g m² | 19.9 g m² | 29.2 g m² |
+| P+C | 2133 g | 15.7 g m² | 20.9 g m² | 28.6 g m² |
+| max | 2294 g | 16.7 g m² | 22.5 g m² | 29.3 g m² |
 
 ## My printed parts
 
@@ -839,8 +839,8 @@ Rough routes, until the electrical step picks gauges and connectors.
 | module connector | 7 mm |
 | camera cable | 179 mm |
 | chute servo | 77 mm |
-| battery taps | 59 mm |
-| fc battery feed | 84 mm |
+| battery taps | 65 mm |
+| fc battery feed | 93 mm |
 | module power to V | 32 mm |
 | module power to P | 70 mm |
 | module power to C | 13 mm |

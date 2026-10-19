@@ -128,7 +128,8 @@ And one from the plan: **the GPS is the ARK GPS on DroneCAN** (16 g, 8 g over th
 - **The wiring is weighed from the connection list** (2026-10-19): each wire's length times its gauge's grams per meter, the wire's half of each plug, heat shrink on soldered ends and sleeving on the battery leads, into base-wiring and one wiring entry per module. Base's is 59.7 g, against the 45 g guess.
 - **The main path is 3.8 mOhm** from the pack's terminals to the ESC and back, worked out from the connection list, and the electrical cases start at the pack's own terminals so the leads' drop counts once.
 - **C's socket and the fuse holders sit on the frame's plates,** not flush with its back edge: touching along a bare edge broke the fused body for the wind tunnel.
-- **The weight now** (2026-10-19): Mission 2340 g with a pessimistic hover of 20.92 min against 21, marginal; Max 2549 g, over its 2.5 kg limit. The decisions are step 3d's.
+- **The branch fuses are soldered inline under heat shrink** (decided 2026-10-19), not in holders: 2.1 g against a 7.1 g guess with holders, with the same MINI fuses and ratings. A blown one takes a soldering iron, but they only blow on a fault.
+- **The weight now** (2026-10-19): Mission 2335 g with a pessimistic hover of 20.98 min against 21, still marginal after the fuses; Max 2544 g, over its 2.5 kg limit. The stack's screws and nuts aren't counted yet.
 
 ### The parts (picked 2026-10-17)
 
