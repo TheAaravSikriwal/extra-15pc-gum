@@ -422,7 +422,7 @@ def backups(ctx: Context, design, parts, listed, lengths, combinations, cases, p
     return findings
 
 
-LI_ION_NOMINAL = 3.6  # V a cell, the usual figure for Li-ion and the P42A's own
+LI_ION_NOMINAL = 3.6  # V a cell, the usual figure for Li-ion and Molicel's own
 
 
 def design_context(design: ConnectionList, catalog, build, cad_settings) -> Context:

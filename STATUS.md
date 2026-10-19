@@ -1,7 +1,7 @@
 # Status
 
 **Last updated:** 2026-10-19, on the PC's Windows side
-**Step:** step 3, electrical design. The talk (3a), the plan (3b) and the build (3c) are done; step 3d's numbers are in, and its decisions are next.
+**Step:** step 3, electrical design. The talk (3a), the plan (3b) and the build (3c) are done; in step 3d the weight is decided, and three findings are left.
 **Main machine:** the PC, with WSL2 Ubuntu 24.04 for the Linux tools
 
 ## Right now
@@ -33,7 +33,7 @@ Where to look:
 
 **Step 3c is done (2026-10-18 to 19).** All 13 tasks. Since the checks: every wire has a CAD route sized from its bundle; ngspice shows the safety monitor's switch passing DShot with the Teensy on and unpowered, handing the ESC stop frames when cutting, and losing one frame in a mid-frame takeover; WireViz harnesses, pin maps, the power tree and a KiCad schematic (rules check clean) all come from the connection list; and Rerun shows every wire by how hard it works. The sims added a firmware requirement: after a takeover the Teensy holds the line high between frames. The [log](docs/log/2026-10-18-electrical-sims.md) has the story. The connection list (`design/electrical.yaml`, 33 boards, 128 wires, 27 safety paths) passes every rule in all eight combinations; every wire's current comes from a DC solve; and the checks cover connectors, supplies, voltages, fuses, heat, the ESC and motors, and a backup case with the module supply dead. The cell fuse links came out (none can work at 90 A). Open findings: the release servo sits under its range through its diode, the Pi's 5.2 V crowds a guessed ceiling, and the XT60 overheats through a 10 s burst on a guessed contact mass. The logs: [part 1](docs/log/2026-10-18-electrical-build.md), [the checks](docs/log/2026-10-18-electrical-checks.md). Task 13 made `pcs14 electrical` run all of it in about 26 s and write [the electrical report](docs/reports/electrical/README.md): 438 checks, 8 of them the open findings.
 
-**Step 3d's numbers are in (2026-10-19).** `pcs14 electrical --update-catalog` weighs the wiring from the connection list: 59.7 g in Base against the 45 g guess, and 2.3, 3.1 and 2.7 g in V, P and C. The main path is 3.8 mOhm, not 3. C's socket and the fuse holders were flush with the frame's back edge, which broke the CAD's body for the wind tunnel; they sit on the plates now. With everything in, Mission is 2340 g and marginal (20.92 min pessimistic hover against 21), and Max is 2549 g, 49 g over. The [log](docs/log/2026-10-19-electrical-report-and-weight.md) has the story.
+**Step 3d: the weight is decided (2026-10-19).** `pcs14 electrical --update-catalog` weighs the wiring from the connection list (59.7 g in Base against the 45 g guess), and the main path is 3.8 mOhm. The branch fuses are now soldered inline (5 g off). The screws, nuts and spacers are a list in `design/cad.yaml`, counted from the CAD's holes: 37 g with steel where it carries load and nylon elsewhere. That's more than any trim could absorb, so the cells are Molicel P45B now (same size and rating, 42 g heavier). Mission is 2414 g with a pessimistic hover of 22.25 min against 21, and passes; Max is 2623 g (report-only). C's socket and the fuses also moved onto the frame's plates, because touching along a bare edge broke the CAD's body for the wind tunnel. The [log](docs/log/2026-10-19-electrical-report-and-weight.md) has the story.
 
 **The parts research added two missing parts (2026-10-17).** The camera needs a 22-pin cable for the Pi 5, and the HaLow card comes with no antenna, so both went into module V (14 g together). Mission is now 2268 g and hovers 25.5 min (21.9 pessimistic, against 21), and Max is 2468 g. Everything still passes, with a thinner margin.
 
@@ -44,15 +44,15 @@ Where to look:
 ## Up next
 
 1. **Set up WSL2 on the PC** with [docs/setup-pc.md](docs/setup-pc.md). The `wsl --install` step needs an admin PowerShell and one reboot. Then commit `docs/machines/pc.md`.
-2. **Step 3d, the decisions:** the weight (Mission marginal, Max over), the release servo's voltage, the Pi's 5 V ceiling, and the XT60 in the burst.
+2. **Step 3d, the rest of the decisions:** the release servo's voltage, the Pi's 5 V ceiling, and the XT60 in the burst.
 3. **The project site's spec** (what it's built with), so its first pages can come with the sizing model.
 4. **Write the first half of `scripts/setup-ubuntu.sh`** (inside WSL2): Gazebo, PX4 and the Python tools, with pinned versions.
 
 ## Still open
 
 - Rotor drag in forward flight, so the cruise numbers get believable (the honesty check's big miss)
-- The weight: Mission's pessimistic hover is 20.92 min against 21 (about 6 g short), and Max is 2549 g against 2500. The two fuse holders (a 7.1 g guess) are the first thing to trim
-- The screws and standoffs for the board stacks aren't weighed anywhere (the old 45 g wiring guess covered them)
+- The weight: Mission passes at 22.25 min pessimistic hover with 1.25 min to spare; Max is 2623 g against its own 2500 g target (report-only)
+- Not counted yet: how the ARK GPS fixes to its plate and how the modules lock onto the rail
 - The pack's own nickel strip and leads aren't in its 3.8 mOhm wiring number
 - What the motor cut board's two undocumented 1 kOhm resistors do (pull-ups would make the board fail the wrong way)
 - Whether a safety monitor cut can be undone in the air (step 5), and the delay between cutting the motors and firing the chute (step 6)

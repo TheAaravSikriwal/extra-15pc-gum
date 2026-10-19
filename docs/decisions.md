@@ -129,7 +129,9 @@ And one from the plan: **the GPS is the ARK GPS on DroneCAN** (16 g, 8 g over th
 - **The main path is 3.8 mOhm** from the pack's terminals to the ESC and back, worked out from the connection list, and the electrical cases start at the pack's own terminals so the leads' drop counts once.
 - **C's socket and the fuse holders sit on the frame's plates,** not flush with its back edge: touching along a bare edge broke the fused body for the wind tunnel.
 - **The branch fuses are soldered inline under heat shrink** (decided 2026-10-19), not in holders: 2.1 g against a 7.1 g guess with holders, with the same MINI fuses and ratings. A blown one takes a soldering iron, but they only blow on a fault.
-- **The weight now** (2026-10-19): Mission 2335 g with a pessimistic hover of 20.98 min against 21, still marginal after the fuses; Max 2544 g, over its 2.5 kg limit. The stack's screws and nuts aren't counted yet.
+- **The hardware is a list in design/cad.yaml** (decided 2026-10-19), counted from the CAD's holes and weighed from standard sizes: steel where the joint carries load (the legs, the battery tray, the stack, the chute's base), nylon where it holds only a light part. The CAD puts each piece's weight on the part it holds; the catalog has base-, v- and p-hardware (32.5, 2.7 and 1.7 g). Titanium for the loaded joints would save about 11 g if it's ever needed.
+- **The cells are Molicel P45B** (decided 2026-10-19), replacing the P42A. The P42A was picked to keep Max under 2500 g, and Max is report-only now. Same 21700 size and 45 A rating, so the 90 A cap and the electrical design don't change; 42 g heavier, about 1.7 min more pessimistic hover. The catalog's P45B capacity is to 2.5 V and the P42A's to 2.8 V, so the real gain is about 2% smaller.
+- **The weight now** (2026-10-19): Mission 2414 g, pessimistic hover 22.25 min against 21, a pass; Max 2623 g, over its 2.5 kg limit (report-only).
 
 ### The parts (picked 2026-10-17)
 
@@ -139,7 +141,7 @@ I picked the lightest build that passes every setup, Max included, over the swee
 |---|---|---|
 | Motors (4) | Emax E3 2814 850KV | 82 g each, without wires |
 | Props (4) | Gemfan 1050 3-blade (10 x 5 in) | 16.8 g each |
-| Pack | 6S2P Molicel P42A: 8062 mAh, 90 A continuous | 858 g with an estimated 60 g of nickel, leads and wrap |
+| Pack | 6S2P Molicel P42A: 8062 mAh, 90 A continuous (P45B since 2026-10-19, see the electrical build's changes) | 858 g with an estimated 60 g of nickel, leads and wrap |
 | ESC | Holybro Tekko32 F4 4in1 50A (AM32) | 14 g |
 | Frame | iFlight Nazgul XL10 V6 | 343 g |
 | Current cap | 90 A, in my firmware (100% of the pack's rating) | |

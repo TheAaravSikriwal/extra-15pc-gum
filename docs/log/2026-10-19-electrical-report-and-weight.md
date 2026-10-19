@@ -44,6 +44,29 @@ With the wiring and the printed parts' new weights in (the rail lost 1.6 g to it
 
 Mission is now marginal: five seconds short of 21 minutes on the pessimistic model, with the 200 g growth margin still on top. Max was already over its limit and is 49 g over now. Each gram costs Mission about 0.8 s of pessimistic hover, so it needs about 6 g back to reach 21 minutes.
 
+## Deciding the weight
+
+The first fix was the cheap one. The two branch fuses sat in inline holders, a 7.1 g guess, and soldering the same MINI fuses straight into their wires under heat shrink saves about 5 g. A blown one takes a soldering iron, but these only blow on a fault. I'd first estimated 5.8 g and then realized a sleeve over a whole fuse weighs more like half a gram, not the 0.03 g of a wire joint. That left Mission at 20.98 minutes: 1.2 seconds short.
+
+Then the screws. The old 45 g wiring guess had quietly included them, so once the wiring was weighed properly they weren't counted anywhere. The CAD knows where every screw hole is, so the drone now has a hardware list in `design/cad.yaml`: 26 lines, from the eight M3 screws through the landing legs to the three 4-40s in the parachute's base, each weighed from its standard size. What they weigh depends almost entirely on the material:
+
+| Fasteners | What Mission gains |
+|---|---|
+| All steel | 52 g |
+| Steel where it carries load, nylon elsewhere | 30 g |
+| Titanium where it carries load, nylon elsewhere | 19 g |
+
+Even the light choice would have cost Mission about 14 seconds, far more than any trim. So the real lever was the cells. In step 1 I picked the P42A because it was the only way to keep Max under 2500 g. Max has since become report-only, and it's over anyway. Molicel's P45B is the same 21700 size with the same 45 A rating, so the 90 A cap, the pack in the CAD and every electrical number stay where they are. It costs 42 g and buys about 1.7 minutes.
+
+With the P45B and the hardware in (steel where it carries load, nylon elsewhere, 37 g in all):
+
+| Setup | Weight | Pessimistic hover | Target |
+|---|---|---|---|
+| Mission | 2414 g | 22.25 min | 21 min |
+| Max | 2623 g | 19.77 min | 17 min, and under 2500 g (report-only) |
+
+Every required setup passes again. One caveat I found while comparing cells: the catalog rates the P45B's capacity to 2.5 V but the P42A's, measured by HKJ, to 2.8 V. On equal terms the P45B's lead is about 2% smaller, which still leaves Mission well clear. The heavier drone hovers on more current, so the XT60's burst got a little worse: 94 K over the air at the end, against 88.
+
 ## Next
 
-The open findings and the weight are decisions, not code, so they're the rest of step 3d: what to trim or accept on weight, the release servo's voltage, the Pi's ceiling, and the XT60 in the burst.
+The other three findings: the release servo's voltage, the Pi's 5 V ceiling, and the XT60 in the burst.
