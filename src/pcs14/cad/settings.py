@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Literal
 
 import yaml
-from pydantic import Field, ValidationError
+from pydantic import Field, ValidationError, model_validator
 
 from pcs14 import units
 from pcs14.catalog.source import Strict
@@ -183,6 +183,32 @@ class Wire(Strict):
         return [_m(p) for p in self.path_mm]
 
 
+class Fastener(Strict):
+    """A screw, nut or spacer, counted from the CAD's holes (see pcs14.cad.hardware)."""
+
+    what: Literal["screw", "nut", "lock nut", "standoff", "spacer", "grommet", "patch"]
+    count: int = Field(gt=0)
+    holds: str  # the catalog part it fastens
+    size: Literal["M2", "M2.5", "M3", "4-40"] | None = None
+    length_mm: float | None = Field(default=None, gt=0)
+    material: str | None = None  # a key in materials
+    grams: float | None = Field(default=None, gt=0)  # each, for what has no standard shape
+    module: Literal["base", "V", "P", "C"] | None = None  # when the part is in more than one
+    note: str | None = None
+
+    @model_validator(mode="after")
+    def _weighable(self):
+        if self.grams is not None:
+            return self
+        if self.size is None or self.material is None:
+            raise ValueError(f"a {self.what} needs a size and a material, or its own grams")
+        if self.what in ("screw", "standoff", "spacer") and self.length_mm is None:
+            raise ValueError(f"a {self.what} needs a length_mm")
+        if self.what in ("grommet", "patch"):
+            raise ValueError(f"a {self.what} has no standard shape, so it needs grams")
+        return self
+
+
 class CadSettings(Strict):
     materials: dict[str, Material]
     print: Print
@@ -195,6 +221,14 @@ class CadSettings(Strict):
     p_holder: PHolder
     place: dict[str, Placement | list[Placement]]
     wires: list[Wire]
+    hardware: list[Fastener] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def _materials_exist(self):
+        for item in self.hardware:
+            if item.material is not None and item.material not in self.materials:
+                raise ValueError(f"hardware for {item.holds}: no material {item.material}")
+        return self
 
     def spots(self) -> list[Spot]:
         return parse_spots(self.place)

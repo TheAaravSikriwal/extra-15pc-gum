@@ -1,7 +1,7 @@
 {
  "generated": "2026-10-19",
  "pcs14_version": "0.1.0",
- "build": "E3 2814 850KV / 1050 3-blade / 6S2P Molicel INR-21700-P42A",
+ "build": "E3 2814 850KV / 1050 3-blade / 6S2P Molicel INR-21700-P45B",
  "verdict": "pass",
  "combinations": [
   {
@@ -9,37 +9,37 @@
    "modules": [],
    "passed": true,
    "trim_x_mm": -10.0,
-   "mass_g": 1801.125,
+   "mass_g": 1875.4,
    "center_of_gravity_mm": [
-    0.109,
-    0.009,
-    -2.282
+    -0.017,
+    0.008,
+    -2.775
    ],
    "inertia_kg_m2": [
     [
-     0.0128351808272054,
-     -3.0360771073159853e-06,
-     -0.0003674791142392478
+     0.012920484931064145,
+     -3.0380527483357324e-06,
+     -0.0003783993818992167
     ],
     [
-     -3.0360771073159853e-06,
-     0.015313168955816006,
-     -4.2095591520550654e-07
+     -3.0380527483357324e-06,
+     0.015493119677103716,
+     -4.286680241205782e-07
     ],
     [
-     -0.0003674791142392478,
-     -4.2095591520550654e-07,
-     0.025714921077487646
+     -0.0003783993818992167,
+     -4.286680241205782e-07,
+     0.025893784745621932
     ]
    ],
-   "busiest_motor_extra": 0.000795,
+   "busiest_motor_extra": 0.000171,
    "findings": [
     {
      "check": "balance",
      "passed": true,
-     "value": 0.0007946157647102102,
+     "value": 0.0001709051413935517,
      "limit": 0.05,
-     "detail": "with the pack at x = -10 mm, the center of gravity sits +0.1 mm along x and +0.0 mm along y, so the busiest motor works 0.1% harder",
+     "detail": "with the pack at x = -10 mm, the center of gravity sits -0.0 mm along x and +0.0 mm along y, so the busiest motor works 0.0% harder",
      "parts": []
     },
     {
@@ -768,7 +768,7 @@
     {
      "check": "lidar view",
      "passed": true,
-     "value": 0.0499,
+     "value": 0.04970000000000001,
      "limit": null,
      "detail": "the lidar sits 50 mm off the ground when landed, so it can't read the last 150 mm of a landing",
      "parts": []
@@ -782,35 +782,35 @@
    ],
    "passed": true,
    "trim_x_mm": -6.0,
-   "mass_g": 1962.015,
+   "mass_g": 2038.948,
    "center_of_gravity_mm": [
-    -0.162,
-    0.229,
-    4.196
+    -0.158,
+    0.221,
+    3.586
    ],
    "inertia_kg_m2": [
     [
-     0.013987838831305142,
-     5.288353368297566e-05,
-     0.00015972010849536842
+     0.014100840491145654,
+     5.288625094467123e-05,
+     0.00015322162518984576
     ],
     [
-     5.288353368297566e-05,
-     0.016893883246218006,
-     -4.1743108089678555e-05
+     5.288625094467123e-05,
+     0.017114527262798145,
+     -4.2019825921951645e-05
     ],
     [
-     0.00015972010849536842,
-     -4.1743108089678555e-05,
-     0.026338381042162202
+     0.00015322162518984576,
+     -4.2019825921951645e-05,
+     0.02653215798139596
     ]
    ],
-   "busiest_motor_extra": 0.002637,
+   "busiest_motor_extra": 0.002546,
    "findings": [
     {
      "check": "balance",
      "passed": true,
-     "value": 0.002636781268729979,
+     "value": 0.002546160095120719,
      "limit": 0.05,
      "detail": "with the pack at x = -6 mm, the center of gravity sits -0.2 mm along x and +0.2 mm along y, so the busiest motor works 0.3% harder",
      "parts": []
@@ -1804,7 +1804,7 @@
     {
      "check": "lidar view",
      "passed": true,
-     "value": 0.0499,
+     "value": 0.04970000000000001,
      "limit": null,
      "detail": "the lidar sits 50 mm off the ground when landed, so it can't read the last 150 mm of a landing",
      "parts": []
@@ -1817,38 +1817,38 @@
     "P"
    ],
    "passed": true,
-   "trim_x_mm": -18.0,
-   "mass_g": 1974.291,
+   "trim_x_mm": -17.0,
+   "mass_g": 2050.247,
    "center_of_gravity_mm": [
-    -0.056,
-    0.038,
-    8.166
+    0.14,
+    0.037,
+    7.431
    ],
    "inertia_kg_m2": [
     [
-     0.015482662575003595,
-     -5.724754574676795e-06,
-     -0.0013040567467910913
+     0.01562079488384446,
+     -5.710030476666619e-06,
+     -0.001305827414542833
     ],
     [
-     -5.724754574676795e-06,
-     0.018393770798868253,
-     -2.5334317018315685e-06
+     -5.710030476666619e-06,
+     0.018606829755507818,
+     -2.588423413162799e-06
     ],
     [
-     -0.0013040567467910913,
-     -2.5334317018315685e-06,
-     0.02619849828703541
+     -0.001305827414542833,
+     -2.588423413162799e-06,
+     0.02635797835952127
     ]
    ],
-   "busiest_motor_extra": 0.000635,
+   "busiest_motor_extra": 0.001191,
    "findings": [
     {
      "check": "balance",
      "passed": true,
-     "value": 0.0006352474811683536,
+     "value": 0.001190668415041131,
      "limit": 0.05,
-     "detail": "with the pack at x = -18 mm, the center of gravity sits -0.1 mm along x and +0.0 mm along y, so the busiest motor works 0.1% harder",
+     "detail": "with the pack at x = -17 mm, the center of gravity sits +0.1 mm along x and +0.0 mm along y, so the busiest motor works 0.1% harder",
      "parts": []
     },
     {
@@ -2716,7 +2716,7 @@
     {
      "check": "lidar view",
      "passed": true,
-     "value": 0.0499,
+     "value": 0.04970000000000001,
      "limit": null,
      "detail": "the lidar sits 50 mm off the ground when landed, so it can't read the last 150 mm of a landing",
      "parts": []
@@ -2729,38 +2729,38 @@
     "C"
    ],
    "passed": true,
-   "trim_x_mm": 13.0,
-   "mass_g": 1960.025,
+   "trim_x_mm": 12.0,
+   "mass_g": 2034.3,
    "center_of_gravity_mm": [
-    0.086,
-    0.029,
-    -4.227
+    0.002,
+    0.028,
+    -4.61
    ],
    "inertia_kg_m2": [
     [
-     0.013004565882311943,
-     9.100499092271597e-07,
-     -0.00040258447302001193
+     0.013086709668482669,
+     9.052422339443619e-07,
+     -0.0004137061151869915
     ],
     [
-     9.100499092271597e-07,
-     0.018082658213210825,
-     -7.949979539190837e-07
+     9.052422339443619e-07,
+     0.018239839947130486,
+     -8.171760013961728e-07
     ],
     [
-     -0.00040258447302001193,
-     -7.949979539190837e-07,
-     0.02840688994803293
+     -0.0004137061151869915,
+     -8.171760013961728e-07,
+     0.028566145060204533
     ]
    ],
-   "busiest_motor_extra": 0.000775,
+   "busiest_motor_extra": 0.000208,
    "findings": [
     {
      "check": "balance",
      "passed": true,
-     "value": 0.0007753665211594527,
+     "value": 0.0002079733861226834,
      "limit": 0.05,
-     "detail": "with the pack at x = 13 mm, the center of gravity sits +0.1 mm along x and +0.0 mm along y, so the busiest motor works 0.1% harder",
+     "detail": "with the pack at x = 12 mm, the center of gravity sits +0.0 mm along x and +0.0 mm along y, so the busiest motor works 0.0% harder",
      "parts": []
     },
     {
@@ -3489,7 +3489,7 @@
     {
      "check": "lidar view",
      "passed": true,
-     "value": 0.0499,
+     "value": 0.04970000000000001,
      "limit": null,
      "detail": "the lidar sits 50 mm off the ground when landed, so it can't read the last 150 mm of a landing",
      "parts": []
@@ -3504,37 +3504,37 @@
    ],
    "passed": true,
    "trim_x_mm": -13.0,
-   "mass_g": 2135.181,
+   "mass_g": 2213.795,
    "center_of_gravity_mm": [
-    0.108,
-    0.238,
-    13.331
+    -0.001,
+    0.23,
+    12.535
    ],
    "inertia_kg_m2": [
     [
-     0.016412661346552383,
-     5.032886894343535e-05,
-     -0.0007507868515939987
+     0.016578261970218125,
+     5.027396756426855e-05,
+     -0.0007751242101900369
     ],
     [
-     5.032886894343535e-05,
-     0.0196737748724138,
-     -3.960621400924051e-05
+     5.027396756426855e-05,
+     0.019955054503922928,
+     -4.001295022273869e-05
     ],
     [
-     -0.0007507868515939987,
-     -3.960621400924051e-05,
-     0.026743876224454576
+     -0.0007751242101900369,
+     -4.001295022273869e-05,
+     0.026946026824441516
     ]
    ],
-   "busiest_motor_extra": 0.002334,
+   "busiest_motor_extra": 0.001553,
    "findings": [
     {
      "check": "balance",
      "passed": true,
-     "value": 0.002333623630622371,
+     "value": 0.0015529636645792316,
      "limit": 0.05,
-     "detail": "with the pack at x = -13 mm, the center of gravity sits +0.1 mm along x and +0.2 mm along y, so the busiest motor works 0.2% harder",
+     "detail": "with the pack at x = -13 mm, the center of gravity sits -0.0 mm along x and +0.2 mm along y, so the busiest motor works 0.2% harder",
      "parts": []
     },
     {
@@ -4665,7 +4665,7 @@
     {
      "check": "lidar view",
      "passed": true,
-     "value": 0.0499,
+     "value": 0.04970000000000001,
      "limit": null,
      "detail": "the lidar sits 50 mm off the ground when landed, so it can't read the last 150 mm of a landing",
      "parts": []
@@ -4679,38 +4679,38 @@
     "V"
    ],
    "passed": true,
-   "trim_x_mm": 17.0,
-   "mass_g": 2120.915,
+   "trim_x_mm": 16.0,
+   "mass_g": 2197.848,
    "center_of_gravity_mm": [
-    -0.164,
-    0.232,
-    1.913
+    -0.129,
+    0.224,
+    1.427
    ],
    "inertia_kg_m2": [
     [
-     0.014209632834329779,
-     5.681882703162709e-05,
-     0.00012554682231271307
+     0.014317591972337215,
+     5.683637028489126e-05,
+     0.00011877302045039308
     ],
     [
-     5.681882703162709e-05,
-     0.019873650494491437,
-     -4.2854086644625367e-05
+     5.683637028489126e-05,
+     0.020070196974246387,
+     -4.309563843609543e-05
     ],
     [
-     0.00012554682231271307,
-     -4.2854086644625367e-05,
-     0.0291882001014552
+     0.00011877302045039308,
+     -4.309563843609543e-05,
+     0.029362922232911867
     ]
    ],
-   "busiest_motor_extra": 0.002665,
+   "busiest_motor_extra": 0.002378,
    "findings": [
     {
      "check": "balance",
      "passed": true,
-     "value": 0.002665253031419441,
+     "value": 0.0023779586695709077,
      "limit": 0.05,
-     "detail": "with the pack at x = 17 mm, the center of gravity sits -0.2 mm along x and +0.2 mm along y, so the busiest motor works 0.3% harder",
+     "detail": "with the pack at x = 16 mm, the center of gravity sits -0.1 mm along x and +0.2 mm along y, so the busiest motor works 0.2% harder",
      "parts": []
     },
     {
@@ -5702,7 +5702,7 @@
     {
      "check": "lidar view",
      "passed": true,
-     "value": 0.0499,
+     "value": 0.04970000000000001,
      "limit": null,
      "detail": "the lidar sits 50 mm off the ground when landed, so it can't read the last 150 mm of a landing",
      "parts": []
@@ -5717,37 +5717,37 @@
    ],
    "passed": true,
    "trim_x_mm": 5.0,
-   "mass_g": 2133.191,
+   "mass_g": 2209.147,
    "center_of_gravity_mm": [
-    -0.066,
-    0.055,
-    5.6
+    0.147,
+    0.053,
+    5.007
    ],
    "inertia_kg_m2": [
     [
-     0.01574241775190518,
-     -1.7853476078812803e-06,
-     -0.001338778625745055
+     0.015873650144385507,
+     -1.7604510155931202e-06,
+     -0.00134153444057961
     ],
     [
-     -1.7853476078812803e-06,
-     0.020937878088322148,
-     -2.6547116655287523e-06
+     -1.7604510155931202e-06,
+     0.02116297462309121,
+     -2.724177321180408e-06
     ],
     [
-     -0.001338778625745055,
-     -2.6547116655287523e-06,
-     0.02857471104333412
+     -0.00134153444057961,
+     -2.724177321180408e-06,
+     0.02875312884143645
     ]
    ],
-   "busiest_motor_extra": 0.000813,
+   "busiest_motor_extra": 0.001346,
    "findings": [
     {
      "check": "balance",
      "passed": true,
-     "value": 0.0008126483604287095,
+     "value": 0.0013462965438301802,
      "limit": 0.05,
-     "detail": "with the pack at x = 5 mm, the center of gravity sits -0.1 mm along x and +0.1 mm along y, so the busiest motor works 0.1% harder",
+     "detail": "with the pack at x = 5 mm, the center of gravity sits +0.1 mm along x and +0.1 mm along y, so the busiest motor works 0.1% harder",
      "parts": []
     },
     {
@@ -6615,7 +6615,7 @@
     {
      "check": "lidar view",
      "passed": true,
-     "value": 0.0499,
+     "value": 0.04970000000000001,
      "limit": null,
      "detail": "the lidar sits 50 mm off the ground when landed, so it can't read the last 150 mm of a landing",
      "parts": []
@@ -6630,38 +6630,38 @@
     "V"
    ],
    "passed": true,
-   "trim_x_mm": 10.0,
-   "mass_g": 2294.081,
+   "trim_x_mm": 9.0,
+   "mass_g": 2372.695,
    "center_of_gravity_mm": [
-    0.088,
-    0.24,
-    10.588
+    0.015,
+    0.232,
+    9.936
    ],
    "inertia_kg_m2": [
     [
-     0.016729954062601304,
-     5.42652188029104e-05,
-     -0.000786573105591525
+     0.01688687610543802,
+     5.4225437556817374e-05,
+     -0.0008099472867975883
     ],
     [
-     5.42652188029104e-05,
-     0.022472777369130656,
-     -4.0720864118880945e-05
+     5.4225437556817374e-05,
+     0.02272537260516304,
+     -4.1081822896508254e-05
     ],
     [
-     -0.000786573105591525,
-     -4.0720864118880945e-05,
-     0.029317431650289997
+     -0.0008099472867975883,
+     -4.1081822896508254e-05,
+     0.029499576592817135
     ]
    ],
-   "busiest_motor_extra": 0.002211,
+   "busiest_motor_extra": 0.001664,
    "findings": [
     {
      "check": "balance",
      "passed": true,
-     "value": 0.0022105777136549568,
+     "value": 0.0016641089486420177,
      "limit": 0.05,
-     "detail": "with the pack at x = 10 mm, the center of gravity sits +0.1 mm along x and +0.2 mm along y, so the busiest motor works 0.2% harder",
+     "detail": "with the pack at x = 9 mm, the center of gravity sits +0.0 mm along x and +0.2 mm along y, so the busiest motor works 0.2% harder",
      "parts": []
     },
     {
@@ -7792,7 +7792,7 @@
     {
      "check": "lidar view",
      "passed": true,
-     "value": 0.0499,
+     "value": 0.04970000000000001,
      "limit": null,
      "detail": "the lidar sits 50 mm off the ground when landed, so it can't read the last 150 mm of a landing",
      "parts": []
@@ -7804,35 +7804,35 @@
   {
    "name": "leg front left",
    "material": "tpu",
-   "mass_g": 6.594,
+   "mass_g": 6.577,
    "module": "base",
    "catalog_id": "landing-legs"
   },
   {
    "name": "leg front right",
    "material": "tpu",
-   "mass_g": 6.594,
+   "mass_g": 6.577,
    "module": "base",
    "catalog_id": "landing-legs"
   },
   {
    "name": "leg back left",
    "material": "tpu",
-   "mass_g": 6.594,
+   "mass_g": 6.577,
    "module": "base",
    "catalog_id": "landing-legs"
   },
   {
    "name": "leg back right",
    "material": "tpu",
-   "mass_g": 6.594,
+   "mass_g": 6.577,
    "module": "base",
    "catalog_id": "landing-legs"
   },
   {
    "name": "battery tray",
    "material": "petg_cf",
-   "mass_g": 29.38,
+   "mass_g": 29.263,
    "module": "base",
    "catalog_id": "battery-tray"
   },
@@ -8064,7 +8064,7 @@
    "compared": null
   },
   {
-   "part": "molicel-p42a",
+   "part": "molicel-p45b",
    "found": "none",
    "terms": null,
    "compared": null
@@ -8329,5 +8329,189 @@
   "outputs/cad/print/camera-bracket.3mf",
   "outputs/cad/print/v-housing.3mf",
   "outputs/cad/print/p-holder.3mf"
+ ],
+ "hardware": [
+  {
+   "holds": "landing-legs",
+   "what": "M3 x 12 screw",
+   "count": 8,
+   "material": "steel",
+   "each_g": 1.034
+  },
+  {
+   "holds": "landing-legs",
+   "what": "M3 lock nut",
+   "count": 8,
+   "material": "steel",
+   "each_g": 0.601
+  },
+  {
+   "holds": "battery-tray",
+   "what": "M3 x 8 screw",
+   "count": 4,
+   "material": "steel",
+   "each_g": 0.857
+  },
+  {
+   "holds": "battery-tray",
+   "what": "M3 lock nut",
+   "count": 4,
+   "material": "steel",
+   "each_g": 0.601
+  },
+  {
+   "holds": "holybro-tekko32-f4-50a",
+   "what": "M3 x 30 screw",
+   "count": 4,
+   "material": "steel",
+   "each_g": 1.828
+  },
+  {
+   "holds": "holybro-tekko32-f4-50a",
+   "what": "M3 lock nut",
+   "count": 4,
+   "material": "steel",
+   "each_g": 0.601
+  },
+  {
+   "holds": "holybro-tekko32-f4-50a",
+   "what": "M3 x 6 spacer",
+   "count": 4,
+   "material": "nylon",
+   "each_g": 0.138
+  },
+  {
+   "holds": "holybro-tekko32-f4-50a",
+   "what": "grommet",
+   "count": 8,
+   "material": "",
+   "each_g": 0.15
+  },
+  {
+   "holds": "module-mount",
+   "what": "M3 x 10 screw",
+   "count": 4,
+   "material": "nylon",
+   "each_g": 0.137
+  },
+  {
+   "holds": "module-mount",
+   "what": "M3 nut",
+   "count": 4,
+   "material": "nylon",
+   "each_g": 0.052
+  },
+  {
+   "holds": "lidar-bracket",
+   "what": "M3 x 8 screw",
+   "count": 2,
+   "material": "nylon",
+   "each_g": 0.124
+  },
+  {
+   "holds": "lidar-bracket",
+   "what": "M3 nut",
+   "count": 2,
+   "material": "nylon",
+   "each_g": 0.052
+  },
+  {
+   "holds": "benewake-tf-luna",
+   "what": "M2 x 6 screw",
+   "count": 2,
+   "material": "nylon",
+   "each_g": 0.04
+  },
+  {
+   "holds": "benewake-tf-luna",
+   "what": "M2 nut",
+   "count": 2,
+   "material": "nylon",
+   "each_g": 0.02
+  },
+  {
+   "holds": "safety-monitor-carrier",
+   "what": "M3 x 8 screw",
+   "count": 2,
+   "material": "nylon",
+   "each_g": 0.124
+  },
+  {
+   "holds": "safety-monitor-carrier",
+   "what": "M3 nut",
+   "count": 2,
+   "material": "nylon",
+   "each_g": 0.052
+  },
+  {
+   "holds": "ruko-r111",
+   "what": "patch",
+   "count": 1,
+   "material": "",
+   "each_g": 0.5
+  },
+  {
+   "holds": "camera-bracket",
+   "what": "M3 x 8 screw",
+   "count": 2,
+   "material": "nylon",
+   "each_g": 0.124
+  },
+  {
+   "holds": "camera-bracket",
+   "what": "M3 nut",
+   "count": 2,
+   "material": "nylon",
+   "each_g": 0.052
+  },
+  {
+   "holds": "rpi-camera-module-3",
+   "what": "M2 x 8 screw",
+   "count": 4,
+   "material": "nylon",
+   "each_g": 0.045
+  },
+  {
+   "holds": "rpi-camera-module-3",
+   "what": "M2 nut",
+   "count": 4,
+   "material": "nylon",
+   "each_g": 0.02
+  },
+  {
+   "holds": "rpi-5-4gb",
+   "what": "M2.5 x 6 standoff",
+   "count": 4,
+   "material": "nylon",
+   "each_g": 0.141
+  },
+  {
+   "holds": "rpi-5-4gb",
+   "what": "M2.5 x 6 screw",
+   "count": 4,
+   "material": "nylon",
+   "each_g": 0.067
+  },
+  {
+   "holds": "heltec-ht-hc01p",
+   "what": "M2.5 x 11 standoff",
+   "count": 4,
+   "material": "nylon",
+   "each_g": 0.236
+  },
+  {
+   "holds": "heltec-ht-hc01p",
+   "what": "M2.5 x 6 screw",
+   "count": 4,
+   "material": "nylon",
+   "each_g": 0.067
+  },
+  {
+   "holds": "fruity-chutes-harrier-40-42",
+   "what": "4-40 x 6.35 screw",
+   "count": 3,
+   "material": "steel",
+   "each_g": 0.56
+  }
  ]
 }

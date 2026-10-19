@@ -57,7 +57,7 @@ def test_every_bought_part_has_a_spot_wherever_its_listed(settings, build):
     where = listed(build)
     spots = settings.spots()
     for part_id, places in where.items():
-        if parts[part_id].cad.shape in ("printed", "routed"):
+        if parts[part_id].cad.shape in ("printed", "routed", "fasteners"):
             continue
         mine = [s for s in spots if s.part_id == part_id]
         if len(places) == 1:

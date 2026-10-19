@@ -42,3 +42,17 @@ discharge_tests:
       - {capacity_mah: 3360, voltage_v: 3.30}
       - {capacity_mah: 3780, voltage_v: 3.12}
       - {capacity_mah: 4200, voltage_v: 2.80}
+cad:
+  shape: cell
+  diameter_mm: 21.6
+  length_mm: 70.2
+  source:
+    kind: manufacturer
+    url: https://www.molicel.com/product/inr-21700-p45b/
+    checked: '2026-10-19'
+    note: The maximum diameter and height from Molicel's product page, for clearances. The same page
+      gives 69 g as the maximum weight; mass_g keeps the datasheet's 70 g
+  existing:
+    found: none
+    checked: '2026-10-19'
+    note: It's a cylinder, and Molicel publishes no 3D file

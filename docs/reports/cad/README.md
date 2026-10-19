@@ -8,20 +8,20 @@
 
 **Pass.** All 8 combinations pass every check.
 
-Built from E3 2814 850KV / 1050 3-blade / 6S2P Molicel INR-21700-P42A.
+Built from E3 2814 850KV / 1050 3-blade / 6S2P Molicel INR-21700-P45B.
 
 ## Every module combination
 
 | Setup | Modules | Weight | Pack at | Center of gravity (x, y, z) | Busiest motor | Verdict |
 |---|---|---|---|---|---|---|
-| base | none | 1801 g | -10 mm | 0.1, 0.0, -2.3 mm | +0.1% | pass |
-| V | V | 1962 g | -6 mm | -0.2, 0.2, 4.2 mm | +0.3% | pass |
-| P | P | 1974 g | -18 mm | -0.1, 0.0, 8.2 mm | +0.1% | pass |
-| C | C | 1960 g | 13 mm | 0.1, 0.0, -4.2 mm | +0.1% | pass |
-| mission | V+P | 2135 g | -13 mm | 0.1, 0.2, 13.3 mm | +0.2% | pass |
-| V+C | V+C | 2121 g | 17 mm | -0.2, 0.2, 1.9 mm | +0.3% | pass |
-| P+C | P+C | 2133 g | 5 mm | -0.1, 0.1, 5.6 mm | +0.1% | pass |
-| max | V+P+C | 2294 g | 10 mm | 0.1, 0.2, 10.6 mm | +0.2% | pass |
+| base | none | 1875 g | -10 mm | -0.0, 0.0, -2.8 mm | +0.0% | pass |
+| V | V | 2039 g | -6 mm | -0.2, 0.2, 3.6 mm | +0.3% | pass |
+| P | P | 2050 g | -17 mm | 0.1, 0.0, 7.4 mm | +0.1% | pass |
+| C | C | 2034 g | 12 mm | 0.0, 0.0, -4.6 mm | +0.0% | pass |
+| mission | V+P | 2214 g | -13 mm | -0.0, 0.2, 12.5 mm | +0.2% | pass |
+| V+C | V+C | 2198 g | 16 mm | -0.1, 0.2, 1.4 mm | +0.2% | pass |
+| P+C | P+C | 2209 g | 5 mm | 0.1, 0.1, 5.0 mm | +0.1% | pass |
+| max | V+P+C | 2373 g | 9 mm | 0.0, 0.2, 9.9 mm | +0.2% | pass |
 
 The pack's position is along x from the motors' center; it slides to balance each combination. The busiest motor column says how much harder the busiest motor works than the average in a hover (the limit is +5%).
 
@@ -32,7 +32,7 @@ Every check, setup by setup:
 
 | Check | Result | Verdict |
 |---|---|---|
-| balance | with the pack at x = -10 mm, the center of gravity sits +0.1 mm along x and +0.0 mm along y, so the busiest motor works 0.1% harder | pass |
+| balance | with the pack at x = -10 mm, the center of gravity sits -0.0 mm along x and +0.0 mm along y, so the busiest motor works 0.0% harder | pass |
 | collisions | nothing overlaps | pass |
 | prop clearance | frame is 10.6 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | module-socket 2 is 47.8 mm from prop 1's disk (needs 10) | pass |
@@ -208,7 +208,7 @@ Every check, setup by setup:
 
 | Check | Result | Verdict |
 |---|---|---|
-| balance | with the pack at x = -18 mm, the center of gravity sits -0.1 mm along x and +0.0 mm along y, so the busiest motor works 0.1% harder | pass |
+| balance | with the pack at x = -17 mm, the center of gravity sits +0.1 mm along x and +0.0 mm along y, so the busiest motor works 0.1% harder | pass |
 | collisions | nothing overlaps | pass |
 | prop clearance | frame is 10.6 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | module-socket 2 is 47.8 mm from prop 1's disk (needs 10) | pass |
@@ -297,7 +297,7 @@ Every check, setup by setup:
 
 | Check | Result | Verdict |
 |---|---|---|
-| balance | with the pack at x = 13 mm, the center of gravity sits +0.1 mm along x and +0.0 mm along y, so the busiest motor works 0.1% harder | pass |
+| balance | with the pack at x = 12 mm, the center of gravity sits +0.0 mm along x and +0.0 mm along y, so the busiest motor works 0.0% harder | pass |
 | collisions | nothing overlaps | pass |
 | prop clearance | frame is 10.6 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | module-socket 2 is 47.8 mm from prop 1's disk (needs 10) | pass |
@@ -373,7 +373,7 @@ Every check, setup by setup:
 
 | Check | Result | Verdict |
 |---|---|---|
-| balance | with the pack at x = -13 mm, the center of gravity sits +0.1 mm along x and +0.2 mm along y, so the busiest motor works 0.2% harder | pass |
+| balance | with the pack at x = -13 mm, the center of gravity sits -0.0 mm along x and +0.2 mm along y, so the busiest motor works 0.2% harder | pass |
 | collisions | nothing overlaps | pass |
 | prop clearance | frame is 10.6 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | module-socket 2 is 47.8 mm from prop 1's disk (needs 10) | pass |
@@ -486,7 +486,7 @@ Every check, setup by setup:
 
 | Check | Result | Verdict |
 |---|---|---|
-| balance | with the pack at x = 17 mm, the center of gravity sits -0.2 mm along x and +0.2 mm along y, so the busiest motor works 0.3% harder | pass |
+| balance | with the pack at x = 16 mm, the center of gravity sits -0.1 mm along x and +0.2 mm along y, so the busiest motor works 0.2% harder | pass |
 | collisions | nothing overlaps | pass |
 | prop clearance | frame is 10.6 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | module-socket 2 is 47.8 mm from prop 1's disk (needs 10) | pass |
@@ -586,7 +586,7 @@ Every check, setup by setup:
 
 | Check | Result | Verdict |
 |---|---|---|
-| balance | with the pack at x = 5 mm, the center of gravity sits -0.1 mm along x and +0.1 mm along y, so the busiest motor works 0.1% harder | pass |
+| balance | with the pack at x = 5 mm, the center of gravity sits +0.1 mm along x and +0.1 mm along y, so the busiest motor works 0.1% harder | pass |
 | collisions | nothing overlaps | pass |
 | prop clearance | frame is 10.6 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | module-socket 2 is 47.8 mm from prop 1's disk (needs 10) | pass |
@@ -675,7 +675,7 @@ Every check, setup by setup:
 
 | Check | Result | Verdict |
 |---|---|---|
-| balance | with the pack at x = 10 mm, the center of gravity sits +0.1 mm along x and +0.2 mm along y, so the busiest motor works 0.2% harder | pass |
+| balance | with the pack at x = 9 mm, the center of gravity sits +0.0 mm along x and +0.2 mm along y, so the busiest motor works 0.2% harder | pass |
 | collisions | nothing overlaps | pass |
 | prop clearance | frame is 10.6 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | module-socket 2 is 47.8 mm from prop 1's disk (needs 10) | pass |
@@ -789,14 +789,14 @@ Each part's weight spread over its solid, with the pack at its trim. Inertia is 
 
 | Setup | Weight | Ixx | Iyy | Izz |
 |---|---|---|---|---|
-| base | 1801 g | 12.8 g m² | 15.3 g m² | 25.7 g m² |
-| V | 1962 g | 14.0 g m² | 16.9 g m² | 26.3 g m² |
-| P | 1974 g | 15.5 g m² | 18.4 g m² | 26.2 g m² |
-| C | 1960 g | 13.0 g m² | 18.1 g m² | 28.4 g m² |
-| mission | 2135 g | 16.4 g m² | 19.7 g m² | 26.7 g m² |
-| V+C | 2121 g | 14.2 g m² | 19.9 g m² | 29.2 g m² |
-| P+C | 2133 g | 15.7 g m² | 20.9 g m² | 28.6 g m² |
-| max | 2294 g | 16.7 g m² | 22.5 g m² | 29.3 g m² |
+| base | 1875 g | 12.9 g m² | 15.5 g m² | 25.9 g m² |
+| V | 2039 g | 14.1 g m² | 17.1 g m² | 26.5 g m² |
+| P | 2050 g | 15.6 g m² | 18.6 g m² | 26.4 g m² |
+| C | 2034 g | 13.1 g m² | 18.2 g m² | 28.6 g m² |
+| mission | 2214 g | 16.6 g m² | 20.0 g m² | 26.9 g m² |
+| V+C | 2198 g | 14.3 g m² | 20.1 g m² | 29.4 g m² |
+| P+C | 2209 g | 15.9 g m² | 21.2 g m² | 28.8 g m² |
+| max | 2373 g | 16.9 g m² | 22.7 g m² | 29.5 g m² |
 
 ## My printed parts
 
@@ -808,7 +808,7 @@ Weighed from their geometry and material, next to what the catalog says for each
 | leg front right | tpu | 6.6 g | 26.4 g for all 4, from the CAD (landing-legs) |
 | leg back left | tpu | 6.6 g | 26.4 g for all 4, from the CAD (landing-legs) |
 | leg back right | tpu | 6.6 g | 26.4 g for all 4, from the CAD (landing-legs) |
-| battery tray | petg_cf | 29.4 g | 29.4 g, from the CAD (battery-tray) |
+| battery tray | petg_cf | 29.3 g | 29.4 g, from the CAD (battery-tray) |
 | module rail | petg_cf | 11.6 g | 11.6 g, from the CAD (module-mount) |
 | gps mast | tpu | 5.2 g | 5.2 g, from the CAD (gps-mast) |
 | lidar bracket | petg_cf | 2.4 g | 2.4 g, from the CAD (lidar-bracket) |
@@ -822,7 +822,7 @@ Together they weigh 130 g.
 
 ## Wires
 
-Rough routes, until the electrical step picks gauges and connectors.
+Each route's length. The wires in them, their gauges and their weight come from the electrical connection list (docs/reports/electrical).
 
 | Wire | Length |
 |---|---|
@@ -856,6 +856,41 @@ Rough routes, until the electrical step picks gauges and connectors.
 | claws | 45 mm |
 | esc cable from switch | 39 mm |
 
+## Hardware
+
+The screws, nuts and spacers, counted from the CAD's holes and weighed from their standard sizes. Each one's weight sits on the part it holds.
+
+| Holds | What | How many | Material | Each | All of them |
+|---|---|---|---|---|---|
+| landing-legs | M3 x 12 screw | 8 | steel | 1.03 g | 8.3 g |
+| landing-legs | M3 lock nut | 8 | steel | 0.60 g | 4.8 g |
+| battery-tray | M3 x 8 screw | 4 | steel | 0.86 g | 3.4 g |
+| battery-tray | M3 lock nut | 4 | steel | 0.60 g | 2.4 g |
+| holybro-tekko32-f4-50a | M3 x 30 screw | 4 | steel | 1.83 g | 7.3 g |
+| holybro-tekko32-f4-50a | M3 lock nut | 4 | steel | 0.60 g | 2.4 g |
+| holybro-tekko32-f4-50a | M3 x 6 spacer | 4 | nylon | 0.14 g | 0.6 g |
+| holybro-tekko32-f4-50a | grommet | 8 |  | 0.15 g | 1.2 g |
+| module-mount | M3 x 10 screw | 4 | nylon | 0.14 g | 0.5 g |
+| module-mount | M3 nut | 4 | nylon | 0.05 g | 0.2 g |
+| lidar-bracket | M3 x 8 screw | 2 | nylon | 0.12 g | 0.2 g |
+| lidar-bracket | M3 nut | 2 | nylon | 0.05 g | 0.1 g |
+| benewake-tf-luna | M2 x 6 screw | 2 | nylon | 0.04 g | 0.1 g |
+| benewake-tf-luna | M2 nut | 2 | nylon | 0.02 g | 0.0 g |
+| safety-monitor-carrier | M3 x 8 screw | 2 | nylon | 0.12 g | 0.2 g |
+| safety-monitor-carrier | M3 nut | 2 | nylon | 0.05 g | 0.1 g |
+| ruko-r111 | patch | 1 |  | 0.50 g | 0.5 g |
+| camera-bracket | M3 x 8 screw | 2 | nylon | 0.12 g | 0.2 g |
+| camera-bracket | M3 nut | 2 | nylon | 0.05 g | 0.1 g |
+| rpi-camera-module-3 | M2 x 8 screw | 4 | nylon | 0.05 g | 0.2 g |
+| rpi-camera-module-3 | M2 nut | 4 | nylon | 0.02 g | 0.1 g |
+| rpi-5-4gb | M2.5 x 6 standoff | 4 | nylon | 0.14 g | 0.6 g |
+| rpi-5-4gb | M2.5 x 6 screw | 4 | nylon | 0.07 g | 0.3 g |
+| heltec-ht-hc01p | M2.5 x 11 standoff | 4 | nylon | 0.24 g | 0.9 g |
+| heltec-ht-hc01p | M2.5 x 6 screw | 4 | nylon | 0.07 g | 0.3 g |
+| fruity-chutes-harrier-40-42 | 4-40 x 6.35 screw | 3 | steel | 0.56 g | 1.7 g |
+
+Together they weigh 37 g.
+
 ## What's estimated
 
 - emax-e3-2814-850kv: bell_length_mm. Emax doesn't publish how the 45.5 mm splits between the body and the shaft. 31 mm for the base and bell, leaving 14.5 mm of shaft, is a typical split for a 2814, to be checked against Emax's side photos
@@ -882,7 +917,7 @@ Checked for every part before modeling it. They stay in a local cache that never
 | gemfan-1050x3 | none |  |  |
 | holybro-tekko32-f4-50a | official | No license on the download page; holybro.com's terms forbid reproducing it without written permission. Fine to download and use locally, not to commit. | not downloaded |
 | iflight-nazgul-xl10-v6 | unofficial | Unknown: the site blocked automated access, so its license couldn't be read | not downloaded |
-| molicel-p42a | none |  |  |
+| molicel-p45b | none |  |  |
 | ark-fpv | official | No license file in the folder, so all rights reserved by default. Cache only | not downloaded |
 | radiomaster-rp2-v2 | none |  |  |
 | benewake-tf-luna | none |  |  |

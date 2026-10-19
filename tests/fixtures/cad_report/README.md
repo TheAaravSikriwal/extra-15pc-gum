@@ -65,12 +65,22 @@ Together they weigh 20 g.
 
 ## Wires
 
-Rough routes, until the electrical step picks gauges and connectors.
+Each route's length. The wires in them, their gauges and their weight come from the electrical connection list (docs/reports/electrical).
 
 | Wire | Length |
 |---|---|
 | battery leads | 123 mm |
 | receiver | 47 mm |
+
+## Hardware
+
+The screws, nuts and spacers, counted from the CAD's holes and weighed from their standard sizes. Each one's weight sits on the part it holds.
+
+| Holds | What | How many | Material | Each | All of them |
+|---|---|---|---|---|---|
+| landing-legs | M3 x 12 screw | 8 | steel | 1.03 g | 8.3 g |
+
+Together they weigh 8 g.
 
 ## What's estimated
 

@@ -337,12 +337,22 @@ def run_cad(args) -> int:
     print(_made_up_line(args) + summary(result))
     print(f"\nReport written to {Path(args.out).resolve()}")
     if args.update_catalog:
-        from pcs14.cad.catalog_update import update_catalog
+        from pcs14.cad import hardware
+        from pcs14.cad.catalog_update import update_catalog, update_hardware
 
         changed = update_catalog(result.printed, args.catalog, args.build)
         print(f"\nThe catalog took {len(changed)} printed weights:")
         for path in changed:
             print(f"  {path}")
+        settings = drone.settings
+        masses = hardware.by_module(settings, hardware.module_of_parts(build))
+        counts = {}
+        for item in settings.hardware:
+            module = item.module or hardware.module_of_parts(build)[item.holds]
+            counts[module] = counts.get(module, 0) + item.count
+        changed = update_hardware(masses, args.catalog, args.build, counts)
+        grams = ", ".join(f"{m} {kg * 1000:.1f} g" for m, kg in masses.items() if kg)
+        print(f"The hardware ({grams}) went in too: {len(changed)} files changed.")
     if recorder is not None:
         recorder.close()
     return 0

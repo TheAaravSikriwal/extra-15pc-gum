@@ -4,7 +4,7 @@ id: battery-tray
 maker: Printed
 model: Battery tray
 source: {kind: cad, checked: 2026-10-19, note: "From the CAD: battery tray, weighed from their geometry in petg_cf at the density and fill in design/cad.yaml"}
-mass_g: 29.4
+mass_g: 29.3
 cad:
   shape: printed
   source:

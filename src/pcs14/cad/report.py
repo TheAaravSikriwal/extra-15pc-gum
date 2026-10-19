@@ -37,6 +37,15 @@ class ExistingRow:
 
 
 @dataclass(frozen=True)
+class HardwareRow:
+    holds: str
+    what: str  # e.g. "M3 x 12 screw"
+    count: int
+    material: str
+    each_g: float
+
+
+@dataclass(frozen=True)
 class CadRun:
     build_label: str
     results: tuple[CombinationResult, ...]
@@ -46,6 +55,7 @@ class CadRun:
     estimates: tuple[Estimate, ...]
     existing: tuple[ExistingRow, ...]
     exports: tuple[str, ...]
+    hardware: tuple[HardwareRow, ...] = ()
 
     @property
     def passed(self) -> bool:
@@ -90,6 +100,26 @@ def run_cad(drone: Drone, setups, cache: Path = existing_cad.CACHE, recorder=Non
         found = part.cad.existing
         rows.append(ExistingRow(part.id, found.found, found.terms, _compare(part, cache)))
     full = drone.combination({"V", "P", "C"})
+    from pcs14.cad import hardware as fasteners
+
+    hardware = tuple(
+        HardwareRow(
+            item.holds,
+            " ".join(
+                x
+                for x in (
+                    item.size,
+                    f"x {item.length_mm:g}" if item.length_mm else None,
+                    item.what,
+                )
+                if x
+            ),
+            item.count,
+            item.material or "",
+            fasteners.item_mass(item, drone.settings.materials) * 1000,
+        )
+        for item in drone.settings.hardware
+    )
     run = CadRun(
         build_label=build.label,
         results=results,
@@ -101,6 +131,7 @@ def run_cad(drone: Drone, setups, cache: Path = existing_cad.CACHE, recorder=Non
         estimates=estimates,
         existing=tuple(rows),
         exports=(),
+        hardware=hardware,
     )
     if recorder is not None:
         _record(drone, setups, results, recorder)
@@ -275,12 +306,31 @@ def render(run: CadRun, generated: str | None = None) -> str:
         "",
         "## Wires",
         "",
-        "Rough routes, until the electrical step picks gauges and connectors.",
+        "Each route's length. The wires in them, their gauges and their weight come from the "
+        "electrical connection list (docs/reports/electrical).",
         "",
         "| Wire | Length |",
         "|---|---|",
     ]
     lines += [f"| {name} | {length / MM:.0f} mm |" for name, length in run.wire_lengths.items()]
+    lines += ["", "## Hardware", ""]
+    if run.hardware:
+        lines += [
+            "The screws, nuts and spacers, counted from the CAD's holes and weighed from their "
+            "standard sizes. Each one's weight sits on the part it holds.",
+            "",
+            "| Holds | What | How many | Material | Each | All of them |",
+            "|---|---|---|---|---|---|",
+        ]
+        lines += [
+            f"| {h.holds} | {h.what} | {h.count} | {h.material} | {h.each_g:.2f} g | "
+            f"{h.count * h.each_g:.1f} g |"
+            for h in run.hardware
+        ]
+        total = sum(h.count * h.each_g for h in run.hardware)
+        lines += ["", f"Together they weigh {total:.0f} g."]
+    else:
+        lines.append("None listed.")
     lines += ["", "## What's estimated", ""]
     if run.estimates:
         lines += [f"- {e.part_id}: {', '.join(e.dimensions)}. {e.note}" for e in run.estimates]
@@ -369,6 +419,16 @@ def to_data(run: CadRun, generated: str | None = None) -> dict:
             for r in run.existing
         ],
         "exports": list(run.exports),
+        "hardware": [
+            {
+                "holds": h.holds,
+                "what": h.what,
+                "count": h.count,
+                "material": h.material,
+                "each_g": round(h.each_g, 3),
+            }
+            for h in run.hardware
+        ],
     }
 
 

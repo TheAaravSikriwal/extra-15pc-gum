@@ -4,7 +4,7 @@ id: landing-legs
 maker: Printed
 model: Landing legs
 source: {kind: cad, checked: 2026-10-19, note: "From the CAD: leg back left, leg back right, leg front left, leg front right, weighed from their geometry in tpu at the density and fill in design/cad.yaml"}
-mass_g: 26.4
+mass_g: 26.3
 cad:
   shape: printed
   source:

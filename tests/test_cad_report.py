@@ -15,7 +15,7 @@ def made_up_run():
     from pcs14.cad.checks import CombinationResult, Finding
     from pcs14.cad.mass import MassProperties
     from pcs14.cad.printed import PrintedPart
-    from pcs14.cad.report import CadRun, Estimate, ExistingRow
+    from pcs14.cad.report import CadRun, Estimate, ExistingRow, HardwareRow
 
     inertia = ((0.016, 0.0, 0.0), (0.0, 0.019, 0.0), (0.0, 0.0, 0.026))
     passing = CombinationResult(
@@ -90,6 +90,7 @@ def made_up_run():
             ExistingRow("testco-gps", "none", None, None),
         ),
         exports=("outputs/cad/drone.step", "outputs/cad/drone.glb"),
+        hardware=(HardwareRow("landing-legs", "M3 x 12 screw", 8, "steel", 1.034),),
     )
 
 

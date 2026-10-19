@@ -1,0 +1,16 @@
+# Module V's screws, nuts and spacers, added by pcs14 cad --update-catalog.
+type: component
+id: v-hardware
+maker: Various
+model: Module V's screws, nuts and spacers
+source: {kind: estimate, checked: 2026-10-19, note: "From the hardware list in design/cad.yaml (pcs14 cad --update-catalog): 28 pieces, each weighed from its standard size and its material's density. The counts come from the CAD's screw holes; the lengths and materials are my picks, and the grommets' and the patch's grams are guesses"}
+mass_g: 2.7
+cad:
+  shape: fasteners
+  source:
+    kind: estimate
+    note: The hardware list in design/cad.yaml, on the parts it holds
+  existing:
+    found: none
+    checked: '2026-10-19'
+    note: Standard screws, nuts and spacers, weighed from their sizes

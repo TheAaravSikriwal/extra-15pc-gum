@@ -5,7 +5,7 @@ prop: gemfan-1050x3
 esc: holybro-tekko32-f4-50a
 frame: iflight-nazgul-xl10-v6
 pack:
-  cell: molicel-p42a
+  cell: molicel-p45b # replaced the P42A in step 3d (2026-10-19), for Mission's hover
   series: 6
   parallel: 2
   overhead_g: 60
@@ -32,6 +32,7 @@ base:
   - lidar-bracket # printed
   - remote-id-mount # printed
   - safety-monitor-carrier # printed
+  - base-hardware # its screws, nuts and spacers
 modules:
   V:
     - ark-gps # DroneCAN, replaced the end-of-life M10Q
@@ -46,6 +47,7 @@ modules:
     - camera-bracket # printed
     - module-plug
     - v-wiring # its wires, from the connection list
+    - v-hardware # its screws, nuts and spacers
   P:
     - fruity-chutes-harrier-40-42
     - p-mount
@@ -55,6 +57,7 @@ modules:
     - p-servo-diodes # the release servo's backup feed
     - module-plug
     - p-wiring # its wires, from the connection list
+    - p-hardware # its screws, nuts and spacers
   C:
     - claws-placeholder
     - ark-cannode # DroneCAN servo node for the claws

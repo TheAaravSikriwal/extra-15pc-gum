@@ -70,4 +70,6 @@ def test_the_cads_own_weights_differ_only_by_the_printed_parts(drone):
     budget = mass_properties(assembly.pieces, budget=True).mass
     printed = [p for p in assembly.pieces if p.kind == "printed"]
     difference = sum(p.mass - p.budget_mass for p in printed)
-    assert cad - budget == pytest.approx(difference)
+    # the catalog keeps each module's hardware to 0.1 g, so the hardware can differ by up to
+    # 0.05 g a module on top of that
+    assert abs((cad - budget) - difference) <= 3 * 0.05e-3

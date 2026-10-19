@@ -155,6 +155,10 @@ class RoutedCad(CadBlock):
     shape: Literal["routed"]  # modeled by the wire routes in design/cad.yaml
 
 
+class FastenersCad(CadBlock):
+    shape: Literal["fasteners"]  # design/cad.yaml's hardware list, on the parts it holds
+
+
 AnyCad = Annotated[
     BoxCad
     | CylinderCad
@@ -164,6 +168,7 @@ AnyCad = Annotated[
     | CellCad
     | FrameCad
     | PrintedCad
-    | RoutedCad,
+    | RoutedCad
+    | FastenersCad,
     Field(discriminator="shape"),
 ]

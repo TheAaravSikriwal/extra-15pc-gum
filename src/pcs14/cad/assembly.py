@@ -11,7 +11,7 @@ number, or nothing for a part the catalog doesn't have yet).
 """
 
 import math
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 
 from build123d import Align, Compound, Cylinder, Plane, Pos, Sphere
 
@@ -81,6 +81,45 @@ def wire_length(wire: Wire) -> float:
 
 def _volume(wire: Wire) -> float:
     return wire_length(wire) * wire.diameter**2
+
+
+def _with_hardware(pieces, build, settings, catalog_parts):
+    """Each part's hardware, from the hardware list, on its pieces (split by their weight). The
+    budget is the catalog's hardware entry for that module, shared out the same way, so the CAD
+    and the sizing model count the same grams."""
+    from pcs14.cad import hardware
+
+    held = hardware.by_part(settings)
+    if not held:
+        return pieces
+    module_of = hardware.module_of_parts(build)
+    modules = hardware.by_module(settings, module_of)
+    owner = {}
+    for item in settings.hardware:
+        owner[item.holds] = item.module or module_of[item.holds]
+    out = []
+    for piece in pieces:
+        grams = held.get(piece.part_id or "", 0.0)
+        if not grams:
+            out.append(piece)
+            continue
+        group = [p for p in pieces if p.part_id == piece.part_id]
+        share = (
+            piece.mass / sum(p.mass for p in group)
+            if sum(p.mass for p in group)
+            else 1 / len(group)
+        )
+        module = owner[piece.part_id]
+        entry = catalog_parts.get(hardware.HARDWARE_PARTS[module])
+        budget = entry.mass * grams / modules[module] if entry is not None else 0.0
+        out.append(
+            replace(
+                piece,
+                mass=piece.mass + grams * share,
+                budget_mass=piece.budget_mass + budget * share,
+            )
+        )
+    return out
 
 
 class Drone:
@@ -194,6 +233,7 @@ class Drone:
                 )
             )
 
+        pieces = _with_hardware(pieces, build, settings, catalog_parts)
         # each module's wiring entry spreads over its routes by volume; a route with a part of
         # its own (the camera's ribbon) weighs that part instead
         own = {"camera cable": catalog_parts.get("rpi-camera-cable-standard-mini")}
