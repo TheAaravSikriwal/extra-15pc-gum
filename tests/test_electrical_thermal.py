@@ -67,3 +67,70 @@ def test_a_connector_burst_follows_its_time_constant():
     end = xt60.burst_rise(start_rise=start, amps=90, seconds=10)
     final = xt60.steady_rise(90)
     assert end == pytest.approx(final + (start - final) * math.exp(-10 / tau))
+
+
+def test_a_bursts_trajectory_ends_where_the_burst_does():
+    wire = silicone(12)
+    start = wire.steady(23, air_c=40).conductor_c
+    curve = wire.trajectory(start_c=start, amps=90, seconds=10, air_c=40, points=11)
+    assert len(curve) == 11 and curve[0] == (0.0, pytest.approx(start))
+    assert curve[-1][0] == pytest.approx(10)
+    assert curve[-1][1] == pytest.approx(wire.burst(start, 90, 10, 40), abs=0.01)
+    assert all(b[1] >= a[1] for a, b in zip(curve, curve[1:], strict=False))
+
+
+def test_a_connectors_trajectory_follows_its_time_constant():
+    xt60 = thermal.ConnectorModel(rated_a=35, rise_c=85, contact_ohms=1.0e-3, heat_capacity=2.0)
+    curve = xt60.trajectory(start_rise=10, amps=90, seconds=10, points=5)
+    assert curve[-1][1] == pytest.approx(xt60.burst_rise(10, 90, 10))
+
+
+def _hot_wire_case():
+    """A 24 V load on a made-up silicone 18 AWG pair, hovering at 2 A and bursting at 3 A."""
+    from pcs14.catalog.schema import Wire
+    from test_electrical_checks import context, solutions_for
+    from test_electrical_loads import ALL, ALL_LISTED, wire
+
+    table = ALL["t-wire"].model_dump(mode="json")
+    table.update(id="t-silicone", insulation="silicone")
+    parts = {**ALL, "t-silicone": Wire.model_validate(table)}
+    data = {
+        "boards": {"load": {"part": "t-24v-load"}},
+        "wires": [
+            {**wire("pack.XT60.+", "load.J.IN", 300), "wire": "t-silicone"},
+            wire("pack.XT60.-", "load.J.GND", 300),
+        ],
+    }
+    from pcs14.electrical.loads import Case
+
+    cases = [
+        Case("hover", pack_volts=25.0, draw="typical"),
+        Case("burst", pack_volts=25.0, draw="worst"),
+    ]
+    design, solutions = solutions_for(data, cases, parts, ALL_LISTED)
+    return context(design, parts, ALL_LISTED), solutions
+
+
+def test_how_hard_a_wire_works_is_its_share_of_the_allowed_heating():
+    ctx, solutions = _hot_wire_case()
+    working = thermal.wire_working(ctx, solutions)
+    label = "pack.XT60.+ to load.J.IN"
+    model = silicone(18)
+    model = thermal.WireModel(21e-3, model.area, 2.7e-3, thermal.SILICONE)
+    air, limit = 40, 200 - 20
+    hover = model.steady(2.0, air).conductor_c
+    assert working[("test", "hover")][label] == pytest.approx((hover - air) / (limit - air), 1e-3)
+    burst = model.burst(hover, 3.0, 10, air)
+    assert working[("test", "burst")][label] == pytest.approx((burst - air) / (limit - air), 1e-3)
+    # the ground wire's table has no insulation rating, so there's nothing to share out
+    assert "pack.XT60.- to load.J.GND" not in working[("test", "hover")]
+
+
+def test_burst_curves_start_hot_and_carry_their_limits():
+    ctx, solutions = _hot_wire_case()
+    curves = thermal.burst_curves(ctx, solutions)
+    name, curve, limit_c = curves[0]
+    assert name == "pack.XT60.+ to load.J.IN"
+    assert limit_c == 180
+    assert curve[0][0] == 0 and curve[-1][0] == pytest.approx(10)
+    assert curve[0][1] > 40 and curve[-1][1] > curve[0][1]

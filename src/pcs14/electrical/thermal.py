@@ -130,6 +130,13 @@ class WireModel:
         ring = math.pi / 4 * (self.outer**2 - self.conductor**2)
         return copper + ring * self.insulation.density * self.insulation.heat
 
+    def trajectory(self, start_c, amps, seconds, air_c, points=51) -> list[tuple[float, float]]:
+        """(seconds, copper temperature) through a burst, for plotting: the same steps as
+        burst(), sampled along the way."""
+        temps = self._heating(start_c, amps, seconds, air_c)
+        picks = [round(i * BURST_STEPS / (points - 1)) for i in range(points)]
+        return [(seconds * k / BURST_STEPS, temps[k]) for k in picks]
+
     def burst(
         self,
         start_c: float,
@@ -141,15 +148,21 @@ class WireModel:
         alpha: float = ALPHA,
     ) -> float:
         """The copper's temperature after `seconds` at `amps`, from `start_c`."""
+        return self._heating(start_c, amps, seconds, air_c, cooling, insulation_mass, alpha)[-1]
+
+    def _heating(
+        self, start_c, amps, seconds, air_c, cooling=True, insulation_mass=True, alpha=ALPHA
+    ) -> list[float]:
         capacity = self.heat_capacity(insulation_mass)
         step = seconds / BURST_STEPS
-        temp = start_c
+        temps = [start_c]
         for _ in range(BURST_STEPS):
+            temp = temps[-1]
             heat = amps**2 * self.ohms_per_m * (1 + alpha * (temp - 20))
             if cooling:
                 heat -= self.heat_out(temp, air_c)
-            temp += heat * step / capacity
-        return temp
+            temps.append(temp + heat * step / capacity)
+        return temps
 
 
 @dataclass(frozen=True)
@@ -170,15 +183,188 @@ class ConnectorModel:
     def steady_rise(self, amps: float) -> float:
         return self.rise_per_amp2 * amps**2
 
+    def trajectory(self, start_rise, amps, seconds, points=51) -> list[tuple[float, float]]:
+        """(seconds, rise over the air) through a burst, for plotting."""
+        return [
+            (
+                seconds * i / (points - 1),
+                self.burst_rise(start_rise, amps, seconds * i / (points - 1)),
+            )
+            for i in range(points)
+        ]
+
     def burst_rise(self, start_rise: float, amps: float, seconds: float) -> float:
         final = self.steady_rise(amps)
         return final + (start_rise - final) * math.exp(-seconds / self.time_constant)
 
 
+def _wire_model(ctx, run):
+    """A run's heat model and its temperature limit (its insulation's, less the margin), or
+    (None, None) for a wire table with no insulation rating."""
+    from pcs14.electrical.checks import awg_area
+
+    table = ctx.parts[run.wire]
+    if table.insulation is None:
+        return None, None
+    gauge = table.gauge(run.awg)
+    model = WireModel(
+        gauge.resistance_per_m,
+        awg_area(run.awg),
+        gauge.outer_diameter,
+        INSULATIONS[table.insulation],
+    )
+    return model, table.insulation_max_c - ctx.numbers.temp_margin_c
+
+
+def _connector_model(ctx, ref):
+    """A mated pin's connector as a heat model, with its limit, or (None, None) when its maker
+    doesn't publish enough to make one."""
+    from pcs14.electrical.checks import awg_area
+
+    connector = ctx.wiring.board_of(ref).block.connector(ref.split(".")[1])
+    family = ctx.parts.get(connector.family)
+    rating = getattr(getattr(family, "electrical", None), "rating", None)
+    if rating is None or not (rating.temp_rise_c and rating.contact_mass_g and rating.contact_mohm):
+        return None, None
+    wire = awg_area(rating.wire_awg) * 2 * ATTACHED_WIRE * COPPER_DENSITY * COPPER_HEAT
+    capacity = rating.contact_mass_g / 1000 * BRASS_HEAT + wire
+    model = ConnectorModel(
+        rating.continuous_a, rating.temp_rise_c, rating.contact_resistance, capacity
+    )
+    return model, rating.max_c - ctx.numbers.temp_margin_c
+
+
+def _steady_temps(ctx, solutions, models) -> dict:
+    """Each wire's hottest steady temperature in each combination, where its burst starts."""
+    from pcs14.electrical.checks import STEADY
+
+    air = ctx.numbers.air_c
+    out: dict[str, dict[str, float]] = {}
+    for (setup, case), solution in solutions.items():
+        if case not in STEADY:
+            continue
+        temps = out.setdefault(setup, {})
+        for label, amps in solution.wires.items():
+            model = models[label][0]
+            if model is not None:
+                hot = model.steady(amps, air).conductor_c
+                temps[label] = max(temps.get(label, air), hot)
+    return out
+
+
+def _connector_steady(solutions, setup) -> dict[str, float]:
+    """Each contact's highest steady current in one combination."""
+    from pcs14.electrical.checks import STEADY
+
+    out: dict[str, float] = {}
+    for (name, case), solution in solutions.items():
+        if name == setup and case in STEADY:
+            for ref, amps in solution.contacts.items():
+                out[ref] = max(out.get(ref, 0.0), amps)
+    return out
+
+
+def wire_working(ctx, solutions) -> dict:
+    """How hard each wire works, in each combination and case: the share of its allowed heating
+    it uses, which is its temperature rise over the air against the rise to its limit. Past 1,
+    it fails a heat check. Steady cases sit at their steady temperature; the burst starts from
+    that combination's hottest steady temperature and runs for the burst's length."""
+    air, seconds = ctx.numbers.air_c, ctx.numbers.burst_s
+    models = {run.label: _wire_model(ctx, run) for run in ctx.design.wires}
+    starts = _steady_temps(ctx, solutions, models)
+    out = {}
+    for (setup, case), solution in solutions.items():
+        shares = {}
+        for label, amps in solution.wires.items():
+            model, limit_c = models[label]
+            if model is None:
+                continue
+            if amps < 0.01:
+                shares[label] = 0.0
+                continue
+            if case == "burst":
+                hot = model.burst(starts.get(setup, {}).get(label, air), amps, seconds, air)
+            else:
+                hot = model.steady(amps, air).conductor_c
+            shares[label] = (hot - air) / (limit_c - air)
+        out[(setup, case)] = shares
+    return out
+
+
+def connector_working(ctx, solutions) -> dict:
+    """How hard each rated power connector works, the same way as wire_working: its rise over
+    the air against the rise to its limit, steady or at the end of the burst."""
+    air, seconds = ctx.numbers.air_c, ctx.numbers.burst_s
+    models: dict[str, tuple] = {}
+    out = {}
+    for (setup, case), solution in solutions.items():
+        steady = _connector_steady(solutions, setup)
+        shares = {}
+        for ref, amps in solution.contacts.items():
+            if ref not in models:
+                models[ref] = _connector_model(ctx, ref)
+            model, limit_c = models[ref]
+            if model is None:
+                continue
+            if case == "burst":
+                rise = model.burst_rise(model.steady_rise(steady.get(ref, 0.0)), amps, seconds)
+            else:
+                rise = model.steady_rise(amps)
+            shares[ref] = rise / (limit_c - air)
+        out[(setup, case)] = shares
+    return out
+
+
+def burst_curves(ctx, solutions, wires: int = 3) -> list[tuple[str, list, float]]:
+    """Temperature through the burst for the few wires that end it nearest their limits, and
+    for the power connectors the burst heats: (name, [(s, C)], limit in C), the hardest
+    working first. Each comes from the combination where it ends hottest."""
+    air, seconds = ctx.numbers.air_c, ctx.numbers.burst_s
+    models = {run.label: _wire_model(ctx, run) for run in ctx.design.wires}
+    starts = _steady_temps(ctx, solutions, models)
+    worst: dict[str, tuple] = {}  # name -> (share at the end, draw it)
+
+    def keep(name, end_c, limit_c, draw):
+        share = (end_c - air) / (limit_c - air)
+        if share > worst.get(name, (-1.0,))[0]:
+            worst[name] = (share, draw)
+
+    contacts = set()
+    for (setup, case), solution in solutions.items():
+        if case != "burst":
+            continue
+        for label, amps in solution.wires.items():
+            model, limit_c = models[label]
+            if model is None or amps < 0.01:
+                continue
+            start = starts.get(setup, {}).get(label, air)
+            end = model.burst(start, amps, seconds, air)
+            keep(label, end, limit_c, (model.trajectory, (start, amps, seconds, air), limit_c))
+        steady = _connector_steady(solutions, setup)
+        for ref, amps in solution.contacts.items():
+            model, limit_c = _connector_model(ctx, ref)
+            if model is None or amps <= 1.05 * steady.get(ref, 0.0):
+                continue
+            contacts.add(ref)
+            rise = model.steady_rise(steady.get(ref, 0.0))
+            end = air + model.burst_rise(rise, amps, seconds)
+            keep(ref, end, limit_c, (model.trajectory, (rise, amps, seconds), limit_c, air))
+
+    ranked = sorted(worst.items(), key=lambda item: item[1][0], reverse=True)
+    chosen = [item for item in ranked if item[0] not in contacts][:wires]
+    chosen += [item for item in ranked if item[0] in contacts]
+    out = []
+    for name, (_, draw) in sorted(chosen, key=lambda item: item[1][0], reverse=True):
+        trajectory, args, limit_c, *offset = draw
+        lift = offset[0] if offset else 0.0
+        out.append((name, [(t, lift + c) for t, c in trajectory(*args)], limit_c))
+    return out
+
+
 def wire_heat(ctx, solutions) -> list:
     """Each wire's current against 80% of its ampacity in the day's air, its steady temperature,
     and its temperature after the burst, against its insulation's limit less the margin."""
-    from pcs14.electrical.checks import STEADY, Finding, _ok, _where, awg_area
+    from pcs14.electrical.checks import STEADY, Finding, _ok, _where
 
     numbers = ctx.numbers
     steady, bursts = {}, {}
@@ -195,16 +381,9 @@ def wire_heat(ctx, solutions) -> list:
         run = runs[label]
         table = ctx.parts[run.wire]
         burst_amps, burst_where = bursts.get(label, (0.0, ""))
-        if table.insulation is None or max(amps, burst_amps) < 0.01:
+        model, limit_c = _wire_model(ctx, run)
+        if model is None or max(amps, burst_amps) < 0.01:
             continue
-        gauge = table.gauge(run.awg)
-        model = WireModel(
-            gauge.resistance_per_m,
-            awg_area(run.awg),
-            gauge.outer_diameter,
-            INSULATIONS[table.insulation],
-        )
-        limit_c = table.insulation_max_c - numbers.temp_margin_c
         if (run.wire, run.awg) not in ratings:
             ratings[(run.wire, run.awg)] = model.ampacity(table.insulation_max_c, numbers.air_c)
         rating = ratings[(run.wire, run.awg)]
@@ -257,7 +436,7 @@ def wire_heat(ctx, solutions) -> list:
 def connector_heat(ctx, solutions) -> list:
     """The power connectors' temperature, steady and through the burst, from their makers'
     rated rise."""
-    from pcs14.electrical.checks import STEADY, Finding, _ok, _where, awg_area
+    from pcs14.electrical.checks import STEADY, Finding, _ok, _where
 
     numbers = ctx.numbers
     steady, bursts = {}, {}
@@ -269,20 +448,12 @@ def connector_heat(ctx, solutions) -> list:
                 bursts[ref] = (amps, _where(key))
     findings = []
     for ref, (amps, where) in sorted(steady.items()):
-        board = ctx.wiring.board_of(ref)
-        connector = board.block.connector(ref.split(".")[1])
-        family = ctx.parts.get(connector.family)
-        rating = getattr(getattr(family, "electrical", None), "rating", None)
-        if rating is None or not (
-            rating.temp_rise_c and rating.contact_mass_g and rating.contact_mohm
-        ):
+        model, limit_c = _connector_model(ctx, ref)
+        if model is None:
             continue
-        wire = awg_area(rating.wire_awg) * 2 * ATTACHED_WIRE * COPPER_DENSITY * COPPER_HEAT
-        capacity = rating.contact_mass_g / 1000 * BRASS_HEAT + wire
-        model = ConnectorModel(
-            rating.continuous_a, rating.temp_rise_c, rating.contact_resistance, capacity
-        )
-        limit_c = rating.max_c - numbers.temp_margin_c
+        connector = ctx.wiring.board_of(ref).block.connector(ref.split(".")[1])
+        family = ctx.parts[connector.family]
+        rating = family.electrical.rating
         rests = ctx.rests_on(connector.family, "rating")
         family_rests = tuple(
             f"{connector.family}: {e}"

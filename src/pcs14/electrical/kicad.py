@@ -236,7 +236,7 @@ class Schematic:
                 f'(uuid "{_id("symbol", name)}") '
                 f'(property "Reference" "{reference}" (at {x} {_snap(y - 2 * GRID)} 0) {FONT}) '
                 f'(property "Value" {_q(part_of[name])} '
-                f'(at {x} {_snap(y + (rows + 1) * GRID)} 0) {FONT}) '
+                f"(at {x} {_snap(y + (rows + 1) * GRID)} 0) {FONT}) "
                 f'(property "Footprint" "" (at {x} {y} 0) {HIDDEN}) '
                 f'(property "Datasheet" "" (at {x} {y} 0) {HIDDEN}) '
                 f'(property "Board" {_q(name)} (at {x} {_snap(y - 3 * GRID)} 0) {FONT}) '

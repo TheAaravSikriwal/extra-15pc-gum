@@ -137,3 +137,24 @@ def test_the_real_drones_open_findings(real, loads):
     heat = {f.check for f in findings}
     assert {"wire current", "wire temperature", "wire burst", "connector temperature"} <= heat
     assert {"ESC current", "ESC burst", "motor current"} <= heat
+
+
+def test_the_xt60_is_the_one_part_past_its_limit_in_the_burst(real, loads):
+    from pcs14.electrical import thermal
+    from pcs14.electrical.checks import LI_ION_NOMINAL, Context
+
+    catalog, build, design, _, _ = real
+    parts = {p.id: p for p in catalog.all_parts()}
+    ctx = Context.make(
+        design, parts, listed_in(build), design.checks, LI_ION_NOMINAL * build.pack.series
+    )
+    connectors = thermal.connector_working(ctx, loads)
+    assert (
+        connectors[("max", "hover")]["pack.XT60.+"]
+        < 1
+        < connectors[("max", "burst")]["pack.XT60.+"]
+    )
+    hot = {ref for shares in connectors.values() for ref, share in shares.items() if share > 1}
+    assert hot == {"pack.XT60.+", "pack.XT60.-"}
+    wires = thermal.wire_working(ctx, loads)
+    assert max(max(shares.values()) for shares in wires.values()) < 1

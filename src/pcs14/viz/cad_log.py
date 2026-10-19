@@ -49,13 +49,13 @@ def _color(piece) -> tuple[int, int, int]:
     return BOUGHT
 
 
-def _mesh(shape, color) -> rr.Mesh3D:
+def _mesh(shape, color, alpha: int = 255) -> rr.Mesh3D:
     vertices, triangles = shape.tessellate(0.0003, 0.3)
     points = np.array([(v.X, v.Y, v.Z) for v in vertices], dtype=np.float32)
     return rr.Mesh3D(
         vertex_positions=points,
         triangle_indices=np.array(triangles, dtype=np.uint32),
-        albedo_factor=[*color, 255],
+        albedo_factor=[*color, alpha],
     )
 
 
