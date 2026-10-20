@@ -112,6 +112,7 @@ class FlightSimRun:
     estimates: tuple[str, ...]
     files: tuple[str, ...] = ()
     skipped: tuple[str, ...] = ()
+    mine: tuple[ScenarioResult, ...] = ()  # the same scenarios flown by my firmware (step 5)
 
     def result(self, scenario: str, setup: str) -> ScenarioResult | None:
         return next((r for r in self.results if r.scenario == scenario and r.setup == setup), None)
@@ -127,6 +128,13 @@ class FlightSimRun:
         if all(r is not None and r.passed for r in found):
             return "pass"
         return "fail"
+
+
+def mine_view(run: FlightSimRun) -> FlightSimRun:
+    """The run as my firmware flew it: its results in place of PX4's."""
+    from dataclasses import replace
+
+    return replace(run, results=run.mine, mine=())
 
 
 def closing(run: FlightSimRun) -> dict:
@@ -238,6 +246,58 @@ def _cell(run: FlightSimRun, scenario: str, setup) -> str:
     return "pass" if r.passed else "**fail**"
 
 
+def _mine_cell(run: FlightSimRun, scenario: str, setup) -> str:
+    """My firmware's result, and PX4's where the two disagree."""
+    words = _cell(mine_view(run), scenario, setup)
+    if words in ("", "not yet"):
+        return words
+    mine = mine_view(run).result(scenario, setup.name)
+    px4 = run.result(scenario, setup.name)
+    if px4 is not None and px4.flown and px4.passed != mine.passed:
+        words += " (PX4 passes)" if px4.passed else " (PX4 fails)"
+    return words
+
+
+def _mine_lines(run: FlightSimRun) -> list[str]:
+    if not any(r.flown for r in run.mine):
+        return []
+    view = mine_view(run)
+    expected = view.expected()
+    flown = [r for r in (view.result(sc, s) for sc, s in expected) if r is not None and r.flown]
+    failed = [r for r in flown if not r.passed]
+    count = (
+        ("and both pass" if len(flown) == 2 else "and they all pass")
+        if not failed
+        else f"and {len(failed)} miss"
+    )
+    lines = [
+        "## My firmware, the same scenarios",
+        "",
+        "The same models and the same scripts, flown by my own flight firmware (step 5, in "
+        "`firmware/`) instead of PX4, through its Gazebo bridge, with the safety monitor's "
+        "firmware in the loop. Where it and PX4 disagree, the cell says so.",
+        "",
+        f"{len(flown)} of {len(expected)} runs flown, {count}.",
+        "",
+        "| Scenario | " + " | ".join(s.name for s in run.combinations) + " |",
+        "|---|" + "---|" * len(run.combinations),
+    ]
+    for scenario in SCENARIOS:
+        cells = [_mine_cell(run, scenario, s) for s in run.combinations]
+        lines.append(f"| {scenario} | " + " | ".join(cells) + " |")
+    lines.append("")
+    if failed:
+        lines += ["Where mine misses:", ""]
+        for r in failed:
+            px4 = run.result(r.scenario, r.setup)
+            same = px4 is not None and px4.flown and not px4.passed
+            misses = "; ".join(f"{f.check}: {f.detail}" for f in r.findings if not f.passed)
+            lines.append(f"- {r.scenario} in {r.setup}: {misses}"
+                         + (" (PX4 misses it too)" if same else ""))  # fmt: skip
+        lines.append("")
+    return lines
+
+
 def render(run: FlightSimRun, generated: str | None = None) -> str:
     when = f" on {generated}" if generated else ""
     lines = [
@@ -295,6 +355,7 @@ def render(run: FlightSimRun, generated: str | None = None) -> str:
         lines += ["", "</details>", ""]
     lines += _misses_lines(run)
     lines += _closing_lines(run)
+    lines += _mine_lines(run)
     lines += [
         "## The models",
         "",
@@ -329,6 +390,17 @@ def render(run: FlightSimRun, generated: str | None = None) -> str:
     return "\n".join(lines)
 
 
+def _result_data(r: ScenarioResult) -> dict:
+    return {
+        "scenario": r.scenario,
+        "setup": r.setup,
+        "flown": r.flown,
+        "passed": r.passed,
+        "note": r.note,
+        "findings": [vars(f) for f in r.findings],
+    }
+
+
 def to_data(run: FlightSimRun, generated: str | None = None) -> dict:
     return {
         "generated": generated,
@@ -339,19 +411,14 @@ def to_data(run: FlightSimRun, generated: str | None = None) -> dict:
         "verdict": run.verdict,
         "combinations": [s.name for s in run.combinations],
         "models": [vars(m) for m in run.models],
-        "results": [
-            {
-                "scenario": r.scenario,
-                "setup": r.setup,
-                "flown": r.flown,
-                "passed": r.passed,
-                "note": r.note,
-                "findings": [vars(f) for f in r.findings],
-            }
-            for r in run.results
-        ],
+        "results": [_result_data(r) for r in run.results],
         "planned": [{"scenario": sc, "setup": s} for sc, s in run.expected()],
         "closing": closing(run),
+        "mine": {
+            "verdict": mine_view(run).verdict,
+            "results": [_result_data(r) for r in run.mine],
+            "closing": closing(mine_view(run)),
+        },
         "estimates": list(run.estimates),
         "unproven": list(UNPROVEN),
         "files": list(run.files),

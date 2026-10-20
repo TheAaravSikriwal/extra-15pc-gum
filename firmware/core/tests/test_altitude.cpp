@@ -173,3 +173,13 @@ TEST_CASE("armed long after power-on, it still gets its 10 s to take off") {
   s.fly(6.0f);
   CHECK_FALSE(s.flight.armed());  // but after 10 s without taking off, it is
 }
+
+TEST_CASE("the ground is zero, even when the barometer's first sample is off") {
+  // one sample of the sim's 3 Pa noise can be 8 Pa off, about 0.7 m: the zero averages the
+  // first second instead (the top speed run of 2026-10-20 stopped 0.7 m short on one)
+  Sim s;
+  s.flight.on_baro(s.plant.pressure() - 8.0f, 0.0f);
+  s.k = 1;
+  s.fly(8.0f);
+  CHECK(std::fabs(s.flight.z()) < 0.1f);
+}

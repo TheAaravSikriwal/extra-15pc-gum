@@ -82,10 +82,20 @@ def _plain(value):
     raise TypeError(f"can't save {type(value).__name__}")
 
 
-def load_results(exports: Path) -> list[ScenarioResult]:
+def load_results(
+    exports: Path, firmware: str = "px4", tag: str | None = None
+) -> list[ScenarioResult]:
+    """The saved results one firmware flew (PX4 unless told otherwise), without any
+    experiment's unless `tag` names it. A tagged run is saved as "<scenario> (<tag>)"; it
+    comes back as plain "<scenario>"."""
+    want = firmware_tag(firmware, tag)
+    suffix = f" ({want})" if want else ""
     out = []
     for path in sorted((Path(exports) / RESULTS).glob("*.json")):
         data = json.loads(path.read_text(encoding="utf-8"))
+        if want and not data["scenario"].endswith(suffix) or not want and "(" in data["scenario"]:
+            continue
+        data["scenario"] = data["scenario"].removesuffix(suffix)
         data.pop("run", None)
         findings = tuple(grade.Finding(**f) for f in data.pop("findings"))
         out.append(ScenarioResult(findings=findings, **data))

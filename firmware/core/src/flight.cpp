@@ -99,11 +99,15 @@ void Flight::on_mag(const Vec3& field) {
 }
 
 void Flight::on_baro(float pressure_pa, float dt) {
-  if (reference_pa_ <= 0) {
-    reference_pa_ = pressure_pa;  // heights are from where it started
-    return;
+  // heights are from where it started: the average pressure over its first second, since a
+  // single sample can be a good fraction of a meter off
+  if (baro_zero_s_ < kBaroZeroS) {
+    baro_sum_ += pressure_pa;
+    ++baro_count_;
+    baro_zero_s_ += dt;
+    reference_pa_ = static_cast<float>(baro_sum_ / baro_count_);
   }
-  height_.correct(-pressure_height(pressure_pa, reference_pa_), dt);
+  if (dt > 0) height_.correct(-pressure_height(pressure_pa, reference_pa_), dt);
 }
 
 void Flight::on_gps_velocity(const Vec3& velocity, float dt) {

@@ -149,3 +149,37 @@ def test_the_data_file_carries_the_comparison():
          "cruise_sim_min": 33.5, "cruise_sizing_min": 44.9}
     ]  # fmt: skip
     assert data["closing"]["caught"][0]["delay_s"] == 0.41
+
+
+def mine_run():
+    from dataclasses import replace
+
+    run = made_up_run()
+    still = (Finding("wind drift", True, 0.6, 1.0, "m", "drifted 0.60 m in the wind"),)
+    mine = (
+        ScenarioResult("hover", "base", True, run.results[0].findings),
+        ScenarioResult("wind", "mission", True, still),
+    )
+    return replace(run, mine=mine)
+
+
+def test_my_firmware_gets_its_own_matrix_next_to_px4s():
+    from pcs14.flight.report import render
+
+    text = render(mine_run())
+    section = text.split("## My firmware, the same scenarios")[1].split("\n## ")[0]
+    assert "2 of 19 runs flown, and both pass" in section
+    assert "| hover | pass | not yet |" in section
+    assert "| wind |  | pass (PX4 fails) |" in section  # where they differ, it says so
+    assert "## My firmware" not in render(made_up_run())  # nothing until it has flown
+
+
+def test_my_firmwares_verdict_and_data_stay_apart_from_px4s():
+    from pcs14.flight.report import mine_view, to_data
+
+    run = mine_run()
+    assert run.verdict == "fail" and mine_view(run).verdict == "fail"  # not flown everywhere
+    data = to_data(run)
+    assert [r["scenario"] for r in data["mine"]["results"]] == ["hover", "wind"]
+    assert data["mine"]["verdict"] == "fail"
+    assert all(r["scenario"] != "wind" or not r["passed"] for r in data["results"])

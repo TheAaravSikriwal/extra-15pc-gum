@@ -197,6 +197,7 @@ def test_a_one_shot_wait_closes_its_stream():
 
 def test_gazebo_message_types_map_to_their_python_modules():
     assert run.gz_message("gz.msgs.Vector3d") == ("gz.msgs10.vector3d_pb2", "Vector3d")
+    assert run.gz_message("gz.msgs.Pose_V") == ("gz.msgs10.pose_v_pb2", "Pose_V")
     assert run.gz_message("gz.msgs.EntityFactory") == ("gz.msgs10.entity_factory_pb2",
                                                         "EntityFactory")  # fmt: skip
 
@@ -260,3 +261,54 @@ def test_my_firmware_runs_on_px4s_ports_for_its_instance():
 def test_only_known_firmware_flies():
     with pytest.raises(ValueError, match="no firmware called betaflight"):
         run.Session(run.toolchain(), "pcs14_base", {}, "out", "smoke", firmware="betaflight")
+
+
+def test_topics_answer_service_requests_and_keep_the_latest_poses():
+    from types import SimpleNamespace as NS
+
+    class FakeNode:
+        def __init__(self, options):
+            self.requests, self.subscribed = [], {}
+
+        def request(self, service, request, request_type, reply_type, timeout):
+            self.requests.append((service, request.text, request_type.__name__, timeout))
+            return True, reply_type()
+
+        def subscribe(self, kind, topic, callback):
+            self.subscribed[topic] = (kind.__name__, callback)
+            return True
+
+    class Options:
+        partition = ""
+
+    class Transport:
+        NodeOptions, Node = Options, FakeNode
+
+    class Pose:
+        text = ""
+
+    class Boolean:
+        text = "data: true"
+
+    class Pose_V:  # noqa: N801 (Gazebo's name)
+        pass
+
+    messages = NS(Pose=Pose, Boolean=Boolean, Pose_V=Pose_V)
+
+    def parse(text, message):
+        message.text = text
+
+    topics = run.GzTopics(Transport, "p", parse=parse, load=lambda module: messages,
+                          show=lambda message: message.text)  # fmt: skip
+    reply = topics.request("/world/w/set_pose", "gz.msgs.Pose", "gz.msgs.Boolean", 'name: "box"')
+    assert reply == "data: true"
+    assert topics.node.requests == [("/world/w/set_pose", 'name: "box"', "Pose", 5000)]
+    assert topics.pose("drone") is None  # nothing heard yet
+    topics.watch_poses("w")
+    kind, callback = topics.node.subscribed["/world/w/pose/info"]
+    pose = NS(name="drone", position=NS(x=1.0, y=4.0, z=1.5),
+              orientation=NS(w=1.0, x=0.0, y=0.0, z=0.0))  # fmt: skip
+    callback(NS(pose=[NS(name="other", position=pose.position, orientation=pose.orientation),
+                      pose]))  # fmt: skip
+    assert kind == "Pose_V"
+    assert topics.pose("drone") == ((1.0, 4.0, 1.5), (1.0, 0.0, 0.0, 0.0))

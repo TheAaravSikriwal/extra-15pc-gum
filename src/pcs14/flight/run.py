@@ -29,6 +29,7 @@ import re
 import shutil
 import signal
 import sys
+import threading
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -234,7 +235,7 @@ def gz_message(message_type: str) -> tuple[str, str]:
     """The Python module and class for a Gazebo message type: gz.msgs.EntityFactory is
     EntityFactory in gz.msgs10.entity_factory_pb2."""
     name = message_type.rsplit(".", 1)[-1]
-    return f"{GZ_MSGS}.{re.sub(r'(?<!^)(?=[A-Z])', '_', name).lower()}_pb2", name
+    return f"{GZ_MSGS}.{re.sub(r'(?<!^)(?<!_)(?=[A-Z])', '_', name).lower()}_pb2", name
 
 
 def gz_bindings():
@@ -253,30 +254,70 @@ def gz_bindings():
         return None
 
 
+def _text_format():
+    from google.protobuf import text_format  # Gazebo's bindings bring it
+
+    return text_format
+
+
 class GzTopics:
-    """Publishes on Gazebo topics from inside the runner, through Gazebo's Python bindings.
+    """Publishes on Gazebo topics, asks its services and follows the models' poses from inside
+    the runner, through Gazebo's Python bindings.
 
     The first version started gz's command line for every message: about 0.9 s and a quarter
     of a CPU second each (measured 2026-10-20), against 0.04 s here. Two runs at 4x already
     load the PC to about 12 of its 16 threads, and a spike on top can starve PX4 of its sensors
     for tens of milliseconds of sim time."""
 
-    def __init__(self, transport, partition: str, parse=None, load=importlib.import_module):
+    def __init__(self, transport, partition: str, parse=None, load=importlib.import_module,
+                 show=None):  # fmt: skip
         os.environ["GZ_IP"] = "127.0.0.1"  # the same discovery as Gazebo's (gz_environment)
         options = transport.NodeOptions()
         options.partition = partition
         self.node = transport.Node(options)
         self._publishers: dict = {}
         self._load = load
-        if parse is None:
-            from google.protobuf import text_format
+        self._parse = parse or (lambda text, message: _text_format().Parse(text, message))
+        self._show = show or (lambda m: _text_format().MessageToString(m, as_one_line=True))
+        self._poses: dict = {}
+        self._lock = threading.Lock()
 
-            parse = text_format.Parse
-        self._parse = parse
-
-    async def publish(self, topic: str, message_type: str, payload: str):
+    def _kind(self, message_type: str):
         module, name = gz_message(message_type)
-        kind = getattr(self._load(module), name)
+        return getattr(self._load(module), name)
+
+    def request(self, service: str, request_type: str, reply_type: str, payload: str,
+                timeout_ms: int = 5000) -> str:  # fmt: skip
+        """Asks a Gazebo service and returns its reply as text, the way gz's command line
+        prints it (empty when nothing answered)."""
+        kind = self._kind(request_type)
+        message = kind()
+        self._parse(payload, message)
+        ok, reply = self.node.request(service, message, kind, self._kind(reply_type), timeout_ms)
+        return self._show(reply) if ok else ""
+
+    def watch_poses(self, world: str):
+        """Starts following every model's pose in `world`, for pose()."""
+        self.node.subscribe(self._kind("gz.msgs.Pose_V"), f"/world/{world}/pose/info",
+                            self._on_poses)  # fmt: skip
+
+    def _on_poses(self, message):
+        found = {}
+        for pose in message.pose:
+            p, q = pose.position, pose.orientation
+            found[pose.name] = ((p.x, p.y, p.z), (q.w, q.x, q.y, q.z))
+        with self._lock:
+            self._poses.update(found)
+
+    def pose(self, name: str):
+        """The model's latest pose, Gazebo's frame: ((x, y, z), (w, x, y, z)), or None."""
+        with self._lock:
+            return self._poses.get(name)
+
+    async def ready(self, topic: str, message_type: str):
+        """Advertises a topic and waits until Gazebo listens, so the first publish goes out at
+        once."""
+        kind = self._kind(message_type)
         publisher = self._publishers.get((topic, message_type))
         if publisher is None:
             publisher = self.node.advertise(topic, kind)
@@ -285,6 +326,10 @@ class GzTopics:
             deadline = time.monotonic() + CONNECT_TOPIC_S
             while not publisher.has_connections() and time.monotonic() < deadline:
                 await asyncio.sleep(0.02)
+        return publisher, kind
+
+    async def publish(self, topic: str, message_type: str, payload: str):
+        publisher, kind = await self.ready(topic, message_type)
         message = kind()
         self._parse(payload, message)
         publisher.publish(message)
@@ -524,13 +569,24 @@ class Session:
         self._processes.append((name, process))
         return process
 
+    def gz(self) -> GzTopics | None:
+        """Gazebo's topics and services in-process, or None without the Python bindings."""
+        if self._topics is None and (transport := gz_bindings()) is not None:
+            self._topics = GzTopics(transport, self.partition)
+            self._topics.watch_poses(WORLD)
+        return self._topics
+
+    def true_pose(self, name: str):
+        """A model's pose as Gazebo has it: ((x, y, z), (w, x, y, z)) in Gazebo's frame (x
+        east, y north, z up), or None before one has come in or without the bindings."""
+        topics = self.gz()
+        return topics.pose(name) if topics is not None else None
+
     async def gz_publish(self, topic: str, message_type: str, payload: str):
         """Publishes one message on a Gazebo topic: through Gazebo's Python bindings when
         they're installed (GzTopics), otherwise through gz's own command line."""
-        if self._topics is None and (transport := gz_bindings()) is not None:
-            self._topics = GzTopics(transport, self.partition)
-        if self._topics is not None:
-            await self._topics.publish(topic, message_type, payload)
+        if (topics := self.gz()) is not None:
+            await topics.publish(topic, message_type, payload)
             return
         process = await asyncio.create_subprocess_exec(
             "gz", "topic", "-t", topic, "-m", message_type, "-p", payload,
@@ -540,7 +596,12 @@ class Session:
         )  # fmt: skip
         await process.wait()
 
-    async def gz_service(self, service: str, request_type: str, reply_type: str, request: str):
+    async def gz_service(self, service: str, request_type: str, reply_type: str, request: str,
+                         fast: bool = False):  # fmt: skip
+        """Asks a Gazebo service through gz's command line, or with `fast` through the Python
+        bindings (milliseconds against about a second)."""
+        if fast and (topics := self.gz()) is not None:
+            return topics.request(service, request_type, reply_type, request)
         process = await asyncio.create_subprocess_exec(
             "gz", "service", "-s", service, "--reqtype", request_type, "--reptype", reply_type,
             "--timeout", "5000", "--req", request,

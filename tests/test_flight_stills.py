@@ -54,6 +54,17 @@ def test_the_matrix_shows_every_run(tmp_path, targets):
     assert path.stat().st_size > 10_000
 
 
+def test_my_firmware_gets_its_own_matrix(tmp_path, targets):
+    from dataclasses import replace
+
+    setups = tuple(targets.combinations())
+    hover = ScenarioResult("hover", setups[0].name, True, (grade.Finding("x", True, 0, 1, "", ""),))
+    run = FlightSimRun("made up", "v1.17.0", "Harmonic", setups, (), (), ())
+    paths = stills.draw_all(tmp_path, replace(run, mine=(hover,)), tmp_path / "exports")
+    assert [p.name for p in paths] == ["matrix.png", "matrix-mine.png"]
+    assert stills.draw_all(tmp_path, run, tmp_path / "exports")[1:] == []  # none until it flies
+
+
 def test_the_first_steps_settling_comes_from_its_result():
     found = ScenarioResult("steps", "base", True, (
         grade.Finding("roll to 15 degrees: settling", True, 0.25, 0.5, "s", ""),

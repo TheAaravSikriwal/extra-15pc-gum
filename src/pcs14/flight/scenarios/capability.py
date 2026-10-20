@@ -14,8 +14,9 @@ up its payload.
   stretch's power comes from the logged rotor speeds, and the battery model turns it into a
   flight time to compare with the sizing model's at the same weight
 - payload grab: a 250 g box on a 1 m shelf 4 m north of home. The drone hovers 0.4 m above it,
-  Gazebo's attach joint stands in for the claws, and it climbs to 3 m and carries it for 20 s,
-  then lets go of it 1.5 m up, 2 m east of home, and lands at home
+  the box goes up to just under its feet, where the claws would hold it, and Gazebo's attach
+  joint stands in for the claws. It climbs to 3 m and carries it for 20 s, then lets go of it
+  1.5 m up, 2 m east of home, and lands at home
 """
 
 import contextlib
@@ -60,6 +61,8 @@ SHELF_HEIGHT = 1.0
 SHELF_SIDE = 0.3
 PAYLOAD_SIZE = 0.08  # the payload model's box, pcs14.flight.generate.payload_sdf
 GRAB_CLEARANCE = 0.4  # m between the drone's feet and the payload's top
+CLAW_GAP = 0.01  # m between the feet and the box's top once the claws have it
+SETTLE_STEPS_S = 0.01  # s of sim for Gazebo to move the box before the joint takes it
 CARRY_HEIGHT = 3.0
 DROP_EAST = 2.0  # m east of home, where the box gets set down, clear of the landing spot
 RELEASE_HEIGHT = 1.5  # m: the box drops about a meter when it's let go. Lower, PX4's height
@@ -311,6 +314,39 @@ async def place_payload(s):
     await s.spawn(payload, f"{PREFIX}payload", (0.0, SHELF_NORTH, top))
 
 
+def claws_position(drone, lift_off: float) -> tuple[float, float, float]:
+    """Where the box's center goes for the claws to hold it: just under the feet of a drone
+    whose origin is at `drone` (Gazebo's frame, z up) and `lift_off` m above its feet."""
+    x, y, z = drone
+    return x, y, z - lift_off - CLAW_GAP - PAYLOAD_SIZE / 2
+
+
+async def to_the_claws(s, attach_topic: str):
+    """Moves the box from the shelf to just under the feet. Gazebo's attach joint keeps
+    whatever offset it finds, and holding the box rigidly 0.4 m below the feet is a boom real
+    claws don't have: it put five times the roll inertia on the drone, and my firmware's roll
+    loop, which only knows the drone's own, swung itself over on it (2026-10-20)."""
+    from pcs14.flight.run import WORLD, SimError
+
+    topics = s.gz()
+    if topics is None:
+        raise SimError("the payload grab needs Gazebo's Python bindings (python3-gz-transport13)")
+    await topics.ready(attach_topic, "gz.msgs.Empty")  # so the joint closes right after the move
+    pose = s.true_pose(s.entity)
+    if pose is None:
+        raise SimError("Gazebo hasn't sent the drone's pose")
+    (x, y, z), (qw, qx, qy, qz) = claws_position(pose[0], s.context.model["lift_off_m"]), pose[1]
+    reply = await s.gz_service(
+        f"/world/{WORLD}/set_pose", "gz.msgs.Pose", "gz.msgs.Boolean",
+        f'name: "{PREFIX}payload", position: {{x: {x}, y: {y}, z: {z}}}, '
+        f"orientation: {{w: {qw}, x: {qx}, y: {qy}, z: {qz}}}",
+        fast=True,
+    )  # fmt: skip
+    if "true" not in reply:
+        raise SimError(f"Gazebo wouldn't move the payload: {reply.strip()}")
+    await s.clock.sleep(SETTLE_STEPS_S)
+
+
 async def payload_grab(s):
     attach, detach = PAYLOAD_TOPICS
     # Gazebo's attach joint closes as soon as the drone loads, so let go first. A one-off
@@ -325,6 +361,7 @@ async def payload_grab(s):
     await hold(s, 5.0, "before")
     grab = SHELF_HEIGHT + PAYLOAD_SIZE + GRAB_CLEARANCE
     await go_to(s, SHELF_NORTH, 0.0, grab, tolerance=0.2)
+    await to_the_claws(s, attach)
     s.mark("grab")
     for _ in range(3):
         await s.gz_publish(attach, "gz.msgs.Empty", "unused: true")

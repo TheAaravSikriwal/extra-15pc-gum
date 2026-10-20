@@ -135,13 +135,15 @@ def steps(tuned, stock, path: Path, size: str = "portrait") -> Path:
     return path
 
 
-def matrix(run, path: Path, size: str = "wide") -> Path:
-    """Every scenario in every combination: `run` is a pcs14.flight.report.FlightSimRun."""
+def matrix(run, path: Path, size: str = "wide", pilot: str | None = None) -> Path:
+    """Every scenario in every combination: `run` is a pcs14.flight.report.FlightSimRun, and
+    `pilot` what flew it (PX4 unless it says otherwise)."""
     from pcs14.flight.report import SCENARIOS, applies
 
     canvas = charts.Canvas(
         "Every scenario, every combination",
-        f"PX4 {run.px4} in Gazebo {run.gazebo}, flying a model of each module combination",
+        f"{pilot or f'PX4 {run.px4}'} in Gazebo {run.gazebo}, flying a model of each module "
+        "combination",
         made_up=False,
         size=size,
     )
@@ -213,6 +215,10 @@ def draw_all(folder: Path, run, exports: Path, chute=None) -> list[Path]:
     folder = Path(folder)
     folder.mkdir(parents=True, exist_ok=True)
     paths = [matrix(run, folder / "matrix.png")]
+    if any(r.flown for r in run.mine):
+        from pcs14.flight.report import mine_view
+
+        paths.append(matrix(mine_view(run), folder / "matrix-mine.png", pilot="My firmware"))
     for setup in ("mission", "P", "max", "P+C"):
         found = flown_log(exports, setup, "parachute-drop")
         if found is not None and chute is not None:

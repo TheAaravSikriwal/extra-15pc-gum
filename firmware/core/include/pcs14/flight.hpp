@@ -192,7 +192,10 @@ class Flight {
   float offboard_t_ = -1e9f;
   float t_ = 0;  // s: the loop's own clock
   Vec3 mag_;
-  float reference_pa_ = 0;
+  static constexpr float kBaroZeroS = 1.0f;  // s of barometer averaged for the zero
+  float reference_pa_ = 0, baro_zero_s_ = 0;
+  double baro_sum_ = 0;
+  int baro_count_ = 0;
   float yaw_setpoint_ = 0;
   float takeoff_z_ = 0;
   Vec3 home_;

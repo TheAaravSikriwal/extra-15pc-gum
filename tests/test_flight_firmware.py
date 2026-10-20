@@ -34,3 +34,16 @@ def test_my_firmwares_runs_are_kept_apart_from_px4s():
     assert firmware_tag("px4", "x500-gains") == "x500-gains"
     assert firmware_tag("mine", None) == "mine"
     assert firmware_tag("mine", "try") == "mine-try"
+
+
+def test_each_firmwares_report_loads_only_its_own_runs(tmp_path):
+    from pcs14.flight.batch import load_results, save
+    from pcs14.flight.report import ScenarioResult
+
+    for scenario in ("hover", "hover (mine)", "steps (x500-gains)", "steps (mine)"):
+        result = ScenarioResult(scenario, "base", True, ())
+        save(tmp_path, "pcs14_base", result, name=scenario.replace(" (", "-").rstrip(")"))
+    found = lambda **kw: sorted(r.scenario for r in load_results(tmp_path, **kw))  # noqa: E731
+    assert found() == ["hover"]
+    assert found(firmware="mine") == ["hover", "steps"]
+    assert found(tag="x500-gains") == ["steps"]

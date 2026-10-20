@@ -563,9 +563,12 @@ def run_flight_sim(args) -> int:
     else:
         models = write_models(exports, drone, build, targets, setups, meshes=not args.no_meshes)
     names = {s.name for s in setups}
-    flown = tuple(
-        r for r in load_results(exports) if r.scenario in report.SCENARIOS and r.setup in names
-    )
+
+    def graded_runs(firmware):
+        found = load_results(exports, firmware=firmware)
+        return tuple(r for r in found if r.scenario in report.SCENARIOS and r.setup in names)
+
+    flown, mine = graded_runs("px4"), graded_runs("mine")
     skipped = []
     if not flown:
         skipped.append("flying the scenarios: PX4 and Gazebo run in WSL2 on the PC "
@@ -581,6 +584,7 @@ def run_flight_sim(args) -> int:
         estimates=report.estimates_for(models, build),
         files=tuple(files),
         skipped=tuple(skipped),
+        mine=mine,
     )
     stills = []
     if flown:
