@@ -1,7 +1,7 @@
 # Status
 
 **Last updated:** 2026-10-19, on the PC's Windows side
-**Step:** step 4, the flight sim. The talk (4a) and the plan (4b) are done (2026-10-19); the build (4c) is next.
+**Step:** step 4, the flight sim. The talk (4a) and the plan (4b) are done, and the build (4c) has tasks 1 to 8 done (2026-10-19). The rest needs Ubuntu in WSL2.
 **Main machine:** the PC, with WSL2 Ubuntu 24.04 for the Linux tools
 
 ## Right now
@@ -41,12 +41,14 @@ Where to look:
 
 **Step 4a and 4b, the flight sim talk and plan, are done (2026-10-19).** PX4 v1.17.0 on Gazebo Harmonic, pinned; a small drag plugin of our own for body drag, wind and the parachute; each motor topping out at the sizing model's worst case (the reserve, the 90 A cap); a pass/fail table in the targets; MAVSDK-Python flying the scenarios headless; a Python reference for the safety monitor's triggers; PX4 unmodified. The [spec](docs/specs/2026-10-19-flight-sim.md), the [plan](docs/plans/2026-10-19-flight-sim.md) (12 tasks, the first eight Windows-only) and the [log](docs/log/2026-10-19-flight-sim-talk.md). From here on, routine choices get made and written down, and only drastic ones get asked.
 
+**Step 4c, tasks 1 to 8, are done (2026-10-19).** The targets, the motor model fit, the drag and parachute math, the generator, power from logged rotor speeds, the safety monitor's reference triggers, grading, and the report. `pcs14 flight-sim` writes all eight Gazebo models and the [flight sim report](docs/reports/flight-sim/README.md): 78 scenario runs planned, none flown until PX4 is installed. Mission flies at 2213 g (the CAD's weight, without the growth margin) and should hover at 58% throttle. The [log](docs/log/2026-10-19-flight-sim-build.md).
+
 **Offline?** Study from [docs/learning.md](docs/learning.md). Topics 1 and 2 (how quads fly; props, motors and batteries) are what the sizing model needs.
 
 ## Up next
 
 1. **Install Ubuntu in WSL2 on the PC** (mine to do): WSL2 is already on, with no distribution yet. In an administrator PowerShell, `wsl --install -d Ubuntu-24.04`, then set the Ubuntu username and password, then step 3 of [docs/setup-pc.md](docs/setup-pc.md). Tasks 9 to 12 of the flight sim need it.
-2. **Step 4c, the build:** tasks 1 to 8 of the [plan](docs/plans/2026-10-19-flight-sim.md) (Windows only), then the setup, the runner and every scenario.
+2. **Step 4c, the rest:** tasks 9 to 12 of the [plan](docs/plans/2026-10-19-flight-sim.md): installing PX4 v1.17.0 and Gazebo Harmonic in Ubuntu (I'll ask before the downloads), building the drag plugin, the runner, then every scenario in every combination.
 3. **The project site's spec** (what it's built with). The goal is now written down in decisions: a complete blueprint, from the structure to the circuits.
 4. **Write the first half of `scripts/setup-ubuntu.sh`** (inside WSL2): Gazebo Harmonic, PX4 v1.17.0 and the Python tools, pinned. It's task 9 of the flight sim now.
 
@@ -55,6 +57,7 @@ Where to look:
 - Rotor drag in forward flight, so the cruise numbers get believable (the honesty check's big miss)
 - The weight: Mission passes at 22.25 min pessimistic hover with 1.25 min to spare; Max is 2623 g against its own 2500 g target (report-only)
 - Not counted yet: how the ARK GPS fixes to its plate and how the modules lock onto the rail
+- The sizing model's capped full-throttle point scales from the thrust table's top row with a power law, which lands its rpm about 4% off the table itself; the flight sim matches thrust instead
 - **Mine to do:** ask Fruity Chutes for the Harrier release servo's voltage range and draw. The design runs on a stand-in (Hitec's HS-55, 4.8 to 6 V)
 - The XT60's contact mass (a 2.5 g guess): the firmware's heat limit and the burst check both rest on it
 - The pack's own nickel strip and leads aren't in its 3.8 mOhm wiring number

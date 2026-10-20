@@ -76,7 +76,7 @@ This is the live version. When a step finishes, its outcome goes here, with a li
 |---|---|---|---|
 | 4a. Talk | Settle the versions, the air, the battery, what passing means, the runner and where it runs | Done, 2026-10-19 | PX4 v1.17.0 on Gazebo Harmonic, a drag plugin of our own, motors topping out at the sizing model's worst case, and a pass/fail table ([log](docs/log/2026-10-19-flight-sim-talk.md), [spec](docs/specs/2026-10-19-flight-sim.md#settled-in-the-flight-sim-talk)) |
 | 4b. Plan | The implementation plan | Done, 2026-10-19 | 12 test-first tasks; the first eight need only Windows ([plan](docs/plans/2026-10-19-flight-sim.md)) |
-| 4c. Build | Test-first: the targets, the motor fit, the drag math, the generator, power, the triggers, grading and the report, then the setup, the runner and every scenario | Up next | |
+| 4c. Build | Test-first: the targets, the motor fit, the drag math, the generator, power, the triggers, grading and the report, then the setup, the runner and every scenario | In progress | Tasks 1 to 8 done: `pcs14 flight-sim` generates all eight models and the [report](docs/reports/flight-sim/README.md) (78 runs planned, none flown yet). Mission flies at 2213 g and should hover at 58% throttle ([log](docs/log/2026-10-19-flight-sim-build.md)). Next: Ubuntu in WSL2, then PX4 |
 | 4d. Close the loop | The sim's results against the sizing model, the false-trigger counts against the thresholds | Not started | |
 
 ## Modules

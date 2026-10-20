@@ -117,6 +117,14 @@ Eight questions, all in the [electrical spec](specs/2026-10-18-electrical.md) un
 
 And one from the plan: **the GPS is the ARK GPS on DroneCAN** (16 g, 8 g over the old M10Q). With the servo nodes, Max comes to about 2514 g, over its 2.5 kg limit; the 8 g serial alternative wouldn't have saved it. Max only has to be reported.
 
+### What the flight sim build decided (2026-10-19)
+
+- **The motor model is fitted where the drone flies,** from just under its hover to just over its top speed, because Emax's table isn't exactly speed-squared and a whole-table fit was 6% off at hover.
+- **Each motor's top speed matches the sizing model's full-throttle thrust,** not its rpm, because thrust is what the capability checks depend on and the sizing model's capped rpm comes from a power law about 4% off its own table.
+- **The sim flies the drone as built:** the CAD's weight, without the 200 g growth margin. Mission is 2213 g there, against 2414 g in the sizing model.
+- **The wind reaches the model through our drag plugin,** from the world's starting wind plus a topic of its own, so a scenario can change it mid-flight.
+- **The world's origin is PX4's default** (Zurich), never anywhere of mine.
+
 ### What the electrical build changed (2026-10-18)
 
 - **The safety monitor's IMU is ST's LSM6DSOX** on Adafruit's breakout (1.7 g, in stock). No usable ICM-42688-P breakout is sold.

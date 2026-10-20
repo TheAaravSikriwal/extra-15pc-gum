@@ -38,4 +38,6 @@
 
 Tasks 1 to 8 need only Windows and CI; 9 to 12 need Ubuntu in WSL2 on the PC.
 
+**Done in the build (2026-10-19):** tasks 1 to 8. The stills wait for the first real flights, which are what's worth a post; the report and the Rerun replay are in.
+
 **Done when:** the baseline passes every scenario in all eight module combinations on PX4, and the report shows every run.
