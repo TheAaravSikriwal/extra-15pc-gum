@@ -139,10 +139,47 @@ void load_params(const std::string& text, pcs14::Params& params) {
 
 // the firmware's own parameters, with PX4's names where PX4 has one
 void default_params(pcs14::Params& p) {
-  p.add("MIS_TAKEOFF_ALT", 2.5f);  // m, what MAVSDK's set_takeoff_altitude sets
-  p.add_int("SYS_FAILURE_EN", 0);  // failure injection allowed
-  p.add("COM_OF_LOSS_T", 1.0f);    // s without offboard setpoints before it's lost
-  p.add("COM_DL_LOSS_T", 10.0f);   // s without the ground's heartbeat before the link is lost
+  const pcs14::AutoSettings a;
+  p.add("MIS_TAKEOFF_ALT", a.takeoff_height);  // m, what MAVSDK's set_takeoff_altitude sets
+  p.add("MPC_TKO_SPEED", a.takeoff_speed);
+  p.add("MPC_Z_V_AUTO_UP", a.climb_speed);
+  p.add("MPC_Z_V_AUTO_DN", a.descent_speed);
+  p.add("MPC_LAND_SPEED", a.land_speed);
+  p.add("MPC_LAND_ALT1", a.land_slow_height);
+  p.add("MPC_LAND_ALT2", a.land_slowest_height);
+  p.add("MPC_XY_CRUISE", a.cruise_speed);
+  p.add("MPC_VEL_MANUAL", a.manual_speed);
+  p.add("RTL_RETURN_ALT", a.return_height);
+  p.add("COM_OF_LOSS_T", a.offboard_loss_s);  // s without offboard setpoints before it's lost
+  p.add_int("SYS_FAILURE_EN", 0);             // failure injection allowed
+  p.add("COM_DL_LOSS_T", 10.0f);  // s without the ground's heartbeat before the link is lost
+}
+
+// the automatic modes' settings, from the parameters as they are now
+pcs14::AutoSettings auto_settings(const pcs14::Params& p) {
+  pcs14::AutoSettings a;
+  a.takeoff_height = p.get("MIS_TAKEOFF_ALT", a.takeoff_height);
+  a.takeoff_speed = p.get("MPC_TKO_SPEED", a.takeoff_speed);
+  a.climb_speed = p.get("MPC_Z_V_AUTO_UP", a.climb_speed);
+  a.descent_speed = p.get("MPC_Z_V_AUTO_DN", a.descent_speed);
+  a.land_speed = p.get("MPC_LAND_SPEED", a.land_speed);
+  a.land_slow_height = p.get("MPC_LAND_ALT1", a.land_slow_height);
+  a.land_slowest_height = p.get("MPC_LAND_ALT2", a.land_slowest_height);
+  a.cruise_speed = p.get("MPC_XY_CRUISE", a.cruise_speed);
+  a.manual_speed = p.get("MPC_VEL_MANUAL", a.manual_speed);
+  a.return_height = p.get("RTL_RETURN_ALT", a.return_height);
+  a.offboard_loss_s = p.get("COM_OF_LOSS_T", a.offboard_loss_s);
+  return a;
+}
+
+// the flight gains PX4's parameters set (the ones the generator writes)
+pcs14::FlightGains flight_gains(const pcs14::Params& p) {
+  pcs14::FlightGains g;
+  g.angle.kp_roll_pitch = p.get("MC_ROLL_P", g.angle.kp_roll_pitch);
+  g.angle.kp_yaw = p.get("MC_YAW_P", g.angle.kp_yaw);
+  g.position.max_speed = p.get("MPC_XY_VEL_MAX", g.position.max_speed);
+  g.position.max_tilt = p.get("MPC_TILTMAX_AIR", 45.0f) * pcs14::kPi / 180;
+  return g;
 }
 
 // MAVLink over UDP on the loopback
@@ -180,7 +217,7 @@ class Bridge {
  public:
   Bridge(const pcs14::Airframe& airframe, const Options& o, pcs14::Params& params,
          std::FILE* log_file)
-      : flight_(airframe),
+      : flight_(airframe, flight_gains(params)),
         params_(params),
         model_(o.model),
         file_(log_file),
@@ -256,6 +293,16 @@ class Bridge {
       // MANUAL_CONTROL's x is the pitch stick (forward is nose down), y roll, r yaw, z throttle
       flight_.set_sticks({m.y, -m.x, m.r, m.z});
     };
+    h.offboard = [this](const pcs14::OffboardSetpoint& o) {
+      // POSITION_TARGET_TYPEMASK: the bits are the fields to ignore
+      constexpr uint16_t kPosition = 0x7, kVelocity = 0x38, kYaw = 0x400;
+      pcs14::OffboardTarget t;
+      t.position = (o.ignore & kPosition) == 0;
+      t.point = o.position;
+      if ((o.ignore & kVelocity) == 0) t.velocity = o.velocity;
+      t.yaw = (o.ignore & kYaw) == 0 ? o.yaw : flight_.attitude().q().yaw();
+      flight_.set_offboard(t);
+    };
     return h;
   }
 
@@ -271,9 +318,8 @@ class Bridge {
     ulog_.text(6, micros(last_), "disarmed");
   }
 
-  // what the ground asks for. So far it flies rate mode, self-level and altitude hold (step 5,
-  // tasks 4 and 7); the rest come with the modes that need them, and until then the ground
-  // hears "denied"
+  // what the ground asks for: arming, the modes, take-off, land and return. Termination and
+  // failure injection come with the failsafes (task 9); until then the ground hears "denied"
   bool request(const pcs14::Request& r) {
     using K = pcs14::Request::Kind;
     switch (r.kind) {
@@ -290,6 +336,12 @@ class Bridge {
         return true;
       case K::SetMode:
         return flight_.set_mode(r.mode);
+      case K::Takeoff:
+        return flight_.set_mode(pcs14::Mode::Takeoff);
+      case K::Land:
+        return flight_.set_mode(pcs14::Mode::Land);
+      case K::Return:
+        return flight_.set_mode(pcs14::Mode::Return);
       default:
         return false;
     }
@@ -321,6 +373,7 @@ class Bridge {
       return;
     }
     if (dt <= 0 || dt > 0.1f) return;  // a repeat or a jump in the clock: skip a beat
+    flight_.set_auto(auto_settings(params_));
     const pcs14::Mix mix = flight_.step(gyro, accel, dt);
     send(mix.rad_s);
     const uint64_t us = micros(t);
@@ -339,6 +392,10 @@ class Bridge {
     telemetry_.mode = flight_.mode();
     telemetry_.landed = flight_.on_ground() ? pcs14::Landed::OnGround : pcs14::Landed::InAir;
     telemetry_.armable = armable();
+    telemetry_.position_valid = flight_.position_valid();
+    telemetry_.position = flight_.position();
+    telemetry_.velocity = flight_.velocity();
+    if (flight_.home_valid()) telemetry_.home_position = flight_.home();
     link_.update(telemetry_);
     if (t >= next_status_) {
       next_status_ = t + 1.0;
@@ -361,9 +418,15 @@ class Bridge {
 
   void on_mag(const gz::msgs::Magnetometer& msg) {
     std::lock_guard<std::mutex> lock(mutex_);
-    const Vec3 field = frd(msg.field_tesla());
+    // Gazebo Harmonic's magnetometer, despite the field's name, gives gauss in a left-handed
+    // frame (gz-sim pull request 2460); PX4's bridge maps it to forward-right-down as
+    // (-y, -x, z), and so does this. Read as forward-left-up, the heading came out a quarter
+    // turn wrong and the position loop spiralled
+    const gz::msgs::Vector3d& f = msg.field_tesla();
+    const Vec3 field{static_cast<float>(-f.y()), static_cast<float>(-f.x()),
+                     static_cast<float>(f.z())};
     flight_.on_mag(field);
-    telemetry_.mag = field * 1e4f;  // gauss, as MAVLink carries it
+    telemetry_.mag = field;  // gauss, as MAVLink carries it
   }
 
   void on_pressure(const gz::msgs::FluidPressure& msg) {
@@ -375,8 +438,8 @@ class Bridge {
     telemetry_.pressure_hpa = static_cast<float>(msg.pressure() / 100.0);
   }
 
-  // The GPS. Until the position filter comes (task 8), the fix itself is the position: the
-  // first fix sets home, and the local position is the fix's offset from it on a flat earth.
+  // The GPS: the first fix is the local origin (and the home MAVSDK sees before arming), and
+  // each fix's offset from it, on a flat earth, goes to the position filter.
   void on_navsat(const gz::msgs::NavSat& msg) {
     std::lock_guard<std::mutex> lock(mutex_);
     Telemetry& t = telemetry_;
@@ -395,15 +458,15 @@ class Bridge {
     t.alt_msl_m = static_cast<float>(msg.altitude());
     t.alt_rel_m = t.alt_msl_m - t.home_alt_msl_m;
     const double rad = pcs14::kPi / 180.0;
-    t.position = {static_cast<float>((t.lat_deg - t.home_lat_deg) * rad * kEarthRadius),
-                  static_cast<float>((t.lon_deg - t.home_lon_deg) * rad * kEarthRadius *
-                                     std::cos(t.home_lat_deg * rad)),
-                  -t.alt_rel_m};
-    t.velocity = {static_cast<float>(msg.velocity_north()), static_cast<float>(msg.velocity_east()),
-                  static_cast<float>(-msg.velocity_up())};
-    t.position_valid = true;
+    const auto north = static_cast<float>((t.lat_deg - t.home_lat_deg) * rad * kEarthRadius);
+    const auto east = static_cast<float>((t.lon_deg - t.home_lon_deg) * rad * kEarthRadius *
+                                         std::cos(t.home_lat_deg * rad));
+    const Vec3 velocity{static_cast<float>(msg.velocity_north()),
+                        static_cast<float>(msg.velocity_east()),
+                        static_cast<float>(-msg.velocity_up())};
     const double now = seconds(msg.header());
-    flight_.on_gps_velocity(t.velocity, gps_t_ >= 0 ? static_cast<float>(now - gps_t_) : 0.0f);
+    // the fix's offset from home goes to the position filter; the telemetry carries its estimate
+    flight_.on_gps(north, east, velocity, gps_t_ >= 0 ? static_cast<float>(now - gps_t_) : 0.0f);
     gps_t_ = now;
   }
 

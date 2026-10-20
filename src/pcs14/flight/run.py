@@ -638,7 +638,7 @@ class Session:
         binary = sitl_binary()
         if not binary.exists():
             raise SimError(f"no pcs14_sitl at {binary}; run scripts/build-firmware.sh")
-        home = models / self.model
+        home = (models / self.model).resolve()  # it runs in the run's own folder
         info = json.loads((home / "model.json").read_text())
         if not world_ready:
             await self.wait_for_world()
@@ -650,10 +650,16 @@ class Session:
             )  # fmt: skip
         params = self.folder / "params.txt"
         params.write_text(params_text({**self.params, **RUN_PARAMS}), encoding="utf-8")
-        await self._spawn(
+        process = await self._spawn(
             sitl_command(binary, self.entity, home / "firmware.txt", self.instance, params),
             "sitl", env=self.gz_env, cwd=self.folder,
         )  # fmt: skip
+        # a bridge that can't start (a missing file, a bad parameter) says so and leaves at once
+        with contextlib.suppress(TimeoutError):
+            await asyncio.wait_for(process.wait(), 1.0)
+        if process.returncode is not None:
+            log = (self.folder / "sitl.log").read_text(errors="replace").strip()
+            raise SimError(f"pcs14_sitl stopped at start: {log[-300:]}")
 
     async def within(self, awaitable, sim_seconds: float) -> asyncio.Task:
         """Runs `awaitable` for up to `sim_seconds` on PX4's clock, and returns its task:

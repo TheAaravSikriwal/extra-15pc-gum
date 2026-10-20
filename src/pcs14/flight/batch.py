@@ -98,12 +98,22 @@ def run_name(scenario: Scenario, tag: str | None = None) -> str:
     return f"{name}-{tag}" if tag else name
 
 
+def firmware_tag(firmware: str, tag: str | None) -> str | None:
+    """The tag a run's files carry: my firmware's runs are tagged "mine", so they never
+    overwrite PX4's and stay out of its report."""
+    if firmware == "px4":
+        return tag
+    return f"{firmware}-{tag}" if tag else firmware
+
+
 async def run_one(
     tools, exports, setup, scenario: Scenario, targets, build, instance=0, speed=1.0,
-    overrides=None, tag=None,
+    overrides=None, tag=None, firmware="px4",
 ):  # fmt: skip
     """Flies one scenario in one combination, grades it and saves the result. `overrides` are
-    PX4 parameters over everything else, and `tag` keeps an experiment's run apart."""
+    PX4 parameters over everything else, `tag` keeps an experiment's run apart, and `firmware`
+    is what flies (PX4, or mine)."""
+    tag = firmware_tag(firmware, tag)
     model = model_name(setup.name)
     params = load_params(exports, model)
     context = Context(targets, setup, params, build=build, model=load_model(exports, model))
@@ -112,7 +122,7 @@ async def run_one(
     params = {**params, **(overrides or {})}
     context = replace(context, params=params)
     name = run_name(scenario, tag)
-    session = Session(tools, model, params, exports, name, instance, speed)
+    session = Session(tools, model, params, exports, name, instance, speed, firmware=firmware)
     session.context = context
     session.world_file = scenario.world
     budget = scenario.budget_s(context) if callable(scenario.budget_s) else scenario.budget_s
@@ -169,7 +179,7 @@ def regrade(exports, setup, scenario: Scenario, targets, build) -> ScenarioResul
 
 async def run_many(
     tools, exports, pairs, targets, build, jobs: int = 1, speed: float = 1.0, report=print,
-    overrides=None, tag=None,
+    overrides=None, tag=None, firmware="px4",
 ):  # fmt: skip
     """Every (setup, scenario) in `pairs`, `jobs` at a time, each on its own PX4 instance."""
     queue: asyncio.Queue = asyncio.Queue()
@@ -181,8 +191,9 @@ async def run_many(
         while not queue.empty():
             setup, scenario = queue.get_nowait()
             result, outcome = await run_one(
-                tools, exports, setup, scenario, targets, build, instance, speed, overrides, tag
-            )
+                tools, exports, setup, scenario, targets, build, instance, speed, overrides, tag,
+                firmware,
+            )  # fmt: skip
             results.append(result)
             verdict = "pass" if result.passed else ("FAIL" if result.flown else "not flown")
             report(f"{scenario.name} in {setup.name}: {verdict} ({result.note})")

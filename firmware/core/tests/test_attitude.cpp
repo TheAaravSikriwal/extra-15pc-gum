@@ -40,6 +40,14 @@ TEST_CASE("the magnetometer pulls the heading to north") {
   CHECK(std::abs(att.q().yaw()) < 0.035f);  // inside 2 degrees
 }
 
+TEST_CASE("a fresh estimator takes its heading from the first magnetometer sample") {
+  Attitude att;
+  const Quat truth = Quat::from_euler(0, 0, 1.5708f);  // facing east, as the sim's models spawn
+  const Vec3 mag = body_of(truth, kMagNorth);
+  att.update({0, 0, 0}, kStill, &mag, kDt);
+  CHECK(att.q().yaw() == Approx(1.5708f).epsilon(0.01));
+}
+
 TEST_CASE("a hard pull doesn't drag the tilt with it") {
   Attitude att;
   // level, but pulling 3 g in a turn: the accelerometer's direction is no help, so it's ignored

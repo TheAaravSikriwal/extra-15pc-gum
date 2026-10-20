@@ -151,6 +151,13 @@ def build_parser() -> argparse.ArgumentParser:
     flight.add_argument(
         "--speed", type=float, default=1.0, help="with run: the sim's speed, against real time"
     )
+    flight.add_argument(
+        "--firmware",
+        choices=("px4", "mine"),
+        default="px4",
+        help="with run: what flies, PX4 or my own (firmware/, built by scripts/build-firmware.sh); "
+        "my firmware's runs are kept apart, tagged mine",
+    )
     flight.add_argument("--cad", type=Path, default=Path("design/cad.yaml"))
     flight.add_argument(
         "--out", type=Path, default=Path("docs/reports/flight-sim"), help="report folder"
@@ -689,6 +696,7 @@ def fly_flight_sim(args, build, targets) -> int:
             args.speed,
             overrides=overrides,
             tag=args.tag,
+            firmware=args.firmware,
         )  # fmt: skip
     )
     passed = sum(r.passed for r in results)

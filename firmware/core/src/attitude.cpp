@@ -15,16 +15,19 @@ void Attitude::update(const Vec3& gyro, const Vec3& accel_measured, const Vec3* 
     const Vec3 expected = q_.unrotate({0, 0, 1});             // down, as the estimate has it
     error += measured.cross(expected) * gains_.kp_accel;
   }
-  // the field's horizontal part sets the heading; its vertical part says nothing new
+  // the field's horizontal part sets the heading; its vertical part says nothing new. The
+  // error is the angle between where the field points in the estimate's world and north, so
+  // the pull doesn't fade with the field's dip (far north, its horizontal part is small)
   if (mag != nullptr && mag->norm() > 0) {
-    const Vec3 world = q_.rotate(mag->normalized());
-    const float horizontal = std::sqrt(world.x * world.x + world.y * world.y);
-    const Vec3 reference = q_.unrotate({horizontal, 0, world.z});  // north, flattened
-    const Vec3 measured = mag->normalized();
-    // only the heading part of the error: project it onto the world's vertical, in the body
-    const Vec3 down = q_.unrotate({0, 0, 1});
-    const Vec3 heading_error = measured.cross(reference);
-    error += down * (heading_error.dot(down) * gains_.kp_mag);
+    const Vec3 world = q_.rotate(*mag);
+    const float off = std::atan2(world.y, world.x);  // the field's heading, east of north
+    if (!aligned_) {
+      // the first sample sets the heading outright, as PX4 does when it starts
+      q_ = (Quat::from_axis_angle({0, 0, 1}, -off) * q_).normalized();
+      aligned_ = true;
+    } else {
+      error += q_.unrotate({0, 0, -off * gains_.kp_mag});
+    }
   }
   // the bias is the integral of the error, the correction its proportional part
   bias_ -= error * (gains_.ki * dt);

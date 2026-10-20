@@ -26,9 +26,12 @@ class Attitude {
  public:
   explicit Attitude(AttitudeGains gains = {}) : gains_(gains) {}
 
+  // starts from a known attitude (a fresh estimator instead takes its heading from the first
+  // magnetometer sample it gets)
   void reset(const Quat& q) {
     q_ = q.normalized();
     bias_ = {};
+    aligned_ = true;
   }
 
   // gyro in rad/s and accel in m/s^2 (specific force), both in the body frame; mag in any unit,
@@ -51,6 +54,7 @@ class Attitude {
   Quat q_{};
   Vec3 bias_{};
   Vec3 rate_{};
+  bool aligned_ = false;
 };
 
 }  // namespace pcs14

@@ -12,6 +12,7 @@ add_library(pcs14_core STATIC
   src/mixer.cpp
   src/modes.cpp
   src/params.cpp
+  src/position.cpp
   src/rate.cpp
   src/ulog.cpp
 )
@@ -47,6 +48,7 @@ add_executable(pcs14_core_tests
   tests/test_modes.cpp
   tests/test_link.cpp
   tests/test_altitude.cpp
+  tests/test_position.cpp
 )
 target_link_libraries(pcs14_core_tests PRIVATE pcs14_core doctest::doctest)
 add_test(NAME core COMMAND pcs14_core_tests)

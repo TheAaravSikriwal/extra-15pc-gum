@@ -25,3 +25,12 @@ def test_the_sim_layer_is_found_where_the_build_puts_it():
     found = firmware.sitl_binary({"HOME": "/home/me"})
     assert found.as_posix() == "/home/me/build/fw-sitl/sitl/pcs14_sitl"
     assert firmware.sitl_binary({"PCS14_SITL": "/x/pcs14_sitl"}).as_posix() == "/x/pcs14_sitl"
+
+
+def test_my_firmwares_runs_are_kept_apart_from_px4s():
+    from pcs14.flight.batch import firmware_tag
+
+    assert firmware_tag("px4", None) is None
+    assert firmware_tag("px4", "x500-gains") == "x500-gains"
+    assert firmware_tag("mine", None) == "mine"
+    assert firmware_tag("mine", "try") == "mine-try"
