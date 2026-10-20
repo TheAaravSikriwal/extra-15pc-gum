@@ -28,6 +28,11 @@ else
   git -C "$px4_dir" submodule update --init --recursive --quiet
 fi
 
+# everything that needs sudo, together, so the password gets typed once
+echo "==> The basics from docs/setup-pc.md (sudo)"
+sudo apt-get update -qq
+sudo apt-get install -y git git-lfs python3-venv mesa-utils pciutils
+
 echo "==> PX4's own setup: its toolchain, and Gazebo Harmonic from OSRF's repository (sudo)"
 # --no-nuttx: the flight controller's ARM toolchain isn't needed for the simulator
 bash "$px4_dir/Tools/setup/ubuntu.sh" --no-nuttx
