@@ -297,6 +297,8 @@ One website that pulls from every simulation, for looking at the drone and learn
 - **The unproven list,** front and center.
 - **The project's look:** black, spearmint and magenta, with the same fonts as the posts.
 
+**The end goal, in my words (2026-10-19):** a very complete blueprint on a website. An in-depth 3D model of the drone I can click into and explore, from the structure down to the circuits and where everything connects, with every simulation that was run behind it. For the circuits that means the wire routes in 3D with their gauges and currents (`electrical.json` and `cad.json` already carry them), each board's pin map, the harness diagrams and the schematic, and a click on any wire or pin showing both its ends. One gap for later: the CAD places each board but not each connector on it, so a wire's ends in 3D are a route's ends, not the plug itself.
+
 It's built from the data files every step writes, so it grows as the steps finish, starting with the sizing model. The individual sims stay available on their own too: the Rerun recordings, the reports in `docs/reports/`, and the clips.
 
 **Where it lives (decided 2026-10-17):** on my machine while the research runs. It doesn't go live until the project is done, and then it joins my portfolio site, wearechintu.com, as another project. So it's built as a self-contained static site with relative links, which can drop into the portfolio wherever it ends up, with no server needed. Its code lives in this repo like everything else, but the built site isn't published anywhere until the end. What it's built with gets settled in its own spec.
