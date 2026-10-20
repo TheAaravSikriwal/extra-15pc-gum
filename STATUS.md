@@ -53,6 +53,7 @@ Where to look:
 
 1. **Finish task 11** (picking up where I stopped):
    - A clean batch of all 78 runs was flying in WSL (`pcs14 flight-sim run --speed 4 --jobs 2`, two at a time, never four: four overloads the PC and spoils the results). Its results land in `outputs/flight-sim/results/`. If it didn't finish, rerun the missing ones the same way with `--setup` and `--scenario`. Low battery in V hung once ("PX4's clock stopped"), probably starved while the Windows tests ran: rerun it alone.
+   - **Look into wind in P first.** In the batch it tumbled about 85 s into the wind (the monitor's tumble trigger at 123.2 s), PX4's failure detector terminated and fired the chute at 123.8 s, and then land was refused. Mission passed the same scenario at 1x. Fly it alone at 1x and at 4x (`--setup P --scenario wind`) to see whether it's P itself or the sped-up sim, and check the wind ramp: its marks show the wind blowing from 38 s to 155 s of sim time, far longer than the 40 s it should.
    - Regrade everything (`pcs14 flight-sim regrade`, inside WSL or on Windows) so the drop and dead-motor runs get the safety monitor's catch time.
    - Fly the before-and-after for the steps still: `pcs14 flight-sim run --setup base --scenario steps --tag x500-gains --param MC_ROLL_P=6.5 --param MC_PITCH_P=6.5 --speed 4`.
    - Then `pcs14 flight-sim report --replays` writes the report, the stills and a Rerun replay of every run. Commit the report and stills.
