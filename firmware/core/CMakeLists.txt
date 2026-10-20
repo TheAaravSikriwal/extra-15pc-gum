@@ -57,8 +57,7 @@ add_test(NAME core COMMAND pcs14_core_tests)
 set_tests_properties(core PROPERTIES FIXTURES_SETUP ulog_sample)
 
 # pyulog, the library the flight sim's graders use, reads the sample log the tests wrote back,
-# wherever it's installed for the Python CMake finds (pass -DPython3_EXECUTABLE to pick one)
-find_package(Python3 COMPONENTS Interpreter)
+# wherever it's installed for the Python CMake found
 if(Python3_FOUND)
   execute_process(COMMAND ${Python3_EXECUTABLE} -c "import pyulog"
     RESULT_VARIABLE pyulog_missing OUTPUT_QUIET ERROR_QUIET)
