@@ -44,6 +44,7 @@ testpaths = ["tests"]
 markers = [
     "kicad: needs KiCad's command line (CI runs these in their own job)",
     "px4: flies PX4 in Gazebo (only inside WSL2 Ubuntu, after scripts/setup-ubuntu.sh)",
+    "sitl: flies my own firmware in Gazebo (inside WSL2 Ubuntu, after scripts/build-firmware.sh)",
 ]
 
 [tool.ruff]

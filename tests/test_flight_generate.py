@@ -186,9 +186,37 @@ def test_it_writes_every_models_folder_and_the_world(real, tmp_path):
     build, targets, drone, setups, _ = real
     models = write_models(tmp_path, drone, build, targets, [setups["max"]], meshes=False)
     home = tmp_path / "models" / models[0].name
-    for name in ("model.config", "model.sdf", "params.json"):
+    for name in ("model.config", "model.sdf", "params.json", "firmware.txt"):
         assert (home / name).is_file(), name
     ET.parse(home / "model.sdf")
     assert json.loads((home / "params.json").read_text())["CA_ROTOR_COUNT"] == 4
     assert (tmp_path / "models" / "pcs14_payload" / "model.sdf").is_file()  # Max carries one
     ET.parse(tmp_path / "worlds" / "pcs14.sdf")
+
+
+def test_my_firmware_gets_the_whole_drone_as_one_body():
+    from pcs14.flight.generate import firmware_airframe
+
+    model = made_up_model()
+    lines = {}
+    rotors = []
+    for line in firmware_airframe(model).splitlines():
+        words = line.split("#")[0].split()
+        if not words:
+            continue
+        if words[0] == "rotor":
+            rotors.append([float(w) for w in words[1:]])
+        else:
+            lines[words[0]] = [float(w) for w in words[1:]]
+    assert lines["mass_kg"] == [pytest.approx(model.total_mass)]
+    # the props add their m r^2 to roll, pitch and yaw
+    props = sum(r.mass * (r.position[0] ** 2 + r.position[1] ** 2) for r in model.rotors)
+    spin = 4 * model.rotors[0].inertia[2]
+    assert lines["inertia_kg_m2"][2] == pytest.approx(0.045 + props + spin, rel=0.01)
+    assert lines["inertia_kg_m2"][0] > 0.02
+    # PX4's order and frame: front right first, +y to the right, counterclockwise positive
+    assert len(rotors) == 4
+    assert rotors[0][0] > 0 and rotors[0][1] > 0 and rotors[0][2] == pytest.approx(0.016)
+    assert rotors[2][0] > 0 and rotors[2][1] < 0 and rotors[2][2] == pytest.approx(-0.016)
+    assert lines["idle_rad_s"] == [round(0.15 * 930.0)]
+    assert lines["max_rad_s"] == [pytest.approx(930.0)]

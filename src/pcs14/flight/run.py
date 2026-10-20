@@ -470,11 +470,11 @@ class Session:
     async def _spawn(self, command, name: str, **kwargs):
         out = open(self.folder / f"{name}.log", "wb")  # noqa: SIM115 (closed in stop)
         self._outputs.append(out)
+        kwargs.setdefault("stdin", asyncio.subprocess.DEVNULL)
+        kwargs.setdefault("stdout", out)
         process = await asyncio.create_subprocess_exec(
             *command,
-            stdout=out,
-            stderr=asyncio.subprocess.STDOUT,
-            stdin=asyncio.subprocess.DEVNULL,
+            stderr=asyncio.subprocess.STDOUT if kwargs["stdout"] is out else out,
             start_new_session=True,
             **kwargs,
         )
@@ -545,15 +545,21 @@ class Session:
         if "true" not in reply:
             raise SimError(f"Gazebo wouldn't spawn {name}: {reply.strip()}")
 
-    async def start(self, before_px4=None):
-        from mavsdk import System
-
+    async def start_gazebo(self):
+        """Gazebo's server, headless, in a fresh run folder: the first half of start, and all
+        my own firmware needs before its model goes in (pcs14.flight.firmware)."""
         if self.folder.exists():
             shutil.rmtree(self.folder)
         self.folder.mkdir(parents=True)
         models, worlds = self.exports / "models", self.exports / "worlds"
         self.gz_env = gz_environment(self.tools, models, worlds, self.partition)
         await self._spawn(gz_command(worlds / f"{self.world_file}.sdf"), "gz", env=self.gz_env)
+
+    async def start(self, before_px4=None):
+        from mavsdk import System
+
+        await self.start_gazebo()
+        models = self.exports / "models"
         if before_px4 is not None:
             await self.wait_for_world()
             await before_px4(self)
