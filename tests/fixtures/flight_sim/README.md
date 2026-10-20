@@ -57,6 +57,10 @@ A blank cell is a scenario that combination doesn't fly: top speed and wind only
 
 </details>
 
+## Why the misses miss
+
+- wind drift in mission: not looked into yet
+
 ## The models
 
 Each combination's model, as generated. The weight is the CAD's, without the sizing model's growth margin; the top speed is where each motor makes the sizing model's full-throttle thrust, at the 20% reserve and the 90 A cap.

@@ -1,16 +1,26 @@
 """The plain flights: the smoke flight that proves the runner works, and the moves every other
-scenario is built from."""
+scenario is built from.
+
+PX4 holds its position by itself after taking off (its Hold mode). Moving to a point uses
+offboard position setpoints, which MAVSDK keeps resending; leaving offboard goes back to Hold.
+A script's marks come in pairs, "<name> start" and "<name> end", never a bare name that could
+be one of PX4's modes.
+"""
+
+import asyncio
+import contextlib
+import math
 
 from pcs14.flight import grade
 from pcs14.flight.scenarios import Aborted, Scenario
 
 SMOKE_HEIGHT = 2.5  # m
 SMOKE_HOLD_S = 10.0
-SETTLE_S = 3.0  # after reaching a height, before a hold counts
-HOME_RADIUS = 1.0  # m: a flight that should come back lands within this of where it started
+SETTLE_S = 3.0  # after reaching a height or a point, before a hold counts
+STILL_MS = 0.3  # m/s: slower than this counts as stopped
 
 
-async def take_off(s, height: float, timeout: float = 40.0):
+async def take_off(s, height: float, timeout: float = 60.0):
     """Arms, climbs to `height` with PX4's takeoff mode, and lets it settle."""
     await s.drone.action.set_takeoff_altitude(height)
     await s.drone.action.arm()
@@ -22,19 +32,96 @@ async def take_off(s, height: float, timeout: float = 40.0):
 
 
 async def hold(s, seconds: float, name: str = "hold"):
-    """Holds where it is for `seconds`, marked "<name> start" and "<name> end" (not just the
-    name, which could be one of PX4's modes)."""
+    """Waits `seconds` where it is, marked "<name> start" and "<name> end"."""
     s.mark(f"{name} start")
     await s.clock.sleep(seconds)
     s.mark(f"{name} end")
 
 
-async def land(s, timeout: float = 90.0):
+async def offboard_here(s):
+    """Switches to offboard, holding the current position and heading."""
+    from mavsdk.offboard import PositionNedYaw
+
+    st = s.state
+    await s.drone.offboard.set_position_ned(PositionNedYaw(st.north, st.east, st.down, st.heading))
+    await s.drone.offboard.start()
+
+
+async def go_to(s, north: float, east: float, height: float, tolerance=0.5, timeout=90.0):
+    """Flies (in offboard) to a point north and east of home, `height` m up, and settles."""
+    from mavsdk.offboard import PositionNedYaw
+
+    await s.drone.offboard.set_position_ned(PositionNedYaw(north, east, -height, s.state.heading))
+
+    def there():
+        st = s.state
+        off = math.dist((st.north, st.east, st.height), (north, east, height))
+        return off <= tolerance and st.speed <= STILL_MS
+
+    if not await s.clock.until(there, timeout):
+        raise Aborted(f"it never got to {north:g} m north, {east:g} m east, {height:g} m up")
+    await s.clock.sleep(SETTLE_S)
+
+
+async def leave_offboard(s):
+    """Back to PX4's Hold."""
+    await s.drone.action.hold()
+    await s.clock.until(lambda: s.state.mode.endswith("HOLD"), 5.0)
+
+
+async def land(s, timeout: float = 120.0):
     """Lands where it is and waits for PX4 to disarm."""
     await s.drone.action.land()
     s.mark("land sent")
+    await disarmed(s, timeout)
+
+
+async def disarmed(s, timeout: float):
     if not await s.clock.until(lambda: not s.state.armed, timeout):
         raise Aborted(f"it didn't land and disarm within {timeout:g} s")
+
+
+async def down(s, timeout: float = 90.0, after_s: float = 3.0):
+    """Waits for it to be on the ground by PX4's estimate, however it got there."""
+    if not await s.clock.until(lambda: s.state.height < 0.5 and not s.state.in_air, timeout):
+        raise Aborted(f"it was still in the air {timeout:g} s later")
+    await s.clock.sleep(after_s)
+
+
+class Sticks:
+    """A pilot's sticks over MAVLink, resent 20 times a second like a real transmitter's: x
+    forward, y right, z throttle (0.5 holds height in altitude mode), r yaw."""
+
+    def __init__(self, s):
+        self.s = s
+        self.x = self.y = self.r = 0.0
+        self.z = 0.5
+        self._task = None
+
+    async def send(self):
+        await self.s.drone.manual_control.set_manual_control_input(self.x, self.y, self.z, self.r)
+
+    async def move(self, **sticks):
+        """Moves sticks (x, y, z or r) and sends them at once, not at the next resend: at a
+        faster sim speed the resend's real-time gap is a longer stretch of sim time."""
+        for name, value in sticks.items():
+            setattr(self, name, value)
+        await self.send()
+
+    async def _send(self):
+        while True:
+            await self.send()
+            await asyncio.sleep(0.05)
+
+    async def __aenter__(self):
+        self._task = asyncio.create_task(self._send())
+        await asyncio.sleep(0.2)
+        return self
+
+    async def __aexit__(self, *exc):
+        self._task.cancel()
+        with contextlib.suppress(asyncio.CancelledError):
+            await self._task
 
 
 async def smoke(s):
@@ -43,11 +130,16 @@ async def smoke(s):
     await land(s)
 
 
-def hold_window(log, name: str = "hold"):
+def window(log, name: str):
+    """The (start, end) of a marked stretch, or None."""
     start, end = log.when(f"{name} start"), log.when(f"{name} end")
     if start is None or end is None:
         return None
     return start, end
+
+
+def hold_window(log, name: str = "hold"):
+    return window(log, name)
 
 
 def height_at(log, t: float) -> float:
@@ -55,20 +147,24 @@ def height_at(log, t: float) -> float:
     return float(log.position[k, 2])
 
 
+def missing(what: str) -> list:
+    return [grade.Finding(what, False, None, None, "", f"the flight never got to the {what}")]
+
+
 def grade_smoke(log, imu, context) -> list:
-    hover = context.targets.flight_sim.hover
-    window = hold_window(log)
-    if window is None:
-        return [grade.Finding("hover", False, None, None, "", "it never got to the hold")]
-    start, end = window
-    found = grade.hover_hold(
+    hover = context.sim.hover
+    found = window(log, "hold")
+    if found is None:
+        return missing("hold")
+    start, end = found
+    out = grade.hover_hold(
         log, start, end, height_at(log, start), hover.max_drift_m, hover.max_height_error_m
     )
-    found.append(
+    out.append(
         grade.sequence(log.events, ["took off", "landed", "disarmed"], "take-off and landing")
     )
-    found.append(grade.ends_safely(log, HOME_RADIUS))
-    return found
+    out.append(grade.ends_safely(log, context.sim.returns.max_landing_distance_m))
+    return out
 
 
 SCENARIOS = (Scenario("smoke", smoke, grade_smoke, budget_s=120.0),)

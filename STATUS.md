@@ -1,7 +1,7 @@
 # Status
 
-**Last updated:** 2026-10-19, on the PC (Windows and WSL2 Ubuntu)
-**Step:** step 4, the flight sim. The talk (4a) and the plan (4b) are done, and the build (4c) has tasks 1 to 10 done (2026-10-19): PX4 flies the generated model in Gazebo. Next is every scenario in every combination.
+**Last updated:** 2026-10-20, on the PC (Windows and WSL2 Ubuntu)
+**Step:** step 4, the flight sim. The build (4c) has tasks 1 to 10 done and task 11 mostly done (2026-10-20): all twelve scenarios are written and have flown; a clean batch of all 78 runs was flying when I stopped.
 **Main machine:** the PC, with WSL2 Ubuntu 24.04 for the Linux tools
 
 ## Right now
@@ -45,14 +45,24 @@ Where to look:
 
 **Step 4c, tasks 9 and 10, are done (2026-10-19): PX4 flies it.** Ubuntu is in WSL2 on the PC, and `scripts/setup-ubuntu.sh` installed PX4 v1.17.0, Gazebo Harmonic (8.15.0), MAVSDK 3.17.4, pyulog 1.2.4 and our drag plugin. It now fetches only the simulator's submodules, after the full clone crawled at 60 kB/s. `pcs14 flight-sim run` starts Gazebo headless, PX4 standalone and stock with our parameters, a relay that can cut the uplink, and the scenario script on PX4's clock, then grades from Gazebo's ground truth in PX4's log. The smoke flight (take off, hover 10 s, land) in base passes: hovering at 539 rad/s as the motor model predicts, 8 cm of drift, 41 s of real time. In P, PX4's own parachute output fires the chute on flight termination. The [log](docs/log/2026-10-19-first-flight.md).
 
+**Step 4c, task 11, mostly done (2026-10-20).** All twelve scenarios fly. Passing: hover, stick steps (after tuning PX4's attitude gain from 6.5 to 9), top speed (88 km/h), 10 m/s wind, lost link, low battery (home with 29% left), the parachute drop, a dead motor with P, the sagging pack, the payload grab. Not passing, and why: **a dead motor without P is a crash** (a quad can't fly on three motors); **losing GPS means a blind descent** that drifts 34 to 38 m in calm air (no optical flow sensor); **cruise endurance disagrees with the sizing model by about 25%** (Gazebo's rotors don't gain from forward flight; the sizing model's do). Fixed on the way: the chute was on PX4's landing gear output (400, not 401) and opened on take-off. The [log](docs/log/2026-10-20-flight-sim-scenarios.md).
+
 **Offline?** Study from [docs/learning.md](docs/learning.md). Topics 1 and 2 (how quads fly; props, motors and batteries) are what the sizing model needs.
 
 ## Up next
 
-1. **Step 4c, task 11:** every scenario in every combination (78 runs), tuning PX4 where its x500 defaults don't suit this airframe, each change written down. Then task 12, closing the loop against the sizing model. The [plan](docs/plans/2026-10-19-flight-sim.md).
+1. **Finish task 11** (picking up where I stopped):
+   - A clean batch of all 78 runs was flying in WSL (`pcs14 flight-sim run --speed 4 --jobs 2`, two at a time, never four: four overloads the PC and spoils the results). Its results land in `outputs/flight-sim/results/`. If it didn't finish, rerun the missing ones the same way with `--setup` and `--scenario`. Low battery in V hung once ("PX4's clock stopped"), probably starved while the Windows tests ran: rerun it alone.
+   - Regrade everything (`pcs14 flight-sim regrade`, inside WSL or on Windows) so the drop and dead-motor runs get the safety monitor's catch time.
+   - Fly the before-and-after for the steps still: `pcs14 flight-sim run --setup base --scenario steps --tag x500-gains --param MC_ROLL_P=6.5 --param MC_PITCH_P=6.5 --speed 4`.
+   - Then `pcs14 flight-sim report --replays` writes the report, the stills and a Rerun replay of every run. Commit the report and stills.
+2. **Task 12, closing the loop:** the report's new sections do most of it (flight times against the sizing model, false triggers, the monitor's catch times, why each miss misses). Write it up, and decide what the three design findings mean (below).
+3. **The project site's spec** (what it's built with). The goal is written down in decisions: a complete blueprint, from the structure to the circuits.
 2. **The project site's spec** (what it's built with). The goal is written down in decisions: a complete blueprint, from the structure to the circuits.
 
 ## Still open
+
+- **Decisions the flight sim raised (mine to make):** should P (the chute) be in every combination, since a dead motor without it loses the drone? Should Base get an optical flow sensor, so a GPS failure isn't a blind descent? Both change the parts list and the weight.
 
 - Rotor drag in forward flight, so the cruise numbers get believable (the honesty check's big miss)
 - The weight: Mission passes at 22.25 min pessimistic hover with 1.25 min to spare; Max is 2623 g against its own 2500 g target (report-only)

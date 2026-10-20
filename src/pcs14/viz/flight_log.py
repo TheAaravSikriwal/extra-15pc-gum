@@ -50,6 +50,12 @@ class FlightRecorder(Recorder):
             path = f"world/drone/{_safe(piece.name.replace(' ', '_'))}"
             self.rec.log(path, _mesh(piece.solid, _color(piece)), static=True)
 
+    def log_meshes(self, meshes) -> None:
+        """Ready-made parts from drone_meshes, so a batch of replays tessellates each
+        combination once."""
+        for path, mesh in meshes:
+            self.rec.log(path, mesh, static=True)
+
     def log_flight(self, name: str, log, max_rot_velocity: float) -> None:
         tag = _safe(name.replace(" ", "_").replace(",", ""))
         trail = np.asarray(log.position, dtype=np.float32)
@@ -88,3 +94,32 @@ class FlightRecorder(Recorder):
         self.rec.log(
             "summary", rr.TextDocument(text, media_type=rr.MediaType.MARKDOWN), static=True
         )
+
+
+REPLAY_TOLERANCE = 0.001  # m: a flight replay doesn't need the CAD stills' 0.3 mm
+
+
+def drone_meshes(pieces) -> list:
+    """(entity path, mesh) for each of the CAD's parts but the wires, tessellated coarsely."""
+    out = []
+    for piece in pieces:
+        if piece.kind == "wire":
+            continue
+        vertices, triangles = piece.solid.tessellate(REPLAY_TOLERANCE, 0.5)
+        mesh = rr.Mesh3D(
+            vertex_positions=np.array([(v.X, v.Y, v.Z) for v in vertices], dtype=np.float32),
+            triangle_indices=np.array(triangles, dtype=np.uint32),
+            albedo_factor=[*_color(piece), 255],
+        )
+        out.append((f"world/drone/{_safe(piece.name.replace(' ', '_'))}", mesh))
+    return out
+
+
+def record_run(path: Path, meshes, name: str, log, max_rot_velocity: float, summary: str) -> Path:
+    """One flown run's recording: the drone flying its logged path, the plots and the checks."""
+    recorder = FlightRecorder(path)
+    recorder.log_meshes(meshes)
+    recorder.log_flight(name, log, max_rot_velocity)
+    recorder.log_summary(summary)
+    recorder.close()
+    return Path(path)

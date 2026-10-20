@@ -12,17 +12,18 @@ dependencies = [
     "build123d==0.13.0",
     "matplotlib==3.11.2",
     "pydantic==2.13.5",
+    "pyulog==1.2.4",
     "pyyaml==6.0.3",
     "rerun-sdk==0.38.1",
     "wireviz==0.4.1",
 ]
 
 [project.optional-dependencies]
-# the flight sim's tools, installed in WSL2 by scripts/setup-ubuntu.sh (MAVSDK's 3.x line: 4.0 was
-# a month-old major version when these were pinned, 2026-10-19)
+# flying the flight sim, installed in WSL2 by scripts/setup-ubuntu.sh (MAVSDK's 3.x line: 4.0 was
+# a month-old major version when it was pinned, 2026-10-19). Reading PX4's logs (pyulog) is in
+# the main list, so any machine can grade, draw and replay flights already flown.
 flight = [
     "mavsdk==3.17.4",
-    "pyulog==1.2.4",
 ]
 
 [project.scripts]

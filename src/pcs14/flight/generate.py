@@ -31,14 +31,23 @@ FOOT_RADIUS = 0.008  # m, the printed legs' feet (pcs14.cad.printed)
 IDLE_SHARE = 0.15  # of the top speed, where PX4 idles a motor (the x500: 150 of 1000 rad/s)
 TOP_SPEED_LIMIT = 25.0  # m/s, PX4's speed limits for the capability tests (80 km/h is 22.2)
 CHUTE_TOPIC = "/pcs14/chute/fire"
-# PX4 fires the chute itself: its parachute output (function 400) on the bridge's first servo
+# PX4 fires the chute itself: its parachute output (function 401) on the bridge's first servo
 # sits at -1 in flight and goes to +1 on flight termination, which also stops the motors.
 # Gazebo gets it as an angle between the servo's limits, and the plugin fires past halfway.
 CHUTE_SERVO = 0
+CHUTE_FUNCTION = 401  # PX4's Parachute (400 is the landing gear, which fired it on take-off)
 CHUTE_SERVO_DEG = 45.0
 CHUTE_FIRE_ABOVE = math.radians(CHUTE_SERVO_DEG) / 2
 WIND_TOPIC = "/pcs14/wind"
 PAYLOAD_TOPICS = ("/pcs14/payload/attach", "/pcs14/payload/detach")
+# PX4 tuned for this airframe, over the x500's defaults, each change found in the flight sim
+# and written down in docs/decisions.md
+TUNING = {
+    # attitude gains, 6.5 on the x500: a 15 degree stick step settled in 0.6 s, against the
+    # 0.5 s target, with 1% overshoot; at 9 it settles in 0.25 s with 3 to 4% (2026-10-20)
+    "MC_ROLL_P": 9.0,
+    "MC_PITCH_P": 9.0,
+}
 # PX4's quad X: (front?, left?, direction) for rotors 0 to 3
 ORDER = ((True, False, "ccw"), (False, True, "ccw"), (True, True, "cw"), (False, False, "cw"))
 # the x500's sensor noise (models/x500_base/model.sdf in PX4-gazebo-models b6127f4)
@@ -379,11 +388,12 @@ def px4_params(model: FlightModel, build, targets) -> dict:
     params["BAT1_N_CELLS"] = pack.series
     params["BAT1_CAPACITY"] = round(pack.cell.capacity_mah * pack.parallel)
     params["NAV_DLL_ACT"] = 2  # lost link: return, the x500's own
+    params.update(TUNING)
     if model.chute is not None:
         # the chute on the bridge's first servo, fired by flight termination, which the failure
         # detector may now call: the flight controller's half of "the motors cut, then the chute"
         n = CHUTE_SERVO + 1
-        params[f"SIM_GZ_SV_FUNC{n}"] = 400
+        params[f"SIM_GZ_SV_FUNC{n}"] = CHUTE_FUNCTION
         params[f"SIM_GZ_SV_MINA{n}"] = -CHUTE_SERVO_DEG
         params[f"SIM_GZ_SV_MAXA{n}"] = CHUTE_SERVO_DEG
         params["CBRK_FLIGHTTERM"] = 0

@@ -38,6 +38,29 @@ UNPROVEN = (
 )
 
 
+# why a miss misses, for the misses that have been looked into: (scenario, check) to the reason
+EXPLAINED = {
+    ("dead motor", "touchdown"): (
+        "There's no chute without P, and a quad can't fly on three motors: PX4 drops the dead "
+        "one from the mix and tries, but it tumbles and falls. Every combination without P "
+        "loses the drone to a dead motor."
+    ),
+    ("failed sensor", "no fly-away"): (
+        "Without GPS this drone has nothing to hold its position with: the TF-Luna only "
+        "measures height, and there's no optical flow sensor. PX4 comes down blind, level by "
+        "its own attitude estimate, and that estimate's small tilt error carries it off at up "
+        "to a few m/s. In wind it would drift farther."
+    ),
+    ("endurance", "cruise endurance"): (
+        "The sizing model says forward flight is cheaper than a hover, the way it is for a real "
+        "prop moving through fresh air. Gazebo's rotors make the same thrust at any airspeed, so "
+        "in the sim a cruise costs about what a hover does. The truth is somewhere between, and "
+        "pinning it down takes the rotor's forward-flight data the aero side track will "
+        "measure."
+    ),
+}
+
+
 def applies(scenario: str, setup) -> bool:
     """Which scenarios a combination flies: top speed and wind where the targets set them, the
     drop with P, the grab with C, the rest everywhere."""
@@ -106,6 +129,106 @@ class FlightSimRun:
         return "fail"
 
 
+def closing(run: FlightSimRun) -> dict:
+    """The sim against the other layers: flight times against the sizing model's, the safety
+    monitor's false triggers in the healthy runs, and how soon it would catch the real
+    failures."""
+    flight_time = []
+    for setup in run.combinations:
+        r = run.result("endurance", setup.name)
+        if r is None or not r.flown:
+            continue
+        row = {"setup": setup.name}
+        for f in r.findings:
+            if f.extra and f.check in ("hover endurance", "cruise endurance"):
+                kind = f.check.split()[0]
+                row[f"{kind}_sim_min"] = f.extra["sim_min"]
+                row[f"{kind}_sizing_min"] = f.extra["sizing_min"]
+        flight_time.append(row)
+    false, healthy = [], 0
+    caught = []
+    for r in run.results:
+        for f in r.findings:
+            if f.check == "false triggers":
+                healthy += 1
+                if f.value:
+                    false.append({"scenario": r.scenario, "setup": r.setup, "detail": f.detail})
+            elif f.check == "safety monitor":
+                caught.append({"scenario": r.scenario, "setup": r.setup, "delay_s": f.value,
+                               "detail": f.detail})  # fmt: skip
+    return {"flight_time": flight_time, "healthy_runs": healthy, "false_triggers": false,
+            "caught": caught}  # fmt: skip
+
+
+def _minutes(value) -> str:
+    return f"{value:.1f} min" if value is not None else ""
+
+
+def _closing_lines(run: FlightSimRun) -> list[str]:
+    found = closing(run)
+    if not (found["flight_time"] or found["healthy_runs"] or found["caught"]):
+        return []
+    lines = ["## Closing the loop", ""]
+    if found["flight_time"]:
+        lines += [
+            "Flight times from the sim's logged rotors, through my battery model, against the "
+            "sizing model's at the same weight (no growth margin, no payload).",
+            "",
+            "| Setup | Hover, sim | Hover, sizing model | Cruise, sim | Cruise, sizing model |",
+            "|---|---|---|---|---|",
+        ]
+        keys = ("hover_sim_min", "hover_sizing_min", "cruise_sim_min", "cruise_sizing_min")
+        for row in found["flight_time"]:
+            cells = [_minutes(row.get(k)) for k in keys]
+            lines.append(f"| {row['setup']} | " + " | ".join(cells) + " |")
+        lines.append("")
+    if found["healthy_runs"]:
+        count = len(found["false_triggers"])
+        lines.append(
+            f"The safety monitor's triggers, replayed over the {found['healthy_runs']} runs where "
+            "nothing fails on purpose: "
+            + ("no false triggers." if not count else f"{count} false triggers:")
+        )
+        lines += [
+            f"- {f['scenario']} in {f['setup']}: {f['detail']}" for f in found["false_triggers"]
+        ]
+        lines.append("")
+    if found["caught"]:
+        lines += ["And where something really fails:", ""]
+        lines += [f"- {c['scenario']} in {c['setup']}: {c['detail']}" for c in found["caught"]]
+        lines.append("")
+    return lines
+
+
+def _misses_lines(run: FlightSimRun) -> list[str]:
+    misses: dict[tuple, list[str]] = {}
+    unexplained = []
+    for r in run.results:
+        if not r.flown:
+            continue
+        for f in r.findings:
+            if f.passed:
+                continue
+            key = (r.scenario, f.check)
+            if key in EXPLAINED:
+                misses.setdefault(key, []).append(r.setup)
+            else:
+                unexplained.append(f"{f.check} in {r.setup}")
+    if not misses and not unexplained:
+        return []
+    lines = ["## Why the misses miss", ""]
+    for (scenario, check), setups in misses.items():
+        lines += [
+            f"**{scenario}, {check}** ({', '.join(setups)}). {EXPLAINED[scenario, check]}",
+            "",
+        ]
+    for item in unexplained:
+        lines.append(f"- {item}: not looked into yet")
+    if unexplained:
+        lines.append("")
+    return lines
+
+
 def _cell(run: FlightSimRun, scenario: str, setup) -> str:
     if not applies(scenario, setup):
         return ""
@@ -170,6 +293,8 @@ def render(run: FlightSimRun, generated: str | None = None) -> str:
             f"| {f.check} | {f.detail} | {'pass' if f.passed else 'fail'} |" for f in r.findings
         ]
         lines += ["", "</details>", ""]
+    lines += _misses_lines(run)
+    lines += _closing_lines(run)
     lines += [
         "## The models",
         "",
@@ -226,6 +351,7 @@ def to_data(run: FlightSimRun, generated: str | None = None) -> dict:
             for r in run.results
         ],
         "planned": [{"scenario": sc, "setup": s} for sc, s in run.expected()],
+        "closing": closing(run),
         "estimates": list(run.estimates),
         "unproven": list(UNPROVEN),
         "files": list(run.files),

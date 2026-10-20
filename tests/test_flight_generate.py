@@ -165,7 +165,7 @@ def test_px4s_parameters_match_the_model(real):
 def test_px4_fires_the_chute_by_termination_only_with_p(real):
     _, _, _, _, models = real
     p = models["mission"].params
-    assert p["SIM_GZ_SV_FUNC1"] == 400  # PX4's parachute output, on the first servo
+    assert p["SIM_GZ_SV_FUNC1"] == 401  # PX4's parachute output (400 is the landing gear)
     assert p["CBRK_FLIGHTTERM"] == 0  # flight termination allowed, which fires it
     root = ET.fromstring(models["mission"].sdf())
     chute = next(p for p in root.iter("plugin") if p.get("filename") == "pcs14-drag").find("chute")

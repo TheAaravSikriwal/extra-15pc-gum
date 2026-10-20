@@ -46,19 +46,32 @@ def graded(scenario: Scenario, outcome, context: Context) -> ScenarioResult:
     findings = list(scenario.grade(log, imu, context)) if not outcome.aborted else []
     if outcome.aborted:
         findings.append(grade.Finding("flown to the end", False, None, None, "", outcome.aborted))
+    sim = targets.flight_sim
     if scenario.healthy:
-        sim = targets.flight_sim
         findings.append(grade.false_triggers(imu, sim.triggers, sim.max_false_triggers))
-    note = f"{outcome.wall_s:.0f} s of real time"
+    elif scenario.failure is not None and log.when(scenario.failure) is not None:
+        findings.append(grade.caught(imu, sim.triggers, log.when(scenario.failure)))
+    note = f"{outcome.wall_s:.0f} s of real time at {outcome.speed:g}x"
     return ScenarioResult(scenario.name, setup.name, True, tuple(findings), note)
 
 
-def save(exports: Path, model: str, result: ScenarioResult) -> Path:
+def save(exports: Path, model: str, result: ScenarioResult, outcome=None, name=None) -> Path:
+    """The result, plus the run's own record when there is one: the script's marks, its
+    notes and how long it took, for looking into a run later."""
     folder = Path(exports) / RESULTS
     folder.mkdir(parents=True, exist_ok=True)
-    path = folder / f"{model}-{result.scenario.replace(' ', '-')}.json"
+    path = folder / f"{model}-{name or result.scenario.replace(' ', '-')}.json"
     data = asdict(result)
     data["findings"] = [asdict(f) for f in result.findings]
+    if outcome is not None:
+        data["run"] = {
+            "marks": [[t, name] for t, name in outcome.marks],
+            "notes": outcome.notes,
+            "wall_s": outcome.wall_s,
+            "speed": outcome.speed,
+            "error": outcome.error,
+            "aborted": outcome.aborted,
+        }
     path.write_text(json.dumps(data, indent=1, default=_plain) + "\n", encoding="utf-8")
     return path
 
@@ -73,31 +86,90 @@ def load_results(exports: Path) -> list[ScenarioResult]:
     out = []
     for path in sorted((Path(exports) / RESULTS).glob("*.json")):
         data = json.loads(path.read_text(encoding="utf-8"))
+        data.pop("run", None)
         findings = tuple(grade.Finding(**f) for f in data.pop("findings"))
         out.append(ScenarioResult(findings=findings, **data))
     return out
 
 
-async def run_one(tools, exports, setup, scenario: Scenario, targets, build, instance=0, speed=1.0):
-    """Flies one scenario in one combination, grades it and saves the result."""
+def run_name(scenario: Scenario, tag: str | None = None) -> str:
+    """A run's name in file names: the scenario's, plus an experiment's tag."""
+    name = scenario.name.replace(" ", "-")
+    return f"{name}-{tag}" if tag else name
+
+
+async def run_one(
+    tools, exports, setup, scenario: Scenario, targets, build, instance=0, speed=1.0,
+    overrides=None, tag=None,
+):  # fmt: skip
+    """Flies one scenario in one combination, grades it and saves the result. `overrides` are
+    PX4 parameters over everything else, and `tag` keeps an experiment's run apart."""
     model = model_name(setup.name)
     params = load_params(exports, model)
     context = Context(targets, setup, params, build=build, model=load_model(exports, model))
     if scenario.params is not None:
         params = {**params, **scenario.params(context)}
-        context = replace(context, params=params)
-    name = scenario.name.replace(" ", "-")
+    params = {**params, **(overrides or {})}
+    context = replace(context, params=params)
+    name = run_name(scenario, tag)
     session = Session(tools, model, params, exports, name, instance, speed)
     session.context = context
-    outcome = await fly(session, scenario.fly, scenario.budget_s, scenario.prepare)
+    budget = scenario.budget_s(context) if callable(scenario.budget_s) else scenario.budget_s
+    outcome = await fly(session, scenario.fly, budget, scenario.prepare)
     result = graded(scenario, outcome, context)
-    save(exports, model, result)
+    if tag:
+        result = replace(result, scenario=f"{scenario.name} ({tag})")
+    save(exports, model, result, outcome, name)
     return result, outcome
 
 
+def flown_log(exports, setup_name: str, name: str):
+    """A flown run's (FlightLog, marks, ScenarioResult), from its saved log and record, or None
+    if it hasn't flown. `name` is the run's name in file names (pcs14_mission-parachute-drop
+    is "parachute-drop" in mission)."""
+    model = model_name(setup_name)
+    path = Path(exports) / RESULTS / f"{model}-{name}.json"
+    log = Path(exports) / "logs" / f"{model}-{name}.ulg"
+    if not path.exists() or not log.exists():
+        return None
+    data = json.loads(path.read_text(encoding="utf-8"))
+    record = data.pop("run", None) or {"marks": []}
+    marks = [(t, n) for t, n in record["marks"]]
+    findings = tuple(grade.Finding(**f) for f in data.pop("findings"))
+    return ulog.flight_log(ulog.read(log), marks), marks, ScenarioResult(findings=findings, **data)
+
+
+def regrade(exports, setup, scenario: Scenario, targets, build) -> ScenarioResult | None:
+    """Grades a run again from its saved log and record, without flying it: for when a
+    grader changes. None if it hasn't flown."""
+    from pcs14.flight.run import RunResult
+
+    model = model_name(setup.name)
+    name = scenario.name.replace(" ", "-")
+    path = Path(exports) / RESULTS / f"{model}-{name}.json"
+    log = Path(exports) / "logs" / f"{model}-{name}.ulg"
+    if not path.exists() or not log.exists():
+        return None
+    record = json.loads(path.read_text(encoding="utf-8")).get("run")
+    if record is None:
+        return None
+    outcome = RunResult(model, name, Path(), log=log,
+                        marks=[(t, n) for t, n in record["marks"]], notes=record["notes"],
+                        error=record["error"], aborted=record["aborted"],
+                        wall_s=record["wall_s"], speed=record.get("speed", 1.0))  # fmt: skip
+    params = load_params(exports, model)
+    context = Context(targets, setup, params, build=build, model=load_model(exports, model))
+    if scenario.params is not None:
+        context = replace(context, params={**params, **scenario.params(context)})
+    result = graded(scenario, outcome, context)
+    save(exports, model, result, outcome)
+    return result
+
+
 async def run_many(
-    tools, exports, pairs, targets, build, jobs: int = 1, speed: float = 1.0, report=print
-):
+    tools, exports, pairs, targets, build, jobs: int = 1, speed: float = 1.0, report=print,
+    overrides=None, tag=None,
+):  # fmt: skip
     """Every (setup, scenario) in `pairs`, `jobs` at a time, each on its own PX4 instance."""
     queue: asyncio.Queue = asyncio.Queue()
     for pair in pairs:
@@ -108,7 +180,7 @@ async def run_many(
         while not queue.empty():
             setup, scenario = queue.get_nowait()
             result, outcome = await run_one(
-                tools, exports, setup, scenario, targets, build, instance, speed
+                tools, exports, setup, scenario, targets, build, instance, speed, overrides, tag
             )
             results.append(result)
             verdict = "pass" if result.passed else ("FAIL" if result.flown else "not flown")

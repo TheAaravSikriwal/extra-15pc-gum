@@ -1,10 +1,10 @@
 # The flight sim
 
-*Generated on 2026-10-19 by pcs14 0.1.0, the flight sim in `src/pcs14/flight/`. PX4 v1.17.0 flies a Gazebo Harmonic model of this drone, generated from the build, the sizing model and the CAD, in every module combination.*
+*Generated on 2026-10-20 by pcs14 0.1.0, the flight sim in `src/pcs14/flight/`. PX4 v1.17.0 flies a Gazebo Harmonic model of this drone, generated from the build, the sizing model and the CAD, in every module combination.*
 
 ## The verdict
 
-**Not flown yet.** 78 scenario runs are planned across 8 combinations; the models are generated and waiting.
+**Fail.** 13 of 78 runs flown, and 4 miss: endurance in base; dead motor in base; failed sensor in base; failed sensor in P.
 
 Built from E3 2814 850KV / 1050 3-blade / 6S2P Molicel INR-21700-P45B.
 
@@ -12,20 +12,173 @@ Built from E3 2814 850KV / 1050 3-blade / 6S2P Molicel INR-21700-P45B.
 
 | Scenario | base | V | P | C | mission | V+C | P+C | max |
 |---|---|---|---|---|---|---|---|---|
-| hover | not yet | not yet | not yet | not yet | not yet | not yet | not yet | not yet |
-| steps | not yet | not yet | not yet | not yet | not yet | not yet | not yet | not yet |
-| top speed |  | not yet | not yet |  | not yet |  |  |  |
-| wind |  | not yet | not yet |  | not yet |  |  |  |
-| endurance | not yet | not yet | not yet | not yet | not yet | not yet | not yet | not yet |
-| lost link | not yet | not yet | not yet | not yet | not yet | not yet | not yet | not yet |
+| hover | pass | not yet | not yet | not yet | not yet | not yet | not yet | not yet |
+| steps | pass | not yet | not yet | not yet | not yet | not yet | not yet | not yet |
+| top speed |  | not yet | not yet |  | pass |  |  |  |
+| wind |  | not yet | not yet |  | pass |  |  |  |
+| endurance | **fail** | not yet | not yet | not yet | not yet | not yet | not yet | not yet |
+| lost link | pass | not yet | not yet | not yet | not yet | not yet | not yet | not yet |
 | low battery | not yet | not yet | not yet | not yet | not yet | not yet | not yet | not yet |
-| parachute drop |  |  | not yet |  | not yet |  | not yet | not yet |
-| dead motor | not yet | not yet | not yet | not yet | not yet | not yet | not yet | not yet |
-| failed sensor | not yet | not yet | not yet | not yet | not yet | not yet | not yet | not yet |
-| sagging pack | not yet | not yet | not yet | not yet | not yet | not yet | not yet | not yet |
-| payload grab |  |  |  | not yet |  | not yet | not yet | not yet |
+| parachute drop |  |  | pass |  | not yet |  | not yet | not yet |
+| dead motor | **fail** | not yet | pass | not yet | not yet | not yet | not yet | not yet |
+| failed sensor | **fail** | not yet | **fail** | not yet | not yet | not yet | not yet | not yet |
+| sagging pack | pass | not yet | not yet | not yet | not yet | not yet | not yet | not yet |
+| payload grab |  |  |  | pass |  | not yet | not yet | not yet |
 
 A blank cell is a scenario that combination doesn't fly: top speed and wind only where the targets set them, the parachute drop with P, the payload grab with C.
+
+<details>
+<summary>dead motor, base: fail</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| no fly-away | ended on the ground, 2 m from where it was then | pass |
+| touchdown | came down at 24.8 m/s at the end, too fast for a controlled landing | fail |
+
+</details>
+
+<details>
+<summary>endurance, base: fail</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| hover endurance | 33.3 min in the sim against the sizing model's 33.2, at 287 W | pass |
+| cruise endurance | 33.5 min in the sim against the sizing model's 44.9, at 285 W | fail |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>failed sensor, base: fail</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| the landing | gps failed then landed | pass |
+| no fly-away | ended on the ground, 38 m from where it was then | fail |
+| touchdown | came down at 0.7 m/s at the end, a controlled landing | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>hover, base: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| hover drift | drifted 0.09 m sideways over 60 s | pass |
+| hover height | held its height within 0.07 m | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>lost link, base: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| the return | link cut then link lost then return then landed | pass |
+| no fly-away | ended on the ground, 0 m from where it started | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>sagging pack, base: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| the landing | pack sagged then low battery then landed | pass |
+| sagged top speed | the motors topped out at 79% of their usual top speed | pass |
+| no fly-away | ended on the ground, 0 m from where it was then | pass |
+| touchdown | came down at 0.7 m/s at the end, a controlled landing | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>steps, base: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| roll to 15 degrees: settling | inside 5% of the step after 0.25 s | pass |
+| roll to 15 degrees: overshoot | overshot by 3% of the step | pass |
+| roll back from 15 degrees: settling | inside 5% of the step after 0.25 s | pass |
+| roll back from 15 degrees: overshoot | overshot by 3% of the step | pass |
+| pitch to 15 degrees: settling | inside 5% of the step after 0.23 s | pass |
+| pitch to 15 degrees: overshoot | overshot by 3% of the step | pass |
+| pitch back from 15 degrees: settling | inside 5% of the step after 0.23 s | pass |
+| pitch back from 15 degrees: overshoot | overshot by 4% of the step | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>payload grab, C: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| payload drift | stayed within 0.05 m after picking it up | pass |
+| payload lifted | the rotors' thrust grew 12%, against 12% for 250 g | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>top speed, mission: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| top speed | held 88 km/h for 1 s, against 80 | pass |
+| top speed, flat out | the busiest motor at 100% of its top speed, leaning up to 47 degrees | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>wind, mission: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| wind drift | drifted 0.11 m in the wind | pass |
+| motor headroom | the busiest motor reached 64% of its top speed | pass |
+| leaning into the wind | leaned 3.3 degrees into a 10 m/s wind | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>dead motor, P: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| no fly-away | ended on the ground, 1 m from where it was then | pass |
+| chute order | the motors stopped 0.15 s before the canopy left | pass |
+| chute height lost | lost 8.9 m before settling at 4.2 m/s | pass |
+
+</details>
+
+<details>
+<summary>failed sensor, P: fail</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| the landing | gps failed then landed | pass |
+| no fly-away | ended on the ground, 37 m from where it was then | fail |
+| touchdown | came down at 0.7 m/s at the end, a controlled landing | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>parachute drop, P: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| chute order | the motors stopped 0.14 s before the canopy left | pass |
+| chute height lost | lost 4.5 m before settling at 4.1 m/s | pass |
+| no fly-away | ended on the ground, 0 m from where it was then | pass |
+
+</details>
 
 ## The models
 
@@ -72,7 +225,3 @@ Generated on every run, not committed (they're build outputs):
 - `flight-sim/models/pcs14_v/model.sdf`
 - `flight-sim/models/pcs14_v_c/model.sdf`
 - `flight-sim/worlds/pcs14.sdf`
-
-Skipped on this run:
-
-- flying the scenarios: PX4 and Gazebo run in WSL2 on the PC (task 10)

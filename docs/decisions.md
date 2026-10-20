@@ -133,9 +133,24 @@ And one from the plan: **the GPS is the ARK GPS on DroneCAN** (16 g, 8 g over th
 - **Every grade uses Gazebo's ground truth,** which PX4's Gazebo bridge logs next to PX4's own estimates, so a grade says what the drone did, not what PX4 thought it did.
 - **Lost link is a relay that cuts the uplink:** it drops everything MAVSDK sends and passes everything PX4 sends. PX4 v1.17 lists a MAVLink-signal failure but doesn't implement it, and a cut uplink is what a dropped radio looks like to PX4, while the script still sees what PX4 does.
 - **Scripts keep time on PX4's clock** (from its IMU timestamps), which in the sim is Gazebo's, so a run means the same at any sim speed. A clock that stops for 30 s of real time counts as a hung sim, not a failed drone.
-- **In P, PX4 fires the chute itself:** its parachute output (function 400) drives the bridge's first servo, which sits at its low end in flight and swings to its high end on flight termination, and the drag plugin fires the canopy past halfway. Termination also stops the motors, so the order comes from PX4. Flight termination (CBRK_FLIGHTTERM 0) is on only where there's a chute.
+- **In P, PX4 fires the chute itself:** its parachute output (function 401) drives the bridge's first servo, which sits at its low end in flight and swings to its high end on flight termination, and the drag plugin fires the canopy past halfway. Termination also stops the motors, so the order comes from PX4. Flight termination (CBRK_FLIGHTTERM 0) is on only where there's a chute.
 - **New pass/fail numbers in the targets,** my picks: a return lands within 2 m of where it took off; after a failure, a controlled landing comes down slower than 2 m/s at the end, and ending more than 30 m from where the failure hit is a fly-away.
 - **A script's marks come in pairs,** "hold start" and "hold end", because a bare "hold" collided with PX4's Hold mode in the first flight's grading.
+
+### What flying the scenarios changed (2026-10-20)
+
+- **PX4's attitude gains are 9, not the x500's 6.5** (MC_ROLL_P and MC_PITCH_P). At 6.5 a 15° stick step settled in 0.6 s against the 0.5 s target; at 9 it settles in 0.25 s and overshoots 3 to 4%. The tuning lives in one place in the generator, with the reason next to it.
+- **The chute is PX4's output function 401.** I first used 400, which is PX4's landing gear: the "gear" retracted after take-off, the servo swung over, and the plugin fired the chute 4 m up. Mission then crawled along at 4 m/s with an open canopy, and the wind blew it over. One wrong number, two failed scenarios.
+- **Stick inputs are flown in PX4's altitude mode, over MAVLink,** the way a pilot flies it (COM_RC_IN_MODE 1 for that run). The script waits until PX4 really is in altitude mode, because once it wasn't, and the first stick movement dropped PX4 from Hold into Position mode, where a stick means a speed.
+- **A dead motor is flown with CA_FAILURE_MODE 1,** PX4's "drop the failed motor from the mix". The x500 ignores motor failures, so without it the injected failure never reached the motor. It's the setting I'd want on the real drone anyway.
+- **The GPS fails on PX4's side:** its estimator stops using it (EKF2_GPS_CTRL to 0) mid-flight. PX4's sensor failure injection only works with Gazebo Classic's bridge, not Harmonic's.
+- **Power is read off the thrust table by thrust,** the sim rotor's motor constant times its speed squared, not by its speed. The one-number motor fit runs 3% slow at base's hover, which is 9% in power read by speed; by thrust, the sim's hover lasts 33.3 min against the sizing model's 33.2.
+- **After a termination or a dead motor the script just waits 25 s** and the grade comes from Gazebo's ground truth: PX4's own estimate can't be trusted to say the drone is down after it has tumbled.
+- **pyulog is a main dependency now,** not part of the flight extra: reading PX4's logs is analysis, so Windows can grade, draw and replay flights already flown. MAVSDK stays in the flight extra.
+- **The scenarios fly at 4x sim speed, two at a time.** 4x matches real time (hover drift 0.07 against 0.09 m, step overshoot within a percent); four at a time overloaded the PC (load 18.6 on 16 threads) and spoiled the results.
+- **The safety monitor's triggers are timed on the real failures too:** for the drop and the dead motor, how soon after the failure its first trigger would fire. Not a pass or fail of the drone: they're in shadow mode.
+- **Every miss in the report gets its reason, or says it hasn't been looked into.** The reasons are written once in the report code, next to the unproven list.
+- **Low battery runs on PX4's simulated battery, drained at my battery model's hover rate,** with the return called at 30% and a warning at 35%. That's a stand-in for my firmware's energy-based return; whether it landed above the reserve is judged by my battery model from the logged rotors.
 
 ### What the electrical build changed (2026-10-18)
 

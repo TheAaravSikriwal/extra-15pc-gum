@@ -39,6 +39,7 @@ class Finding:
     limit: float | None
     unit: str
     detail: str
+    extra: dict | None = None  # numbers for the report's tables, when a check has more than one
 
 
 @dataclass
@@ -114,7 +115,8 @@ def endurance(sim_s: float, sizing_s: float, max_difference: float) -> Finding:
     difference = abs(sim_s - sizing_s) / sizing_s
     return Finding("endurance", difference <= max_difference, difference, max_difference, "",
                    f"{sim_s / 60:.1f} min in the sim against the sizing model's "
-                   f"{sizing_s / 60:.1f}")  # fmt: skip
+                   f"{sizing_s / 60:.1f}",
+                   extra={"sim_min": sim_s / 60, "sizing_min": sizing_s / 60})  # fmt: skip
 
 
 def sequence(events, expected, name: str) -> Finding:
@@ -133,17 +135,18 @@ def sequence(events, expected, name: str) -> Finding:
     return Finding(name, passed, None, None, "", detail)
 
 
-def chute(log: FlightLog) -> list[Finding]:
+def chute(log: FlightLog, ejection_s: float = 0.0) -> list[Finding]:
+    """The motors have to stop before the canopy leaves, which is `ejection_s` after the chute
+    fires: PX4's flight termination does both in the same step."""
     stopped, fired = log.when("motors stopped"), log.when("chute fired")
-    order = stopped is not None and fired is not None and stopped <= fired
-    order_finding = Finding(
-        "chute order",
-        order,
-        None,
-        None,
-        "",
-        "the motors stopped before the chute fired" if order else "the chute fired first",
-    )
+    order = stopped is not None and fired is not None and stopped <= fired + ejection_s + 1e-9
+    if order:
+        words = f"the motors stopped {fired + ejection_s - stopped:.2f} s before the canopy left"
+    elif fired is not None and stopped is not None:
+        words = "the canopy left while the motors still ran"
+    else:
+        words = "the chute never fired" if fired is None else "the motors never stopped"
+    order_finding = Finding("chute order", order, None, None, "", words)
     if fired is None:
         return [order_finding, Finding("chute height lost", False, None, None, "m", "no chute")]
     after = log.t >= fired
@@ -190,6 +193,22 @@ def touchdown(log: FlightLog, max_speed: float) -> Finding:
     kind = "a controlled landing" if speed <= max_speed else "too fast for a controlled landing"
     return Finding("touchdown", speed <= max_speed, speed, max_speed, "m/s",
                    f"came down at {speed:.1f} m/s at the end, {kind}")  # fmt: skip
+
+
+def caught(imu, limits, since: float) -> Finding:
+    """How soon the safety monitor's triggers would catch a real failure that hit at `since`.
+    Not a pass or fail of the drone: its triggers are in shadow mode, and what they'd do about
+    it is step 5's and 6's to decide."""
+    from pcs14.safety.triggers import triggers
+
+    fired = [t for t in triggers(imu, limits) if t.at >= since]
+    if not fired:
+        return Finding("safety monitor", False, None, None, "s",
+                       "its triggers never fired after the failure")  # fmt: skip
+    first = fired[0]
+    delay = first.at - since
+    words = f"its {first.kind} trigger would fire {delay:.2f} s after the failure"
+    return Finding("safety monitor", True, delay, None, "s", words)
 
 
 def false_triggers(imu, limits, allowed: int) -> Finding:

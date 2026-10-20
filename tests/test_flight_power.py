@@ -56,3 +56,36 @@ def test_a_logged_flight_drains_the_pack_sample_by_sample(real):
     assert drained.mah_used[-1] == pytest.approx(current * 60 / 3.6, rel=0.01)
     assert drained.soc[0] == 1.0 and drained.soc[-1] < 1.0
     assert drained.voltage[-1] < drained.voltage[0]
+
+
+def test_power_follows_the_thrust_the_sim_made_not_its_rotor_speed(real):
+    """The sim's motor makes k w^2, which isn't quite the table at the same speed. Reading the
+    power off the table by that thrust keeps the fit's error out of the energy, so a hover at
+    the fitted motor's speed lasts as long as the sizing model says."""
+    import math
+
+    from pcs14.flight.motor import motor_model
+    from pcs14.sizing.battery import Pack
+    from pcs14.sizing.flight import avionics_power, fly, power_model
+    from pcs14.sizing.rotor import Rotor
+
+    build, targets, setup = real
+    model = power_model(build, setup, targets.growth_margin, pessimistic=True)
+    motor = motor_model(build, targets, setup, mass=model.weight / 9.80665)
+    w = math.sqrt(model.hover_thrust / motor.motor_constant)  # where the sim's motor hovers
+    rotor = Rotor.from_build(build, pessimistic=True)
+    watts = power.electrical_power_from_thrust(
+        rotor, [motor.motor_constant * w**2] * 4, avionics_power(build, setup)
+    )
+    pack = Pack(build.pack)
+    sizing = fly(model, pack, 0.0, targets.reserve_fraction).samples[-1].time
+    assert power.endurance(pack, watts, targets.reserve_fraction) == pytest.approx(sizing, rel=0.01)
+
+
+def test_power_past_the_tables_top_follows_its_speed(real):
+    from pcs14.sizing.rotor import Rotor
+
+    build, _, _ = real
+    rotor = Rotor.from_build(build, pessimistic=True)
+    beyond = rotor.max_thrust * 1.2
+    assert power.electrical_power_from_thrust(rotor, [beyond], 0.0) > rotor.max_power

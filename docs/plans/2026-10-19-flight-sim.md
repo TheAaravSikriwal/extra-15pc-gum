@@ -42,4 +42,6 @@ Tasks 1 to 8 need only Windows and CI; 9 to 12 need Ubuntu in WSL2 on the PC.
 
 **Tasks 9 and 10 (2026-10-19):** done. The setup script fetches only the simulator's submodules, shallow. The runner grades from Gazebo's ground truth in PX4's log, cuts the link with a relay of its own (PX4 v1.17 doesn't implement its MAVLink-signal failure), and lets PX4 fire the chute through its own parachute output. The smoke flight in base passes on the PC.
 
+**Task 11 (2026-10-20):** mostly done. All twelve scenarios are written and have flown; one PX4 tuning change (the attitude gain, 6.5 to 9). A clean 78-run batch (4x, two at a time) was flying when the session stopped; what's left is in STATUS. Task 12 has started: the report now puts the sim's flight times beside the sizing model's, counts false triggers, times how soon the safety monitor would catch a real failure, and explains each miss.
+
 **Done when:** the baseline passes every scenario in all eight module combinations on PX4, and the report shows every run.

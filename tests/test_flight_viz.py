@@ -46,3 +46,20 @@ def test_every_plot_opens_on_the_whole_flight():
     assert len(plots) == 3
     for plot in plots:
         assert repr(plot.properties.get("TimeAxis")) == repr(WHOLE_RUN), plot.name
+
+
+def test_a_flown_runs_replay_reuses_its_combinations_meshes(tmp_path):
+    from build123d import Box
+
+    from pcs14.cad.assembly import Piece
+    from pcs14.viz.flight_log import drone_meshes, record_run
+
+    pieces = [
+        Piece("frame", Box(0.3, 0.03, 0.035), "frame", "base", 0.3, 0.3),
+        Piece("lead", Box(0.1, 0.002, 0.002), "wire", "base", 0.01, 0.01),
+    ]
+    meshes = drone_meshes(pieces)
+    assert [path for path, _ in meshes] == ["world/drone/frame"]  # wires stay out
+    for name in ("hover", "wind"):
+        path = record_run(tmp_path / f"{name}.rrd", meshes, name, synthetic_flight(), 930.0, "ok")
+        assert path.stat().st_size > 0

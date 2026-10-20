@@ -178,3 +178,18 @@ def test_a_clock_that_stops_is_a_hung_sim():
         follow.cancel()
 
     asyncio.run(scenario())
+
+
+def test_a_one_shot_wait_closes_its_stream():
+    closed = {"yes": False}
+
+    async def stream():
+        try:
+            for k in range(100):
+                yield k
+                await asyncio.sleep(0)
+        finally:
+            closed["yes"] = True
+
+    assert asyncio.run(run.first(stream(), lambda k: k == 3)) == 3
+    assert closed["yes"]  # MAVSDK stops queueing for a stream once it's closed

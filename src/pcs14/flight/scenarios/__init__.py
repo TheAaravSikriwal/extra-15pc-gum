@@ -43,10 +43,11 @@ class Scenario:
     name: str
     fly: Callable  # async (Session) -> None
     grade: Callable  # (FlightLog, IMU samples, Context) -> list[Finding]
-    budget_s: float  # s of PX4's clock the script may take
+    budget_s: float | Callable  # s of PX4's clock the script may take, or (Context) -> s
     healthy: bool = True  # nothing fails on purpose, so the safety monitor must stay quiet
     params: Callable | None = None  # (Context) -> PX4 parameters this scenario adds
     prepare: Callable | None = None  # async (Session) -> None: sets up the world before PX4
+    failure: str | None = None  # the mark where something fails on purpose, for the monitor
 
 
 def scenarios() -> dict[str, Scenario]:

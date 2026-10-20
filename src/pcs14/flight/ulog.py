@@ -118,6 +118,12 @@ def px4_euler(attitude: np.ndarray) -> np.ndarray:
     return np.stack([roll, pitch, yaw], axis=-1)
 
 
+def tilt_of(attitude: np.ndarray) -> np.ndarray:
+    """rad from level, from the log's (x, y, z, w) attitudes."""
+    q = np.asarray(attitude, dtype=float)
+    return tilt(np.concatenate([q[..., 3:], q[..., :3]], axis=-1))
+
+
 def tilt(q_ned: np.ndarray) -> np.ndarray:
     """rad from level, from PX4's attitude quaternions (w, x, y, z)."""
     q = np.asarray(q_ned, dtype=float)

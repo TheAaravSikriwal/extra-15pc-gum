@@ -1,10 +1,10 @@
 {
- "generated": "2026-10-19",
+ "generated": "2026-10-20",
  "pcs14_version": "0.1.0",
  "build": "E3 2814 850KV / 1050 3-blade / 6S2P Molicel INR-21700-P45B",
  "px4": "v1.17.0",
  "gazebo": "Harmonic",
- "verdict": "not flown yet",
+ "verdict": "fail",
  "combinations": [
   "base",
   "V",
@@ -105,7 +105,517 @@
    "payload_g": 250.0
   }
  ],
- "results": [],
+ "results": [
+  {
+   "scenario": "dead motor",
+   "setup": "base",
+   "flown": true,
+   "passed": false,
+   "note": "66 s of real time",
+   "findings": [
+    {
+     "check": "no fly-away",
+     "passed": true,
+     "value": 2.4839906369516256,
+     "limit": 30.0,
+     "unit": "m",
+     "detail": "ended on the ground, 2 m from where it was then"
+    },
+    {
+     "check": "touchdown",
+     "passed": false,
+     "value": 24.794281005859375,
+     "limit": 2.0,
+     "unit": "m/s",
+     "detail": "came down at 24.8 m/s at the end, too fast for a controlled landing"
+    }
+   ]
+  },
+  {
+   "scenario": "endurance",
+   "setup": "base",
+   "flown": true,
+   "passed": false,
+   "note": "166 s of real time",
+   "findings": [
+    {
+     "check": "hover endurance",
+     "passed": true,
+     "value": 0.0015982108957620974,
+     "limit": 0.1,
+     "unit": "",
+     "detail": "33.3 min in the sim against the sizing model's 33.2, at 287 W"
+    },
+    {
+     "check": "cruise endurance",
+     "passed": false,
+     "value": 0.2546075333865717,
+     "limit": 0.1,
+     "unit": "",
+     "detail": "33.5 min in the sim against the sizing model's 44.9, at 285 W"
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none"
+    }
+   ]
+  },
+  {
+   "scenario": "failed sensor",
+   "setup": "base",
+   "flown": true,
+   "passed": false,
+   "note": "87 s of real time",
+   "findings": [
+    {
+     "check": "the landing",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "unit": "",
+     "detail": "gps failed then landed"
+    },
+    {
+     "check": "no fly-away",
+     "passed": false,
+     "value": 38.025827646840305,
+     "limit": 30.0,
+     "unit": "m",
+     "detail": "ended on the ground, 38 m from where it was then"
+    },
+    {
+     "check": "touchdown",
+     "passed": true,
+     "value": 0.7000482082366943,
+     "limit": 2.0,
+     "unit": "m/s",
+     "detail": "came down at 0.7 m/s at the end, a controlled landing"
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none"
+    }
+   ]
+  },
+  {
+   "scenario": "hover",
+   "setup": "base",
+   "flown": true,
+   "passed": true,
+   "note": "103 s of real time",
+   "findings": [
+    {
+     "check": "hover drift",
+     "passed": true,
+     "value": 0.0943098023157037,
+     "limit": 0.5,
+     "unit": "m",
+     "detail": "drifted 0.09 m sideways over 60 s"
+    },
+    {
+     "check": "hover height",
+     "passed": true,
+     "value": 0.07424736022949219,
+     "limit": 0.3,
+     "unit": "m",
+     "detail": "held its height within 0.07 m"
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none"
+    }
+   ]
+  },
+  {
+   "scenario": "lost link",
+   "setup": "base",
+   "flown": true,
+   "passed": true,
+   "note": "116 s of real time",
+   "findings": [
+    {
+     "check": "the return",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "unit": "",
+     "detail": "link cut then link lost then return then landed"
+    },
+    {
+     "check": "no fly-away",
+     "passed": true,
+     "value": 0.03179758476302378,
+     "limit": 2.0,
+     "unit": "m",
+     "detail": "ended on the ground, 0 m from where it started"
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none"
+    }
+   ]
+  },
+  {
+   "scenario": "sagging pack",
+   "setup": "base",
+   "flown": true,
+   "passed": true,
+   "note": "66 s of real time",
+   "findings": [
+    {
+     "check": "the landing",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "unit": "",
+     "detail": "pack sagged then low battery then landed"
+    },
+    {
+     "check": "sagged top speed",
+     "passed": true,
+     "value": 0.7881081081081082,
+     "limit": null,
+     "unit": "",
+     "detail": "the motors topped out at 79% of their usual top speed"
+    },
+    {
+     "check": "no fly-away",
+     "passed": true,
+     "value": 0.05700453408802782,
+     "limit": 30.0,
+     "unit": "m",
+     "detail": "ended on the ground, 0 m from where it was then"
+    },
+    {
+     "check": "touchdown",
+     "passed": true,
+     "value": 0.6928738951683044,
+     "limit": 2.0,
+     "unit": "m/s",
+     "detail": "came down at 0.7 m/s at the end, a controlled landing"
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none"
+    }
+   ]
+  },
+  {
+   "scenario": "steps",
+   "setup": "base",
+   "flown": true,
+   "passed": true,
+   "note": "56 s of real time",
+   "findings": [
+    {
+     "check": "roll to 15 degrees: settling",
+     "passed": true,
+     "value": 0.2519999999999989,
+     "limit": 0.5,
+     "unit": "s",
+     "detail": "inside 5% of the step after 0.25 s"
+    },
+    {
+     "check": "roll to 15 degrees: overshoot",
+     "passed": true,
+     "value": 0.028592038696195754,
+     "limit": 0.2,
+     "unit": "",
+     "detail": "overshot by 3% of the step"
+    },
+    {
+     "check": "roll back from 15 degrees: settling",
+     "passed": true,
+     "value": 0.2519999999999989,
+     "limit": 0.5,
+     "unit": "s",
+     "detail": "inside 5% of the step after 0.25 s"
+    },
+    {
+     "check": "roll back from 15 degrees: overshoot",
+     "passed": true,
+     "value": 0.03274481998128831,
+     "limit": 0.2,
+     "unit": "",
+     "detail": "overshot by 3% of the step"
+    },
+    {
+     "check": "pitch to 15 degrees: settling",
+     "passed": true,
+     "value": 0.23199999999999932,
+     "limit": 0.5,
+     "unit": "s",
+     "detail": "inside 5% of the step after 0.23 s"
+    },
+    {
+     "check": "pitch to 15 degrees: overshoot",
+     "passed": true,
+     "value": 0.03418234814019394,
+     "limit": 0.2,
+     "unit": "",
+     "detail": "overshot by 3% of the step"
+    },
+    {
+     "check": "pitch back from 15 degrees: settling",
+     "passed": true,
+     "value": 0.23199999999999932,
+     "limit": 0.5,
+     "unit": "s",
+     "detail": "inside 5% of the step after 0.23 s"
+    },
+    {
+     "check": "pitch back from 15 degrees: overshoot",
+     "passed": true,
+     "value": 0.04187062253766993,
+     "limit": 0.2,
+     "unit": "",
+     "detail": "overshot by 4% of the step"
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none"
+    }
+   ]
+  },
+  {
+   "scenario": "payload grab",
+   "setup": "C",
+   "flown": true,
+   "passed": true,
+   "note": "87 s of real time",
+   "findings": [
+    {
+     "check": "payload drift",
+     "passed": true,
+     "value": 0.05178946666594302,
+     "limit": 1.0,
+     "unit": "m",
+     "detail": "stayed within 0.05 m after picking it up"
+    },
+    {
+     "check": "payload lifted",
+     "passed": true,
+     "value": 1.1227732815414155,
+     "limit": 1.1228924053636515,
+     "unit": "",
+     "detail": "the rotors' thrust grew 12%, against 12% for 250 g"
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none"
+    }
+   ]
+  },
+  {
+   "scenario": "top speed",
+   "setup": "mission",
+   "flown": true,
+   "passed": true,
+   "note": "102 s of real time",
+   "findings": [
+    {
+     "check": "top speed",
+     "passed": true,
+     "value": 24.37601652026834,
+     "limit": 22.22222222222222,
+     "unit": "m/s",
+     "detail": "held 88 km/h for 1 s, against 80"
+    },
+    {
+     "check": "top speed, flat out",
+     "passed": true,
+     "value": 1.0,
+     "limit": null,
+     "unit": "",
+     "detail": "the busiest motor at 100% of its top speed, leaning up to 47 degrees"
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none"
+    }
+   ]
+  },
+  {
+   "scenario": "wind",
+   "setup": "mission",
+   "flown": true,
+   "passed": true,
+   "note": "102 s of real time",
+   "findings": [
+    {
+     "check": "wind drift",
+     "passed": true,
+     "value": 0.10541623582937208,
+     "limit": 1.0,
+     "unit": "m",
+     "detail": "drifted 0.11 m in the wind"
+    },
+    {
+     "check": "motor headroom",
+     "passed": true,
+     "value": 0.6367567567567568,
+     "limit": 0.9,
+     "unit": "",
+     "detail": "the busiest motor reached 64% of its top speed"
+    },
+    {
+     "check": "leaning into the wind",
+     "passed": true,
+     "value": 3.2740226701617905,
+     "limit": 0.5,
+     "unit": "degrees",
+     "detail": "leaned 3.3 degrees into a 10 m/s wind"
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none"
+    }
+   ]
+  },
+  {
+   "scenario": "dead motor",
+   "setup": "P",
+   "flown": true,
+   "passed": true,
+   "note": "68 s of real time",
+   "findings": [
+    {
+     "check": "no fly-away",
+     "passed": true,
+     "value": 0.8288988997494242,
+     "limit": 30.0,
+     "unit": "m",
+     "detail": "ended on the ground, 1 m from where it was then"
+    },
+    {
+     "check": "chute order",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "unit": "",
+     "detail": "the motors stopped 0.15 s before the canopy left"
+    },
+    {
+     "check": "chute height lost",
+     "passed": true,
+     "value": 8.863868713378906,
+     "limit": null,
+     "unit": "m",
+     "detail": "lost 8.9 m before settling at 4.2 m/s"
+    }
+   ]
+  },
+  {
+   "scenario": "failed sensor",
+   "setup": "P",
+   "flown": true,
+   "passed": false,
+   "note": "88 s of real time",
+   "findings": [
+    {
+     "check": "the landing",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "unit": "",
+     "detail": "gps failed then landed"
+    },
+    {
+     "check": "no fly-away",
+     "passed": false,
+     "value": 36.50579674478965,
+     "limit": 30.0,
+     "unit": "m",
+     "detail": "ended on the ground, 37 m from where it was then"
+    },
+    {
+     "check": "touchdown",
+     "passed": true,
+     "value": 0.6927251815795898,
+     "limit": 2.0,
+     "unit": "m/s",
+     "detail": "came down at 0.7 m/s at the end, a controlled landing"
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none"
+    }
+   ]
+  },
+  {
+   "scenario": "parachute drop",
+   "setup": "P",
+   "flown": true,
+   "passed": true,
+   "note": "67 s of real time",
+   "findings": [
+    {
+     "check": "chute order",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "unit": "",
+     "detail": "the motors stopped 0.14 s before the canopy left"
+    },
+    {
+     "check": "chute height lost",
+     "passed": true,
+     "value": 4.518283843994141,
+     "limit": null,
+     "unit": "m",
+     "detail": "lost 4.5 m before settling at 4.1 m/s"
+    },
+    {
+     "check": "no fly-away",
+     "passed": true,
+     "value": 0.15808742277725726,
+     "limit": 30.0,
+     "unit": "m",
+     "detail": "ended on the ground, 0 m from where it was then"
+    }
+   ]
+  }
+ ],
  "planned": [
   {
    "scenario": "hover",
@@ -446,7 +956,5 @@
   "flight-sim/models/pcs14_v_c/model.sdf",
   "flight-sim/worlds/pcs14.sdf"
  ],
- "skipped": [
-  "flying the scenarios: PX4 and Gazebo run in WSL2 on the PC (task 10)"
- ]
+ "skipped": []
 }

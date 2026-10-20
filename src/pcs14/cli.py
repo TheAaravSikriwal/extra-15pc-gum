@@ -14,6 +14,7 @@ opens the viewer and streams into it as the run happens.
 
 import argparse
 import sys
+from dataclasses import replace
 from datetime import date, datetime
 from pathlib import Path
 
@@ -116,10 +117,12 @@ def build_parser() -> argparse.ArgumentParser:
     flight.add_argument(
         "action",
         nargs="?",
-        choices=("generate", "run"),
+        choices=("generate", "report", "run", "regrade"),
         default="generate",
-        help="generate the models and the report (the default), or run: fly the scenarios "
-        "(inside WSL2, where PX4 and Gazebo are)",
+        help="generate the models and the report (the default); report: just the report, "
+        "stills and replays, leaving the model files alone (safe while flying); run: fly the "
+        "scenarios (inside WSL2, where PX4 and Gazebo are); regrade: grade the flown runs "
+        "again from their logs",
     )
     flight.add_argument(
         "--setup",
@@ -132,6 +135,18 @@ def build_parser() -> argparse.ArgumentParser:
         help="with run: a scenario to fly (repeat for more; default: all of them)",
     )
     flight.add_argument("--jobs", type=int, default=1, help="with run: flights at once")
+    flight.add_argument(
+        "--param",
+        action="append",
+        default=[],
+        metavar="NAME=VALUE",
+        help="with run: a PX4 parameter over the generated ones, for an experiment",
+    )
+    flight.add_argument(
+        "--tag",
+        help="with run: a name for an experiment's runs, kept apart from the real ones and "
+        "out of the report",
+    )
     flight.add_argument(
         "--speed", type=float, default=1.0, help="with run: the sim's speed, against real time"
     )
@@ -147,6 +162,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     flight.add_argument(
         "--no-meshes", action="store_true", help="skip the CAD meshes (the models still fly)"
+    )
+    flight.add_argument(
+        "--replays",
+        action="store_true",
+        help="also write a Rerun recording of every flown run to outputs/flight-sim/rerun/",
     )
     report = add("report", "Write the sizing report: Markdown, charts and the data file.")
     report.add_argument("--out", type=Path, help="report folder (default: docs/reports/sizing)")
@@ -481,35 +501,94 @@ def run_flight_sim(args) -> int:
     from pcs14.cad.assembly import Drone
     from pcs14.cad.settings import load_settings
     from pcs14.flight import report
-    from pcs14.flight.generate import write_models
+    from pcs14.flight.batch import load_results
+    from pcs14.flight.generate import flight_model, write_models
 
     _, build, targets = _load(args)
     if targets.flight_sim is None:
         raise ValueError("the targets have no flight_sim section, so nothing can be graded")
     if args.action == "run":
         return fly_flight_sim(args, build, targets)
+    if args.action == "regrade":
+        return regrade_flight_sim(args, build, targets)
     drone = Drone(build, load_settings(args.cad))
     setups = targets.combinations()
     exports = Path(args.exports)
-    models = write_models(exports, drone, build, targets, setups, meshes=not args.no_meshes)
+    if args.action == "report":  # the models as they'd be, without touching their files
+        models = [flight_model(drone, build, targets, s) for s in setups]
+    else:
+        models = write_models(exports, drone, build, targets, setups, meshes=not args.no_meshes)
+    names = {s.name for s in setups}
+    flown = tuple(
+        r for r in load_results(exports) if r.scenario in report.SCENARIOS and r.setup in names
+    )
+    skipped = []
+    if not flown:
+        skipped.append("flying the scenarios: PX4 and Gazebo run in WSL2 on the PC "
+                       "(pcs14 flight-sim run)")  # fmt: skip
+    files = sorted(p.relative_to(exports.parent).as_posix() for p in exports.rglob("*.sdf"))
     run = report.FlightSimRun(
         build_label=build.label,
         px4="v1.17.0",
         gazebo="Harmonic",
         combinations=tuple(setups),
         models=tuple(report.summary_of(m) for m in models),
-        results=(),
+        results=flown,
         estimates=report.estimates_for(models, build),
-        files=tuple(
-            sorted(p.relative_to(exports.parent).as_posix() for p in exports.rglob("*.sdf"))
-        ),
-        skipped=("flying the scenarios: PX4 and Gazebo run in WSL2 on the PC (task 10)",),
+        files=tuple(files),
+        skipped=tuple(skipped),
     )
+    stills = []
+    if flown:
+        from pcs14.flight import stills as drawing
+
+        chute = next((m.chute for m in models if m.chute is not None), None)
+        timing = (chute.ejection_s, chute.opening_s) if chute is not None else None
+        out_dir = Path(args.out)
+        stills = [p.relative_to(out_dir).as_posix()
+                  for p in drawing.draw_all(out_dir / "stills", run, exports, timing)]  # fmt: skip
+    replays = []
+    if flown and args.replays:
+        replays = flight_replays(drone, models, flown, exports)
+    run = replace(run, files=tuple(stills) + run.files + tuple(replays))
     out = report.write(args.out, run, date.today().isoformat())
     print(_made_up_line(args) + report.summary(run))
-    print(f"\nModels written to {exports.resolve()}")
+    if args.action != "report":
+        print(f"\nModels written to {exports.resolve()}")
     print(f"Report written to {out.resolve()}")
     return 0
+
+
+def flight_replays(drone, models, results, exports) -> list[str]:
+    """A Rerun recording of every flown run, in outputs/flight-sim/rerun/."""
+    from pcs14.cad.checks import trim
+    from pcs14.flight.batch import flown_log
+    from pcs14.viz.flight_log import drone_meshes, record_run
+
+    by_setup = {m.setup: m for m in models}
+    meshes = {}
+    out = []
+    for r in results:
+        model = by_setup[r.setup]
+        name = r.scenario.replace(" ", "-")
+        found = flown_log(exports, r.setup, name)
+        if found is None:
+            continue
+        if r.setup not in meshes:
+            pieces = [p for p in trim(drone, model.modules).pieces if p.kind != "prop"]
+            meshes[r.setup] = drone_meshes(pieces)
+        log, _, result = found
+        rows = [f"| {f.check} | {f.detail} | {'pass' if f.passed else 'fail'} |"
+                for f in result.findings]  # fmt: skip
+        summary = "\n".join(
+            [f"## {r.scenario}, {r.setup}", "", "| Check | Found | Verdict |", "|---|---|---|"]
+            + rows
+        )
+        path = exports / "rerun" / f"{model.name}-{name}.rrd"
+        record_run(path, meshes[r.setup], f"{r.scenario}, {r.setup}", log,
+                   model.motor.max_rot_velocity, summary)  # fmt: skip
+        out.append(path.relative_to(exports.parent).as_posix())
+    return out
 
 
 def _pick(wanted, available: dict, what: str) -> list:
@@ -535,17 +614,57 @@ def fly_flight_sim(args, build, targets) -> int:
         print("The flights run inside WSL2 Ubuntu, set up by scripts/setup-ubuntu.sh.")
         return 2
     setups = _pick(args.setup, {s.name: s for s in targets.combinations()}, "combination")
-    chosen = _pick(args.scenario, scenarios(), "scenario")
+    found = scenarios()
+    if not args.scenario:  # every report scenario; the smoke flight only when it's named
+        found = {name: sc for name, sc in found.items() if name in report.SCENARIOS}
+    chosen = _pick(args.scenario, found, "scenario")
     pairs = [
         (s, sc) for s in setups for sc in chosen if sc.name == "smoke" or report.applies(sc.name, s)
     ]
+    overrides = {}
+    for item in args.param:
+        name, _, value = item.partition("=")
+        if not value:
+            raise ValueError(f"--param wants NAME=VALUE, not {item!r}")
+        overrides[name.strip()] = float(value) if "." in value or "e" in value else int(value)
     print(f"Flying {len(pairs)} runs, {args.jobs} at a time, at {args.speed:g}x real time")
     results = asyncio.run(
-        batch.run_many(tools, Path(args.exports), pairs, targets, build, args.jobs, args.speed)
+        batch.run_many(
+            tools,
+            Path(args.exports),
+            pairs,
+            targets,
+            build,
+            args.jobs,
+            args.speed,
+            overrides=overrides,
+            tag=args.tag,
+        )  # fmt: skip
     )
     passed = sum(r.passed for r in results)
     print(f"\n{passed} of {len(results)} runs passed")
     return 0 if passed == len(results) else 1
+
+
+def regrade_flight_sim(args, build, targets) -> int:
+    from pcs14.flight import batch
+    from pcs14.flight.scenarios import scenarios
+
+    setups = _pick(args.setup, {s.name: s for s in targets.combinations()}, "combination")
+    chosen = _pick(args.scenario, scenarios(), "scenario")
+    done = 0
+    for setup in setups:
+        for scenario in chosen:
+            result = batch.regrade(Path(args.exports), setup, scenario, targets, build)
+            if result is None:
+                continue
+            done += 1
+            verdict = "pass" if result.passed else ("FAIL" if result.flown else "not flown")
+            print(f"{scenario.name} in {setup.name}: {verdict}")
+            for f in result.findings:
+                print(f"    {'ok  ' if f.passed else 'FAIL'} {f.check}: {f.detail}")
+    print(f"\nRegraded {done} runs")
+    return 0
 
 
 COMMANDS = {

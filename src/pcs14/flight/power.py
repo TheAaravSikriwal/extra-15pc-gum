@@ -2,10 +2,13 @@
 into current here, through the same battery model the sizing model uses. Every layer then agrees
 on what a battery is, and the reserve is counted in mAh everywhere.
 
-A motor's electrical power comes from its thrust table at the logged speed: for a given speed
-the prop does the same work whatever the pack's voltage, so only the current changes with it.
-Below the table's first row the power goes as the speed cubed, the way a prop's does; above its
-last row, the same. The pack's current for that power, sag included, comes from the battery
+A motor's electrical power comes from its thrust table, read by the thrust the sim's rotor made
+(its motor constant times its logged speed squared). The sim's motor is a one-number fit that
+isn't quite the table at the same speed (3% slow at the base combination's hover, which is 9%
+in power), so reading by speed would put the fit's error into the energy; reading by thrust
+keeps it out. For a given thrust the prop does the same work whatever the pack's voltage, so
+only the current changes with it. `motor_power` reads by speed instead, for logs without a
+motor model. The pack's current for that power, sag included, comes from the battery
 model, and the charge drains sample by sample.
 """
 
@@ -30,6 +33,22 @@ def motor_power(table, rpm: float) -> float:
 def electrical_power(table, rpms, avionics_w: float) -> float:
     """W from the pack: every motor at its logged rpm, plus the avionics."""
     return sum(motor_power(table, r) for r in rpms) + avionics_w
+
+
+def thrust_power(rotor, thrust: float) -> float:
+    """W into one motor making `thrust` N, read off the (pessimistic) table by thrust. Past the
+    table's top, power grows as thrust to the 1.5, the way a prop's does."""
+    found = rotor.power_for_thrust(thrust)
+    if found is not None:
+        return found
+    return rotor.max_power * (thrust / rotor.max_thrust) ** 1.5
+
+
+def electrical_power_from_thrust(rotor, thrusts, avionics_w: float) -> float:
+    """W from the pack, from the thrust each motor made in the sim (its motor constant times
+    its speed squared). The sim's motor is a one-number fit that isn't quite the table at the
+    same speed, and reading the power by thrust keeps that fit's error out of the energy."""
+    return sum(thrust_power(rotor, t) for t in thrusts) + avionics_w
 
 
 @dataclass(frozen=True)

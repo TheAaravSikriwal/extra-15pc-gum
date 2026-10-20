@@ -82,6 +82,20 @@ def test_the_wind_hold_checks_drift_and_motor_headroom():
 def test_endurance_against_the_sizing_model():
     assert grade.endurance(1300, 1340, 0.1).passed
     assert not grade.endurance(1100, 1340, 0.1).passed
+    # the times themselves ride along, for the report's comparison table
+    assert grade.endurance(1300, 1340, 0.1).extra == {"sim_min": 1300 / 60, "sizing_min": 1340 / 60}
+
+
+def test_the_safety_monitor_catching_a_real_failure(targets):
+    from pcs14.safety.triggers import G, ImuSample
+
+    limits = targets.flight_sim.triggers  # free fall: under 0.3 g for 0.3 s
+    calm = [ImuSample(k * 0.004, (0, 0, G), (0, 0, 0)) for k in range(2500)]
+    falling = [ImuSample(10 + k * 0.004, (0, 0, 0), (0, 0, 0)) for k in range(200)]
+    found = grade.caught(calm + falling, limits, since=10.0)
+    assert found.passed and found.value == pytest.approx(0.3, abs=0.01)
+    assert "free fall" in found.detail
+    assert not grade.caught(calm, limits, since=5.0).passed  # nothing to catch, nothing caught
 
 
 def test_a_failsafe_has_to_happen_in_order():
@@ -109,6 +123,10 @@ def test_the_chute_fires_only_after_the_motors_stop_and_reports_the_height_lost(
                             rotor_speed=drop.rotor_speed,
                             events=[(5.0, "chute fired"), (5.2, "motors stopped")])  # fmt: skip
     assert not grade.chute(early)[0].passed
+    # what counts is the canopy leaving: 0.2 s after firing, the motors have just stopped...
+    assert grade.chute(early, ejection_s=0.2)[0].passed
+    # ...but not with a quicker ejection
+    assert not grade.chute(early, ejection_s=0.1)[0].passed
 
 
 def test_no_fly_away():

@@ -96,3 +96,56 @@ def test_the_command_generates_every_model_and_writes_the_report(tmp_path, capsy
     data = json.loads((out / "flight-sim.json").read_text(encoding="utf-8"))
     assert data["verdict"] == "not flown yet" and len(data["models"]) == 8
     assert "not flown yet" in capsys.readouterr().out
+
+
+def closing_run():
+    from dataclasses import replace
+
+    run = made_up_run()
+    endurance = (
+        Finding("hover endurance", True, 0.01, 0.1, "", "33.3 min in the sim against 33.2",
+                extra={"sim_min": 33.3, "sizing_min": 33.2}),
+        Finding("cruise endurance", False, 0.25, 0.1, "", "33.5 min in the sim against 44.9",
+                extra={"sim_min": 33.5, "sizing_min": 44.9}),
+        Finding("false triggers", True, 0, 0, "", "the safety monitor's triggers fired: none"),
+    )  # fmt: skip
+    dead = (
+        Finding("touchdown", False, 24.5, 2.0, "m/s", "came down at 24.5 m/s at the end"),
+        Finding("safety monitor", True, 0.41, None, "s",
+                "its tumble rate trigger would fire 0.41 s after the failure"),
+    )  # fmt: skip
+    results = run.results + (
+        ScenarioResult("endurance", "base", True, endurance),
+        ScenarioResult("dead motor", "base", True, dead),
+    )
+    return replace(run, results=results)
+
+
+def test_closing_the_loop_puts_the_layers_side_by_side():
+    from pcs14.flight.report import render
+
+    text = render(closing_run())
+    assert "## Closing the loop" in text
+    assert "| base | 33.3 min | 33.2 min | 33.5 min | 44.9 min |" in text
+    assert "its tumble rate trigger would fire 0.41 s after the failure" in text
+
+
+def test_every_miss_gets_its_reason_or_says_it_has_none_yet():
+    from pcs14.flight.report import render
+
+    text = render(closing_run())
+    section = text.split("## Why the misses miss")[1].split("\n## ")[0]
+    assert "dead motor" in section and "three motors" in section  # a known reason
+    assert "cruise endurance" in section and "airspeed" in section
+    assert "wind drift in mission: not looked into yet" in section  # an unknown one says so
+
+
+def test_the_data_file_carries_the_comparison():
+    from pcs14.flight.report import to_data
+
+    data = to_data(closing_run())
+    assert data["closing"]["flight_time"] == [
+        {"setup": "base", "hover_sim_min": 33.3, "hover_sizing_min": 33.2,
+         "cruise_sim_min": 33.5, "cruise_sizing_min": 44.9}
+    ]  # fmt: skip
+    assert data["closing"]["caught"][0]["delay_s"] == 0.41

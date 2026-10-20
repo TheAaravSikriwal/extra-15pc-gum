@@ -319,6 +319,17 @@ async def _follow_state(drone, state: State):
     await asyncio.gather(armed(), in_air(), mode(), position(), heading(), battery())
 
 
+async def first(stream, condition):
+    """The first item of a MAVSDK stream that meets `condition`, closing the stream after:
+    an abandoned stream keeps MAVSDK queueing messages nobody reads."""
+    try:
+        async for item in stream:
+            if condition(item):
+                return item
+    finally:
+        await stream.aclose()
+
+
 async def _imu_stamps(drone):
     async for imu in drone.telemetry.imu():
         yield imu.timestamp_us
@@ -335,6 +346,7 @@ class RunResult:
     error: str | None = None  # the sim failing, not the drone
     aborted: str | None = None  # the drone not doing what the script needed
     wall_s: float = 0.0
+    speed: float = 1.0  # the sim's speed against real time
 
 
 class Session:
@@ -359,7 +371,7 @@ class Session:
         self.instance, self.speed = instance, speed
         self.folder = (work or work_folder()) / f"{model}-{scenario}"
         self.partition = f"pcs14_{os.getpid()}_{instance}"
-        self.result = RunResult(model, scenario, self.folder)
+        self.result = RunResult(model, scenario, self.folder, speed=speed)
         self.clock = Clock()
         self.state = State()
         self.relay = Relay(API_PORT + instance, SDK_PORT + instance)
@@ -440,6 +452,16 @@ class Session:
         if "true" not in reply:
             raise SimError(f"Gazebo wouldn't spawn {name}: {reply.strip()}")
 
+    async def spawn_sdf(self, sdf: str, name: str, position=(0.0, 0.0, 0.0)):
+        """Puts a model written out as SDF into the world, Gazebo's frame like spawn."""
+        x, y, z = position
+        reply = await self.gz_service(
+            f"/world/{WORLD}/create", "gz.msgs.EntityFactory", "gz.msgs.Boolean",
+            f"sdf: '{sdf}', name: \"{name}\", pose: {{position: {{x: {x}, y: {y}, z: {z}}}}}",
+        )  # fmt: skip
+        if "true" not in reply:
+            raise SimError(f"Gazebo wouldn't spawn {name}: {reply.strip()}")
+
     async def start(self, before_px4=None):
         from mavsdk import System
 
@@ -462,23 +484,24 @@ class Session:
         await self.drone.connect(system_address=f"udpin://127.0.0.1:{SDK_PORT + self.instance}")
 
         async def connected():
-            async for status in self.drone.core.connection_state():
-                if status.is_connected:
-                    return
+            await first(self.drone.core.connection_state(), lambda status: status.is_connected)
 
         try:
             await asyncio.wait_for(connected(), CONNECT_S)
         except TimeoutError as e:
             raise SimError(f"PX4 didn't connect within {CONNECT_S:g} s; see px4.log") from e
         await self.drone.telemetry.set_rate_imu(50.0)
+        await self.drone.telemetry.set_rate_position_velocity_ned(20.0)
+        await self.drone.telemetry.set_rate_battery(2.0)
         self._tasks.append(asyncio.create_task(self.clock.follow(_imu_stamps(self.drone))))
         self._tasks.append(asyncio.create_task(_follow_state(self.drone, self.state)))
         await asyncio.wait_for(self.clock.started(), CONNECT_S)
 
         async def healthy():
-            async for health in self.drone.telemetry.health():
-                if health.is_global_position_ok and health.is_home_position_ok:
-                    return
+            await first(
+                self.drone.telemetry.health(),
+                lambda h: h.is_global_position_ok and h.is_home_position_ok,
+            )
 
         if not _finished(await self.within(healthy(), 120.0)):
             raise SimError("PX4 never got a position fix and a home position")
@@ -571,6 +594,9 @@ async def fly(session: Session, script, budget_s: float, before_px4=None) -> Run
             session.result.aborted = f"it didn't finish within {budget_s:g} s of sim time"
         elif isinstance(e, Aborted):
             session.result.aborted = str(e)
+        elif e is not None and type(e).__module__.startswith("mavsdk"):
+            # PX4 refused something the script asked for: the drone's answer, not the sim's
+            session.result.aborted = f"PX4 refused: {type(e).__name__}: {e}"
         elif isinstance(e, SimError):
             session.result.error = str(e)
         elif e is not None:
