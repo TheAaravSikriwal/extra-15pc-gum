@@ -25,11 +25,11 @@ This is the live version. When a step finishes, its outcome goes here, with a li
 | Step | What it's for | Status | Outcome |
 |---|---|---|---|
 | 0. Planning | Figure out what I'm designing | Done, 2026-10-17 | Decisions, targets and roadmap written, reviewed and revised ([log](docs/log/2026-10-14-plan-revision.md)), then turned into a research plan ([log](docs/log/2026-10-17-research-project.md)) |
-| Setup | WSL2 on the PC, with all checks passing | Up next | |
-| 1. Sizing and parts | Real, orderable parts that hit the targets | Done, 2026-10-17 | Emax 2814 850KV motors, Gemfan 10x5 props, a 6S2P Molicel P42A pack and a Nazgul XL10 frame. Every setup passes, Max included: 25.7 min hover with Mission's loadout at 2254 g ([report](docs/reports/sizing/README.md), [log](docs/log/2026-10-17-first-real-sweep.md)) |
+| Setup | WSL2 on the PC, with all checks passing | Done, 2026-10-19 | WSL2 Ubuntu 24.04 with PX4 v1.17.0, Gazebo Harmonic and the flight sim's tools ([machine check](docs/machines/pc.md), [log](docs/log/2026-10-19-first-flight.md)) |
+| 1. Sizing and parts | Real, orderable parts that hit the targets | Done, 2026-10-17 | Emax 2814 850KV motors, Gemfan 10x5 props, a 6S2P Molicel pack (P42A then, P45B since step 3) and a Nazgul XL10 frame. Every setup passed, Max included: 25.7 min hover with Mission's loadout at 2254 g ([report](docs/reports/sizing/README.md), [log](docs/log/2026-10-17-first-real-sweep.md)) |
 | 2. The virtual drone (CAD) | Every part modeled and connected | Done, 2026-10-18 | Every part modeled and every module combination passing its checks, with the real weights back in the sizing model: Mission 2293 g, still passing ([report](docs/reports/cad/README.md), [log](docs/log/2026-10-18-cad-build.md)) |
 | 3. Electrical design | Every wire, pin and connector | Done, 2026-10-19 | One connection list behind every check, diagram and the schematic: 438 checks pass in all eight combinations, and ngspice shows the safety monitor's switch working. Weighing the real wiring and hardware moved the cells to P45B: Mission is 2414 g with a 22.25 min pessimistic hover ([report](docs/reports/electrical/README.md), [log](docs/log/2026-10-19-electrical-report-and-weight.md)) |
-| 4. Flight sim (PX4) | Prove the airframe flies, in all eight module combinations | In progress | The talk and the plan are done ([spec](docs/specs/2026-10-19-flight-sim.md), [plan](docs/plans/2026-10-19-flight-sim.md)). Next is the build |
+| 4. Flight sim (PX4) | Prove the airframe flies, in all eight module combinations | In progress | PX4 flies all twelve scenarios in all eight combinations; most pass, and the misses are real findings: a dead motor without the chute crashes, losing GPS means a blind descent, and cruise endurance disagrees with the sizing model ([report](docs/reports/flight-sim/README.md), [log](docs/log/2026-10-20-flight-sim-scenarios.md)) |
 | 5. My firmware | My flight code and the safety monitor, passing the same tests as PX4 | Not started | |
 | 6. Modules in sim | Parachute, vision & nav, and claws if they happen | Not started | |
 | 7. Smart features in sim | Mapping, safe spots, the LLM, object detection, soar mode, the spiral descent and more | Not started | |
@@ -38,7 +38,7 @@ This is the live version. When a step finishes, its outcome goes here, with a li
 | Side track | Starts after | Status | Outcome |
 |---|---|---|---|
 | Structure | Step 2 | Not started | |
-| Aero (the wind tunnel) | Step 2 | Not started | |
+| Aero (the wind tunnel) | Step 2 | In progress | The visual half first: FluidX3D on the RTX 3060, the drone's drag lines and wake at 10 m/s ([spec](docs/specs/2026-10-20-wind-tunnel-visuals.md), [log](docs/log/2026-10-20-first-wind-tunnel.md)). The numbers come from OpenFOAM next |
 | Design hunt (v2) | Step 4 | Not started | |
 | Project site | Step 1 | Not started | Stays on my machine until the project is done, then joins my portfolio site |
 

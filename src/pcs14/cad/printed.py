@@ -152,6 +152,12 @@ def build_printed(build: Build, settings: CadSettings, frame: FrameModel) -> lis
             rail -= Pos(hx * MM, hy * MM, top_z + rail_h / 2) * Cylinder(
                 M3 / 2, 1.0, align=CENTERED
             )
+    # the modules' locks: a blind hole from the top for each heat-set insert
+    depth = min(rail_s.insert_depth_mm * MM, rail_h - 1 * MM)
+    for lx, ly in rail_s.locks_mm:
+        rail -= Pos(lx * MM, ly * MM, top_z + rail_h - depth) * Cylinder(
+            rail_s.insert_diameter_mm / 2 * MM, depth + 1e-4, align=BOTTOM
+        )
     add(
         "module rail",
         [(rail, rail_s.material)],
@@ -170,20 +176,27 @@ def build_printed(build: Build, settings: CadSettings, frame: FrameModel) -> lis
     gps_z = top_z + mast.height_mm * MM
     mount = Pos(mx, my, top_z) * Box(block, block, 8 * MM, align=BOTTOM)
     mount -= Pos(mx, my, top_z + 2 * MM) * Cylinder(tube_r, 6 * MM + 1e-4, align=BOTTOM)
-    plate = Pos(mx, my, gps_z - 3 * MM) * Box(24 * MM, 24 * MM, 3 * MM, align=BOTTOM)
+    # the cradle the GPS sits in: a floor and a low wall around its case
+    inner, wall = mast.cradle_inner_mm * MM, mast.cradle_wall_mm * MM
+    outer = inner + 2 * wall
+    plate = Pos(mx, my, gps_z - 3 * MM) * Box(outer, outer, 3 * MM, align=BOTTOM)
+    plate += Pos(mx, my, gps_z) * Box(outer, outer, mast.cradle_lip_mm * MM, align=BOTTOM)
+    plate -= Pos(mx, my, gps_z) * Box(inner, inner, mast.cradle_lip_mm * MM + 1e-4, align=BOTTOM)
     tube = Pos(mx, my, top_z + 2 * MM) * Cylinder(
         tube_r, gps_z - 3 * MM - top_z - 2 * MM, align=BOTTOM
     )
     tube -= Pos(mx, my, top_z) * Cylinder(tube_r - 1 * MM, 1.0, align=BOTTOM)
     add(
         "gps mast",
-        [(mount, "tpu"), (plate, "tpu"), (tube, mast.material)],
+        [(mount, "tpu"), (tube, mast.material)],
         "tpu",
         3 * MM,
         (0, 0, -1),
         "V",
         "gps-mast",
     )
+    # the cradle is its own print, flat on its floor, glued onto the tube's top
+    add("gps cradle", [(plate, "tpu")], "tpu", wall, (0, 0, -1), "V", "gps-mast")
 
     # Lidar bracket: a plate under the bottom plate's nose, holding the TF-Luna by its ears
     lidar = next(p for p in build.base if p.id == "benewake-tf-luna")

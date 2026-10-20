@@ -4,7 +4,7 @@
 
 ## The verdict
 
-**Fail.** 13 of 78 runs flown, and 4 miss: endurance in base; dead motor in base; failed sensor in base; failed sensor in P.
+**Fail.** 75 of 78 runs flown, and 19 miss: endurance in base; dead motor in base; failed sensor in base; endurance in V; dead motor in V; failed sensor in V; endurance in P; endurance in C; low battery in C; dead motor in C; endurance in mission; low battery in mission; endurance in V+C; payload grab in V+C; endurance in P+C; payload grab in P+C; endurance in max; failed sensor in max; payload grab in max.
 
 Built from E3 2814 850KV / 1050 3-blade / 6S2P Molicel INR-21700-P45B.
 
@@ -12,18 +12,18 @@ Built from E3 2814 850KV / 1050 3-blade / 6S2P Molicel INR-21700-P45B.
 
 | Scenario | base | V | P | C | mission | V+C | P+C | max |
 |---|---|---|---|---|---|---|---|---|
-| hover | pass | not yet | not yet | not yet | not yet | not yet | not yet | not yet |
-| steps | pass | not yet | not yet | not yet | not yet | not yet | not yet | not yet |
-| top speed |  | not yet | not yet |  | pass |  |  |  |
-| wind |  | not yet | not yet |  | pass |  |  |  |
-| endurance | **fail** | not yet | not yet | not yet | not yet | not yet | not yet | not yet |
-| lost link | pass | not yet | not yet | not yet | not yet | not yet | not yet | not yet |
-| low battery | not yet | not yet | not yet | not yet | not yet | not yet | not yet | not yet |
-| parachute drop |  |  | pass |  | not yet |  | not yet | not yet |
-| dead motor | **fail** | not yet | pass | not yet | not yet | not yet | not yet | not yet |
-| failed sensor | **fail** | not yet | **fail** | not yet | not yet | not yet | not yet | not yet |
-| sagging pack | pass | not yet | not yet | not yet | not yet | not yet | not yet | not yet |
-| payload grab |  |  |  | pass |  | not yet | not yet | not yet |
+| hover | pass | pass | pass | pass | pass | pass | pass | pass |
+| steps | pass | pass | pass | pass | pass | pass | pass | pass |
+| top speed |  | pass | pass |  | pass |  |  |  |
+| wind |  | pass | pass |  | pass |  |  |  |
+| endurance | **fail** | **fail** | **fail** | **fail** | **fail** | **fail** | **fail** | **fail** |
+| lost link | pass | pass | pass | pass | pass | pass | pass | pass |
+| low battery | pass | not yet | pass | **fail** | **fail** | pass | pass | pass |
+| parachute drop |  |  | pass |  | pass |  | pass | pass |
+| dead motor | **fail** | **fail** | pass | **fail** | not yet | not yet | pass | pass |
+| failed sensor | **fail** | **fail** | pass | pass | pass | pass | pass | **fail** |
+| sagging pack | pass | pass | pass | pass | pass | pass | pass | pass |
+| payload grab |  |  |  | pass |  | **fail** | **fail** | **fail** |
 
 A blank cell is a scenario that combination doesn't fly: top speed and wind only where the targets set them, the parachute drop with P, the payload grab with C.
 
@@ -32,8 +32,8 @@ A blank cell is a scenario that combination doesn't fly: top speed and wind only
 
 | Check | Found | Verdict |
 |---|---|---|
-| no fly-away | ended on the ground, 2 m from where it was then | pass |
-| touchdown | came down at 24.8 m/s at the end, too fast for a controlled landing | fail |
+| no fly-away | ended on the ground, 1 m from where it was then | pass |
+| touchdown | came down at 24.5 m/s at the end, too fast for a controlled landing | fail |
 
 </details>
 
@@ -54,7 +54,7 @@ A blank cell is a scenario that combination doesn't fly: top speed and wind only
 | Check | Found | Verdict |
 |---|---|---|
 | the landing | gps failed then landed | pass |
-| no fly-away | ended on the ground, 38 m from where it was then | fail |
+| no fly-away | ended on the ground, 34 m from where it was then | fail |
 | touchdown | came down at 0.7 m/s at the end, a controlled landing | pass |
 | false triggers | the safety monitor's triggers fired: none | pass |
 
@@ -65,7 +65,7 @@ A blank cell is a scenario that combination doesn't fly: top speed and wind only
 
 | Check | Found | Verdict |
 |---|---|---|
-| hover drift | drifted 0.09 m sideways over 60 s | pass |
+| hover drift | drifted 0.06 m sideways over 60.016 s | pass |
 | hover height | held its height within 0.07 m | pass |
 | false triggers | the safety monitor's triggers fired: none | pass |
 
@@ -78,6 +78,18 @@ A blank cell is a scenario that combination doesn't fly: top speed and wind only
 |---|---|---|
 | the return | link cut then link lost then return then landed | pass |
 | no fly-away | ended on the ground, 0 m from where it started | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>low battery, base: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| the return | low battery then return then landed | pass |
+| no fly-away | ended on the ground, 0 m from where it started | pass |
+| charge at landing | landed with 29% left by my battery model, against the 20% reserve | pass |
 | false triggers | the safety monitor's triggers fired: none | pass |
 
 </details>
@@ -100,14 +112,79 @@ A blank cell is a scenario that combination doesn't fly: top speed and wind only
 
 | Check | Found | Verdict |
 |---|---|---|
-| roll to 15 degrees: settling | inside 5% of the step after 0.25 s | pass |
-| roll to 15 degrees: overshoot | overshot by 3% of the step | pass |
-| roll back from 15 degrees: settling | inside 5% of the step after 0.25 s | pass |
+| roll to 15 degrees: settling | inside 5% of the step after 0.23 s | pass |
+| roll to 15 degrees: overshoot | overshot by 2% of the step | pass |
+| roll back from 15 degrees: settling | inside 5% of the step after 0.21 s | pass |
 | roll back from 15 degrees: overshoot | overshot by 3% of the step | pass |
-| pitch to 15 degrees: settling | inside 5% of the step after 0.23 s | pass |
+| pitch to 15 degrees: settling | inside 5% of the step after 0.16 s | pass |
 | pitch to 15 degrees: overshoot | overshot by 3% of the step | pass |
-| pitch back from 15 degrees: settling | inside 5% of the step after 0.23 s | pass |
+| pitch back from 15 degrees: settling | inside 5% of the step after 0.20 s | pass |
 | pitch back from 15 degrees: overshoot | overshot by 4% of the step | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>dead motor, C: fail</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| no fly-away | ended on the ground, 1 m from where it was then | pass |
+| touchdown | came down at 25.1 m/s at the end, too fast for a controlled landing | fail |
+
+</details>
+
+<details>
+<summary>endurance, C: fail</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| hover endurance | 29.2 min in the sim against the sizing model's 29.2, at 325 W | pass |
+| cruise endurance | 29.3 min in the sim against the sizing model's 38.4, at 324 W | fail |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>failed sensor, C: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| the landing | gps failed then landed | pass |
+| no fly-away | ended on the ground, 26 m from where it was then | pass |
+| touchdown | came down at 0.8 m/s at the end, a controlled landing | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>hover, C: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| hover drift | drifted 0.08 m sideways over 60.004 s | pass |
+| hover height | held its height within 0.06 m | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>lost link, C: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| the return | link cut then link lost then return then landed | pass |
+| no fly-away | ended on the ground, 0 m from where it started | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>low battery, C: fail</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| flown to the end | it didn't finish within 1931.49 s of sim time | fail |
 | false triggers | the safety monitor's triggers fired: none | pass |
 
 </details>
@@ -117,8 +194,255 @@ A blank cell is a scenario that combination doesn't fly: top speed and wind only
 
 | Check | Found | Verdict |
 |---|---|---|
-| payload drift | stayed within 0.05 m after picking it up | pass |
+| payload drift | stayed within 0.07 m after picking it up | pass |
 | payload lifted | the rotors' thrust grew 12%, against 12% for 250 g | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>sagging pack, C: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| the landing | pack sagged then low battery then landed | pass |
+| sagged top speed | the motors topped out at 79% of their usual top speed | pass |
+| no fly-away | ended on the ground, 0 m from where it was then | pass |
+| touchdown | came down at 0.7 m/s at the end, a controlled landing | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>steps, C: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| roll to 15 degrees: settling | inside 5% of the step after 0.21 s | pass |
+| roll to 15 degrees: overshoot | overshot by 3% of the step | pass |
+| roll back from 15 degrees: settling | inside 5% of the step after 0.17 s | pass |
+| roll back from 15 degrees: overshoot | overshot by 3% of the step | pass |
+| pitch to 15 degrees: settling | inside 5% of the step after 0.20 s | pass |
+| pitch to 15 degrees: overshoot | overshot by 4% of the step | pass |
+| pitch back from 15 degrees: settling | inside 5% of the step after 0.17 s | pass |
+| pitch back from 15 degrees: overshoot | overshot by 4% of the step | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>dead motor, max: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| no fly-away | ended on the ground, 1 m from where it was then | pass |
+| chute order | the motors stopped 0.16 s before the canopy left | pass |
+| chute height lost | lost 9.5 m before settling at 4.5 m/s | pass |
+| safety monitor | its free fall trigger would fire 0.48 s after the failure | pass |
+
+</details>
+
+<details>
+<summary>endurance, max: fail</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| hover endurance | 22.7 min in the sim against the sizing model's 22.7, at 415 W | pass |
+| cruise endurance | 22.7 min in the sim against the sizing model's 28.5, at 414 W | fail |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>failed sensor, max: fail</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| the landing | gps failed then landed | pass |
+| no fly-away | ended on the ground, 50 m from where it was then | fail |
+| touchdown | came down at 0.7 m/s at the end, a controlled landing | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>hover, max: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| hover drift | drifted 0.06 m sideways over 60.016 s | pass |
+| hover height | held its height within 0.12 m | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>lost link, max: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| the return | link cut then link lost then return then landed | pass |
+| no fly-away | ended on the ground, 0 m from where it started | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>low battery, max: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| the return | low battery then return then landed | pass |
+| no fly-away | ended on the ground, 0 m from where it started | pass |
+| charge at landing | landed with 28% left by my battery model, against the 20% reserve | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>parachute drop, max: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| chute order | the motors stopped 0.14 s before the canopy left | pass |
+| chute height lost | lost 4.9 m before settling at 4.4 m/s | pass |
+| no fly-away | ended on the ground, 0 m from where it was then | pass |
+| safety monitor | its free fall trigger would fire 0.45 s after the failure | pass |
+
+</details>
+
+<details>
+<summary>payload grab, max: fail</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| flown to the end | it never climbed to 3 m (got to -59.2 m) | fail |
+| false triggers | the safety monitor's triggers fired: tumble tilt at 77.5 s, tumble tilt at 78.7 s, tumble tilt at 80.1 s, tumble tilt at 83.7 s, tumble tilt at 85.2 s, tumble tilt at 89.2 s | fail |
+
+</details>
+
+<details>
+<summary>sagging pack, max: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| the landing | pack sagged then low battery then landed | pass |
+| sagged top speed | the motors topped out at 79% of their usual top speed | pass |
+| no fly-away | ended on the ground, 0 m from where it was then | pass |
+| touchdown | came down at 0.7 m/s at the end, a controlled landing | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>steps, max: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| roll to 16 degrees: settling | inside 5% of the step after 0.18 s | pass |
+| roll to 16 degrees: overshoot | overshot by 3% of the step | pass |
+| roll back from 15 degrees: settling | inside 5% of the step after 0.17 s | pass |
+| roll back from 15 degrees: overshoot | overshot by 3% of the step | pass |
+| pitch to 15 degrees: settling | inside 5% of the step after 0.16 s | pass |
+| pitch to 15 degrees: overshoot | overshot by 4% of the step | pass |
+| pitch back from 15 degrees: settling | inside 5% of the step after 0.14 s | pass |
+| pitch back from 15 degrees: overshoot | overshot by 4% of the step | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>endurance, mission: fail</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| hover endurance | 25.2 min in the sim against the sizing model's 25.1, at 376 W | pass |
+| cruise endurance | 25.2 min in the sim against the sizing model's 32.1, at 375 W | fail |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>failed sensor, mission: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| the landing | gps failed then landed | pass |
+| no fly-away | ended on the ground, 18 m from where it was then | pass |
+| touchdown | came down at 0.7 m/s at the end, a controlled landing | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>hover, mission: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| hover drift | drifted 0.11 m sideways over 60.012 s | pass |
+| hover height | held its height within 0.05 m | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>lost link, mission: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| the return | link cut then link lost then return then landed | pass |
+| no fly-away | ended on the ground, 0 m from where it started | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>low battery, mission: fail</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| flown to the end | it never climbed to 20 m (got to 19.7 m) | fail |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>parachute drop, mission: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| chute order | the motors stopped 0.12 s before the canopy left | pass |
+| chute height lost | lost 4.9 m before settling at 4.3 m/s | pass |
+| no fly-away | ended on the ground, 0 m from where it was then | pass |
+
+</details>
+
+<details>
+<summary>sagging pack, mission: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| the landing | pack sagged then low battery then landed | pass |
+| sagged top speed | the motors topped out at 79% of their usual top speed | pass |
+| no fly-away | ended on the ground, 0 m from where it was then | pass |
+| touchdown | came down at 0.7 m/s at the end, a controlled landing | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>steps, mission: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| roll to 15 degrees: settling | inside 5% of the step after 0.17 s | pass |
+| roll to 15 degrees: overshoot | overshot by 3% of the step | pass |
+| roll back from 15 degrees: settling | inside 5% of the step after 0.21 s | pass |
+| roll back from 15 degrees: overshoot | overshot by 4% of the step | pass |
+| pitch to 15 degrees: settling | inside 5% of the step after 0.18 s | pass |
+| pitch to 15 degrees: overshoot | overshot by 4% of the step | pass |
+| pitch back from 15 degrees: settling | inside 5% of the step after 0.22 s | pass |
+| pitch back from 15 degrees: overshoot | overshot by 5% of the step | pass |
 | false triggers | the safety monitor's triggers fired: none | pass |
 
 </details>
@@ -139,7 +463,7 @@ A blank cell is a scenario that combination doesn't fly: top speed and wind only
 
 | Check | Found | Verdict |
 |---|---|---|
-| wind drift | drifted 0.11 m in the wind | pass |
+| wind drift | drifted 0.09 m in the wind | pass |
 | motor headroom | the busiest motor reached 64% of its top speed | pass |
 | leaning into the wind | leaned 3.3 degrees into a 10 m/s wind | pass |
 | false triggers | the safety monitor's triggers fired: none | pass |
@@ -152,19 +476,64 @@ A blank cell is a scenario that combination doesn't fly: top speed and wind only
 | Check | Found | Verdict |
 |---|---|---|
 | no fly-away | ended on the ground, 1 m from where it was then | pass |
-| chute order | the motors stopped 0.15 s before the canopy left | pass |
+| chute order | the motors stopped 0.16 s before the canopy left | pass |
 | chute height lost | lost 8.9 m before settling at 4.2 m/s | pass |
 
 </details>
 
 <details>
-<summary>failed sensor, P: fail</summary>
+<summary>endurance, P: fail</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| hover endurance | 29.0 min in the sim against the sizing model's 29.0, at 327 W | pass |
+| cruise endurance | 29.2 min in the sim against the sizing model's 38.4, at 326 W | fail |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>failed sensor, P: pass</summary>
 
 | Check | Found | Verdict |
 |---|---|---|
 | the landing | gps failed then landed | pass |
-| no fly-away | ended on the ground, 37 m from where it was then | fail |
+| no fly-away | ended on the ground, 20 m from where it was then | pass |
 | touchdown | came down at 0.7 m/s at the end, a controlled landing | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>hover, P: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| hover drift | drifted 0.06 m sideways over 60.016 s | pass |
+| hover height | held its height within 0.10 m | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>lost link, P: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| the return | link cut then link lost then return then landed | pass |
+| no fly-away | ended on the ground, 0 m from where it started | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>low battery, P: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| the return | low battery then return then landed | pass |
+| no fly-away | ended on the ground, 0 m from where it started | pass |
+| charge at landing | landed with 29% left by my battery model, against the 20% reserve | pass |
 | false triggers | the safety monitor's triggers fired: none | pass |
 
 </details>
@@ -174,11 +543,432 @@ A blank cell is a scenario that combination doesn't fly: top speed and wind only
 
 | Check | Found | Verdict |
 |---|---|---|
-| chute order | the motors stopped 0.14 s before the canopy left | pass |
-| chute height lost | lost 4.5 m before settling at 4.1 m/s | pass |
+| chute order | the motors stopped 0.10 s before the canopy left | pass |
+| chute height lost | lost 4.8 m before settling at 4.1 m/s | pass |
 | no fly-away | ended on the ground, 0 m from where it was then | pass |
 
 </details>
+
+<details>
+<summary>sagging pack, P: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| the landing | pack sagged then low battery then landed | pass |
+| sagged top speed | the motors topped out at 79% of their usual top speed | pass |
+| no fly-away | ended on the ground, 0 m from where it was then | pass |
+| touchdown | came down at 0.7 m/s at the end, a controlled landing | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>steps, P: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| roll to 15 degrees: settling | inside 5% of the step after 0.20 s | pass |
+| roll to 15 degrees: overshoot | overshot by 2% of the step | pass |
+| roll back from 15 degrees: settling | inside 5% of the step after 0.20 s | pass |
+| roll back from 15 degrees: overshoot | overshot by 3% of the step | pass |
+| pitch to 15 degrees: settling | inside 5% of the step after 0.14 s | pass |
+| pitch to 15 degrees: overshoot | overshot by 5% of the step | pass |
+| pitch back from 15 degrees: settling | inside 5% of the step after 0.38 s | pass |
+| pitch back from 15 degrees: overshoot | overshot by 7% of the step | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>top speed, P: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| top speed | held 88 km/h for 1 s, against 80 | pass |
+| top speed, flat out | the busiest motor at 100% of its top speed, leaning up to 48 degrees | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>wind, P: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| wind drift | drifted 0.13 m in the wind | pass |
+| motor headroom | the busiest motor reached 61% of its top speed | pass |
+| leaning into the wind | leaned 2.5 degrees into a 10 m/s wind | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>dead motor, P+C: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| no fly-away | ended on the ground, 1 m from where it was then | pass |
+| chute order | the motors stopped 0.10 s before the canopy left | pass |
+| chute height lost | lost 9.3 m before settling at 4.3 m/s | pass |
+| safety monitor | its free fall trigger would fire 0.48 s after the failure | pass |
+
+</details>
+
+<details>
+<summary>endurance, P+C: fail</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| hover endurance | 25.9 min in the sim against the sizing model's 25.8, at 366 W | pass |
+| cruise endurance | 25.9 min in the sim against the sizing model's 33.4, at 365 W | fail |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>failed sensor, P+C: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| the landing | gps failed then landed | pass |
+| no fly-away | ended on the ground, 20 m from where it was then | pass |
+| touchdown | came down at 0.7 m/s at the end, a controlled landing | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>hover, P+C: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| hover drift | drifted 0.10 m sideways over 60.036 s | pass |
+| hover height | held its height within 0.09 m | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>lost link, P+C: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| the return | link cut then link lost then return then landed | pass |
+| no fly-away | ended on the ground, 0 m from where it started | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>low battery, P+C: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| the return | low battery then return then landed | pass |
+| no fly-away | ended on the ground, 0 m from where it started | pass |
+| charge at landing | landed with 29% left by my battery model, against the 20% reserve | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>parachute drop, P+C: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| chute order | the motors stopped 0.16 s before the canopy left | pass |
+| chute height lost | lost 4.9 m before settling at 4.3 m/s | pass |
+| no fly-away | ended on the ground, 0 m from where it was then | pass |
+| safety monitor | its free fall trigger would fire 0.42 s after the failure | pass |
+
+</details>
+
+<details>
+<summary>payload grab, P+C: fail</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| flown to the end | it never got to 0 m north, 0 m east, 1 m up | fail |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>sagging pack, P+C: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| the landing | pack sagged then low battery then landed | pass |
+| sagged top speed | the motors topped out at 79% of their usual top speed | pass |
+| no fly-away | ended on the ground, 0 m from where it was then | pass |
+| touchdown | came down at 0.7 m/s at the end, a controlled landing | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>steps, P+C: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| roll to 15 degrees: settling | inside 5% of the step after 0.19 s | pass |
+| roll to 15 degrees: overshoot | overshot by 2% of the step | pass |
+| roll back from 15 degrees: settling | inside 5% of the step after 0.21 s | pass |
+| roll back from 15 degrees: overshoot | overshot by 3% of the step | pass |
+| pitch to 15 degrees: settling | inside 5% of the step after 0.35 s | pass |
+| pitch to 15 degrees: overshoot | overshot by 7% of the step | pass |
+| pitch back from 15 degrees: settling | inside 5% of the step after 0.30 s | pass |
+| pitch back from 15 degrees: overshoot | overshot by 5% of the step | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>dead motor, V: fail</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| no fly-away | ended on the ground, 3 m from where it was then | pass |
+| touchdown | came down at 24.2 m/s at the end, too fast for a controlled landing | fail |
+
+</details>
+
+<details>
+<summary>endurance, V: fail</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| hover endurance | 28.3 min in the sim against the sizing model's 28.3, at 335 W | pass |
+| cruise endurance | 28.4 min in the sim against the sizing model's 36.7, at 334 W | fail |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>failed sensor, V: fail</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| the landing | gps failed then landed | pass |
+| no fly-away | ended on the ground, 33 m from where it was then | fail |
+| touchdown | came down at 0.7 m/s at the end, a controlled landing | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>hover, V: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| hover drift | drifted 0.06 m sideways over 60 s | pass |
+| hover height | held its height within 0.14 m | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>lost link, V: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| the return | link cut then link lost then return then landed | pass |
+| no fly-away | ended on the ground, 0 m from where it started | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>sagging pack, V: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| the landing | pack sagged then low battery then landed | pass |
+| sagged top speed | the motors topped out at 79% of their usual top speed | pass |
+| no fly-away | ended on the ground, 0 m from where it was then | pass |
+| touchdown | came down at 0.7 m/s at the end, a controlled landing | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>steps, V: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| roll to 15 degrees: settling | inside 5% of the step after 0.22 s | pass |
+| roll to 15 degrees: overshoot | overshot by 2% of the step | pass |
+| roll back from 15 degrees: settling | inside 5% of the step after 0.21 s | pass |
+| roll back from 15 degrees: overshoot | overshot by 4% of the step | pass |
+| pitch to 16 degrees: settling | inside 5% of the step after 0.20 s | pass |
+| pitch to 16 degrees: overshoot | overshot by 5% of the step | pass |
+| pitch back from 15 degrees: settling | inside 5% of the step after 0.18 s | pass |
+| pitch back from 15 degrees: overshoot | overshot by 4% of the step | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>top speed, V: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| top speed | held 88 km/h for 1 s, against 80 | pass |
+| top speed, flat out | the busiest motor at 100% of its top speed, leaning up to 47 degrees | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>wind, V: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| wind drift | drifted 0.12 m in the wind | pass |
+| motor headroom | the busiest motor reached 61% of its top speed | pass |
+| leaning into the wind | leaned 3.1 degrees into a 10 m/s wind | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>endurance, V+C: fail</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| hover endurance | 25.3 min in the sim against the sizing model's 25.2, at 374 W | pass |
+| cruise endurance | 25.2 min in the sim against the sizing model's 32.1, at 376 W | fail |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>failed sensor, V+C: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| the landing | gps failed then landed | pass |
+| no fly-away | ended on the ground, 18 m from where it was then | pass |
+| touchdown | came down at 0.7 m/s at the end, a controlled landing | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>hover, V+C: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| hover drift | drifted 0.09 m sideways over 60 s | pass |
+| hover height | held its height within 0.11 m | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>lost link, V+C: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| the return | link cut then link lost then return then landed | pass |
+| no fly-away | ended on the ground, 0 m from where it started | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>low battery, V+C: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| the return | low battery then return then landed | pass |
+| no fly-away | ended on the ground, 0 m from where it started | pass |
+| charge at landing | landed with 28% left by my battery model, against the 20% reserve | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>payload grab, V+C: fail</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| payload drift | stayed within 0.09 m after picking it up | pass |
+| payload lifted | the rotors' thrust grew 11%, against 11% for 250 g | pass |
+| false triggers | the safety monitor's triggers fired: tumble tilt at 131.4 s | fail |
+
+</details>
+
+<details>
+<summary>sagging pack, V+C: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| the landing | pack sagged then low battery then landed | pass |
+| sagged top speed | the motors topped out at 79% of their usual top speed | pass |
+| no fly-away | ended on the ground, 0 m from where it was then | pass |
+| touchdown | came down at 0.7 m/s at the end, a controlled landing | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+<details>
+<summary>steps, V+C: pass</summary>
+
+| Check | Found | Verdict |
+|---|---|---|
+| roll to 15 degrees: settling | inside 5% of the step after 0.16 s | pass |
+| roll to 15 degrees: overshoot | overshot by 2% of the step | pass |
+| roll back from 15 degrees: settling | inside 5% of the step after 0.20 s | pass |
+| roll back from 15 degrees: overshoot | overshot by 3% of the step | pass |
+| pitch to 15 degrees: settling | inside 5% of the step after 0.16 s | pass |
+| pitch to 15 degrees: overshoot | overshot by 4% of the step | pass |
+| pitch back from 15 degrees: settling | inside 5% of the step after 0.19 s | pass |
+| pitch back from 15 degrees: overshoot | overshot by 5% of the step | pass |
+| false triggers | the safety monitor's triggers fired: none | pass |
+
+</details>
+
+## Why the misses miss
+
+**dead motor, touchdown** (base, C, V). There's no chute without P, and a quad can't fly on three motors: PX4 drops the dead one from the mix and tries, but it tumbles and falls. Every combination without P loses the drone to a dead motor.
+
+**endurance, cruise endurance** (base, C, max, mission, P, P+C, V, V+C). The sizing model says forward flight is cheaper than a hover, the way it is for a real prop moving through fresh air. Gazebo's rotors make the same thrust at any airspeed, so in the sim a cruise costs about what a hover does. The truth is somewhere between, and pinning it down takes the rotor's forward-flight data the aero side track will measure.
+
+**failed sensor, no fly-away** (base, max, V). Without GPS this drone has nothing to hold its position with: the TF-Luna only measures height, and there's no optical flow sensor. PX4 comes down blind, level by its own attitude estimate, and that estimate's small tilt error carries it off at up to a few m/s. In wind it would drift farther.
+
+- flown to the end in C: not looked into yet
+- flown to the end in max: not looked into yet
+- false triggers in max: not looked into yet
+- flown to the end in mission: not looked into yet
+- flown to the end in P+C: not looked into yet
+- false triggers in V+C: not looked into yet
+
+## Closing the loop
+
+Flight times from the sim's logged rotors, through my battery model, against the sizing model's at the same weight (no growth margin, no payload).
+
+| Setup | Hover, sim | Hover, sizing model | Cruise, sim | Cruise, sizing model |
+|---|---|---|---|---|
+| base |  |  |  |  |
+| V |  |  |  |  |
+| P |  |  |  |  |
+| C |  |  |  |  |
+| mission |  |  |  |  |
+| V+C |  |  |  |  |
+| P+C | 25.9 min | 25.8 min | 25.9 min | 33.4 min |
+| max | 22.7 min | 22.7 min | 22.7 min | 28.5 min |
+
+The safety monitor's triggers, replayed over the 65 runs where nothing fails on purpose: 2 false triggers:
+- payload grab in max: the safety monitor's triggers fired: tumble tilt at 77.5 s, tumble tilt at 78.7 s, tumble tilt at 80.1 s, tumble tilt at 83.7 s, tumble tilt at 85.2 s, tumble tilt at 89.2 s
+- payload grab in V+C: the safety monitor's triggers fired: tumble tilt at 131.4 s
+
+And where something really fails:
+
+- dead motor in max: its free fall trigger would fire 0.48 s after the failure
+- parachute drop in max: its free fall trigger would fire 0.45 s after the failure
+- dead motor in P+C: its free fall trigger would fire 0.48 s after the failure
+- parachute drop in P+C: its free fall trigger would fire 0.42 s after the failure
 
 ## The models
 
@@ -186,14 +976,14 @@ Each combination's model, as generated. The weight is the CAD's, without the siz
 
 | Setup | Weight | Hover throttle | Top speed | Thrust constant | Torque per thrust | Drag area | Chute | Payload |
 |---|---|---|---|---|---|---|---|---|
-| base | 1875 g | 53% | 8836 rpm | 1.58e-05 N/(rad/s)² | 16.0 mm | 120 cm² |  |  |
-| V | 2039 g | 56% | 8836 rpm | 1.58e-05 N/(rad/s)² | 16.0 mm | 177 cm² |  |  |
-| P | 2050 g | 56% | 8836 rpm | 1.58e-05 N/(rad/s)² | 16.0 mm | 145 cm² | yes |  |
-| C | 2034 g | 60% | 8836 rpm | 1.58e-05 N/(rad/s)² | 16.1 mm | 160 cm² |  | 250 g |
-| mission | 2213 g | 58% | 8836 rpm | 1.58e-05 N/(rad/s)² | 16.0 mm | 202 cm² | yes |  |
-| V+C | 2198 g | 62% | 8836 rpm | 1.58e-05 N/(rad/s)² | 16.2 mm | 217 cm² |  | 250 g |
-| P+C | 2209 g | 62% | 8836 rpm | 1.58e-05 N/(rad/s)² | 16.2 mm | 185 cm² | yes | 250 g |
-| max | 2372 g | 64% | 8836 rpm | 1.58e-05 N/(rad/s)² | 16.4 mm | 242 cm² | yes | 250 g |
+| base | 1860 g | 51% | 9046 rpm | 1.58e-05 N/(rad/s)² | 16.0 mm | 120 cm² |  |  |
+| V | 2032 g | 54% | 9046 rpm | 1.58e-05 N/(rad/s)² | 16.0 mm | 177 cm² |  |  |
+| P | 2036 g | 54% | 9046 rpm | 1.58e-05 N/(rad/s)² | 16.0 mm | 145 cm² | yes |  |
+| C | 2022 g | 57% | 9046 rpm | 1.58e-05 N/(rad/s)² | 16.1 mm | 160 cm² |  | 250 g |
+| mission | 2208 g | 57% | 9046 rpm | 1.58e-05 N/(rad/s)² | 16.0 mm | 202 cm² | yes |  |
+| V+C | 2194 g | 60% | 9046 rpm | 1.58e-05 N/(rad/s)² | 16.2 mm | 217 cm² |  | 250 g |
+| P+C | 2198 g | 60% | 9046 rpm | 1.58e-05 N/(rad/s)² | 16.2 mm | 185 cm² | yes | 250 g |
+| max | 2370 g | 62% | 9046 rpm | 1.58e-05 N/(rad/s)² | 16.4 mm | 242 cm² | yes | 250 g |
 
 ## What it rests on
 
@@ -215,6 +1005,11 @@ Each combination's model, as generated. The weight is the CAD's, without the siz
 
 Generated on every run, not committed (they're build outputs):
 
+- `stills/matrix.png`
+- `stills/drop-portrait.png`
+- `stills/drop-square.png`
+- `stills/drop-vertical.png`
+- `stills/drop-wide.png`
 - `flight-sim/models/pcs14_base/model.sdf`
 - `flight-sim/models/pcs14_c/model.sdf`
 - `flight-sim/models/pcs14_max/model.sdf`
@@ -224,4 +1019,5 @@ Generated on every run, not committed (they're build outputs):
 - `flight-sim/models/pcs14_payload/model.sdf`
 - `flight-sim/models/pcs14_v/model.sdf`
 - `flight-sim/models/pcs14_v_c/model.sdf`
+- `flight-sim/worlds/pcs14-fine.sdf`
 - `flight-sim/worlds/pcs14.sdf`

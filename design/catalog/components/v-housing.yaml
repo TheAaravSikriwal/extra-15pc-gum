@@ -4,7 +4,7 @@ id: v-housing
 maker: Various
 model: Module V housing and mounts
 checked: 2026-10-17
-source: {kind: cad, checked: 2026-10-19, note: "From the CAD: v housing, weighed from their geometry in petg_cf at the density and fill in design/cad.yaml"}
+source: {kind: cad, checked: 2026-10-20, note: "From the CAD: v housing, weighed from their geometry in petg_cf at the density and fill in design/cad.yaml"}
 mass_g: 39.9
 drag_area_cm2: 45
 drag_source: {kind: estimate, checked: 2026-10-17, note: "About 75 x 60 mm frontal, at a drag coefficient of 1.0"}

@@ -55,12 +55,13 @@ def test_the_top_speed_is_the_sizing_models_worst_case(mission):
     full = Rotor.from_build(build, pessimistic=True).full_throttle(
         Pack(build.pack), targets.reserve_fraction
     )
-    assert full.capped_from is not None  # the 90 A cap is what holds it back
+    # at the reserve the pack itself gives a little under the 90 A cap flat out
+    assert full.current <= 90.0
     # flat out, each motor makes exactly the sizing model's full-throttle thrust, at a speed
-    # close to the sizing model's own rpm (which comes from a power law, a few percent off)
+    # close to the table's own rpm for it (the motor model is a one-number fit)
     thrust = model.motor_constant * model.max_rot_velocity**2
     assert thrust == pytest.approx(full.thrust, rel=1e-9)
-    assert model.max_rot_velocity == pytest.approx(full.rpm * 2 * math.pi / 60, rel=0.08)
+    assert model.max_rot_velocity == pytest.approx(full.rpm * 2 * math.pi / 60, rel=0.05)
     assert model.hover_rot_velocity < model.max_rot_velocity
 
 

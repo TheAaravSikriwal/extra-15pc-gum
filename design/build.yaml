@@ -8,9 +8,21 @@ pack:
   cell: molicel-p45b # replaced the P42A in step 3d (2026-10-19), for Mission's hover
   series: 6
   parallel: 2
-  overhead_g: 60
   wiring_mohm: 3.8
-  note: "overhead_g is an estimate: nickel strip, balance and power leads, the pack's XT60 half and wrap for a 6S2P 18650 pack. wiring_mohm is the drone's side, the leads and the XT60 from the pack's terminals to the ESC, worked out from the connection list (pcs14 electrical --update-catalog); the pack's own strip and leads aren't in it"
+  insides: # how the pack is put together (decided 2026-10-20): its weight and its own resistance
+    strip_width_mm: 10 # nickel-plated copper, not nickel: 15 A/mm^2 at the 90 A cap, not 37
+    strip_thickness_mm: 0.3
+    tab_length_mm: 25
+    weld_mohm: 0.1 # each cell end's weld, a guess
+    solder_mohm: 0.05 # each tab to its lead, a guess
+    lead_wire: ul3135-silicone
+    lead_awg: 12
+    lead_length_mm: 80 # each of the pack's own two leads, to its XT60
+    balance_lead_g: 4 # seven 22 AWG wires and a JST-XH plug, a guess
+    connector_g: 3.5 # the pack's XT60 half, a guess
+    wrap_g: 12 # fish paper rings, heat shrink around the pack, foam, a guess
+    note: "Worked out in pcs14.electrical.pack: about 2.3 mOhm and 43 g, against a 60 g guess that assumed nickel strip on 18650 cells. The welds' resistance and the small parts' grams are guesses"
+  note: "wiring_mohm is the drone's side, the leads and the XT60 from the pack's terminals to the ESC, worked out from the connection list (pcs14 electrical --update-catalog). The pack's insides (its links, welds and own leads) add their resistance to it, and their weight is the pack's overhead (pcs14.electrical.pack)"
 base:
   - ark-fpv # replaced the Kakute H7 in the electrical talk
   - radiomaster-rp2-v2
@@ -63,6 +75,7 @@ modules:
     - ark-cannode # DroneCAN servo node for the claws
     - module-plug
     - c-wiring # its wires, from the connection list
+    - c-hardware # its screws and nuts
 firmware:
   # My flight controller caps the total battery current at the pack's continuous rating, so
   # full throttle can't overdraw the cells (decided 2026-10-17). 1.0 means 100% of the rating.

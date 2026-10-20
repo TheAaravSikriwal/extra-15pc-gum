@@ -63,8 +63,9 @@ def test_the_step_size_barely_matters(mission, pack):
 
 
 def test_thrust_to_weight_at_the_reserve_by_hand(mission, pack):
-    # 4 x 2100 g x (18.195 / 24)^2 = 4 x 1207.0 g, against 2216 g
-    assert thrust_to_weight(mission, pack, soc=0.2) == pytest.approx(4 * 1207.0 / 2216, rel=1e-3)
+    # 18.195 V and 60.92 A flat out at the reserve, so 277.1 W a motor: 1293.1 g off the
+    # table, between its 60% row (230.4 W, 1150 g) and 70% row (312 W, 1400 g); against 2216 g
+    assert thrust_to_weight(mission, pack, soc=0.2) == pytest.approx(4 * 1293.1 / 2216, rel=1e-3)
 
 
 def test_headroom_is_full_throttle_thrust_over_what_is_needed(mission, pack):

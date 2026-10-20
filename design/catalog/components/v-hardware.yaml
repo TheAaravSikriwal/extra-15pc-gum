@@ -3,8 +3,8 @@ type: component
 id: v-hardware
 maker: Various
 model: Module V's screws, nuts and spacers
-source: {kind: estimate, checked: 2026-10-19, note: "From the hardware list in design/cad.yaml (pcs14 cad --update-catalog): 28 pieces, each weighed from its standard size and its material's density. The counts come from the CAD's screw holes; the lengths and materials are my picks, and the grommets' and the patch's grams are guesses"}
-mass_g: 2.7
+source: {kind: estimate, checked: 2026-10-20, note: "From the hardware list in design/cad.yaml (pcs14 cad --update-catalog): 33 pieces, each weighed from its standard size and its material's density. The counts come from the CAD's screw holes; the lengths and materials are my picks, and the grommets' and the patch's grams are guesses"}
+mass_g: 4.5
 cad:
   shape: fasteners
   source:

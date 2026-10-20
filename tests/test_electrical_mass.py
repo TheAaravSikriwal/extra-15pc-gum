@@ -122,7 +122,9 @@ def test_the_catalog_takes_the_wiring_and_only_the_wiring(copy):
     assert base.electrical is not None  # the XT60's pins stay
     build = load_build(copy / "build.yaml", catalog)
     assert "v-wiring" in {p.id for p in build.modules["V"]}
-    assert build.pack.wiring_resistance == pytest.approx(4.2e-3)
+    # the drone's side as written, plus the pack's own insides
+    assert yaml.safe_load((copy / "build.yaml").read_text())["pack"]["wiring_mohm"] == 4.2
+    assert build.pack.wiring_resistance == pytest.approx(4.2e-3 + build.pack.insides.ohms)
     assert "connection list" in yaml.safe_load((copy / "build.yaml").read_text())["pack"]["note"]
 
 

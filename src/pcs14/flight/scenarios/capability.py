@@ -14,7 +14,8 @@ up its payload.
   stretch's power comes from the logged rotor speeds, and the battery model turns it into a
   flight time to compare with the sizing model's at the same weight
 - payload grab: a 250 g box on a 1 m shelf 4 m north of home. The drone hovers 0.4 m above it,
-  Gazebo's attach joint stands in for the claws, and it climbs to 3 m and carries it for 20 s
+  Gazebo's attach joint stands in for the claws, and it climbs to 3 m and carries it for 20 s,
+  then lets go of it 1.5 m up, 2 m east of home, and lands at home
 """
 
 import contextlib
@@ -60,6 +61,9 @@ SHELF_SIDE = 0.3
 PAYLOAD_SIZE = 0.08  # the payload model's box, pcs14.flight.generate.payload_sdf
 GRAB_CLEARANCE = 0.4  # m between the drone's feet and the payload's top
 CARRY_HEIGHT = 3.0
+DROP_EAST = 2.0  # m east of home, where the box gets set down, clear of the landing spot
+RELEASE_HEIGHT = 1.5  # m: the box drops about a meter when it's let go. Lower, PX4's height
+# estimate isn't good to 20 cm, and with the box resting on the ground it calls itself landed
 CARRY_S = 20.0
 LIFT_BAND = 0.05  # the rotors' thrust has to grow by the payload's share, within this much
 G = 9.80665
@@ -190,9 +194,14 @@ async def wind(s):
     speed = s.context.setup.hold_position_in_wind
     await take_off(s, HOVER_HEIGHT)
     s.mark("wind start")
-    for k in range(1, WIND_RAMP_STEPS + 1):
-        await s.gz_publish(WIND_TOPIC, "gz.msgs.Vector3d", f"x: {speed * k / WIND_RAMP_STEPS}")
+    # the ramp follows PX4's clock: each publish takes real time, which at a faster sim speed
+    # is more sim time, so stepping a fixed count would stretch the ramp
+    start = s.clock.now
+    while (elapsed := s.clock.now - start) < WIND_RAMP_S:
+        share = min(elapsed / WIND_RAMP_S + 1 / WIND_RAMP_STEPS, 1.0)
+        await s.gz_publish(WIND_TOPIC, "gz.msgs.Vector3d", f"x: {speed * share}")
         await s.clock.sleep(WIND_RAMP_S / WIND_RAMP_STEPS)
+    await s.gz_publish(WIND_TOPIC, "gz.msgs.Vector3d", f"x: {speed}")
     await s.clock.sleep(WIND_HOLD_S)
     s.mark("wind end")
     await s.gz_publish(WIND_TOPIC, "gz.msgs.Vector3d", "x: 0")
@@ -304,9 +313,12 @@ async def place_payload(s):
 
 async def payload_grab(s):
     attach, detach = PAYLOAD_TOPICS
-    # Gazebo's attach joint closes as soon as the drone loads, so let go first
-    await s.gz_publish(detach, "gz.msgs.Empty", "unused: true")
-    await s.clock.sleep(1.0)
+    # Gazebo's attach joint closes as soon as the drone loads, so let go first. A one-off
+    # publish from gz's command line can go out before it has found the plugin and be lost,
+    # and taking off still joined to a box on a shelf 4 m away tumbles it, so say it a few times
+    for _ in range(4):
+        await s.gz_publish(detach, "gz.msgs.Empty", "unused: true")
+        await s.clock.sleep(0.5)
     await take_off(s, CARRY_HEIGHT)
     await offboard_here(s)
     await go_to(s, SHELF_NORTH, 0.0, CARRY_HEIGHT)
@@ -314,11 +326,22 @@ async def payload_grab(s):
     grab = SHELF_HEIGHT + PAYLOAD_SIZE + GRAB_CLEARANCE
     await go_to(s, SHELF_NORTH, 0.0, grab, tolerance=0.2)
     s.mark("grab")
-    await s.gz_publish(attach, "gz.msgs.Empty", "unused: true")
-    await s.clock.sleep(1.0)
+    for _ in range(3):
+        await s.gz_publish(attach, "gz.msgs.Empty", "unused: true")
+        await s.clock.sleep(0.3)
     await go_to(s, SHELF_NORTH, 0.0, CARRY_HEIGHT, timeout=60.0)
     await hold(s, CARRY_S, "carry")
-    await go_to(s, 0.0, 0.0, CARRY_HEIGHT)
+    # set it down away from home before landing, the way the claws would: the stand-in joint
+    # holds the box rigidly below the feet, and landing on the box (held or dropped) tips the
+    # drone over
+    await go_to(s, 0.0, DROP_EAST, CARRY_HEIGHT)
+    await go_to(s, 0.0, DROP_EAST, RELEASE_HEIGHT, tolerance=0.35)
+    s.mark("release")
+    for _ in range(3):
+        await s.gz_publish(detach, "gz.msgs.Empty", "unused: true")
+        await s.clock.sleep(0.5)
+    await s.clock.sleep(1.0)
+    await go_to(s, 0.0, 0.0, RELEASE_HEIGHT, tolerance=0.35)
     await leave_offboard(s)
     await land(s)
 

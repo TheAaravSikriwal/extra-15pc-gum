@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Literal
 
 import yaml
-from pydantic import BaseModel, ConfigDict, Field, ValidationError
+from pydantic import BaseModel, ConfigDict, Field, ValidationError, model_validator
 
 from pcs14 import units
 from pcs14.catalog import Catalog, CatalogError, Cell, Component, Esc, Frame, Motor, Prop
@@ -214,13 +214,63 @@ def load_targets(path: Path) -> Targets:
 # --- builds ----------------------------------------------------------------------------
 
 
+class _PackInsides(_Strict):
+    """How the pack is put together, for pcs14.electrical.pack."""
+
+    strip_width_mm: float = Field(gt=0)  # nickel-plated copper
+    strip_thickness_mm: float = Field(gt=0)
+    tab_length_mm: float = Field(gt=0)
+    weld_mohm: float = Field(ge=0)  # each cell end's weld
+    solder_mohm: float = Field(ge=0)  # each tab to its lead
+    lead_wire: str  # a wire in the catalog
+    lead_awg: int
+    lead_length_mm: float = Field(gt=0)  # each of the pack's own two leads
+    balance_lead_g: float = Field(ge=0)
+    connector_g: float = Field(ge=0)  # the pack's half of its plug
+    wrap_g: float = Field(ge=0)  # fish paper, shrink and foam
+    note: str = Field(min_length=1)
+
+
 class _PackFile(_Strict):
     cell: str
     series: int = Field(ge=1)
     parallel: int = Field(ge=1)
-    overhead_g: float = Field(ge=0)
+    overhead_g: float | None = Field(default=None, ge=0)  # an estimate, without insides
     wiring_mohm: float = Field(ge=0)
-    note: str = Field(min_length=1)  # these two numbers are estimates until the electrical step
+    insides: _PackInsides | None = None
+    note: str = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def _weighed(self):
+        if self.overhead_g is None and self.insides is None:
+            raise ValueError("the pack needs its insides or an overhead_g")
+        return self
+
+
+def _pack(raw: _PackFile, catalog, cap_fraction: float | None) -> "PackSpec":
+    """The pack, with its insides worked out (pcs14.electrical.pack) when the build gives them:
+    their weight is its overhead, and their resistance adds to the drone's side of the path."""
+    from pcs14.electrical.pack import insides as work_out
+
+    cell = catalog.cell(raw.cell)
+    if raw.insides is None:
+        return PackSpec(cell, raw.series, raw.parallel, units.g_to_kg(raw.overhead_g),
+                        units.mohm_to_ohm(raw.wiring_mohm))  # fmt: skip
+    i = raw.insides
+    wire = catalog.wire(i.lead_wire)
+    gauge = next((g for g in wire.gauges if g.awg == i.lead_awg), None)
+    if gauge is None:
+        raise DesignError(f"{i.lead_wire} has no {i.lead_awg} AWG for the pack's leads")
+    cap = raw.parallel * cell.max_continuous_a * (cap_fraction or 1.0)
+    found = work_out(
+        raw.series, raw.parallel, cell.cad.size("diameter_mm"),
+        i.strip_width_mm * 1e-3, i.strip_thickness_mm * 1e-3, i.tab_length_mm * 1e-3,
+        units.mohm_to_ohm(i.weld_mohm), units.mohm_to_ohm(i.solder_mohm),
+        gauge.resistance_per_m, gauge.mass_g_per_m * 1e-3, i.lead_length_mm * 1e-3,
+        units.g_to_kg(i.balance_lead_g + i.connector_g + i.wrap_g), cap,
+    )  # fmt: skip
+    return PackSpec(cell, raw.series, raw.parallel, found.kg,
+                    units.mohm_to_ohm(raw.wiring_mohm) + found.ohms, found)  # fmt: skip
 
 
 class _FirmwareFile(_Strict):
@@ -245,8 +295,9 @@ class PackSpec:
     cell: Cell
     series: int
     parallel: int
-    overhead: float  # kg: nickel strip, wires, wrap
-    wiring_resistance: float  # ohms, battery to ESC
+    overhead: float  # kg: the links, leads, plug and wrap
+    wiring_resistance: float  # ohms, the cells' terminals to the ESC
+    insides: object = None  # pcs14.electrical.pack.Insides, when the build gives them
 
     @property
     def cell_count(self) -> int:
@@ -342,13 +393,7 @@ def load_build(path: Path, catalog: Catalog) -> Build:
             prop=catalog.prop(raw.prop),
             esc=catalog.esc(raw.esc),
             frame=catalog.frame(raw.frame),
-            pack=PackSpec(
-                cell=catalog.cell(raw.pack.cell),
-                series=raw.pack.series,
-                parallel=raw.pack.parallel,
-                overhead=units.g_to_kg(raw.pack.overhead_g),
-                wiring_resistance=units.mohm_to_ohm(raw.pack.wiring_mohm),
-            ),
+            pack=_pack(raw.pack, catalog, raw.firmware.current_cap_fraction),
             base=tuple(catalog.component(c) for c in raw.base),
             modules={m: tuple(catalog.component(c) for c in ids) for m, ids in raw.modules.items()},
             current_cap_fraction=raw.firmware.current_cap_fraction,

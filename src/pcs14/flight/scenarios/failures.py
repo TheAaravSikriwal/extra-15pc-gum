@@ -180,6 +180,7 @@ SCENARIOS = (
         healthy=False,
         params=dead_motor_params,
         failure="motor failed",
+        world="pcs14-fine",
     ),
     Scenario("failed sensor", failed_sensor, grade_failed_sensor, budget_s=420.0),
     Scenario("sagging pack", sagging_pack, grade_sagging_pack, budget_s=300.0),

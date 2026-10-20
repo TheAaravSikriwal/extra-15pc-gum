@@ -4,7 +4,7 @@ id: p-mount
 maker: Various
 model: Module P mount
 checked: 2026-10-17
-source: {kind: cad, checked: 2026-10-19, note: "From the CAD: p holder, weighed from their geometry in petg_cf at the density and fill in design/cad.yaml"}
+source: {kind: cad, checked: 2026-10-20, note: "From the CAD: p holder, weighed from their geometry in petg_cf at the density and fill in design/cad.yaml"}
 mass_g: 8.4
 cad:
   shape: printed

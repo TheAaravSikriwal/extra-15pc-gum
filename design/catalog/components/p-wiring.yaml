@@ -3,8 +3,8 @@ type: component
 id: p-wiring
 maker: Various
 model: Module P's wiring
-checked: 2026-10-19
-source: {kind: estimate, checked: 2026-10-19, note: "From the connection list (pcs14 electrical --update-catalog): 0.74 m of wire, 2.4 g at each gauge's grams per meter; 0.1 g of plugs, the wire's half of each; 0.5 g of heat shrink on 18 soldered ends at 0.03 g each. The grams per meter and the heat shrink are estimates"}
+checked: 2026-10-20
+source: {kind: estimate, checked: 2026-10-20, note: "From the connection list (pcs14 electrical --update-catalog): 0.74 m of wire, 2.4 g at each gauge's grams per meter; 0.1 g of plugs, the wire's half of each; 0.5 g of heat shrink on 18 soldered ends at 0.03 g each. The grams per meter and the heat shrink are estimates"}
 mass_g: 3.1
 cad:
   shape: routed

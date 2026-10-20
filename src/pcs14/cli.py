@@ -7,6 +7,7 @@
     pcs14 cad      build the drone in CAD, check every module combination, export it
     pcs14 electrical  every wire, pin and connector, checked in every combination
     pcs14 flight-sim  Gazebo models of every combination for PX4, and the flight sim report
+    pcs14 tunnel   the wind tunnel's visuals: FluidX3D runs of the drone and their stills
 
 Every run saves a Rerun recording to outputs/rerun/ (or wherever --record says), and --live
 opens the viewer and streams into it as the run happens.
@@ -167,6 +168,24 @@ def build_parser() -> argparse.ArgumentParser:
         "--replays",
         action="store_true",
         help="also write a Rerun recording of every flown run to outputs/flight-sim/rerun/",
+    )
+    tunnel = add(
+        "tunnel",
+        "The wind tunnel's visuals: FluidX3D runs of the drone (on the PC's GPU) and their stills.",
+    )
+    tunnel.add_argument("--cad", type=Path, default=Path("design/cad.yaml"))
+    tunnel.add_argument("--setup", default="max", help="the module combination (default: max)")
+    tunnel.add_argument(
+        "--case",
+        action="append",
+        choices=("cruise", "crosswind", "hover"),
+        help="a case to run (repeat for more; default: all three)",
+    )
+    tunnel.add_argument(
+        "--out", type=Path, default=Path("outputs/tunnel"), help="frames, meshes and stills"
+    )
+    tunnel.add_argument(
+        "--stills-only", action="store_true", help="don't run FluidX3D, just redraw the stills"
     )
     report = add("report", "Write the sizing report: Markdown, charts and the data file.")
     report.add_argument("--out", type=Path, help="report folder (default: docs/reports/sizing)")
@@ -591,6 +610,37 @@ def flight_replays(drone, models, results, exports) -> list[str]:
     return out
 
 
+def run_tunnel(args) -> int:
+    import math
+
+    from pcs14.aero import stills, tunnel
+    from pcs14.cad.assembly import Drone
+    from pcs14.cad.settings import load_settings
+
+    _, build, targets = _load(args)
+    setup = _pick([args.setup], {s.name: s for s in targets.combinations()}, "combination")[0]
+    drone = Drone(build, load_settings(args.cad))
+    out = Path(args.out)
+    meshes = out / "meshes"
+    found = tunnel.case_for(drone, build, targets, setup, meshes)
+    wanted = set(args.case or ("cruise", "crosswind", "hover"))
+    chosen = [c for c in found if c.name.rsplit("-", 1)[1] in wanted]
+    home = tunnel.fluidx3d_dir()
+    if not args.stills_only and not (home / "bin" / "FluidX3D.exe").exists():
+        print(f"No FluidX3D build in {home} (set FLUIDX3D_DIR); --stills-only redraws stills.")
+        return 2
+    drawn = []
+    for case in chosen:
+        if not args.stills_only:
+            print(f"{case.name}: running FluidX3D ({case.time_s:g} s of air)")
+            tunnel.run(case, home, out, meshes)
+        rpm = case.omega * 60 / (2 * math.pi) if case.omega else None
+        drawn += stills.draw(case, out / case.name, out / "stills", rpm)
+    print(f"{len(drawn)} stills in {(out / 'stills').resolve()}")
+    print("They stay out of the repo until the FluidX3D fork is public.")
+    return 0
+
+
 def _pick(wanted, available: dict, what: str) -> list:
     if not wanted or wanted == ["all"]:
         return list(available.values())
@@ -675,4 +725,5 @@ COMMANDS = {
     "cad": run_cad,
     "electrical": run_electrical,
     "flight-sim": run_flight_sim,
+    "tunnel": run_tunnel,
 }

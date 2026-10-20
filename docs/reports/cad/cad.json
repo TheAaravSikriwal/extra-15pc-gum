@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-19",
+ "generated": "2026-10-20",
  "pcs14_version": "0.1.0",
  "build": "E3 2814 850KV / 1050 3-blade / 6S2P Molicel INR-21700-P45B",
  "verdict": "pass",
@@ -9,37 +9,37 @@
    "modules": [],
    "passed": true,
    "trim_x_mm": -10.0,
-   "mass_g": 1875.4,
+   "mass_g": 1859.802,
    "center_of_gravity_mm": [
-    -0.017,
+    0.076,
     0.008,
-    -2.775
+    -2.556
    ],
    "inertia_kg_m2": [
     [
-     0.012920484931064145,
-     -3.0380527483357324e-06,
-     -0.0003783993818992167
+     0.01290624033016624,
+     -3.036601296572755e-06,
+     -0.00037497935103129724
     ],
     [
-     -3.0380527483357324e-06,
-     0.015493119677103716,
-     -4.286680241205782e-07
+     -3.036601296572755e-06,
+     0.015456669201920226,
+     -4.252396196343069e-07
     ],
     [
-     -0.0003783993818992167,
-     -4.286680241205782e-07,
-     0.025893784745621932
+     -0.00037497935103129724,
+     -4.252396196343069e-07,
+     0.025860438709353017
     ]
    ],
-   "busiest_motor_extra": 0.000171,
+   "busiest_motor_extra": 0.000567,
    "findings": [
     {
      "check": "balance",
      "passed": true,
-     "value": 0.0001709051413935517,
+     "value": 0.0005670017554744739,
      "limit": 0.05,
-     "detail": "with the pack at x = -10 mm, the center of gravity sits -0.0 mm along x and +0.0 mm along y, so the busiest motor works 0.0% harder",
+     "detail": "with the pack at x = -10 mm, the center of gravity sits +0.1 mm along x and +0.0 mm along y, so the busiest motor works 0.1% harder",
      "parts": []
     },
     {
@@ -781,38 +781,38 @@
     "V"
    ],
    "passed": true,
-   "trim_x_mm": -6.0,
-   "mass_g": 2038.948,
+   "trim_x_mm": -5.0,
+   "mass_g": 2031.585,
    "center_of_gravity_mm": [
-    -0.158,
+    0.112,
     0.221,
-    3.586
+    4.324
    ],
    "inertia_kg_m2": [
     [
-     0.014100840491145654,
-     5.288625094467123e-05,
-     0.00015322162518984576
+     0.014203127855131496,
+     5.300743939623507e-05,
+     0.00023588759430775129
     ],
     [
-     5.288625094467123e-05,
-     0.017114527262798145,
-     -4.2019825921951645e-05
+     5.300743939623507e-05,
+     0.017210387506078825,
+     -4.1687639791404604e-05
     ],
     [
-     0.00015322162518984576,
-     -4.2019825921951645e-05,
-     0.02653215798139596
+     0.00023588759430775129,
+     -4.1687639791404604e-05,
+     0.026521723779527016
     ]
    ],
-   "busiest_motor_extra": 0.002546,
+   "busiest_motor_extra": 0.002244,
    "findings": [
     {
      "check": "balance",
      "passed": true,
-     "value": 0.002546160095120719,
+     "value": 0.002244431752291442,
      "limit": 0.05,
-     "detail": "with the pack at x = -6 mm, the center of gravity sits -0.2 mm along x and +0.2 mm along y, so the busiest motor works 0.3% harder",
+     "detail": "with the pack at x = -5 mm, the center of gravity sits +0.1 mm along x and +0.2 mm along y, so the busiest motor works 0.2% harder",
      "parts": []
     },
     {
@@ -1817,38 +1817,38 @@
     "P"
    ],
    "passed": true,
-   "trim_x_mm": -17.0,
-   "mass_g": 2049.947,
+   "trim_x_mm": -18.0,
+   "mass_g": 2036.416,
    "center_of_gravity_mm": [
-    0.135,
+    -0.117,
     0.041,
-    7.424
+    7.751
    ],
    "inertia_kg_m2": [
     [
-     0.015619899444943968,
-     -6.052368336657784e-06,
-     -0.00130530977016267
+     0.015600985718982953,
+     -6.073511522606497e-06,
+     -0.0013285156265370238
     ],
     [
-     -6.052368336657784e-06,
-     0.01860577859290844,
-     -3.0004708634104952e-06
+     -6.073511522606497e-06,
+     0.01859542841943201,
+     -2.9730772694104146e-06
     ],
     [
-     -0.00130530977016267,
-     -3.0004708634104952e-06,
-     0.026357277430611344
+     -0.0013285156265370238,
+     -2.9730772694104146e-06,
+     0.026355643791221794
     ]
    ],
-   "busiest_motor_extra": 0.001183,
+   "busiest_motor_extra": 0.001067,
    "findings": [
     {
      "check": "balance",
      "passed": true,
-     "value": 0.001183056895124626,
+     "value": 0.0010673782311627288,
      "limit": 0.05,
-     "detail": "with the pack at x = -17 mm, the center of gravity sits +0.1 mm along x and +0.0 mm along y, so the busiest motor works 0.1% harder",
+     "detail": "with the pack at x = -18 mm, the center of gravity sits -0.1 mm along x and +0.0 mm along y, so the busiest motor works 0.1% harder",
      "parts": []
     },
     {
@@ -2729,38 +2729,38 @@
     "C"
    ],
    "passed": true,
-   "trim_x_mm": 12.0,
-   "mass_g": 2034.3,
+   "trim_x_mm": 13.0,
+   "mass_g": 2021.795,
    "center_of_gravity_mm": [
-    0.002,
-    0.028,
-    -4.61
+    0.152,
+    0.029,
+    -4.459
    ],
    "inertia_kg_m2": [
     [
-     0.013086709668482669,
-     9.052422339443619e-07,
-     -0.0004137061151869915
+     0.013077215743783276,
+     9.13901633807847e-07,
+     -0.00040930403334460907
     ],
     [
-     9.052422339443619e-07,
-     0.018239839947130486,
-     -8.171760013961728e-07
+     9.13901633807847e-07,
+     0.018279417113247876,
+     -8.084037596276296e-07
     ],
     [
-     -0.0004137061151869915,
-     -8.171760013961728e-07,
-     0.028566145060204533
+     -0.00040930403334460907,
+     -8.084037596276296e-07,
+     0.028605931271128607
     ]
    ],
-   "busiest_motor_extra": 0.000208,
+   "busiest_motor_extra": 0.001218,
    "findings": [
     {
      "check": "balance",
      "passed": true,
-     "value": 0.0002079733861226834,
+     "value": 0.00121806347943336,
      "limit": 0.05,
-     "detail": "with the pack at x = 12 mm, the center of gravity sits +0.0 mm along x and +0.0 mm along y, so the busiest motor works 0.0% harder",
+     "detail": "with the pack at x = 13 mm, the center of gravity sits +0.2 mm along x and +0.0 mm along y, so the busiest motor works 0.1% harder",
      "parts": []
     },
     {
@@ -3504,37 +3504,37 @@
    ],
    "passed": true,
    "trim_x_mm": -13.0,
-   "mass_g": 2213.495,
+   "mass_g": 2208.199,
    "center_of_gravity_mm": [
-    -0.006,
-    0.234,
-    12.53
+    -0.069,
+    0.235,
+    13.279
    ],
    "inertia_kg_m2": [
     [
-     0.01657749479250021,
-     4.992815356173794e-05,
-     -0.000774662840330457
+     0.01665666392993081,
+     4.989547783497111e-05,
+     -0.0007191643196940677
     ],
     [
-     4.992815356173794e-05,
-     0.019954131901323717,
-     -4.0381187052867965e-05
+     4.989547783497111e-05,
+     0.02003732232066847,
+     -3.9993187476081176e-05
     ],
     [
-     -0.000774662840330457,
-     -4.0381187052867965e-05,
-     0.02694531918494785
+     -0.0007191643196940677,
+     -3.9993187476081176e-05,
+     0.026946276536782655
     ]
    ],
-   "busiest_motor_extra": 0.001615,
+   "busiest_motor_extra": 0.002044,
    "findings": [
     {
      "check": "balance",
      "passed": true,
-     "value": 0.001615330491820228,
+     "value": 0.0020440256991414805,
      "limit": 0.05,
-     "detail": "with the pack at x = -13 mm, the center of gravity sits -0.0 mm along x and +0.2 mm along y, so the busiest motor works 0.2% harder",
+     "detail": "with the pack at x = -13 mm, the center of gravity sits -0.1 mm along x and +0.2 mm along y, so the busiest motor works 0.2% harder",
      "parts": []
     },
     {
@@ -4679,38 +4679,38 @@
     "V"
    ],
    "passed": true,
-   "trim_x_mm": 16.0,
-   "mass_g": 2197.848,
+   "trim_x_mm": 18.0,
+   "mass_g": 2193.577,
    "center_of_gravity_mm": [
-    -0.129,
+    0.18,
     0.224,
-    1.427
+    2.062
    ],
    "inertia_kg_m2": [
     [
-     0.014317591972337215,
-     5.683637028489126e-05,
-     0.00011877302045039308
+     0.014430797641989868,
+     5.698840607774087e-05,
+     0.00020240521533592285
     ],
     [
-     5.683637028489126e-05,
-     0.020070196974246387,
-     -4.309563843609543e-05
+     5.698840607774087e-05,
+     0.020292994531366692,
+     -4.278309610913278e-05
     ],
     [
-     0.00011877302045039308,
-     -4.309563843609543e-05,
-     0.029362922232911867
+     0.00020240521533592285,
+     -4.278309610913278e-05,
+     0.029470362629623752
     ]
    ],
-   "busiest_motor_extra": 0.002378,
+   "busiest_motor_extra": 0.002721,
    "findings": [
     {
      "check": "balance",
      "passed": true,
-     "value": 0.0023779586695709077,
+     "value": 0.002720632329730781,
      "limit": 0.05,
-     "detail": "with the pack at x = 16 mm, the center of gravity sits -0.1 mm along x and +0.2 mm along y, so the busiest motor works 0.2% harder",
+     "detail": "with the pack at x = 18 mm, the center of gravity sits +0.2 mm along x and +0.2 mm along y, so the busiest motor works 0.3% harder",
      "parts": []
     },
     {
@@ -5717,37 +5717,37 @@
    ],
    "passed": true,
    "trim_x_mm": 5.0,
-   "mass_g": 2208.847,
+   "mass_g": 2198.409,
    "center_of_gravity_mm": [
-    0.142,
+    -0.033,
     0.057,
-    5.0
+    5.241
    ],
    "inertia_kg_m2": [
     [
-     0.015872686364536173,
-     -2.10291210031222e-06,
-     -0.0013409893600717844
+     0.015861945939072017,
+     -2.1249111996493328e-06,
+     -0.001360353335269022
     ],
     [
-     -2.10291210031222e-06,
-     0.021161855570007222,
-     -3.1583773072705204e-06
+     -2.1249111996493328e-06,
+     0.02118316165161646,
+     -3.1279776941611626e-06
     ],
     [
-     -0.0013409893600717844,
-     -3.1583773072705204e-06,
-     0.028752427773207752
+     -0.001360353335269022,
+     -3.1279776941611626e-06,
+     0.028776132365934612
     ]
    ],
-   "busiest_motor_extra": 0.001339,
+   "busiest_motor_extra": 0.000607,
    "findings": [
     {
      "check": "balance",
      "passed": true,
-     "value": 0.001339253718421709,
+     "value": 0.0006065159746230015,
      "limit": 0.05,
-     "detail": "with the pack at x = 5 mm, the center of gravity sits +0.1 mm along x and +0.1 mm along y, so the busiest motor works 0.1% harder",
+     "detail": "with the pack at x = 5 mm, the center of gravity sits -0.0 mm along x and +0.1 mm along y, so the busiest motor works 0.1% harder",
      "parts": []
     },
     {
@@ -6630,38 +6630,38 @@
     "V"
    ],
    "passed": true,
-   "trim_x_mm": 9.0,
-   "mass_g": 2372.395,
+   "trim_x_mm": 10.0,
+   "mass_g": 2370.191,
    "center_of_gravity_mm": [
-    0.01,
+    0.006,
     0.236,
-    9.931
+    10.574
    ],
    "inertia_kg_m2": [
     [
-     0.016886043758256704,
-     5.387974189110253e-05,
-     -0.000809456491230228
+     0.016980057808748374,
+     5.387753923422524e-05,
+     -0.0007502991480060854
     ],
     [
-     5.387974189110253e-05,
-     0.022724385234311837,
-     -4.147373748497137e-05
+     5.387753923422524e-05,
+     0.022890645826320492,
+     -4.111378941922543e-05
     ],
     [
-     -0.000809456491230228,
-     -4.147373748497137e-05,
-     0.029498869272985163
+     -0.0007502991480060854,
+     -4.111378941922543e-05,
+     0.029569907519957504
     ]
    ],
-   "busiest_motor_extra": 0.001658,
+   "busiest_motor_extra": 0.001633,
    "findings": [
     {
      "check": "balance",
      "passed": true,
-     "value": 0.0016575918311490766,
+     "value": 0.001632583381155831,
      "limit": 0.05,
-     "detail": "with the pack at x = 9 mm, the center of gravity sits +0.0 mm along x and +0.2 mm along y, so the busiest motor works 0.2% harder",
+     "detail": "with the pack at x = 10 mm, the center of gravity sits +0.0 mm along x and +0.2 mm along y, so the busiest motor works 0.2% harder",
      "parts": []
     },
     {
@@ -7839,14 +7839,14 @@
   {
    "name": "module rail",
    "material": "petg_cf",
-   "mass_g": 11.604,
+   "mass_g": 11.482,
    "module": "base",
    "catalog_id": "module-mount"
   },
   {
    "name": "gps mast",
    "material": "tpu",
-   "mass_g": 5.165,
+   "mass_g": 11.573,
    "module": "V",
    "catalog_id": "gps-mast"
   },
@@ -8326,6 +8326,12 @@
    "found": "none",
    "terms": null,
    "compared": null
+  },
+  {
+   "part": "c-hardware",
+   "found": "none",
+   "terms": null,
+   "compared": null
   }
  ],
  "exports": [
@@ -8411,6 +8417,48 @@
    "count": 4,
    "material": "nylon",
    "each_g": 0.137
+  },
+  {
+   "holds": "module-mount",
+   "what": "insert",
+   "count": 3,
+   "material": "",
+   "each_g": 0.4
+  },
+  {
+   "holds": "v-housing",
+   "what": "M3 x 10 screw",
+   "count": 1,
+   "material": "steel",
+   "each_g": 0.945
+  },
+  {
+   "holds": "p-mount",
+   "what": "M3 x 12 screw",
+   "count": 2,
+   "material": "steel",
+   "each_g": 1.034
+  },
+  {
+   "holds": "ark-gps",
+   "what": "tape",
+   "count": 4,
+   "material": "",
+   "each_g": 0.22
+  },
+  {
+   "holds": "claws-placeholder",
+   "what": "M3 x 10 screw",
+   "count": 2,
+   "material": "steel",
+   "each_g": 0.945
+  },
+  {
+   "holds": "claws-placeholder",
+   "what": "M3 lock nut",
+   "count": 2,
+   "material": "steel",
+   "each_g": 0.601
   },
   {
    "holds": "module-mount",

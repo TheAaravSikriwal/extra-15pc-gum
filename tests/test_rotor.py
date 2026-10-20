@@ -4,7 +4,9 @@ Full throttle on the 6S2P test pack (0.048 ohm): the motors want P0 = 4 x 24 V x
 = 2544 W at 24 V, and their power scales with voltage cubed, so the pack settles where
     V = V_rest - R * P0 * V^2 / 24^3
 At full charge (25.08 V rest) that's 21.134 V and 82.19 A; at the 20% reserve (21.12 V
-rest) it's 18.195 V. Thrust scales with voltage squared: 2100 g x (V / 24)^2 per motor.
+rest) it's 18.195 V. A prop does the same work for the same power at any voltage, so each
+motor's thrust and rpm come off the table at its quarter of that power: 434.2 W at full charge,
+a quarter of the way from the 80% row (408 W) to the 90% row (516 W).
 """
 
 import dataclasses
@@ -60,14 +62,18 @@ def test_full_throttle_at_full_charge(rotor, pack):
     full = rotor.full_throttle(pack, soc=1.0)
     assert full.voltage == pytest.approx(21.134, abs=1e-3)
     assert full.current == pytest.approx(82.19, abs=0.01)
-    assert full.thrust == pytest.approx(gf(2100 * (21.134 / 24) ** 2), rel=1e-3)
-    assert full.rpm == pytest.approx(13100 * 21.134 / 24, rel=1e-3)
+    share = (21.134 * 82.19 / 4 - 408) / 108  # 0.2427 of the way from 408 W to 516 W
+    assert full.thrust == pytest.approx(gf(1650 + share * 230), rel=1e-3)  # 1705.8 g
+    assert full.rpm == pytest.approx(11600 + share * 800, rel=1e-3)  # 11794 rpm
 
 
 def test_full_throttle_at_the_reserve(rotor, pack):
     full = rotor.full_throttle(pack, soc=0.2)
     assert full.voltage == pytest.approx(18.195, abs=1e-3)
-    assert full.thrust == pytest.approx(gf(2100 * (18.195 / 24) ** 2), rel=1e-3)
+    # 2544 W x (18.195 / 24)^2 / 24 = 60.92 A, so 277.1 W a motor, between the 60% and 70% rows
+    share = (18.195 * full.current / 4 - 230.4) / 81.6
+    assert full.current == pytest.approx(2544 * 18.195**2 / 24**3, rel=1e-3)
+    assert full.thrust == pytest.approx(gf(1150 + share * 250), rel=1e-3)  # 1293 g
 
 
 def test_pessimistic_data_makes_less_thrust_for_the_same_power(build, pack):
@@ -125,16 +131,16 @@ def test_the_closest_voltage_breaks_a_tie(catalog):
 
 def test_a_current_cap_throttles_back_full_throttle(build, pack):
     # The firmware caps the pack at half its 90 A rating, so 45 A instead of 82 A flat out.
-    # The pack sags less, and the motors get power = pack volts x 45 A, with thrust following
-    # power to the 2/3 from the full-throttle row (the same law as uncapped full throttle).
+    # The pack sags less, and each motor gets a quarter of pack volts x 45 A, its thrust and rpm
+    # off the table at that power (the same as uncapped full throttle).
     rotor = Rotor.from_build(build.variant(current_cap_fraction=0.5))
     full = rotor.full_throttle(pack, soc=1.0)
     assert full.current == 45
     assert full.voltage == pytest.approx(pack.ocv(1.0) - pack.resistance * 45)
     assert full.capped_from == pytest.approx(82.19, abs=0.01)
-    share = (full.voltage * 45 / (4 * rotor.max_power)) ** (1 / 3)
-    assert full.thrust == pytest.approx(rotor.max_thrust * share**2)
-    assert full.rpm == pytest.approx(13100 * share)
+    share = (full.voltage * 45 / 4 - 230.4) / 81.6  # 257.9 W, between the 60% and 70% rows
+    assert full.thrust == pytest.approx(gf(1150 + share * 250))  # 1234 g
+    assert full.rpm == pytest.approx(9700 + share * 1000)  # 10036 rpm
 
 
 def test_a_cap_above_the_draw_changes_nothing(build, pack):

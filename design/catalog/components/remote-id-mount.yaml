@@ -3,7 +3,7 @@ type: component
 id: remote-id-mount
 maker: Printed
 model: Remote id mount
-source: {kind: cad, checked: 2026-10-19, note: "From the CAD: remote id mount, weighed from their geometry in tpu at the density and fill in design/cad.yaml"}
+source: {kind: cad, checked: 2026-10-20, note: "From the CAD: remote id mount, weighed from their geometry in tpu at the density and fill in design/cad.yaml"}
 mass_g: 1.4
 cad:
   shape: printed

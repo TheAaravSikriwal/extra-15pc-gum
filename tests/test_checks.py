@@ -31,10 +31,12 @@ def test_a_drone_that_passes(build, targets, setups):
 
 
 def test_a_drone_that_is_marginal(build, targets, setups):
-    # The made-up mission setup has 2.18:1 at the reserve, but only 1.96:1 pessimistic
-    mission = evaluate_setup(build, targets, setups["mission"], growth_margin=0.2)
+    # With 400 g of growth, the made-up mission setup has 2.14:1 at the reserve, but only
+    # 1.93:1 pessimistic
+    mission = evaluate_setup(build, targets, setups["mission"], growth_margin=0.4)
     tw = mission.check("Thrust-to-weight at the reserve")
-    assert tw.nominal == pytest.approx(2.18, abs=0.01)
+    assert tw.nominal == pytest.approx(2.14, abs=0.01)
+    assert tw.pessimistic == pytest.approx(1.93, abs=0.01)
     assert tw.verdict == "marginal"
     assert mission.verdict == "marginal"
 
@@ -63,11 +65,14 @@ def test_too_heavy_to_hover_fails_cleanly(build, targets, setups):
 
 
 def test_the_design_verdict_is_the_worst_required_setup(build, targets):
-    design = evaluate(build, targets)
+    import dataclasses
+
+    # 400 g of growth makes the made-up mission marginal (above), and so the whole design
+    design = evaluate(build, dataclasses.replace(targets, growth_margin=0.4))
     assert len(design.setups) == 8
     assert design.sizing.setup.name == "mission"
     assert design.verdict == "marginal"
-    assert design.setup("mission").mass.total == pytest.approx(2.216)
+    assert design.setup("mission").mass.total == pytest.approx(2.416)
 
 
 def test_every_flight_can_go_into_rerun(build, targets, tmp_path):

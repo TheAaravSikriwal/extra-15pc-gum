@@ -377,6 +377,7 @@ class Session:
         self.relay = Relay(API_PORT + instance, SDK_PORT + instance)
         self.drone = None
         self.context = None  # pcs14.flight.scenarios.Context, for the script
+        self.world_file = WORLD  # the world's file: pcs14, or pcs14-fine for a finer step
         self._processes: list = []
         self._tasks: list = []
         self._outputs: list = []
@@ -470,7 +471,7 @@ class Session:
         self.folder.mkdir(parents=True)
         models, worlds = self.exports / "models", self.exports / "worlds"
         self.gz_env = gz_environment(self.tools, models, worlds, self.partition)
-        await self._spawn(gz_command(worlds / f"{WORLD}.sdf"), "gz", env=self.gz_env)
+        await self._spawn(gz_command(worlds / f"{self.world_file}.sdf"), "gz", env=self.gz_env)
         if before_px4 is not None:
             await self.wait_for_world()
             await before_px4(self)

@@ -95,8 +95,10 @@ def test_the_battery_leads_carry_the_sizing_models_current(loads):
         assert ground == pytest.approx(lead, rel=0.02), (setup, case)
 
 
-def test_the_burst_is_the_current_cap(loads):
-    assert loads[("max", "burst")].case.battery_amps == pytest.approx(90.0)
+def test_the_burst_is_the_current_cap_or_what_the_pack_gives(loads):
+    # the cap is 90 A; at the reserve the pack's own sag (its insides included) holds it to
+    # just under that flat out
+    assert 89.0 <= loads[("max", "burst")].case.battery_amps <= 90.0
 
 
 def test_the_module_supply_carries_what_the_talk_worked_out(loads):

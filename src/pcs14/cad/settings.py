@@ -102,6 +102,9 @@ class Rail(Strict):
     width_mm: float = Field(gt=0)
     height_mm: float = Field(gt=0)
     material: str
+    locks_mm: list[tuple[float, float]] = Field(default_factory=list)  # heat-set inserts, x and y
+    insert_diameter_mm: float = Field(default=4.0, gt=0)  # the insert's hole
+    insert_depth_mm: float = Field(default=5.7, gt=0)
 
 
 class GpsMast(Strict):
@@ -110,6 +113,9 @@ class GpsMast(Strict):
     tube_diameter_mm: float = Field(gt=0)
     mount_size_mm: float = Field(gt=0)
     material: str
+    cradle_inner_mm: float = Field(default=50.4, gt=0)  # the GPS's 50 mm case, with a little room
+    cradle_wall_mm: float = Field(default=2.0, gt=0)
+    cradle_lip_mm: float = Field(default=4.0, gt=0)  # how far the walls rise around the GPS
 
 
 class VHousing(Strict):
@@ -186,7 +192,9 @@ class Wire(Strict):
 class Fastener(Strict):
     """A screw, nut or spacer, counted from the CAD's holes (see pcs14.cad.hardware)."""
 
-    what: Literal["screw", "nut", "lock nut", "standoff", "spacer", "grommet", "patch"]
+    what: Literal[
+        "screw", "nut", "lock nut", "standoff", "spacer", "grommet", "patch", "insert", "tape"
+    ]
     count: int = Field(gt=0)
     holds: str  # the catalog part it fastens
     size: Literal["M2", "M2.5", "M3", "4-40"] | None = None
@@ -204,7 +212,7 @@ class Fastener(Strict):
             raise ValueError(f"a {self.what} needs a size and a material, or its own grams")
         if self.what in ("screw", "standoff", "spacer") and self.length_mm is None:
             raise ValueError(f"a {self.what} needs a length_mm")
-        if self.what in ("grommet", "patch"):
+        if self.what in ("grommet", "patch", "insert", "tape"):
             raise ValueError(f"a {self.what} has no standard shape, so it needs grams")
         return self
 

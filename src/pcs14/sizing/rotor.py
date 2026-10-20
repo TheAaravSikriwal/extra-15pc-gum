@@ -98,32 +98,42 @@ class Rotor:
             return None
         return _interpolate(self._thrusts, rpms, thrust, 0.5)
 
+    def at_power(self, power: float) -> tuple[float, float]:
+        """(N, rpm) one motor makes from `power` electrical watts, off the table: a prop does
+        the same work for the same power at any voltage. Past the table's top row, thrust goes
+        as power to the two thirds and rpm as its cube root, the way a prop's do; under its
+        first row, the same."""
+        powers = [r.power for r in self.table.rows]
+        rpms = [r.rpm or 0.0 for r in self.table.rows]
+        thrusts = self._thrusts
+        if power >= powers[-1] or power <= powers[0]:
+            k = -1 if power >= powers[-1] else 0
+            share = power / powers[k]
+            return thrusts[k] * share ** (2 / 3), rpms[k] * share ** (1 / 3)
+        i = bisect.bisect_right(powers, power)
+        f = (power - powers[i - 1]) / (powers[i] - powers[i - 1])
+        thrust = thrusts[i - 1] + f * (thrusts[i] - thrusts[i - 1])
+        return thrust, rpms[i - 1] + f * (rpms[i] - rpms[i - 1])
+
     def full_throttle(self, pack: Pack, soc: float) -> FullThrottle:
-        """All four motors flat out, on this pack at this state of charge."""
+        """All four motors flat out, on this pack at this state of charge. Their power goes as
+        their voltage cubed (rpm goes as voltage, a prop's power as rpm cubed), which with the
+        pack's sag sets the voltage and current; the thrust and rpm then come off the table at
+        each motor's share of that power (decided 2026-10-20: scaling the table's top row by
+        voltage squared landed about 4% off the table's own thrust and rpm)."""
         v0 = self.table.voltage
         p0 = MOTORS * self.max_power
         a = pack.resistance * p0 / v0**3
         rest = pack.ocv(soc)
         volts = (-1 + math.sqrt(1 + 4 * a * rest)) / (2 * a)
         current = p0 * volts**2 / v0**3
-        rpm = self.table.rows[-1].rpm or 0.0
         cap = self.current_cap
         if cap is None or current <= cap:
-            return FullThrottle(
-                voltage=volts,
-                current=current,
-                thrust=self.max_thrust * (volts / v0) ** 2,
-                rpm=rpm * volts / v0,
-            )
+            thrust, rpm = self.at_power(volts * current / MOTORS)
+            return FullThrottle(voltage=volts, current=current, thrust=thrust, rpm=rpm)
         volts = rest - pack.resistance * cap
-        share = (volts * cap / p0) ** (1 / 3)  # the motors' effective voltage over v0
-        return FullThrottle(
-            voltage=volts,
-            current=cap,
-            thrust=self.max_thrust * share**2,
-            rpm=rpm * share,
-            capped_from=current,
-        )
+        thrust, rpm = self.at_power(volts * cap / MOTORS)
+        return FullThrottle(voltage=volts, current=cap, thrust=thrust, rpm=rpm, capped_from=current)
 
 
 class CannotHover(Exception):

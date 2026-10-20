@@ -1,6 +1,7 @@
 """My own printed parts and the module envelopes: printable, weighed from their geometry, and
 lined up with the parts they hold."""
 
+import math
 from pathlib import Path
 
 import pytest
@@ -34,6 +35,7 @@ def test_every_printed_part_is_there(made):
         "battery tray",
         "module rail",
         "gps mast",
+        "gps cradle",
         "lidar bracket",
         "remote id mount",
         "safety monitor carrier",
@@ -103,3 +105,16 @@ def test_the_tray_covers_the_packs_whole_slide(made):
     tray = printed["battery tray"].solid.bounding_box()
     assert tray.size.X >= layout.length + 2 * settings.pack.slide_mm * MM - 1e-9
     assert tray.max.Z == pytest.approx(0, abs=1e-9)  # right under the bottom plate
+
+
+def test_the_gps_sits_in_a_cradle_and_the_rail_takes_the_modules_locks(made):
+    """ARK publishes no holes, so the GPS sits in a cradle with a lip around its 50 mm case;
+    each module locks onto the rail with thumb screws into heat-set inserts."""
+    _, _, _, printed = made
+    cradle = printed["gps cradle"].solid.bounding_box().size
+    assert (cradle.X, cradle.Y) == pytest.approx((0.0544, 0.0544), abs=1e-4)
+    assert cradle.Z == pytest.approx(0.007, abs=1e-4)  # a 3 mm floor and a 4 mm lip
+    # three blind 4 mm holes for the inserts, each with a flat round floor
+    floor = math.pi * 0.002**2
+    rail = printed["module rail"].solid
+    assert len([f for f in rail.faces() if abs(f.area - floor) < 1e-8]) == 3

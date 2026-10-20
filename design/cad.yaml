@@ -63,6 +63,9 @@ rail: # the module rail on the top plate, carrying V and P
   width_mm: 30
   height_mm: 6
   material: petg_cf
+  # each module slides on and is held by M3 thumb screws into brass heat-set inserts in the rail:
+  # one for V, two for P, whose base takes the chute's opening shock (decided 2026-10-20)
+  locks_mm: [[-35, 0], [22, 0], [54, 0]]
 
 gps_mast:
   at_mm: [-58, 0] # on the top plate, behind the V housing
@@ -70,6 +73,11 @@ gps_mast:
   tube_diameter_mm: 8
   mount_size_mm: 14 # the printed TPU block the tube plugs into
   material: carbon
+  # the GPS sits in a TPU cradle on the tube's top, held by foam tape: ARK publishes no mounting
+  # holes, and a cradle with tape is the usual way to mount it (decided 2026-10-20)
+  cradle_inner_mm: 50.4
+  cradle_wall_mm: 2
+  cradle_lip_mm: 4
 
 v_housing: # an envelope around the Pi 5 stack, until the modules step designs it
   from_x_mm: -50
@@ -223,8 +231,8 @@ wires:
 # pcs14.cad.printed and the boards' mounting holes in the catalog. Steel where the joint carries
 # load (the legs take the landings, the tray holds the pack, the stack takes the motors'
 # vibration, the chute's base takes its opening shock), nylon where it holds only a light part.
-# Not counted yet: how the ARK GPS fixes to its plate and how the modules lock onto the rail,
-# which neither ARK nor my own design says yet. Decided 2026-10-19.
+# The GPS's tape and the modules' rail locks were added 2026-10-20 (rail.locks_mm and the GPS
+# mast's cradle). Decided 2026-10-19.
 hardware:
   - {what: screw, size: M3, length_mm: 12, count: 8, material: steel, holds: landing-legs, note: "two through each leg's flange and its arm"}
   - {what: lock nut, size: M3, count: 8, material: steel, holds: landing-legs}
@@ -235,6 +243,12 @@ hardware:
   - {what: spacer, size: M3, length_mm: 6, count: 4, material: nylon, holds: holybro-tekko32-f4-50a, note: "between the ESC and the flight controller"}
   - {what: grommet, count: 8, grams: 0.15, holds: holybro-tekko32-f4-50a, note: "silicone soft mounts for the ESC's 4 mm holes, a guess from their size"}
   - {what: screw, size: M3, length_mm: 10, count: 4, material: nylon, holds: module-mount, note: "the rail to the top plate"}
+  - {what: insert, count: 3, grams: 0.4, holds: module-mount, note: "M3 brass heat-set inserts in the rail, for the modules' locks; 0.4 g is a typical 4 x 5.7 mm insert"}
+  - {what: screw, size: M3, length_mm: 10, count: 1, material: steel, holds: v-housing, note: "V's rail lock, a thumb screw into the rail's insert"}
+  - {what: screw, size: M3, length_mm: 12, count: 2, material: steel, holds: p-mount, note: "P's rail locks, two for the chute's opening shock"}
+  - {what: tape, count: 4, grams: 0.22, holds: ark-gps, note: "15 x 15 mm pads of 1 mm acrylic foam tape (VHB-style, about 0.96 g per cubic cm), the GPS to its cradle"}
+  - {what: screw, size: M3, length_mm: 10, count: 2, material: steel, holds: claws-placeholder, note: "C's lock, through the claws' mount and the bottom plate"}
+  - {what: lock nut, size: M3, count: 2, material: steel, holds: claws-placeholder}
   - {what: nut, size: M3, count: 4, material: nylon, holds: module-mount}
   - {what: screw, size: M3, length_mm: 8, count: 2, material: nylon, holds: lidar-bracket}
   - {what: nut, size: M3, count: 2, material: nylon, holds: lidar-bracket}

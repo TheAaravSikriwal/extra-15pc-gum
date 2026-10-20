@@ -193,10 +193,10 @@ def _add_to_build(lines: list[str], part_id: str, module: str) -> list[str]:
 
 def _pack_lines(lines: list[str], ohms: float) -> list[str]:
     note = (
-        "  note: \"overhead_g is an estimate: nickel strip, balance and power leads, the pack's "
-        "XT60 half and wrap for a 6S2P 18650 pack. wiring_mohm is the drone's side, the leads "
-        "and the XT60 from the pack's terminals to the ESC, worked out from the connection list "
-        "(pcs14 electrical --update-catalog); the pack's own strip and leads aren't in it\""
+        "  note: \"wiring_mohm is the drone's side, the leads and the XT60 from the pack's "
+        "terminals to the ESC, worked out from the connection list (pcs14 electrical "
+        "--update-catalog). The pack's insides (its links, welds and own leads) add their "
+        "resistance to it, and their weight is the pack's overhead (pcs14.electrical.pack)\""
     )
     out = []
     for line in lines:

@@ -48,6 +48,7 @@ class Scenario:
     params: Callable | None = None  # (Context) -> PX4 parameters this scenario adds
     prepare: Callable | None = None  # async (Session) -> None: sets up the world before PX4
     failure: str | None = None  # the mark where something fails on purpose, for the monitor
+    world: str = "pcs14"  # the world's file; pcs14-fine has a 2 ms physics step
 
 
 def scenarios() -> dict[str, Scenario]:

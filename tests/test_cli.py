@@ -24,7 +24,7 @@ def test_size_prints_every_setup_and_the_verdict(capsys):
     assert "MADE-UP TEST PARTS" in out
     for name in ("base", "V", "P", "C", "mission", "V+C", "P+C", "max"):
         assert f" {name} " in out
-    assert "Verdict: marginal" in out
+    assert "Verdict: pass" in out
 
 
 def test_size_saves_a_recording(tmp_path):
