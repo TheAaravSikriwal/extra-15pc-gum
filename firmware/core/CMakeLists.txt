@@ -3,15 +3,28 @@ add_library(pcs14_core STATIC
   src/airframe_file.cpp
   src/attitude.cpp
   src/flight.cpp
+  src/link.cpp
   src/log_topics.cpp
   src/mixer.cpp
+  src/modes.cpp
+  src/params.cpp
   src/rate.cpp
   src/ulog.cpp
 )
 target_include_directories(pcs14_core PUBLIC include)
 
-# The host tests, with doctest (MIT), fetched at a pinned release
 include(FetchContent)
+# MAVLink's generated C headers (MIT), pinned to one generation of the message definitions
+FetchContent_Declare(mavlink
+  URL https://github.com/mavlink/c_library_v2/archive/8c63a49fe35aead7f9ef14031381c5e076ff743a.tar.gz
+  URL_HASH SHA256=c192167675c9022b6382942c3a31eb1f89452e0bbcd9581105504cf2bff871e9
+  DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+)
+FetchContent_MakeAvailable(mavlink)
+# as system headers: they're generated, and not written for this many warnings
+target_include_directories(pcs14_core SYSTEM PUBLIC ${mavlink_SOURCE_DIR})
+
+# The host tests, with doctest (MIT), fetched at a pinned release
 FetchContent_Declare(doctest
   URL https://github.com/doctest/doctest/archive/refs/tags/v2.4.11.tar.gz
   URL_HASH SHA256=632ed2c05a7f53fa961381497bf8069093f0d6628c5f26286161fbd32a560186
@@ -27,6 +40,8 @@ add_executable(pcs14_core_tests
   tests/test_mixer.cpp
   tests/test_flight.cpp
   tests/test_ulog.cpp
+  tests/test_modes.cpp
+  tests/test_link.cpp
 )
 target_link_libraries(pcs14_core_tests PRIVATE pcs14_core doctest::doctest)
 add_test(NAME core COMMAND pcs14_core_tests)

@@ -50,7 +50,10 @@ class Case:
     box: tuple[float, float, float] = (1.4, 3.2, 1.1)  # m: across, along the wind, up
     at: tuple[float, float, float] = (0.5, 0.33, 0.5)  # the drone's origin, as a box share
     time_s: float = 0.48
-    memory_mb: int = 6000
+    # MB of the GPU for the lattice. The 3060 has 12 GB, but its OpenCL driver caps any one
+    # buffer at a quarter of that, and the biggest (the 19 populations, 2 bytes each) has to
+    # fit: 6000 MB asked for a 3.4 GB buffer. 5000 is about 78 million cells
+    memory_mb: int = 5000
     omega: float = 0.0  # rad/s, the props
     radius: float = 0.127  # m, the props' tips
     props: tuple[Prop, ...] = field(default_factory=tuple)
