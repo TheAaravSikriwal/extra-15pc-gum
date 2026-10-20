@@ -30,7 +30,7 @@ This is the live version. When a step finishes, its outcome goes here, with a li
 | 2. The virtual drone (CAD) | Every part modeled and connected | Done, 2026-10-18 | Every part modeled and every module combination passing its checks, with the real weights back in the sizing model: Mission 2293 g, still passing ([report](docs/reports/cad/README.md), [log](docs/log/2026-10-18-cad-build.md)) |
 | 3. Electrical design | Every wire, pin and connector | Done, 2026-10-19 | One connection list behind every check, diagram and the schematic: 438 checks pass in all eight combinations, and ngspice shows the safety monitor's switch working. Weighing the real wiring and hardware moved the cells to P45B: Mission is 2414 g with a 22.25 min pessimistic hover ([report](docs/reports/electrical/README.md), [log](docs/log/2026-10-19-electrical-report-and-weight.md)) |
 | 4. Flight sim (PX4) | Prove the airframe flies, in all eight module combinations | In progress | PX4 flies all twelve scenarios in all eight combinations; most pass, and the misses are real findings: a dead motor without the chute crashes, losing GPS means a blind descent, and cruise endurance disagrees with the sizing model ([report](docs/reports/flight-sim/README.md), [log](docs/log/2026-10-20-flight-sim-scenarios.md)) |
-| 5. My firmware | My flight code and the safety monitor, passing the same tests as PX4 | Not started | |
+| 5. My firmware | My flight code and the safety monitor, passing the same tests as PX4 | In progress | C++17, one core library with thin layers for the sim, the ARK FPV and the safety monitor, speaking PX4's MAVLink and ULog so the same scenarios grade it ([spec](docs/specs/2026-10-20-firmware.md), [plan](docs/plans/2026-10-20-firmware.md)). The core's math, attitude filter, rate loops and mixer pass their tests |
 | 6. Modules in sim | Parachute, vision & nav, and claws if they happen | Not started | |
 | 7. Smart features in sim | Mapping, safe spots, the LLM, object detection, soar mode, the spiral descent and more | Not started | |
 | 8. Build package | Parts list, assembly and wiring guides, test plans, and the unproven list | Not started | |
@@ -78,6 +78,14 @@ This is the live version. When a step finishes, its outcome goes here, with a li
 | 4b. Plan | The implementation plan | Done, 2026-10-19 | 12 test-first tasks; the first eight need only Windows ([plan](docs/plans/2026-10-19-flight-sim.md)) |
 | 4c. Build | Test-first: the targets, the motor fit, the drag math, the generator, power, the triggers, grading and the report, then the setup, the runner and every scenario | In progress | Tasks 1 to 10 done ([log](docs/log/2026-10-19-flight-sim-build.md), [first flight](docs/log/2026-10-19-first-flight.md)). Task 11 mostly done: all twelve scenarios fly; most pass, and three misses are real findings (no chute means a dead motor crashes, no GPS means a blind descent, cruise endurance disagrees with the sizing model) ([log](docs/log/2026-10-20-flight-sim-scenarios.md)). Next: finish the 78-run batch, then the report |
 | 4d. Close the loop | The sim's results against the sizing model, the false-trigger counts against the thresholds | Not started | |
+
+### Step 5, in detail
+
+| Part | What happens | Status | Outcome |
+|---|---|---|---|
+| 5a. Talk | The language, the shape of the code, how it talks to the flight sim, the estimator, the safety monitor | Done, 2026-10-20 | C++17, a hardware-free core, PX4's MAVLink dialect and ULog, Mahony's filter first ([spec](docs/specs/2026-10-20-firmware.md)) |
+| 5b. Plan | The implementation plan | Done, 2026-10-20 | 13 test-first tasks, from the build to a ground station ([plan](docs/plans/2026-10-20-firmware.md)) |
+| 5c. Build | Test-first, task by task | In progress | Tasks 1 to 3 done: the CMake tree with doctest and a CI job under the sanitizers, the math, Mahony's attitude filter, a PID per axis, and the quad X mixer that gives up yaw before roll and pitch. 21 host tests pass. Up next: the sim layer |
 
 ## Modules
 

@@ -1,7 +1,7 @@
 # Status
 
 **Last updated:** 2026-10-20, on the PC (Windows and WSL2 Ubuntu)
-**Step:** step 4, the flight sim. The build (4c) has tasks 1 to 10 done and task 11 mostly done (2026-10-20): all twelve scenarios are written and have flown; a clean batch of all 78 runs was flying when I stopped.
+**Step:** step 4, the flight sim, finishing: the final batch of all 78 runs is flying. Step 5, my firmware, has started alongside it: the spec and plan are written and tasks 1 to 3 are done (2026-10-20).
 **Main machine:** the PC, with WSL2 Ubuntu 24.04 for the Linux tools
 
 ## Right now
@@ -48,6 +48,8 @@ Where to look:
 **Step 4c, task 11, mostly done (2026-10-20).** All twelve scenarios fly. Passing: hover, stick steps (after tuning PX4's attitude gain from 6.5 to 9), top speed (88 km/h), 10 m/s wind, lost link, low battery (home with 29% left), the parachute drop, a dead motor with P, the sagging pack, the payload grab. Not passing, and why: **a dead motor without P is a crash** (a quad can't fly on three motors); **losing GPS means a blind descent** that drifts 34 to 38 m in calm air (no optical flow sensor); **cruise endurance disagrees with the sizing model by about 25%** (Gazebo's rotors don't gain from forward flight; the sizing model's do). Fixed on the way: the chute was on PX4's landing gear output (400, not 401) and opened on take-off. The [log](docs/log/2026-10-20-flight-sim-scenarios.md).
 
 **The first wind tunnel visuals (2026-10-20).** FluidX3D on the RTX 3060: the drone (every module on) at 10 m/s, streamlines and shed vortices, 60 million cells, four minutes a run. FluidX3D lives in `C:\dr\fluidx3d` (altered source, committed locally; it needs its public fork before any picture is posted). Its drag reads about 230 cm² against the sizing model's 202, but that's visual-grade. The [log](docs/log/2026-10-20-first-wind-tunnel.md).
+
+**Step 5 started (2026-10-20).** My firmware is C++17: one core library with no hardware in it, and thin layers for the sim, the ARK FPV and the safety monitor. It speaks PX4's MAVLink dialect and writes ULog, so the flight sim's scenarios and graders work on it unchanged. Tasks 1 to 3 are done: the CMake tree with doctest and a CI job under the sanitizers, the math, Mahony's attitude filter, a PID per axis, and the quad X mixer, which gives up yaw before roll and pitch when the motors run out. 21 host tests pass. The [spec](docs/specs/2026-10-20-firmware.md) and the [plan](docs/plans/2026-10-20-firmware.md).
 
 **Offline?** Study from [docs/learning.md](docs/learning.md). Topics 1 and 2 (how quads fly; props, motors and batteries) are what the sizing model needs.
 

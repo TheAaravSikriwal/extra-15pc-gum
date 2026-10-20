@@ -31,3 +31,12 @@ jobs:
       - run: python -m pip install --upgrade pip
       - run: pip install --group dev -e .
       - run: pytest -m kicad
+
+  # My flight firmware's core: built with the sanitizers and tested on the host.
+  firmware:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: cmake -S firmware -B build/firmware -DCMAKE_BUILD_TYPE=Debug
+      - run: cmake --build build/firmware -j 4
+      - run: ctest --test-dir build/firmware --output-on-failure
