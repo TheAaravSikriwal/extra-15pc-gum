@@ -99,6 +99,9 @@ class CheckNumbers(Strict):
     main_drop_share: float = Field(gt=0, lt=1)  # of the pack's nominal voltage, at the cap
     load_margin_v: float = Field(ge=0)  # inside every load's range, at both ends
     pin_minimums: dict[str, float] = Field(default_factory=dict)  # firmer floors, like the Pi's
+    # ceilings checked without the margin, for a part whose maker publishes no maximum (the
+    # reason goes on the unproven list)
+    pin_ceilings: dict[str, float] = Field(default_factory=dict)
     supply_typical_share: float = Field(gt=0, le=1)  # of a supply's continuous rating
     fuse_hold_factor: float = Field(ge=1)
     cell_link_blow_s: float = Field(gt=0)  # a dead short melts the link this fast

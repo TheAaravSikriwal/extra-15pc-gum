@@ -210,7 +210,12 @@ def load_voltages(ctx: Context, solutions) -> list[Finding]:
         low_v, low_where, draw = lows[ref]
         high_v, high_where, _ = highs[ref]
         floor = max(draw.min_v + m, ctx.numbers.pin_minimums.get(ref, -math.inf))
-        ceiling = draw.max_v - m
+        ceiling = ctx.numbers.pin_ceilings.get(ref, draw.max_v - m)
+        why = (
+            "no margin at the top, since its maker publishes no maximum"
+            if ref in ctx.numbers.pin_ceilings
+            else "less the margin"
+        )
         low_ok, high_ok = _ok(low_v, floor, below=False), _ok(high_v, ceiling)
         if not low_ok or high_ok:
             value, limit, where = low_v, floor, low_where
@@ -226,7 +231,7 @@ def load_voltages(ctx: Context, solutions) -> list[Finding]:
                 "V",
                 where,
                 f"{low_v:.3f} to {high_v:.3f} V across the cases, inside {floor:.2f} to "
-                f"{ceiling:.2f} V ({draw.min_v:g} to {draw.max_v:g} V, less the margin)",
+                f"{ceiling:.2f} V ({draw.min_v:g} to {draw.max_v:g} V, {why})",
                 ctx.rests_on(ref.split(".")[0], f"draws[{draw.pin}]"),
             )
         )

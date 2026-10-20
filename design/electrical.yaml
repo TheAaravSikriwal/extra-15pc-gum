@@ -299,6 +299,7 @@ unproven:
   - "A dead short in the battery leads. Nothing electrical stops it; only the leads' routing and sleeving protect against it."
   - "The motor cut board's two undocumented 1 kOhm resistors. Check them with a meter; pull-ups would make the board fail the wrong way, which the added pull-down only partly covers."
   - "Powering the Pi 5 through its GPIO 5 V pins, which Raspberry Pi's docs don't describe."
+  - "The Pi 5's highest safe input. Raspberry Pi publishes only a 5.1 V supply and the 4.63 V undervoltage warning, so its 5.19 V from the BEC is checked against USB's 5.25 V ceiling, with no margin."
   - "The ESC cable's re-pinning: Holybro doesn't say which end of its plug is pin 1."
   - "Whether the ARK FPV terminates its CAN port. If it does, the harness's terminator at that end comes off."
 
@@ -312,6 +313,8 @@ checks:
   load_margin_v: 0.1 # every load this far inside its voltage range, at both ends
   pin_minimums:
     pi.GPIO.5V: 4.75 # the Pi's undervoltage warning (4.63 V) plus about 0.1 V
+  pin_ceilings:
+    pi.GPIO.5V: 5.25 # USB's 5 V ceiling, with no margin: Raspberry Pi publishes no maximum (2026-10-19)
   supply_typical_share: 0.8 # typical draw against a supply's continuous rating
   fuse_hold_factor: 1.25 # a fuse holds this times its branch's highest steady current
   cell_link_blow_s: 1.0 # a dead short melts a cell link this fast

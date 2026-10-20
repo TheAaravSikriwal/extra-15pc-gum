@@ -6,11 +6,10 @@
 
 ## The verdict
 
-**Fail.** 3 of 438 checks miss.
+**Fail.** 2 of 438 checks miss.
 
 | Check | Where | In | What it found | Rests on |
 |---|---|---|---|---|
-| load voltage | pi.GPIO.5V | V, cruise | 5.183 to 5.187 V across the cases, inside 4.75 to 5.15 V (4.63 to 5.25 V, less the margin) | rpi-5-4gb: draws[GPIO.5V] |
 | connector burst | pack.XT60.+ | max, burst | 90 A for 10 s ends 94 K over the air (heating with a 98 s time constant) | amass-xt60: rating.contact_mass_g |
 | connector burst | pack.XT60.- | P, burst | 90 A for 10 s ends 94 K over the air (heating with a 98 s time constant) | amass-xt60: rating.contact_mass_g |
 
@@ -41,7 +40,7 @@ Every rating gets 80% at most, steady. Heat is checked in 40 °C air, steady and
 | connector current | 51 | 51 | lead.XT60.+, max, hover: 25.07 A through one amass-xt60 contact, rated 35 A |
 | supply, typical | 13 | 13 | bec.5V, max, hover: 2.57 A against 80% of its 5 A |
 | supply, worst | 13 | 13 | bec.5V, max, worst: 5.93 A against its 9 A peak rating |
-| load voltage | 25 | 24 | pi.GPIO.5V, V, cruise: 5.183 to 5.187 V across the cases, inside 4.75 to 5.15 V (4.63 to 5.25 V, less the margin) |
+| load voltage | 25 | 25 | gps.CAN1.5V, max, worst: 4.978 to 4.987 V across the cases, inside 4.85 to 5.15 V (4.75 to 5.25 V, less the margin) |
 | main path drop | 1 | 1 | pack to esc.BAT.VBAT, base, burst: 342 mV lost out and back at 90 A, against 2% of the pack's nominal 21.6 V |
 | fuse holds | 2 | 2 | fuses.F1, max, hover: 0.81 A steady, so it needs 1.01 A; it's a 3 A fuse |
 | fuse protects its wire | 2 | 2 | fuses.F2, on a short: it lets through 9 A2s; fuses.F2.B to fc.POWER_AUX.VBAT (26 AWG) takes 115 A2s to go from 40 to 80 C |
@@ -160,11 +159,10 @@ Every check, one by one:
 </details>
 
 <details>
-<summary>load voltage: 25 checked, 1 miss</summary>
+<summary>load voltage: 25 checked</summary>
 
 | What | In | Found | Verdict |
 |---|---|---|---|
-| pi.GPIO.5V | V, cruise | 5.183 to 5.187 V across the cases, inside 4.75 to 5.15 V (4.63 to 5.25 V, less the margin) | fail |
 | gps.CAN1.5V | max, worst | 4.978 to 4.987 V across the cases, inside 4.85 to 5.15 V (4.75 to 5.25 V, less the margin) | pass |
 | c_node.CAN1.5V | max, worst | 4.980 to 4.997 V across the cases, inside 4.85 to 5.15 V (4.75 to 5.25 V, less the margin) | pass |
 | p_node.CAN1.5V | max, worst | 4.985 to 4.998 V across the cases, inside 4.85 to 5.15 V (4.75 to 5.25 V, less the margin) | pass |
@@ -174,6 +172,7 @@ Every check, one by one:
 | claws.servo2.V+ | max, worst | 5.187 to 5.198 V across the cases, inside 4.90 to 5.90 V (4.8 to 6 V, less the margin) | pass |
 | imu.J1.VIN | V, worst | 3.300 to 3.300 V across the cases, inside 3.10 to 5.40 V (3 to 5.5 V, less the margin) | pass |
 | rx.pads.5V | max, worst | 4.999 to 4.999 V across the cases, inside 4.60 to 5.40 V (4.5 to 5.5 V, less the margin) | pass |
+| pi.GPIO.5V | max, worst | 5.183 to 5.187 V across the cases, inside 4.75 to 5.25 V (4.63 to 5.25 V, no margin at the top, since its maker publishes no maximum) | pass |
 | fan.FAN.5V | max, worst | 5.176 to 5.185 V across the cases, inside 4.60 to 5.40 V (4.5 to 5.5 V, less the margin) | pass |
 | halow.HAT.5V | max, worst | 5.183 to 5.187 V across the cases, inside 4.60 to 5.40 V (4.5 to 5.5 V, less the margin) | pass |
 | cut_3v3.J1.VIN | max, worst | 5.000 to 5.000 V across the cases, inside 4.10 to 49.90 V (4 to 50 V, less the margin) | pass |
@@ -887,6 +886,7 @@ Every number comes from a maker's datasheet or a measurement, except these estim
 - A dead short in the battery leads. Nothing electrical stops it; only the leads' routing and sleeving protect against it.
 - The motor cut board's two undocumented 1 kOhm resistors. Check them with a meter; pull-ups would make the board fail the wrong way, which the added pull-down only partly covers.
 - Powering the Pi 5 through its GPIO 5 V pins, which Raspberry Pi's docs don't describe.
+- The Pi 5's highest safe input. Raspberry Pi publishes only a 5.1 V supply and the 4.63 V undervoltage warning, so its 5.19 V from the BEC is checked against USB's 5.25 V ceiling, with no margin.
 - The ESC cable's re-pinning: Holybro doesn't say which end of its plug is pin 1.
 - Whether the ARK FPV terminates its CAN port. If it does, the harness's terminator at that end comes off.
 - The switch sims use generic models built from datasheet numbers, with no ground bounce or noise from the motor current. A clean sim isn't a scope on the real thing.

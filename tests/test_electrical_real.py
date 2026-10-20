@@ -127,11 +127,11 @@ def test_the_real_drones_open_findings(real, loads):
     findings = check_design(design, catalog, build, targets, settings, loads)
     failing = sorted({(f.check, f.subject) for f in findings if not f.passed})
     # the release servo's two went with the Schottkys (2026-10-19): through the ideal diodes it
-    # gets 5.16 V, and 4.92 V on its backup
+    # gets 5.16 V, and 4.92 V on its backup. The Pi's 5.185 V is checked against USB's 5.25 V
+    # without the margin, since Raspberry Pi publishes no maximum
     assert failing == [
         ("connector burst", "pack.XT60.+"),  # 134 C after 10 s at 90 A, against 100
         ("connector burst", "pack.XT60.-"),
-        ("load voltage", "pi.GPIO.5V"),  # 5.185 V against a guessed 5.25 V ceiling
     ]
     assert len(findings) > 250
     heat = {f.check for f in findings}

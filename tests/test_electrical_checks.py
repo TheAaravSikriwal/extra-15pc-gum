@@ -105,6 +105,27 @@ def test_a_pin_minimum_overrides_the_margin():
     assert [f.limit for f in found] == [5.05]
 
 
+def test_a_pin_ceiling_is_checked_without_the_margin():
+    # the made-up load takes up to 5.5 V; on a 5.45 V rail the margin's 5.4 V ceiling fails it,
+    # and a pin ceiling (for a part whose maker publishes no maximum) checks it at 5.5 V itself
+    data = buck_and_load()
+    regulator = ALL["t-buck"].model_dump(mode="json")
+    regulator["id"] = "t-buck-545"
+    regulator["electrical"]["outputs"][0]["volts"] = 5.45
+    from pcs14.catalog.schema import Component
+
+    parts = {**ALL, "t-buck-545": Component.model_validate(regulator)}
+    listed = {**ALL_LISTED, "t-buck-545": {"base"}}
+    data["boards"]["reg"] = {"part": "t-buck-545"}
+    design, solutions = solutions_for(data, [HOVER], parts, listed)
+    plain = context(design, parts, listed)
+    assert [f.subject for f in failed(checks.load_voltages(plain, solutions))] == ["load.J.5V"]
+    numbers = NUMBERS.model_copy(update={"pin_ceilings": {"load.J.5V": 5.5}})
+    ctx = checks.Context.make(design, parts, listed, numbers, pack_nominal=21.6)
+    found = checks.load_voltages(ctx, solutions)
+    assert failed(found) == [] and "no margin" in found[0].detail
+
+
 def esc_drone(lead_mm):
     esc = part(
         "t-esc",

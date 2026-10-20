@@ -1317,12 +1317,12 @@
   {
    "check": "load voltage",
    "subject": "pi.GPIO.5V",
-   "passed": false,
-   "value": 5.187282594579536,
-   "limit": 5.15,
+   "passed": true,
+   "value": 5.1832393581102885,
+   "limit": 4.75,
    "unit": "V",
-   "where": "V, cruise",
-   "detail": "5.183 to 5.187 V across the cases, inside 4.75 to 5.15 V (4.63 to 5.25 V, less the margin)",
+   "where": "max, worst",
+   "detail": "5.183 to 5.187 V across the cases, inside 4.75 to 5.25 V (4.63 to 5.25 V, no margin at the top, since its maker publishes no maximum)",
    "rests_on": [
     "rpi-5-4gb: draws[GPIO.5V]"
    ]
@@ -10135,6 +10135,7 @@
   "A dead short in the battery leads. Nothing electrical stops it; only the leads' routing and sleeving protect against it.",
   "The motor cut board's two undocumented 1 kOhm resistors. Check them with a meter; pull-ups would make the board fail the wrong way, which the added pull-down only partly covers.",
   "Powering the Pi 5 through its GPIO 5 V pins, which Raspberry Pi's docs don't describe.",
+  "The Pi 5's highest safe input. Raspberry Pi publishes only a 5.1 V supply and the 4.63 V undervoltage warning, so its 5.19 V from the BEC is checked against USB's 5.25 V ceiling, with no margin.",
   "The ESC cable's re-pinning: Holybro doesn't say which end of its plug is pin 1.",
   "Whether the ARK FPV terminates its CAN port. If it does, the harness's terminator at that end comes off."
  ],

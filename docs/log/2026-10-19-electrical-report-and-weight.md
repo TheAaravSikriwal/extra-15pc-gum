@@ -73,6 +73,12 @@ The parachute's release servo got 4.79 to 4.88 V through its Schottky diode, and
 
 The diodes are now an ideal-diode OR: TI's LM66200, which passes whichever of its two inputs is higher through a MOSFET instead of a diode junction, on Adafruit's half-gram breakout. On TI's worst-case on-resistance (60 mOhm, hot), a stalled servo loses 27 mV instead of about 0.4 V. The servo now sees 5.16 to 5.20 V, and 4.92 V on the backup. That's two of the eight findings gone, and 0.3 g lighter than the diodes. I still want the real servo's range, so asking Fruity Chutes is on my list.
 
+## The Pi's 5 V
+
+The Pi sees 5.185 V from the BEC, and the check wanted it under 5.15 V: USB's 5.25 V ceiling less the 0.1 V margin. That 5.25 V was my guess, because Raspberry Pi doesn't publish a maximum. Their documentation says only that every model needs "a 5.1V supply", and that a warning trips under 4.63 V. The BEC can't go lower either: Matek offers 5.2, 8 or 12 V.
+
+A second regulator just for the Pi would fix it properly, but that's grams and a part to protect against a limit nobody has published. So the Pi now gets a ceiling of its own, checked without the margin: USB's 5.25 V, which any USB-C charger can already hand it. It passes with 65 mV to spare, and the missing maximum is on the report's unproven list, where it belongs.
+
 ## Next
 
-The last two findings: the Pi's 5 V ceiling and the XT60 in the burst.
+The last finding: the XT60 in the burst.
