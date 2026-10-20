@@ -125,6 +125,18 @@ And one from the plan: **the GPS is the ARK GPS on DroneCAN** (16 g, 8 g over th
 - **The wind reaches the model through our drag plugin,** from the world's starting wind plus a topic of its own, so a scenario can change it mid-flight.
 - **The world's origin is PX4's default** (Zurich), never anywhere of mine.
 
+### What the flight sim runner decided (2026-10-19)
+
+- **The setup fetches only the simulator's submodules, at their pinned commits, shallow.** PX4's full recursive clone also pulls NuttX, Gazebo Classic, jMAVSim and more, gigabytes the simulator never uses, and GitHub was serving them at about 60 kB/s. PX4's build fetches anything else it needs on its own.
+- **MAVSDK-Python stays pinned at 3.17.4,** though it now warns that the `mavsdk` name is passing to a new native binding. The API I use carries on as `mavsdk-grpc`; moving is its own small decision later.
+- **PX4 gets its parameters as PX4_PARAM_* environment variables,** which its startup sets over the x500 airframe's defaults, in a fresh working folder per run, logging from boot until shutdown. Nothing in PX4 changes.
+- **Every grade uses Gazebo's ground truth,** which PX4's Gazebo bridge logs next to PX4's own estimates, so a grade says what the drone did, not what PX4 thought it did.
+- **Lost link is a relay that cuts the uplink:** it drops everything MAVSDK sends and passes everything PX4 sends. PX4 v1.17 lists a MAVLink-signal failure but doesn't implement it, and a cut uplink is what a dropped radio looks like to PX4, while the script still sees what PX4 does.
+- **Scripts keep time on PX4's clock** (from its IMU timestamps), which in the sim is Gazebo's, so a run means the same at any sim speed. A clock that stops for 30 s of real time counts as a hung sim, not a failed drone.
+- **In P, PX4 fires the chute itself:** its parachute output (function 400) drives the bridge's first servo, which sits at its low end in flight and swings to its high end on flight termination, and the drag plugin fires the canopy past halfway. Termination also stops the motors, so the order comes from PX4. Flight termination (CBRK_FLIGHTTERM 0) is on only where there's a chute.
+- **New pass/fail numbers in the targets,** my picks: a return lands within 2 m of where it took off; after a failure, a controlled landing comes down slower than 2 m/s at the end, and ending more than 30 m from where the failure hit is a fly-away.
+- **A script's marks come in pairs,** "hold start" and "hold end", because a bare "hold" collided with PX4's Hold mode in the first flight's grading.
+
 ### What the electrical build changed (2026-10-18)
 
 - **The safety monitor's IMU is ST's LSM6DSOX** on Adafruit's breakout (1.7 g, in stock). No usable ICM-42688-P breakout is sold.

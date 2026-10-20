@@ -68,6 +68,15 @@ class _PayloadPass(_Strict):
     max_drift_m: float = Field(gt=0)
 
 
+class _ReturnsPass(_Strict):
+    max_landing_distance_m: float = Field(gt=0)  # from where it took off
+
+
+class _FailuresPass(_Strict):
+    max_touchdown_ms: float = Field(gt=0)  # the descent rate just before a controlled touchdown
+    max_distance_m: float = Field(gt=0)  # from where the failure hit; farther is a fly-away
+
+
 class TriggerThresholds(_Strict):
     """The safety monitor's automatic triggers, in shadow mode until they show no false
     triggers (docs/specs/2026-10-19-flight-sim.md)."""
@@ -89,6 +98,8 @@ class FlightSimTargets(_Strict):
     wind: _WindPass
     endurance: _EndurancePass
     payload: _PayloadPass
+    returns: _ReturnsPass
+    failures: _FailuresPass
     triggers: TriggerThresholds
     max_false_triggers: int = Field(ge=0)
 

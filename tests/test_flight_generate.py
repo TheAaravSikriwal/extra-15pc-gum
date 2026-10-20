@@ -162,6 +162,22 @@ def test_px4s_parameters_match_the_model(real):
     assert p["BAT1_N_CELLS"] == build.pack.series
 
 
+def test_px4_fires_the_chute_by_termination_only_with_p(real):
+    _, _, _, _, models = real
+    p = models["mission"].params
+    assert p["SIM_GZ_SV_FUNC1"] == 400  # PX4's parachute output, on the first servo
+    assert p["CBRK_FLIGHTTERM"] == 0  # flight termination allowed, which fires it
+    root = ET.fromstring(models["mission"].sdf())
+    chute = next(p for p in root.iter("plugin") if p.get("filename") == "pcs14-drag").find("chute")
+    # the output sits at -45 degrees in flight and goes to +45 on termination
+    assert float(chute.findtext("fire_above")) == pytest.approx(math.radians(22.5))
+    from pcs14.flight.generate import px4_params
+
+    build, targets, _, _, _ = real
+    without = px4_params(made_up_model(chute=None), build, targets)
+    assert "SIM_GZ_SV_FUNC1" not in without and "CBRK_FLIGHTTERM" not in without
+
+
 def test_it_writes_every_models_folder_and_the_world(real, tmp_path):
     import json
 

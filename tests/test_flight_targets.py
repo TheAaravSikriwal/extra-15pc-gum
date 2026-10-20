@@ -20,6 +20,8 @@ def test_the_real_targets_carry_the_flight_sim_numbers():
     assert sim.wind.max_drift_m == 1.0 and sim.wind.max_motor_share == pytest.approx(0.9)
     assert sim.endurance.max_difference == pytest.approx(0.1)
     assert sim.payload.max_drift_m == 1.0
+    assert sim.returns.max_landing_distance_m == 2.0
+    assert sim.failures.max_touchdown_ms == 2.0 and sim.failures.max_distance_m == 30.0
     assert sim.max_false_triggers == 0
 
 

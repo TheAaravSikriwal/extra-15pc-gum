@@ -119,6 +119,43 @@ def test_no_fly_away():
     assert not grade.ends_safely(gone, radius=100).passed
 
 
+def test_no_fly_away_counted_from_when_the_failure_hit():
+    # flew 200 m out at 10 m/s, then drifted 5 m while coming down from 30 m
+    def path(t):
+        east = np.minimum(t, 20) * 10 + np.maximum(t - 20, 0) / 2
+        up = np.where(t < 20, 30, np.maximum(30 - 3 * (t - 20), 0))
+        return np.column_stack([east, 0 * t, up])
+
+    away = log(30, position=path)
+    assert not grade.ends_safely(away, radius=30).passed  # far from home...
+    found = grade.ends_safely(away, radius=30, since=20.0)  # ...but not from the failure
+    assert found.passed and found.value == pytest.approx(5.0, abs=0.05)
+
+
+def descent(seconds, height):
+    """A log coming straight down: `height(t)` m, with the matching vertical speed."""
+
+    def position(t):
+        return np.column_stack([0 * t, 0 * t, np.maximum(height(t), 0)])
+
+    def velocity(t):
+        up = np.gradient(np.maximum(height(t), 0), t)
+        return np.column_stack([0 * t, 0 * t, up])
+
+    return log(seconds, position=position, velocity=velocity)
+
+
+def test_a_touchdown_by_hand():
+    # down from 10 m at 0.7 m/s: a controlled landing
+    found = grade.touchdown(descent(20, lambda t: 10 - 0.7 * t), max_speed=2.0)
+    assert found.passed and found.value == pytest.approx(0.7, abs=0.01)
+    # falling from 10 m: about 14 m/s at the ground
+    found = grade.touchdown(descent(3, lambda t: 10 - 4.9 * t**2), max_speed=2.0)
+    assert not found.passed and found.value == pytest.approx(14.0, abs=0.3)
+    hovering = log(5, position=lambda t: np.column_stack([0 * t, 0 * t, 5 + 0 * t]))
+    assert not grade.touchdown(hovering, max_speed=2.0).passed
+
+
 def test_false_triggers_counted_on_a_healthy_flight():
     from pcs14.design import TriggerThresholds
     from pcs14.safety.triggers import G, ImuSample

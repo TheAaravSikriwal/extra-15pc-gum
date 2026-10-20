@@ -16,19 +16,27 @@
 //       <canopy_area>1.89</canopy_area>      m^2
 //       <ejection_s>0.2</ejection_s>
 //       <opening_s>1.0</opening_s>
-//       <fire_topic>/pcs14/chute/fire</fire_topic>   gz.msgs.Empty
+//       <fire_topic>/pcs14/chute/fire</fire_topic>   gz.msgs.Empty, to fire it by hand
+//       <servo>0</servo>                     PX4's servo output that fires it, optional
+//       <fire_above>0.39</fire_above>        rad: the servo past this fires it
 //     </chute>
 //   </plugin>
-// The wind starts from the world's <wind><linear_velocity>.
+// The wind starts from the world's <wind><linear_velocity>. PX4's Gazebo bridge publishes its
+// servo outputs as angles on /model/<model>/servo_<n>, and its parachute output goes from its
+// lowest to its highest on flight termination. When the chute fires, the plugin prints
+// "[pcs14-drag] chute fired at <s>" with the sim time, for the runner's log.
 
 #include <algorithm>
 #include <chrono>
 #include <cmath>
+#include <iomanip>
+#include <iostream>
 #include <mutex>
 #include <optional>
 #include <string>
 
 #include <gz/math/Vector3.hh>
+#include <gz/msgs/double.pb.h>
 #include <gz/msgs/empty.pb.h>
 #include <gz/msgs/vector3d.pb.h>
 #include <gz/plugin/Register.hh>
@@ -77,6 +85,14 @@ public:
       this->openingS = std::max(chute->Get<double>("opening_s", 1.0).first, 1e-3);
       const auto fireTopic = chute->Get<std::string>("fire_topic", "/pcs14/chute/fire").first;
       this->node.Subscribe(fireTopic, &Drag::OnFire, this);
+      if (chute->HasElement("servo"))
+      {
+        const int servo = chute->Get<int>("servo", 0).first;
+        this->fireAbove = chute->Get<double>("fire_above", 0.0).first;
+        const std::string servoTopic =
+            "/model/" + model.Name(ecm) + "/servo_" + std::to_string(servo);
+        this->node.Subscribe(servoTopic, &Drag::OnServo, this);
+      }
     }
   }
 
@@ -90,7 +106,10 @@ public:
       std::lock_guard<std::mutex> lock(this->mutex);
       wind = this->wind;
       if (this->fireRequested && !this->firedAt)
+      {
         this->firedAt = now;
+        std::cout << "[pcs14-drag] chute fired at " << std::setprecision(9) << now << std::endl;
+      }
     }
     double area = this->dragArea;
     if (this->firedAt)
@@ -120,11 +139,20 @@ private:
     this->fireRequested = true;
   }
 
+  void OnServo(const gz::msgs::Double &msg)
+  {
+    if (msg.data() <= this->fireAbove)
+      return;
+    std::lock_guard<std::mutex> lock(this->mutex);
+    this->fireRequested = true;
+  }
+
   gz::sim::Link link{gz::sim::kNullEntity};
   double dragArea{0.0};
   double canopyArea{0.0};
   double ejectionS{0.0};
   double openingS{1.0};
+  double fireAbove{0.0};
   std::optional<double> firedAt;
   bool fireRequested{false};
   gz::math::Vector3d wind{0, 0, 0};

@@ -1,7 +1,7 @@
 # Status
 
-**Last updated:** 2026-10-19, on the PC's Windows side
-**Step:** step 4, the flight sim. The talk (4a) and the plan (4b) are done, and the build (4c) has tasks 1 to 8 done (2026-10-19). The rest needs Ubuntu in WSL2.
+**Last updated:** 2026-10-19, on the PC (Windows and WSL2 Ubuntu)
+**Step:** step 4, the flight sim. The talk (4a) and the plan (4b) are done, and the build (4c) has tasks 1 to 10 done (2026-10-19): PX4 flies the generated model in Gazebo. Next is every scenario in every combination.
 **Main machine:** the PC, with WSL2 Ubuntu 24.04 for the Linux tools
 
 ## Right now
@@ -43,14 +43,14 @@ Where to look:
 
 **Step 4c, tasks 1 to 8, are done (2026-10-19).** The targets, the motor model fit, the drag and parachute math, the generator, power from logged rotor speeds, the safety monitor's reference triggers, grading, and the report. `pcs14 flight-sim` writes all eight Gazebo models and the [flight sim report](docs/reports/flight-sim/README.md): 78 scenario runs planned, none flown until PX4 is installed. Mission flies at 2213 g (the CAD's weight, without the growth margin) and should hover at 58% throttle. The [log](docs/log/2026-10-19-flight-sim-build.md).
 
+**Step 4c, tasks 9 and 10, are done (2026-10-19): PX4 flies it.** Ubuntu is in WSL2 on the PC, and `scripts/setup-ubuntu.sh` installed PX4 v1.17.0, Gazebo Harmonic (8.15.0), MAVSDK 3.17.4, pyulog 1.2.4 and our drag plugin. It now fetches only the simulator's submodules, after the full clone crawled at 60 kB/s. `pcs14 flight-sim run` starts Gazebo headless, PX4 standalone and stock with our parameters, a relay that can cut the uplink, and the scenario script on PX4's clock, then grades from Gazebo's ground truth in PX4's log. The smoke flight (take off, hover 10 s, land) in base passes: hovering at 539 rad/s as the motor model predicts, 8 cm of drift, 41 s of real time. In P, PX4's own parachute output fires the chute on flight termination. The [log](docs/log/2026-10-19-first-flight.md).
+
 **Offline?** Study from [docs/learning.md](docs/learning.md). Topics 1 and 2 (how quads fly; props, motors and batteries) are what the sizing model needs.
 
 ## Up next
 
-1. **Install Ubuntu in WSL2 on the PC** (mine to do): WSL2 is already on, with no distribution yet. In an administrator PowerShell, `wsl --install -d Ubuntu-24.04`, then set the Ubuntu username and password, then step 3 of [docs/setup-pc.md](docs/setup-pc.md). Tasks 9 to 12 of the flight sim need it.
-2. **Step 4c, the rest:** tasks 9 to 12 of the [plan](docs/plans/2026-10-19-flight-sim.md). `scripts/setup-ubuntu.sh` (PX4 v1.17.0, Gazebo Harmonic through PX4's own setup, MAVSDK 3.17.4, pyulog 1.2.4, our drag plugin) and the plugin's C++ are written but not yet run: they need Ubuntu, and the downloads (roughly 3 to 5 GB) need my OK. Then the runner, and every scenario in every combination.
-3. **The project site's spec** (what it's built with). The goal is now written down in decisions: a complete blueprint, from the structure to the circuits.
-4. **Write the first half of `scripts/setup-ubuntu.sh`** (inside WSL2): Gazebo Harmonic, PX4 v1.17.0 and the Python tools, pinned. It's task 9 of the flight sim now.
+1. **Step 4c, task 11:** every scenario in every combination (78 runs), tuning PX4 where its x500 defaults don't suit this airframe, each change written down. Then task 12, closing the loop against the sizing model. The [plan](docs/plans/2026-10-19-flight-sim.md).
+2. **The project site's spec** (what it's built with). The goal is written down in decisions: a complete blueprint, from the structure to the circuits.
 
 ## Still open
 
@@ -70,13 +70,15 @@ Where to look:
 - Where the Meshtastic relay (#30) lives: V, Base, or its own little module
 - Exactly what goes in the `us-recreational` limits profile, and whether to get Part 107 (for the build package)
 - What "unique" is allowed to mean in the design hunt
+- OpenGL inside WSL runs on the CPU (llvmpipe), not the RTX 3060. Headless flights don't care; Gazebo's window and clips for posts will
+- MAVSDK-Python 3.17.4 warns that its package name now belongs to a new native binding; the API I use continues as `mavsdk-grpc`. Pinned for now, and a move is its own small decision
 - What the project site is built with (it stays on my machine until the project is done, then joins my portfolio at wearechintu.com)
 
 ## Machines
 
 | Machine | What it is | Role | Setup state |
 |---|---|---|---|
-| PC | Windows 11 + **WSL2 Ubuntu 24.04** (dual boot, native Ubuntu as a fallback), Ryzen 7 9800X3D, 32 GB DDR5, RTX 3060 | Main machine: sim, CFD, CAD, renders | WSL not installed yet. Follow [docs/setup-pc.md](docs/setup-pc.md). The repo is at `C:\dr\extra-15pc-gum`. |
+| PC | Windows 11 + **WSL2 Ubuntu 24.04** (dual boot, native Ubuntu as a fallback), Ryzen 7 9800X3D, 32 GB DDR5, RTX 3060 | Main machine: sim, CFD, CAD, renders | WSL2 Ubuntu 24.04 with the flight sim's tools ([pc.md](docs/machines/pc.md)). The repo is at `C:\dr\extra-15pc-gum`. |
 | Laptop | Windows 11 + WSL2 Ubuntu 24.04, Core Ultra 7 155U, 16 GB, Intel graphics | Docs, light work, ground station, object detection | Checks pass ([laptop-windows.md](docs/machines/laptop-windows.md), [laptop-wsl.md](docs/machines/laptop-wsl.md)). Pushes need `env -u GH_TOKEN git push` for now. |
 
 ## Switching machines

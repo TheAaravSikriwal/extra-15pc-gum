@@ -40,7 +40,10 @@ packages = ["src/pcs14"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-markers = ["kicad: needs KiCad's command line (CI runs these in their own job)"]
+markers = [
+    "kicad: needs KiCad's command line (CI runs these in their own job)",
+    "px4: flies PX4 in Gazebo (only inside WSL2 Ubuntu, after scripts/setup-ubuntu.sh)",
+]
 
 [tool.ruff]
 line-length = 100

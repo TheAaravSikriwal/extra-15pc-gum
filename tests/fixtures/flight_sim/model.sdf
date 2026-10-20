@@ -220,6 +220,8 @@
         <ejection_s>0.2</ejection_s>
         <opening_s>1</opening_s>
         <fire_topic>/pcs14/chute/fire</fire_topic>
+        <servo>0</servo>
+        <fire_above>0.392699082</fire_above>
       </chute>
     </plugin>
   </model>

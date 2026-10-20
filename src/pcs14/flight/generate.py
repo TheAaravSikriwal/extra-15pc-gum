@@ -31,6 +31,12 @@ FOOT_RADIUS = 0.008  # m, the printed legs' feet (pcs14.cad.printed)
 IDLE_SHARE = 0.15  # of the top speed, where PX4 idles a motor (the x500: 150 of 1000 rad/s)
 TOP_SPEED_LIMIT = 25.0  # m/s, PX4's speed limits for the capability tests (80 km/h is 22.2)
 CHUTE_TOPIC = "/pcs14/chute/fire"
+# PX4 fires the chute itself: its parachute output (function 400) on the bridge's first servo
+# sits at -1 in flight and goes to +1 on flight termination, which also stops the motors.
+# Gazebo gets it as an angle between the servo's limits, and the plugin fires past halfway.
+CHUTE_SERVO = 0
+CHUTE_SERVO_DEG = 45.0
+CHUTE_FIRE_ABOVE = math.radians(CHUTE_SERVO_DEG) / 2
 WIND_TOPIC = "/pcs14/wind"
 PAYLOAD_TOPICS = ("/pcs14/payload/attach", "/pcs14/payload/detach")
 # PX4's quad X: (front?, left?, direction) for rotors 0 to 3
@@ -77,6 +83,11 @@ SENSORS = """      <sensor name="air_pressure_sensor" type="air_pressure">
         <update_rate>30</update_rate>
       </sensor>
 """
+
+
+def model_name(setup_name: str) -> str:
+    """The Gazebo model's name for a combination: Mission+C is pcs14_mission_c."""
+    return f"{PREFIX}{setup_name.replace('+', '_').lower()}"
 
 
 def _n(value: float) -> str:
@@ -234,6 +245,8 @@ class FlightModel:
                 f"        <ejection_s>{_n(c.ejection_s)}</ejection_s>",
                 f"        <opening_s>{_n(c.opening_s)}</opening_s>",
                 f"        <fire_topic>{CHUTE_TOPIC}</fire_topic>",
+                f"        <servo>{CHUTE_SERVO}</servo>",
+                f"        <fire_above>{_n(CHUTE_FIRE_ABOVE)}</fire_above>",
                 "      </chute>",
             ]
         lines.append("    </plugin>")
@@ -366,6 +379,14 @@ def px4_params(model: FlightModel, build, targets) -> dict:
     params["BAT1_N_CELLS"] = pack.series
     params["BAT1_CAPACITY"] = round(pack.cell.capacity_mah * pack.parallel)
     params["NAV_DLL_ACT"] = 2  # lost link: return, the x500's own
+    if model.chute is not None:
+        # the chute on the bridge's first servo, fired by flight termination, which the failure
+        # detector may now call: the flight controller's half of "the motors cut, then the chute"
+        n = CHUTE_SERVO + 1
+        params[f"SIM_GZ_SV_FUNC{n}"] = 400
+        params[f"SIM_GZ_SV_MINA{n}"] = -CHUTE_SERVO_DEG
+        params[f"SIM_GZ_SV_MAXA{n}"] = CHUTE_SERVO_DEG
+        params["CBRK_FLIGHTTERM"] = 0
     return params
 
 
@@ -399,7 +420,7 @@ def flight_model(drone, build, targets, setup, mesh: str | None = "meshes/body.s
         if "P" in setup.modules and getattr(part, "parachute", None) is not None:
             chute = Chute.from_part(part)
     model = FlightModel(
-        name=f"{PREFIX}{setup.name.replace('+', '_').lower()}",
+        name=model_name(setup.name),
         setup=setup.name,
         modules=frozenset(setup.modules),
         mass=props.mass,
@@ -440,9 +461,31 @@ def model_config(model: FlightModel) -> str:
     return _config(model.name, model.setup)
 
 
+def model_info(model: FlightModel) -> dict:
+    """The model's own numbers that the scenarios and their graders use."""
+    info = {
+        "setup": model.setup,
+        "mass_kg": model.total_mass,
+        "lift_off_m": model.lift_off,
+        "top_rot_velocity": model.motor.max_rot_velocity,
+        "hover_rot_velocity": model.motor.hover_rot_velocity,
+        "motor_constant": model.motor.motor_constant,
+        "drag_area_m2": model.drag_area,
+        "payload_kg": model.payload,
+    }
+    if model.chute is not None:
+        info["chute"] = {
+            "canopy_area_m2": model.chute.canopy_area,
+            "ejection_s": model.chute.ejection_s,
+            "opening_s": model.chute.opening_s,
+        }
+    return info
+
+
 def write_models(folder, drone, build, targets, setups, meshes: bool = True) -> list:
     """Every combination's model folder (model.config, model.sdf, PX4's parameters as
-    params.json and, with `meshes`, the CAD's mesh), the world and the payload, under `folder`.
+    params.json, the model's numbers as model.json and, with `meshes`, the CAD's mesh), the
+    world and the payload, under `folder`.
     Returns the models."""
     import json
     from pathlib import Path
@@ -462,6 +505,8 @@ def write_models(folder, drone, build, targets, setups, meshes: bool = True) -> 
         (home / "model.sdf").write_text(model.sdf(), encoding="utf-8")
         params = json.dumps(model.params, indent=1, sort_keys=True) + "\n"
         (home / "params.json").write_text(params, encoding="utf-8")
+        info = json.dumps(model_info(model), indent=1, sort_keys=True) + "\n"
+        (home / "model.json").write_text(info, encoding="utf-8")
         if meshes:
             pieces = [p for p in trim(drone, setup.modules).pieces if p.kind != "prop"]
             export_gazebo(pieces, home / "meshes" / "body.stl")

@@ -40,4 +40,6 @@ Tasks 1 to 8 need only Windows and CI; 9 to 12 need Ubuntu in WSL2 on the PC.
 
 **Done in the build (2026-10-19):** tasks 1 to 8. The stills wait for the first real flights, which are what's worth a post; the report and the Rerun replay are in.
 
+**Tasks 9 and 10 (2026-10-19):** done. The setup script fetches only the simulator's submodules, shallow. The runner grades from Gazebo's ground truth in PX4's log, cuts the link with a relay of its own (PX4 v1.17 doesn't implement its MAVLink-signal failure), and lets PX4 fire the chute through its own parachute output. The smoke flight in base passes on the PC.
+
 **Done when:** the baseline passes every scenario in all eight module combinations on PX4, and the report shows every run.

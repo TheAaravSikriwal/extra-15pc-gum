@@ -51,6 +51,11 @@ flight_sim:
     max_difference: 0.1      # hover and cruise times against the sizing model's
   payload: # the claws picking up their payload
     max_drift_m: 1.0
+  returns: # lost link and low battery: it comes home and lands
+    max_landing_distance_m: 2.0  # from where it took off
+  failures: # a dead motor, a failed sensor, a sagging pack
+    max_touchdown_ms: 2.0    # a controlled landing comes down slower than this at the end
+    max_distance_m: 30.0     # from where the failure hit: anything farther is a fly-away
   triggers: # the safety monitor's automatic triggers: starting numbers, tuned against the replays
     free_fall_g: 0.3         # total acceleration under this...
     free_fall_s: 0.3         # ...for this long

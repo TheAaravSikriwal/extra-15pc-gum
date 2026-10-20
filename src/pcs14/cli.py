@@ -113,6 +113,28 @@ def build_parser() -> argparse.ArgumentParser:
         "flight-sim",
         "The flight sim: a Gazebo model of every combination for PX4, and the report.",
     )
+    flight.add_argument(
+        "action",
+        nargs="?",
+        choices=("generate", "run"),
+        default="generate",
+        help="generate the models and the report (the default), or run: fly the scenarios "
+        "(inside WSL2, where PX4 and Gazebo are)",
+    )
+    flight.add_argument(
+        "--setup",
+        action="append",
+        help="with run: a combination to fly (repeat for more; default: all eight)",
+    )
+    flight.add_argument(
+        "--scenario",
+        action="append",
+        help="with run: a scenario to fly (repeat for more; default: all of them)",
+    )
+    flight.add_argument("--jobs", type=int, default=1, help="with run: flights at once")
+    flight.add_argument(
+        "--speed", type=float, default=1.0, help="with run: the sim's speed, against real time"
+    )
     flight.add_argument("--cad", type=Path, default=Path("design/cad.yaml"))
     flight.add_argument(
         "--out", type=Path, default=Path("docs/reports/flight-sim"), help="report folder"
@@ -464,6 +486,8 @@ def run_flight_sim(args) -> int:
     _, build, targets = _load(args)
     if targets.flight_sim is None:
         raise ValueError("the targets have no flight_sim section, so nothing can be graded")
+    if args.action == "run":
+        return fly_flight_sim(args, build, targets)
     drone = Drone(build, load_settings(args.cad))
     setups = targets.combinations()
     exports = Path(args.exports)
@@ -486,6 +510,42 @@ def run_flight_sim(args) -> int:
     print(f"\nModels written to {exports.resolve()}")
     print(f"Report written to {out.resolve()}")
     return 0
+
+
+def _pick(wanted, available: dict, what: str) -> list:
+    if not wanted or wanted == ["all"]:
+        return list(available.values())
+    folded = {k.lower(): v for k, v in available.items()}
+    missing = [w for w in wanted if w.lower() not in folded]
+    if missing:
+        raise ValueError(f"no {what} called {', '.join(missing)}: there's {', '.join(available)}")
+    return [folded[w.lower()] for w in wanted]
+
+
+def fly_flight_sim(args, build, targets) -> int:
+    import asyncio
+
+    from pcs14.flight import batch, report, run
+    from pcs14.flight.scenarios import scenarios
+
+    tools = run.toolchain()
+    missing = tools.missing()
+    if missing:
+        print("Can't fly here: " + "; ".join(missing) + ".")
+        print("The flights run inside WSL2 Ubuntu, set up by scripts/setup-ubuntu.sh.")
+        return 2
+    setups = _pick(args.setup, {s.name: s for s in targets.combinations()}, "combination")
+    chosen = _pick(args.scenario, scenarios(), "scenario")
+    pairs = [
+        (s, sc) for s in setups for sc in chosen if sc.name == "smoke" or report.applies(sc.name, s)
+    ]
+    print(f"Flying {len(pairs)} runs, {args.jobs} at a time, at {args.speed:g}x real time")
+    results = asyncio.run(
+        batch.run_many(tools, Path(args.exports), pairs, targets, build, args.jobs, args.speed)
+    )
+    passed = sum(r.passed for r in results)
+    print(f"\n{passed} of {len(results)} runs passed")
+    return 0 if passed == len(results) else 1
 
 
 COMMANDS = {

@@ -14,7 +14,9 @@ The definitions:
 - motor headroom: the fastest any motor spins, as a share of its top speed
 - the parachute: the motors have to stop before it fires; the height lost runs from firing
   until the descent first settles within 10% of its steady rate
-- no fly-away: the flight ends on the ground within the given radius of where it started
+- no fly-away: the flight ends on the ground within the given radius of where it started, or
+  of where it was when something failed
+- a controlled landing: the fastest descent over the last 0.3 s before touching the ground
 """
 
 from dataclasses import dataclass, field
@@ -25,6 +27,8 @@ SETTLE_BAND = 0.05  # a share of the step
 STEADY_BAND = 0.10  # a share of the steady descent rate
 HOLD_S = 1.0  # what top speed has to be held for
 ON_GROUND_M = 0.5
+CONTACT_M = 0.05  # m above where it started: touching the ground
+TOUCHDOWN_S = 0.3  # how long before touching down the landing speed is measured over
 
 
 @dataclass(frozen=True)
@@ -159,14 +163,33 @@ def chute(log: FlightLog) -> list[Finding]:
     ]  # fmt: skip
 
 
-def ends_safely(log: FlightLog, radius: float) -> Finding:
-    end = log.position[-1]
-    distance = float(np.hypot(end[0] - log.position[0, 0], end[1] - log.position[0, 1]))
+def ends_safely(log: FlightLog, radius: float, since: float | None = None) -> Finding:
+    """On the ground at the end, within `radius` of where it started, or of where it was at
+    `since` (the moment a failure hit, say)."""
+    k = 0 if since is None else min(int(np.searchsorted(log.t, since)), len(log.t) - 1)
+    origin, end = log.position[k], log.position[-1]
+    distance = float(np.hypot(end[0] - origin[0], end[1] - origin[1]))
     down = end[2] <= ON_GROUND_M or log.when("landed") is not None
     passed = down and distance <= radius
     where = "on the ground" if down else f"still {end[2]:.0f} m up"
+    start = "where it started" if since is None else "where it was then"
     return Finding("no fly-away", passed, distance, radius, "m",
-                   f"ended {where}, {distance:.0f} m from where it started")  # fmt: skip
+                   f"ended {where}, {distance:.0f} m from {start}")  # fmt: skip
+
+
+def touchdown(log: FlightLog, max_speed: float) -> Finding:
+    """A controlled landing: the fastest it was coming down in the last TOUCHDOWN_S before it
+    first reached the ground after its highest point."""
+    top = int(np.argmax(log.position[:, 2]))
+    down = np.flatnonzero(log.position[top:, 2] <= CONTACT_M)
+    if not len(down):
+        return Finding("touchdown", False, None, max_speed, "m/s", "it never came down")
+    k = top + int(down[0])
+    before = (log.t >= log.t[k] - TOUCHDOWN_S) & (log.t <= log.t[k])
+    speed = max(0.0, float(-log.velocity[before, 2].min()))
+    kind = "a controlled landing" if speed <= max_speed else "too fast for a controlled landing"
+    return Finding("touchdown", speed <= max_speed, speed, max_speed, "m/s",
+                   f"came down at {speed:.1f} m/s at the end, {kind}")  # fmt: skip
 
 
 def false_triggers(imu, limits, allowed: int) -> Finding:
