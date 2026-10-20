@@ -71,7 +71,8 @@ I post this whole project on LinkedIn (mostly) and Instagram (sometimes), so any
 
 Notes on how I like to work, so a fresh session on either machine picks up the same way.
 
-- Give me options with a clear recommendation and the reason for it. Put the recommended option first.
+- Make the routine choices yourself, the best-suited option each time, and write down what you picked and why (in the spec, the log and decisions). Only ask me about drastic changes: reopening a settled decision, a big change in weight, cost or scope, anything touching the safety rules, or a change of direction (2026-10-19).
+- When you do ask, give me options with a clear recommendation and the reason for it. Put the recommended option first.
 - Show me the full picture (the whole plan, the pros and cons) before asking me to lock something in.
 - Write plans and reviews out in the chat. Don't send me Markdown files to open; they open in VS Code.
 - One question at a time. I often answer in free text and add new ideas halfway through. Fold them in rather than restarting.

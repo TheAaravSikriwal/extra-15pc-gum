@@ -32,3 +32,22 @@ From the [roadmap](../roadmap.md) and layer 4 of the [simulation spec](2026-10-1
 | False triggers | none from the safety monitor in any healthy scenario | the safety rules |
 
 The chute's drag comes from Fruity Chutes' rating (2.5 kg at 4.6 m/s), so the sim's descent rate would only repeat it; that's why the drop checks the order of events and reports the height lost. Max, at 2.62 kg, is a little over that rating and would come down at about 4.7 m/s.
+
+**Flying the scenarios (2026-10-19): MAVSDK-Python, headless, in lockstep.** PX4's own SDK in Python drives PX4 and Gazebo with no window open, in lockstep so a run repeats exactly. Each scenario is one script; failures go in through MAVSDK's failure injection, and wind through Gazebo's own transport. Each flight's log goes through pyulog into the report, into Rerun (the CAD drone flying its logged path, next to the plots) and into the data files the project site reads. **Why:** the shortest path from a scenario to a graded result, in the same Python as the rest of pcs14. **Cost:** MAVSDK hides some of MAVLink; anything it can't do falls back to pymavlink for that one message.
+
+From here on I made the calls myself and wrote down why (I asked to be asked only about drastic changes).
+
+**The safety monitor's triggers (2026-10-19): a Python reference version now, ported to the Teensy in step 5.** The false-trigger replay needs trigger logic before the Teensy firmware exists, so `pcs14` gets one: free fall (the IMU's total acceleration under 0.3 g for 0.3 s) and tumbling (a body rate over 400 °/s for 0.3 s, or a tilt past 75° for 0.5 s). Those are starting numbers, set loose enough for a punch-out and tight enough to catch a dead motor, and tuned against the replays. They live in `design/targets.yaml` next to the pass/fail table. Step 5's Teensy firmware has to give the same answers on the same recorded IMU data. **Why:** the shadow-mode rule (triggers only log until they've shown zero false triggers) needs something to count with, and one reference keeps the sim and the firmware honest with each other.
+
+**PX4 stays unmodified (2026-10-19).** PX4 runs its stock x500 airframe in Gazebo's standalone mode, with our generated parameters loaded at start, and `pcs14` starts Gazebo itself with our generated world and model. Nothing is added to PX4's source tree. **Why:** a clean pin to v1.17.0, nothing to carry between PX4 versions, and no PX4 code in this repo. The parameters include the hardware's real limits for the capability tests (a tilt limit and top speed high enough for the 80 km/h run); the legal limits are a separate limits profile, as always.
+
+**The model (2026-10-19).** One Gazebo model per module combination, generated:
+- the looks from the CAD's mesh of that combination, and a simple collision shape (the body and the four feet), because contacts on a full mesh are slow and jittery
+- the mass, center of gravity and inertia from the CAD's mass properties, with the pack at its trim
+- the rotors from the frame's geometry, with Gazebo's multicopter motor model fitted to Emax's thrust table: thrust against rotor speed squared, torque from the power, and the top speed at the worst case above. The prop's own drag, its rolling moment and the motors' spin-up times start from the x500's values, scaled, and are flagged as estimates
+- our drag plugin, carrying the combination's drag area and, in P, the parachute: when the scenario fires it, the plugin waits out an ejection delay and then opens a canopy over an opening time, both estimates, with the canopy sized from Fruity Chutes' rating
+- in C, Gazebo's detachable joint for the payload grab
+
+**Where it runs (2026-10-19).** The PC's WSL2 Ubuntu 24.04, with PX4's source and builds in the Ubuntu home folder (the setup guide's rule). CI doesn't install PX4 or Gazebo, which are gigabytes and a long build. It checks everything around them instead: the generator's output, the drag and parachute math, the pass/fail grading and the battery post-processing, all on made-up data and short synthetic logs. Real flight logs stay out of the repo as always; the sim's logs live under `outputs/`.
+
+**What comes out (2026-10-19).** `pcs14 flight-sim` generates the models, flies any or all scenarios in any or all combinations, and writes `docs/reports/flight-sim/` (the report and `flight-sim.json`, like the other steps), a Rerun recording, and stills in the post sizes. Gazebo clips for the posts get recorded on request and stay out of the repo.
