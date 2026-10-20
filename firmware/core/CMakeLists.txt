@@ -4,6 +4,7 @@ add_library(pcs14_core STATIC
   src/altitude.cpp
   src/angle.cpp
   src/attitude.cpp
+  src/battery.cpp
   src/failsafe.cpp
   src/flight.cpp
   src/height.cpp
@@ -56,6 +57,7 @@ add_executable(pcs14_core_tests
   tests/test_failsafe.cpp
   tests/test_limits.cpp
   tests/test_prearm.cpp
+  tests/test_battery.cpp
 )
 target_link_libraries(pcs14_core_tests PRIVATE pcs14_core doctest::doctest)
 add_test(NAME core COMMAND pcs14_core_tests)
