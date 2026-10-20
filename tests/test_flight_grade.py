@@ -174,6 +174,20 @@ def test_a_touchdown_by_hand():
     assert not grade.touchdown(hovering, max_speed=2.0).passed
 
 
+def test_a_crash_onto_its_side_is_graded_at_the_impact_not_the_roll_after():
+    """A tumbled drone lands on its side with its middle about a quarter meter up, then rolls
+    flat; the first time its middle dropped under 5 cm was the roll, at 1.5 m/s, and the 24 m/s
+    impact passed as a controlled landing (V+C's dead motor on my firmware, 2026-10-20)."""
+
+    def height(t):
+        fall = np.maximum(30 - 0.5 * 9.8 * t**2, 0.26)  # 24 m/s at the ground, held up on its side
+        rolling = np.clip(0.26 - 1.5 * (t - 3.0), 0.03, 0.26)  # rolls flat 3 s in
+        return np.where(t < 3.0, fall, rolling)
+
+    found = grade.touchdown(descent(5, height), max_speed=2.0)
+    assert not found.passed and found.value > 20
+
+
 def test_false_triggers_counted_on_a_healthy_flight():
     from pcs14.design import TriggerThresholds
     from pcs14.safety.triggers import G, ImuSample

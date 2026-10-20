@@ -11,6 +11,9 @@ FlightLogWriter::FlightLogWriter(ULogWriter& out, bool ground_truth)
         "float vx;float vy;float vz;");
     out_.format("vehicle_attitude_groundtruth:uint64_t timestamp;float[4] q;");
   }
+  out_.format(
+      "vehicle_local_position:uint64_t timestamp;float x;float y;float z;float vx;float vy;"
+      "float vz;");
   out_.format("esc_report:int32_t esc_rpm;");
   out_.format("esc_status:uint64_t timestamp;uint8_t esc_count;esc_report[4] esc;");
   out_.format("sensor_combined:uint64_t timestamp;float[3] gyro_rad;float[3] accelerometer_m_s2;");
@@ -25,6 +28,7 @@ FlightLogWriter::FlightLogWriter(ULogWriter& out, bool ground_truth)
     position_ = out_.subscribe("vehicle_local_position_groundtruth");
     attitude_ = out_.subscribe("vehicle_attitude_groundtruth");
   }
+  estimate_ = out_.subscribe("vehicle_local_position");
   esc_ = out_.subscribe("esc_status");
   imu_ = out_.subscribe("sensor_combined");
   status_ = out_.subscribe("vehicle_status");
@@ -50,6 +54,13 @@ void FlightLogWriter::log(const TruthAttitude& s) {
   Packer p;
   p.put(s.t_us).put(s.q.w).put(s.q.x).put(s.q.y).put(s.q.z);
   out_.data(attitude_, p.data(), p.size());
+}
+
+void FlightLogWriter::log(const EstimateLog& s) {
+  Packer p;
+  p.put(s.t_us);
+  put(put(p, s.position), s.velocity);
+  out_.data(estimate_, p.data(), p.size());
 }
 
 void FlightLogWriter::log(const EscSample& s) {

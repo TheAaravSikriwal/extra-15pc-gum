@@ -28,6 +28,9 @@ STEADY_BAND = 0.10  # a share of the steady descent rate
 HOLD_S = 1.0  # what top speed has to be held for
 ON_GROUND_M = 0.5
 CONTACT_M = 0.05  # m above where it started: touching the ground
+# m: a tumbled drone lands on its side or upside down with its middle up to about here, so its
+# middle can stay above CONTACT_M until it rolls flat, seconds after the impact
+SIDE_CONTACT_M = 0.4
 TOUCHDOWN_S = 0.3  # how long before touching down the landing speed is measured over
 
 
@@ -182,9 +185,11 @@ def ends_safely(log: FlightLog, radius: float, since: float | None = None) -> Fi
 
 def touchdown(log: FlightLog, max_speed: float) -> Finding:
     """A controlled landing: the fastest it was coming down in the last TOUCHDOWN_S before it
-    first reached the ground after its highest point."""
+    first got within SIDE_CONTACT_M of the ground after its highest point. That's the moment
+    of contact for a drone landing on its feet, its side or its back; a level landing crosses
+    it at its landing speed."""
     top = int(np.argmax(log.position[:, 2]))
-    down = np.flatnonzero(log.position[top:, 2] <= CONTACT_M)
+    down = np.flatnonzero(log.position[top:, 2] <= SIDE_CONTACT_M)
     if not len(down):
         return Finding("touchdown", False, None, max_speed, "m/s", "it never came down")
     k = top + int(down[0])

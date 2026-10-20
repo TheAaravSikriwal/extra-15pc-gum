@@ -750,7 +750,8 @@ def regrade_flight_sim(args, build, targets) -> int:
     done = 0
     for setup in setups:
         for scenario in chosen:
-            result = batch.regrade(Path(args.exports), setup, scenario, targets, build)
+            result = batch.regrade(Path(args.exports), setup, scenario, targets, build,
+                                   firmware=args.firmware, tag=args.tag)  # fmt: skip
             if result is None:
                 continue
             done += 1

@@ -308,7 +308,12 @@ Mix Flight::step(const Vec3& gyro, const Vec3& accel, float dt) {
       const Thrust t = control_.update(sp, position(), velocity(), mass, dt);
       rate_sp = angle_rates(q, t.attitude, gains_.angle);
       thrust = t.thrust;
-      if (done) enter(Mode::Hold);
+      // take-off done, it stays at the take-off height, as PX4 does: not wherever the "close
+      // enough" test caught it, up to kReached away
+      if (done) {
+        enter(Mode::Hold);
+        hold_.z = takeoff_z_ - auto_.takeoff_height;
+      }
     } else {
       // blind: no position to hold, so level, and down on the barometer at the land speed
       // (PX4's "descend"); the wind carries it where it will

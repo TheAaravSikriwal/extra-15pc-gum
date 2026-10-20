@@ -160,13 +160,17 @@ def flown_log(exports, setup_name: str, name: str):
     return ulog.flight_log(ulog.read(log), marks), marks, ScenarioResult(findings=findings, **data)
 
 
-def regrade(exports, setup, scenario: Scenario, targets, build) -> ScenarioResult | None:
+def regrade(
+    exports, setup, scenario: Scenario, targets, build, firmware="px4", tag=None
+) -> ScenarioResult | None:
     """Grades a run again from its saved log and record, without flying it: for when a
-    grader changes. None if it hasn't flown."""
+    grader changes. `firmware` and `tag` pick the run as run_one names it. None if it hasn't
+    flown."""
     from pcs14.flight.run import RunResult
 
+    tag = firmware_tag(firmware, tag)
     model = model_name(setup.name)
-    name = scenario.name.replace(" ", "-")
+    name = run_name(scenario, tag)
     path = Path(exports) / RESULTS / f"{model}-{name}.json"
     log = Path(exports) / "logs" / f"{model}-{name}.ulg"
     if not path.exists() or not log.exists():
@@ -183,7 +187,9 @@ def regrade(exports, setup, scenario: Scenario, targets, build) -> ScenarioResul
     if scenario.params is not None:
         context = replace(context, params={**params, **scenario.params(context)})
     result = graded(scenario, outcome, context)
-    save(exports, model, result, outcome)
+    if tag:
+        result = replace(result, scenario=f"{scenario.name} ({tag})")
+    save(exports, model, result, outcome, name=name)
     return result
 
 

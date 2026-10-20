@@ -75,6 +75,7 @@ TEST_CASE("write a sample flight log for pyulog") {
     const float f = static_cast<float>(k);
     log.log(TruthPosition{t, {f, 2 * f, -0.5f * f}, {1, 2, -0.5f}});
     log.log(TruthAttitude{t, Quat::from_euler(0, 0, 0.1f * f)});
+    log.log(EstimateLog{t, {f, 2 * f, -0.4f * f}, {1, 2, -0.4f}});
     log.log(EscSample{t, {500 + f, 501 + f, 502 + f, 503 + f}});
     log.log(ImuLog{t, {0.01f * f, 0, 0}, {0, 0, -kG}});
     log.log(StatusLog{t, k < 5 ? kArmingStandby : kArmingArmed, kNavAcro});

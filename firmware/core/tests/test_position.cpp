@@ -190,3 +190,34 @@ TEST_CASE("land comes straight down and disarms") {
   CHECK(fastest < 1.8f);  // 1.5 m/s up high, the land speed near the ground
   CHECK(std::hypot(s.plant.position.x, s.plant.position.y) < 0.5f);
 }
+
+TEST_CASE("take-off eases into its height instead of overshooting it") {
+  // graded the way the hover scenario grades it: against the height when the climb first got
+  // within 0.2 m, over the hold after (P+C's hover missed by 4 cm, 2026-10-20)
+  Sim s;
+  AutoSettings a;
+  a.takeoff_height = 10.0f;
+  s.flight.set_auto(a);
+  s.flight.set_mode(Mode::Position);
+  s.flight.arm();
+  REQUIRE(s.flight.set_mode(Mode::Takeoff));
+  REQUIRE(s.until([&] { return -s.flight.z() >= 9.8f; }, 30.0f));
+  const float start = s.height();
+  float worst = 0, top = 0;
+  for (int k = 0; k < 300; ++k) {
+    s.fly(0.1f);
+    worst = std::max(worst, std::fabs(s.height() - start));
+    top = std::max(top, s.height());
+  }
+  MESSAGE("from " << start << " m: within " << worst << " m, top " << top << " m");
+  CHECK(worst < 0.25f);
+  CHECK(top < 10.1f);
+  // and it holds the take-off height itself, as PX4 does, not wherever "close enough" caught it
+  CHECK(s.flight.mode() == Mode::Hold);
+  float sum = 0;
+  for (int k = 0; k < 100; ++k) {
+    s.fly(0.1f);
+    sum += -s.flight.z();
+  }
+  CHECK(sum / 100 == Approx(10.0f).epsilon(0.005));
+}

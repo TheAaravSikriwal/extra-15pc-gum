@@ -23,6 +23,7 @@ def main(path: str) -> int:
     topics = {d.name: d.data for d in log.data_list}
     wanted = {
         "vehicle_local_position_groundtruth", "vehicle_attitude_groundtruth", "esc_status",
+        "vehicle_local_position",
         "sensor_combined", "vehicle_status", "vehicle_land_detected", "failsafe_flags",
         "battery_status",
     }  # fmt: skip
@@ -38,6 +39,7 @@ def main(path: str) -> int:
             (topics["vehicle_local_position_groundtruth"]["x"][k], f),
             (topics["vehicle_local_position_groundtruth"]["y"][k], 2 * f),
             (topics["vehicle_local_position_groundtruth"]["z"][k], -0.5 * f),
+            (topics["vehicle_local_position"]["z"][k], -0.4 * f),
             (topics["vehicle_local_position_groundtruth"]["vz"][k], -0.5),
             (topics["vehicle_attitude_groundtruth"]["q[0]"][k], math.cos(0.05 * f)),
             (topics["vehicle_attitude_groundtruth"]["q[3]"][k], math.sin(0.05 * f)),

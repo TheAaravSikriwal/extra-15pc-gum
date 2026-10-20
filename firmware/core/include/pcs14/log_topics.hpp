@@ -24,6 +24,12 @@ struct TruthAttitude {
   uint64_t t_us;
   Quat q;  // body (forward-right-down) to north-east-down
 };
+// my firmware's own estimate of the same, PX4's vehicle_local_position (from home's take-off
+// origin, north-east-down), so the log shows the estimate against the truth
+struct EstimateLog {
+  uint64_t t_us;
+  Vec3 position, velocity;  // m, m/s
+};
 struct EscSample {
   uint64_t t_us;
   std::array<float, 4> rad_s;  // each motor's commanded speed (PX4's esc_rpm carries rad/s in
@@ -60,6 +66,7 @@ class FlightLogWriter {
 
   void log(const TruthPosition& s);
   void log(const TruthAttitude& s);
+  void log(const EstimateLog& s);
   void log(const EscSample& s);
   void log(const ImuLog& s);
   void log(const StatusLog& s);
@@ -70,7 +77,8 @@ class FlightLogWriter {
  private:
   ULogWriter& out_;
   bool truth_;
-  uint16_t position_ = 0, attitude_ = 0, esc_, imu_, status_, land_, failsafe_, battery_;
+  uint16_t position_ = 0, attitude_ = 0, estimate_, esc_, imu_, status_, land_, failsafe_,
+      battery_;
 };
 
 }  // namespace pcs14

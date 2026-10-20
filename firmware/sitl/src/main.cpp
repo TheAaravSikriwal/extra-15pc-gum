@@ -580,6 +580,7 @@ class Bridge {
     const uint64_t us = micros(t);
     log_->log(pcs14::ImuLog{us, gyro, accel});
     log_->log(pcs14::EscSample{us, mix.rad_s});
+    log_->log(pcs14::EstimateLog{us, flight_.position(), flight_.velocity()});
     if (t >= next_sample_) {
       next_sample_ = t + kStatusEvery;
       log_status(us);
