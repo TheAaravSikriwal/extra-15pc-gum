@@ -38,7 +38,8 @@ void Flight::arm() {
     altitude_.reset(height_.z());
     flown_ = false;
     home_ = position();
-    home_set_ = position_.valid();
+    home_set_ = position_valid();
+    for (bool& f : failed_) f = false;
     enter(mode_);
   }
   armed_ = true;
@@ -58,9 +59,19 @@ void Flight::enter(Mode mode) {
   hold_.yaw = yaw_setpoint_;
 }
 
+void Flight::terminate() { mode_ = Mode::Termination; }
+
+void Flight::fail_motor(int index) {
+  if (index >= 0 && index < 4) failed_[index] = true;
+}
+
 bool Flight::set_mode(Mode mode) {
-  if (mode == Mode::Termination) return false;  // its own command, in task 9
-  if (needs_position(mode) && !position_.valid()) return false;
+  if (mode_ == Mode::Termination) return false;  // final
+  if (mode == Mode::Termination) {
+    terminate();
+    return true;
+  }
+  if (needs_position(mode) && !position_valid()) return false;
   if (mode == Mode::Takeoff && !(armed_ && land_.landed())) return false;
   if (mode == Mode::Return && !home_set_) return false;
   if (mode == Mode::Offboard && t_ - offboard_t_ > auto_.offboard_loss_s) return false;
@@ -96,8 +107,10 @@ void Flight::on_gps_velocity(const Vec3& velocity, float dt) {
 }
 
 void Flight::on_gps(float north, float east, const Vec3& velocity, float dt) {
+  if (!use_gps_) return;
   position_.correct(north, east, velocity.x, velocity.y, dt);
   on_gps_velocity(velocity, dt);
+  gps_t_ = t_;
 }
 
 float Flight::hover_throttle() const { return airframe_.mass_kg * kG / max_thrust(); }
@@ -195,9 +208,9 @@ Mix Flight::step(const Vec3& gyro, const Vec3& accel, float dt) {
   const Vec3 world = q.rotate(accel);  // the specific force: horizontally, the acceleration
   height_.predict(world.z, dt);
   position_.predict(world.x, world.y, dt);
-  if (!armed_) {
+  if (!armed_ || mode_ == Mode::Termination) {
     saturated_ = false;
-    land_.update(false, 0, height_.vz(), 0, dt);
+    land_.update(armed_, 0, height_.vz(), takeoff_z_ - height_.z(), dt);
     return Mix{};
   }
   const Vec3 rate = attitude_.rate();
@@ -262,10 +275,18 @@ Mix Flight::step(const Vec3& gyro, const Vec3& accel, float dt) {
       // on the ground only take-off leaves it
       idle = land_.landed() && (mode_ != Mode::Takeoff || phase_ > 0);
     }
-    const Thrust t = control_.update(sp, position(), velocity(), mass, dt);
-    rate_sp = angle_rates(q, t.attitude, gains_.angle);
-    thrust = t.thrust;
-    if (done) enter(Mode::Hold);
+    if (position_valid()) {
+      const Thrust t = control_.update(sp, position(), velocity(), mass, dt);
+      rate_sp = angle_rates(q, t.attitude, gains_.angle);
+      thrust = t.thrust;
+      if (done) enter(Mode::Hold);
+    } else {
+      // blind: no position to hold, so level, and down on the barometer at the land speed
+      // (PX4's "descend"); the wind carries it where it will
+      rate_sp = angle_rates(q, stick_attitude(0, 0, sp.yaw, gains_.max_tilt), gains_.angle);
+      thrust =
+          altitude_.update_speed(auto_.land_speed, height_.z(), height_.vz(), tilt_cos, mass, dt);
+    }
   }
   if (idle) {
     thrust = 0;
@@ -279,7 +300,14 @@ Mix Flight::step(const Vec3& gyro, const Vec3& accel, float dt) {
   const Vec3 jw{j.x * rate.x, j.y * rate.y, j.z * rate.z};
   const Vec3 torque =
       Vec3{j.x * accel_wanted.x, j.y * accel_wanted.y, j.z * accel_wanted.z} + rate.cross(jw);
-  const Mix mix = mixer_.mix(torque, thrust);
+  Mix mix = mixer_.mix(torque, thrust);
+  for (int i = 0; i < 4; ++i) {
+    if (failed_[i]) {
+      mix.thrust[i] = 0;
+      mix.rad_s[i] = 0;
+      mix.saturated = true;
+    }
+  }
   saturated_ = mix.saturated;
   float total = 0;
   for (float t : mix.thrust) total += t;

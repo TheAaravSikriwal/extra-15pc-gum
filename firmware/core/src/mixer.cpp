@@ -46,6 +46,11 @@ Mixer::Mixer(const MixerSetup& setup) : setup_(setup) {
   max_ = setup.motor_constant * setup.max_rad_s * setup.max_rad_s;
 }
 
+void Mixer::set_max_rad_s(float max_rad_s) {
+  const float w = clamp(max_rad_s, setup_.idle_rad_s, setup_.max_rad_s);
+  max_ = setup_.motor_constant * w * w;
+}
+
 std::array<float, 4> Mixer::allocate(const Vec3& torque, float thrust) const {
   const float want[4] = {torque.x, torque.y, torque.z, thrust};
   std::array<float, 4> t{};

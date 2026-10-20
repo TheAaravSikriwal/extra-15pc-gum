@@ -112,6 +112,17 @@ class Flight {
   // just the GPS's velocity, for the attitude estimator (the rate and self-level tests)
   void on_gps_velocity(const Vec3& velocity, float dt);
 
+  // flight termination: the motors stop and stay stopped (the chute is the bridge's to fire)
+  void terminate();
+  bool terminated() const { return mode_ == Mode::Termination; }
+  // a motor that has failed (0 to 3): its output stays at zero, as PX4's failure injection does
+  void fail_motor(int index);
+  // the motors' top speed, lowered (a sagging pack) or back to their own
+  void set_max_rad_s(float max_rad_s) { mixer_.set_max_rad_s(max_rad_s); }
+  // stops (or restarts) using the GPS, as PX4's EKF2_GPS_CTRL does; a second without it and the
+  // position is no longer valid
+  void use_gps(bool use) { use_gps_ = use; }
+
   // one control step: gyro (rad/s) and accelerometer (m/s^2, specific force), body frame.
   // Returns the motors' speeds: zero when disarmed, idle or more when armed.
   Mix step(const Vec3& gyro, const Vec3& accel, float dt);
@@ -122,7 +133,7 @@ class Flight {
   // barometer started) and velocity, north-east-down
   Vec3 position() const { return {position_.north(), position_.east(), height_.z()}; }
   Vec3 velocity() const { return {position_.v_north(), position_.v_east(), height_.vz()}; }
-  bool position_valid() const { return position_.valid(); }
+  bool position_valid() const { return position_.valid() && t_ - gps_t_ < kGpsTimeout; }
   float z() const { return height_.z(); }
   float vz() const { return height_.vz(); }
   // where it armed, the home it returns to
@@ -165,6 +176,10 @@ class Flight {
   Vec3 gps_velocity_, motion_;
   bool have_gps_velocity_ = false;
   bool flown_ = false;  // taken off since it armed
+  bool use_gps_ = true;
+  float gps_t_ = -1e9f;  // when the GPS was last used
+  bool failed_[4]{};
+  static constexpr float kGpsTimeout = 1.0f;  // s
   bool have_mag_ = false;
   bool armed_ = false;
   bool saturated_ = false;

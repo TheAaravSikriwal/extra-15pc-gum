@@ -44,6 +44,8 @@ class Mixer {
 
   float min_thrust() const { return min_; }
   float max_thrust() const { return max_; }
+  // a lower top speed, as a sagging pack gives (never above the motors' own)
+  void set_max_rad_s(float max_rad_s);
 
  private:
   std::array<float, 4> allocate(const Vec3& torque, float thrust) const;

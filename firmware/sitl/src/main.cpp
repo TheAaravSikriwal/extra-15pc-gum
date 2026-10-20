@@ -24,7 +24,9 @@
 // Either way it prints "ready" once the first IMU sample is in, and a status line every second
 // of sim time.
 #include <arpa/inet.h>
+#include <common/mavlink.h>
 #include <gz/msgs/actuators.pb.h>
+#include <gz/msgs/double.pb.h>
 #include <gz/msgs/fluid_pressure.pb.h>
 #include <gz/msgs/imu.pb.h>
 #include <gz/msgs/magnetometer.pb.h>
@@ -51,6 +53,7 @@
 #include <gz/transport/Node.hh>
 
 #include "pcs14/airframe_file.hpp"
+#include "pcs14/failsafe.hpp"
 #include "pcs14/flight.hpp"
 #include "pcs14/link.hpp"
 #include "pcs14/log_topics.hpp"
@@ -151,9 +154,55 @@ void default_params(pcs14::Params& p) {
   p.add("MPC_VEL_MANUAL", a.manual_speed);
   p.add("RTL_RETURN_ALT", a.return_height);
   p.add("COM_OF_LOSS_T", a.offboard_loss_s);  // s without offboard setpoints before it's lost
-  p.add_int("SYS_FAILURE_EN", 0);             // failure injection allowed
-  p.add("COM_DL_LOSS_T", 10.0f);  // s without the ground's heartbeat before the link is lost
+  // the failsafes, PX4's names and defaults (pcs14/failsafe.hpp)
+  const pcs14::FailsafeSettings f;
+  p.add("COM_DL_LOSS_T", f.link_loss_s);
+  p.add_int("NAV_DLL_ACT", f.link_action);
+  p.add("BAT_LOW_THR", f.battery_low);
+  p.add("BAT_CRIT_THR", f.battery_critical);
+  p.add("BAT_EMERGEN_THR", f.battery_emergency);
+  p.add_int("COM_LOW_BAT_ACT", f.battery_action);
+  p.add_int("FD_FAIL_R", 60);
+  p.add_int("FD_FAIL_P", 60);
+  p.add("FD_FAIL_R_TTRI", f.fail_time_s);
+  p.add_int("CBRK_FLIGHTTERM", 121212);  // PX4's "termination off"; 0 allows it
+  p.add_int("EKF2_GPS_CTRL", 7);         // anything but 0 uses the GPS
+  // the sim only: PX4's own sim defaults
+  p.add_int("SYS_FAILURE_EN", 1);    // failure injection, on in PX4's SITL
+  p.add("SIM_BAT_DRAIN", 60.0f);     // s to drain the simulated pack
+  p.add("SIM_BAT_MIN_PCT", 50.0f);   // where it stops draining
 }
+
+pcs14::FailsafeSettings failsafe_settings(const pcs14::Params& p) {
+  pcs14::FailsafeSettings f;
+  f.link_loss_s = p.get("COM_DL_LOSS_T", f.link_loss_s);
+  f.link_action = p.get_int("NAV_DLL_ACT", f.link_action);
+  f.battery_low = p.get("BAT_LOW_THR", f.battery_low);
+  f.battery_critical = p.get("BAT_CRIT_THR", f.battery_critical);
+  f.battery_emergency = p.get("BAT_EMERGEN_THR", f.battery_emergency);
+  f.battery_action = p.get_int("COM_LOW_BAT_ACT", f.battery_action);
+  f.fail_tilt_rad = static_cast<float>(p.get_int("FD_FAIL_R", 60)) * pcs14::kPi / 180;
+  f.fail_time_s = p.get("FD_FAIL_R_TTRI", f.fail_time_s);
+  f.termination = p.get_int("CBRK_FLIGHTTERM", 121212) == 0;
+  return f;
+}
+
+// PX4's simulated battery, so the flight sim's low battery scenario means the same for both:
+// it drains in a straight line while armed, over SIM_BAT_DRAIN seconds, down to
+// SIM_BAT_MIN_PCT, and a failure injected into it empties it
+struct BatterySim {
+  float armed_s = 0;
+  bool failed = false;
+  float remaining(const pcs14::Params& p) const {
+    if (failed) return 0;
+    const float drain = std::fmax(p.get("SIM_BAT_DRAIN", 60.0f), 1.0f);
+    const float floor = p.get("SIM_BAT_MIN_PCT", 50.0f) / 100;
+    return std::fmax(1 - armed_s / drain, floor);
+  }
+  float voltage(const pcs14::Params& p) const {  // 3.5 V a cell empty, 4.2 full
+    return static_cast<float>(p.get_int("BAT1_N_CELLS", 6)) * (3.5f + 0.7f * remaining(p));
+  }
+};
 
 // the automatic modes' settings, from the parameters as they are now
 pcs14::AutoSettings auto_settings(const pcs14::Params& p) {
@@ -219,6 +268,7 @@ class Bridge {
          std::FILE* log_file)
       : flight_(airframe, flight_gains(params)),
         params_(params),
+        failsafes_(failsafe_settings(params)),
         model_(o.model),
         file_(log_file),
         ulog_([this](const uint8_t* d, size_t n) {
@@ -239,6 +289,8 @@ class Bridge {
         "/world/" + o.world + "/model/" + o.model + "/link/base_link/sensor/";
     // the motor plugins have no namespace set, so they listen under the model's own name
     motors_ = node_.Advertise<gz::msgs::Actuators>("/" + o.model + "/command/motor_speed");
+    // the first servo, where PX4's parachute output (function 401) goes in the P combinations
+    chute_ = node_.Advertise<gz::msgs::Double>("/model/" + o.model + "/servo_0");
     node_.Subscribe(sensors + "imu_sensor/imu", &Bridge::on_imu, this);
     node_.Subscribe(sensors + "magnetometer_sensor/magnetometer", &Bridge::on_mag, this);
     node_.Subscribe(sensors + "air_pressure_sensor/air_pressure", &Bridge::on_pressure, this);
@@ -309,7 +361,9 @@ class Bridge {
   bool armable() const { return have_imu_ && have_gps_; }
 
   void arm() {
+    if (!flight_.armed()) failsafes_.reset();
     flight_.arm();
+    motor_failed_ = false;
     ulog_.text(6, micros(last_), "armed");
   }
 
@@ -318,8 +372,8 @@ class Bridge {
     ulog_.text(6, micros(last_), "disarmed");
   }
 
-  // what the ground asks for: arming, the modes, take-off, land and return. Termination and
-  // failure injection come with the failsafes (task 9); until then the ground hears "denied"
+  // what the ground asks for: arming, the modes, take-off, land, return, termination, and the
+  // failures the flight sim injects
   bool request(const pcs14::Request& r) {
     using K = pcs14::Request::Kind;
     switch (r.kind) {
@@ -342,6 +396,35 @@ class Bridge {
         return flight_.set_mode(pcs14::Mode::Land);
       case K::Return:
         return flight_.set_mode(pcs14::Mode::Return);
+      case K::Terminate:
+        ulog_.text(3, micros(last_), "flight termination");
+        return flight_.set_mode(pcs14::Mode::Termination);
+      case K::InjectFailure:
+        return inject(r);
+      default:
+        return false;
+    }
+  }
+
+  // PX4's failure injection, for what the flight sim injects: a motor off, the battery off,
+  // the GPS off
+  bool inject(const pcs14::Request& r) {
+    if (r.failure_type != FAILURE_TYPE_OFF) return false;
+    switch (r.failure_unit) {
+      case FAILURE_UNIT_SYSTEM_MOTOR:
+        // instance 0 is every motor, otherwise motor n counted from 1, as PX4 counts them
+        for (int i = 0; i < 4; ++i)
+          if (r.failure_instance == 0 || r.failure_instance == i + 1) flight_.fail_motor(i);
+        motor_failed_ = true;
+        ulog_.text(4, micros(last_), "motor failure injected");
+        return true;
+      case FAILURE_UNIT_SYSTEM_BATTERY:
+        battery_.failed = true;
+        ulog_.text(4, micros(last_), "battery failure injected");
+        return true;
+      case FAILURE_UNIT_SENSOR_GPS:
+        gps_failed_ = true;
+        return true;
       default:
         return false;
     }
@@ -373,9 +456,18 @@ class Bridge {
       return;
     }
     if (dt <= 0 || dt > 0.1f) return;  // a repeat or a jump in the clock: skip a beat
+    // parameters that act live: the automatic modes', the GPS's, a sagging pack's top speed
     flight_.set_auto(auto_settings(params_));
+    flight_.use_gps(!gps_failed_ && params_.get_int("EKF2_GPS_CTRL", 7) != 0);
+    float top = 1e9f;
+    for (int n = 1; n <= 4; ++n)
+      top = std::fmin(top, params_.get("SIM_GZ_EC_MAX" + std::to_string(n), 1e9f));
+    flight_.set_max_rad_s(top);
+    if (flight_.armed()) battery_.armed_s += dt;
+    failsafe(dt);
     const pcs14::Mix mix = flight_.step(gyro, accel, dt);
     send(mix.rad_s);
+    send_chute();
     const uint64_t us = micros(t);
     log_->log(pcs14::ImuLog{us, gyro, accel});
     log_->log(pcs14::EscSample{us, mix.rad_s});
@@ -392,6 +484,8 @@ class Bridge {
     telemetry_.mode = flight_.mode();
     telemetry_.landed = flight_.on_ground() ? pcs14::Landed::OnGround : pcs14::Landed::InAir;
     telemetry_.armable = armable();
+    telemetry_.battery_remaining = battery_.remaining(params_);
+    telemetry_.battery_v = battery_.voltage(params_);
     telemetry_.position_valid = flight_.position_valid();
     telemetry_.position = flight_.position();
     telemetry_.velocity = flight_.velocity();
@@ -413,7 +507,46 @@ class Bridge {
         us, flight_.armed() ? pcs14::kArmingArmed : pcs14::kArmingStandby,
         pcs14::nav_state(flight_.mode())});
     log_->log(pcs14::LandLog{us, flight_.on_ground()});
-    log_->log(pcs14::FailsafeLog{us});
+    const pcs14::FailsafeFlags& f = failsafes_.flags();
+    pcs14::FailsafeLog flags{us};
+    flags.link_lost = f.link_lost;
+    flags.position_invalid = f.position_invalid;
+    flags.critical_failure = f.critical_failure;
+    flags.motor_failure = motor_failed_;
+    flags.battery_warning = f.battery_warning;
+    log_->log(flags);
+    log_->log(pcs14::BatteryLog{us, battery_.voltage(params_), 0, battery_.remaining(params_)});
+  }
+
+  void failsafe(float dt) {
+    pcs14::FailsafeInputs in;
+    in.armed = flight_.armed();
+    in.in_air = !flight_.on_ground();
+    in.mode = flight_.mode();
+    const uint64_t heard = link_.last_ground_heartbeat_us();
+    in.ground_heard = heard > 0;
+    in.ground_silent_s = heard > 0 ? static_cast<float>(micros(last_) - heard) * 1e-6f : 0;
+    in.battery = battery_.remaining(params_);
+    in.position_valid = flight_.position_valid();
+    in.home_valid = flight_.home_valid();
+    in.tilt_rad = flight_.attitude().q().tilt();
+    failsafes_.set(failsafe_settings(params_));
+    pcs14::Mode mode;
+    if (failsafes_.update(in, dt, mode) && mode != flight_.mode()) {
+      flight_.set_mode(mode);
+      ulog_.text(4, micros(last_), "failsafe");
+    }
+  }
+
+  // the parachute output, as PX4's function 401 drives it: at its low end in flight, its high
+  // end once terminated (the drag plugin fires the canopy past halfway)
+  void send_chute() {
+    if (params_.get_int("SIM_GZ_SV_FUNC1", 0) != 401) return;
+    const float deg = flight_.terminated() ? params_.get("SIM_GZ_SV_MAXA1", 45.0f)
+                                           : params_.get("SIM_GZ_SV_MINA1", -45.0f);
+    gz::msgs::Double out;
+    out.set_data(deg * pcs14::kPi / 180);
+    chute_.Publish(out);
   }
 
   void on_mag(const gz::msgs::Magnetometer& msg) {
@@ -499,6 +632,9 @@ class Bridge {
   using Telemetry = pcs14::Telemetry;
   pcs14::Flight flight_;
   pcs14::Params& params_;
+  pcs14::Failsafes failsafes_;
+  BatterySim battery_;
+  bool motor_failed_ = false, gps_failed_ = false;
   std::string model_;
   std::FILE* file_;
   pcs14::ULogWriter ulog_;
@@ -507,7 +643,7 @@ class Bridge {
   pcs14::Link link_;
   Telemetry telemetry_;
   gz::transport::Node node_;
-  gz::transport::Node::Publisher motors_;
+  gz::transport::Node::Publisher motors_, chute_;
   std::mutex mutex_;
   std::thread listener_;
   double last_ = -1, next_status_ = 0, next_sample_ = 0;
