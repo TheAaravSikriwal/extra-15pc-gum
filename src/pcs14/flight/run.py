@@ -384,6 +384,7 @@ class State:
     speed: float = 0.0  # m/s, sideways
     heading: float = 0.0  # degrees from north, clockwise, as of the last heading() read
     battery: float | None = None  # PX4's remaining share, 1 is full
+    peak: float = 0.0  # m: the highest it has been, by PX4's estimate
 
     @property
     def height(self) -> float:
@@ -407,6 +408,7 @@ async def _follow_state(drone, state: State):
         async for value in drone.telemetry.position_velocity_ned():
             p, v = value.position, value.velocity
             state.north, state.east, state.down = p.north_m, p.east_m, p.down_m
+            state.peak = max(state.peak, -p.down_m)
             state.speed = (v.north_m_s**2 + v.east_m_s**2) ** 0.5
 
     async def battery():

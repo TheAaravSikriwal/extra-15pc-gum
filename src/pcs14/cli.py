@@ -152,6 +152,12 @@ def build_parser() -> argparse.ArgumentParser:
         "--speed", type=float, default=1.0, help="with run: the sim's speed, against real time"
     )
     flight.add_argument(
+        "--instance",
+        type=int,
+        default=0,
+        help="with run: the first PX4 instance (each moves the ports), to fly beside another batch",
+    )
+    flight.add_argument(
         "--firmware",
         choices=("px4", "mine"),
         default="px4",
@@ -697,6 +703,7 @@ def fly_flight_sim(args, build, targets) -> int:
             overrides=overrides,
             tag=args.tag,
             firmware=args.firmware,
+            first_instance=args.instance,
         )  # fmt: skip
     )
     passed = sum(r.passed for r in results)

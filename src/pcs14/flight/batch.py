@@ -179,9 +179,10 @@ def regrade(exports, setup, scenario: Scenario, targets, build) -> ScenarioResul
 
 async def run_many(
     tools, exports, pairs, targets, build, jobs: int = 1, speed: float = 1.0, report=print,
-    overrides=None, tag=None, firmware="px4",
+    overrides=None, tag=None, firmware="px4", first_instance=0,
 ):  # fmt: skip
-    """Every (setup, scenario) in `pairs`, `jobs` at a time, each on its own PX4 instance."""
+    """Every (setup, scenario) in `pairs`, `jobs` at a time, each on its own PX4 instance,
+    numbered from `first_instance` (so two batches can fly side by side)."""
     queue: asyncio.Queue = asyncio.Queue()
     for pair in pairs:
         queue.put_nowait(pair)
@@ -203,5 +204,5 @@ async def run_many(
             if outcome.log is not None:
                 report(f"    log: {outcome.log}")
 
-    await asyncio.gather(*(worker(k) for k in range(max(1, jobs))))
+    await asyncio.gather(*(worker(first_instance + k) for k in range(max(1, jobs))))
     return results

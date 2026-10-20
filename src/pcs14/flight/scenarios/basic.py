@@ -28,10 +28,11 @@ async def take_off(s, height: float, timeout: float = 60.0):
     s.mark("arm")
     await s.drone.action.takeoff()
     if not await s.clock.until(lambda: s.state.height >= height - 0.2, timeout):
-        if s.state.in_air and s.state.height < GROUNDED_M:
-            # PX4 thinks it's flying, with the motors run up, and the model never moved: in
-            # the batch of 2026-10-20 this happened only with two runs at once, when Gazebo
-            # never got PX4's motor commands. That's the sim failing, not the drone
+        if s.state.in_air and s.state.peak < GROUNDED_M:
+            # PX4 thinks it's flying, with the motors run up, and the model never left the
+            # ground at all: in the batch of 2026-10-20 this happened only with two runs at
+            # once, when Gazebo never got PX4's motor commands. That's the sim failing, not
+            # the drone. (A drone that climbed and then crashed is the drone's.)
             from pcs14.flight.run import SimError
 
             raise SimError("PX4 ran the motors up for take-off and the model never moved")
