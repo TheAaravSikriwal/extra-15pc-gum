@@ -22,6 +22,9 @@ STEP_BEFORE_S = 0.3
 STEP_AFTER_S = 1.5
 
 
+SETTLE_TARGET_S = 0.5  # s, the steps scenario's target
+
+
 def _c(name: str) -> str:
     return charts._c(name)
 
@@ -40,7 +43,7 @@ def drop(log, path: Path, setup: str, ejection_s: float, opening_s: float,
     shown &= t <= end
     canvas = charts.Canvas(
         "The parachute",
-        f"PX4 terminates the flight 40 m up, in {setup}; Gazebo and my drag plugin do the rest",
+        f"PX4 cuts the flight 40 m up, in {setup}, and the chute does the rest",
         made_up=False,
         size=size,
     )
@@ -97,24 +100,36 @@ def steps(tuned, stock, path: Path, size: str = "portrait") -> Path:
     )
     (ax,) = canvas.axes
     fonts = charts._fonts()
+    overshoot = 0.0
     for (log, marks, settle), color, words in (
         (stock, "muted", "the x500's gain, 6.5"),
         (tuned, "accent", "tuned, 9"),
     ):
         t, roll = _step_response(log, marks)
         ax.plot(t, roll, color=_c(color), linewidth=2.2)
-        k = np.searchsorted(t, 1.0)
-        ax.text(1.02, roll[min(k, len(roll) - 1)] + (0.9 if color == "accent" else -1.6),
+        k = np.searchsorted(t, 0.62)
+        # inside the plot, above the tuned line and below the stock one
+        ax.text(0.62, roll[min(k, len(roll) - 1)] + (0.9 if color == "accent" else -1.6),
                 f"{words}: settles in {settle:.2f} s", fontsize=12, color=_c("text"),
                 family=fonts["body"])  # fmt: skip
-    ax.axvline(0.5, color=_c("pop"), linewidth=1.4, zorder=0)
+        if color == "accent":
+            final = float(np.mean(roll[t > t[-1] - 0.3]))
+            overshoot = max(0.0, float(np.max(roll)) / final - 1) if final else 0.0
+    ax.axvline(SETTLE_TARGET_S, color=_c("pop"), linewidth=1.4, zorder=0)
     ax.text(0.52, 1.0, "the 0.5 s target", fontsize=12, color=_c("text"), family=fonts["body"])
     ax.set_xlim(-STEP_BEFORE_S, STEP_AFTER_S)
     charts._label(ax, "seconds from the stick moving", "roll (degrees)")
+    # the words follow the numbers: in the first runs the stock gains missed the target, and in
+    # the final batch they don't
+    if stock[2] > SETTLE_TARGET_S:
+        why = (f"PX4's stock x500 gains were too gentle for this drone; raising the attitude "
+               f"gain from 6.5 to 9 fixed it with {overshoot:.0%} overshoot.")  # fmt: skip
+    else:
+        why = (f"Both make the {SETTLE_TARGET_S:g} s target; raising the attitude gain from "
+               f"the x500's 6.5 to 9 settles {stock[2] / tuned[2]:.1f} times faster, with "
+               f"{overshoot:.0%} overshoot.")  # fmt: skip
     canvas.headline(
-        f"{stock[2]:.2f} s to {tuned[2]:.2f} s",
-        "to settle within 5% of the step. PX4's stock x500 gains were too gentle for this "
-        "drone; raising the attitude gain from 6.5 to 9 fixed it with 3 to 4% overshoot.",
+        f"{stock[2]:.2f} s to {tuned[2]:.2f} s", "to settle within 5% of the step. " + why
     )
     canvas.save(path)
     return path
@@ -131,6 +146,9 @@ def matrix(run, path: Path, size: str = "wide") -> Path:
         size=size,
     )
     (ax,) = canvas.axes
+    # room on the left for the scenarios' names ("parachute drop" ran off the edge)
+    box = ax.get_position()
+    ax.set_position((box.x0 + 0.06, box.y0, box.width - 0.06, box.height))
     fonts = charts._fonts()
     combos = run.combinations
     ax.set_xlim(-0.5, len(combos) - 0.5)

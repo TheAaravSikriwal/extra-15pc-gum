@@ -73,13 +73,16 @@ class FlightRecorder(Recorder):
             )
         times = rr.TimeColumn("flight_time", duration=np.asarray(log.t, dtype=np.float64))
         speed = np.linalg.norm(np.asarray(log.velocity)[:, :2], axis=1)
-        series = {f"height/{tag}": log.position[:, 2], f"speed/{tag}": speed}
+        # each series with its color, set where it's made (a run named "dead motor" once
+        # fooled a lookup by name)
+        series = [
+            (f"height/{tag}", log.position[:, 2], style.rgb("accent")),
+            (f"speed/{tag}", speed, style.rgb("accent")),
+        ]
         for n in range(np.asarray(log.rotor_speed).shape[1]):
-            series[f"motors/{tag}/motor_{n}"] = log.rotor_speed[:, n] / max_rot_velocity
-        for path, values in series.items():
-            color = (
-                style.rgb(MOTOR_COLORS[int(path[-1])]) if "motor_" in path else style.rgb("accent")
-            )
+            series.append((f"motors/{tag}/motor_{n}", log.rotor_speed[:, n] / max_rot_velocity,
+                           style.rgb(MOTOR_COLORS[n])))  # fmt: skip
+        for path, values, color in series:
             self.rec.log(path, rr.SeriesLines(colors=[[*color, 255]]), static=True)
             self.rec.send_columns(
                 path,

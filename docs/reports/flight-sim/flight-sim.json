@@ -111,12 +111,12 @@
    "setup": "base",
    "flown": true,
    "passed": false,
-   "note": "24 s of real time at 4x",
+   "note": "30 s of real time at 4x",
    "findings": [
     {
      "check": "no fly-away",
      "passed": true,
-     "value": 0.7376457797019816,
+     "value": 1.2454512833016844,
      "limit": 30.0,
      "unit": "m",
      "detail": "ended on the ground, 1 m from where it was then",
@@ -125,10 +125,19 @@
     {
      "check": "touchdown",
      "passed": false,
-     "value": 24.541255950927734,
+     "value": 24.31954574584961,
      "limit": 2.0,
      "unit": "m/s",
-     "detail": "came down at 24.5 m/s at the end, too fast for a controlled landing",
+     "detail": "came down at 24.3 m/s at the end, too fast for a controlled landing",
+     "extra": null
+    },
+    {
+     "check": "safety monitor",
+     "passed": true,
+     "value": 0.5,
+     "limit": null,
+     "unit": "s",
+     "detail": "its free fall trigger would fire 0.50 s after the failure",
      "extra": null
     }
    ]
@@ -138,25 +147,31 @@
    "setup": "base",
    "flown": true,
    "passed": false,
-   "note": "51 s of real time at 4x",
+   "note": "49 s of real time at 4x",
    "findings": [
     {
      "check": "hover endurance",
      "passed": true,
-     "value": 0.0014659174584918753,
+     "value": 0.0016569802483971659,
      "limit": 0.1,
      "unit": "",
-     "detail": "33.3 min in the sim against the sizing model's 33.2, at 287 W",
-     "extra": null
+     "detail": "33.7 min in the sim against the sizing model's 33.6, at 283 W",
+     "extra": {
+      "sim_min": 33.67893132449848,
+      "sizing_min": 33.62321831586155
+     }
     },
     {
      "check": "cruise endurance",
      "passed": false,
-     "value": 0.254237311557997,
+     "value": 0.2551959489340163,
      "limit": 0.1,
      "unit": "",
-     "detail": "33.5 min in the sim against the sizing model's 44.9, at 285 W",
-     "extra": null
+     "detail": "33.8 min in the sim against the sizing model's 45.4, at 282 W",
+     "extra": {
+      "sim_min": 33.846368548297725,
+      "sizing_min": 45.44331962192726
+     }
     },
     {
      "check": "false triggers",
@@ -173,8 +188,8 @@
    "scenario": "failed sensor",
    "setup": "base",
    "flown": true,
-   "passed": false,
-   "note": "27 s of real time at 4x",
+   "passed": true,
+   "note": "29 s of real time at 4x",
    "findings": [
     {
      "check": "the landing",
@@ -187,17 +202,17 @@
     },
     {
      "check": "no fly-away",
-     "passed": false,
-     "value": 33.96192403750796,
+     "passed": true,
+     "value": 28.96417845369304,
      "limit": 30.0,
      "unit": "m",
-     "detail": "ended on the ground, 34 m from where it was then",
+     "detail": "ended on the ground, 29 m from where it was then",
      "extra": null
     },
     {
      "check": "touchdown",
      "passed": true,
-     "value": 0.6808215379714966,
+     "value": 0.6997051239013672,
      "limit": 2.0,
      "unit": "m/s",
      "detail": "came down at 0.7 m/s at the end, a controlled landing",
@@ -219,21 +234,21 @@
    "setup": "base",
    "flown": true,
    "passed": true,
-   "note": "32 s of real time at 4x",
+   "note": "30 s of real time at 4x",
    "findings": [
     {
      "check": "hover drift",
      "passed": true,
-     "value": 0.06128017663330286,
+     "value": 0.07357459356344,
      "limit": 0.5,
      "unit": "m",
-     "detail": "drifted 0.06 m sideways over 60.016 s",
+     "detail": "drifted 0.07 m sideways over 60.036 s",
      "extra": null
     },
     {
      "check": "hover height",
      "passed": true,
-     "value": 0.072906494140625,
+     "value": 0.0723257064819336,
      "limit": 0.3,
      "unit": "m",
      "detail": "held its height within 0.07 m",
@@ -255,7 +270,7 @@
    "setup": "base",
    "flown": true,
    "passed": true,
-   "note": "44 s of real time at 4x",
+   "note": "40 s of real time at 4x",
    "findings": [
     {
      "check": "the return",
@@ -269,7 +284,7 @@
     {
      "check": "no fly-away",
      "passed": true,
-     "value": 0.026849483610166407,
+     "value": 0.03844413548723155,
      "limit": 2.0,
      "unit": "m",
      "detail": "ended on the ground, 0 m from where it started",
@@ -291,7 +306,7 @@
    "setup": "base",
    "flown": true,
    "passed": true,
-   "note": "473 s of real time at 4x",
+   "note": "468 s of real time at 4x",
    "findings": [
     {
      "check": "the return",
@@ -305,7 +320,7 @@
     {
      "check": "no fly-away",
      "passed": true,
-     "value": 0.03701546258596754,
+     "value": 0.022086124912903342,
      "limit": 2.0,
      "unit": "m",
      "detail": "ended on the ground, 0 m from where it started",
@@ -314,7 +329,7 @@
     {
      "check": "charge at landing",
      "passed": true,
-     "value": 0.29306333935125495,
+     "value": 0.2912769957903725,
      "limit": 0.2,
      "unit": "",
      "detail": "landed with 29% left by my battery model, against the 20% reserve",
@@ -350,16 +365,16 @@
     {
      "check": "sagged top speed",
      "passed": true,
-     "value": 0.7881081081081082,
+     "value": 0.7845828933474129,
      "limit": null,
      "unit": "",
-     "detail": "the motors topped out at 79% of their usual top speed",
+     "detail": "the motors topped out at 78% of their usual top speed",
      "extra": null
     },
     {
      "check": "no fly-away",
      "passed": true,
-     "value": 0.10495631577593754,
+     "value": 0.05055917975055594,
      "limit": 30.0,
      "unit": "m",
      "detail": "ended on the ground, 0 m from where it was then",
@@ -368,7 +383,7 @@
     {
      "check": "touchdown",
      "passed": true,
-     "value": 0.7075233459472656,
+     "value": 0.6717263460159302,
      "limit": 2.0,
      "unit": "m/s",
      "detail": "came down at 0.7 m/s at the end, a controlled landing",
@@ -395,73 +410,73 @@
     {
      "check": "roll to 15 degrees: settling",
      "passed": true,
-     "value": 0.22800000000000153,
+     "value": 0.1720000000000006,
      "limit": 0.5,
      "unit": "s",
-     "detail": "inside 5% of the step after 0.23 s",
+     "detail": "inside 5% of the step after 0.17 s",
      "extra": null
     },
     {
      "check": "roll to 15 degrees: overshoot",
      "passed": true,
-     "value": 0.01835590143643584,
+     "value": 0.03364330555623041,
      "limit": 0.2,
      "unit": "",
-     "detail": "overshot by 2% of the step",
+     "detail": "overshot by 3% of the step",
      "extra": null
     },
     {
      "check": "roll back from 15 degrees: settling",
      "passed": true,
-     "value": 0.20800000000000196,
+     "value": 0.33999999999999986,
      "limit": 0.5,
      "unit": "s",
-     "detail": "inside 5% of the step after 0.21 s",
+     "detail": "inside 5% of the step after 0.34 s",
      "extra": null
     },
     {
      "check": "roll back from 15 degrees: overshoot",
      "passed": true,
-     "value": 0.03267562364838272,
+     "value": 0.050409683151050766,
      "limit": 0.2,
      "unit": "",
-     "detail": "overshot by 3% of the step",
+     "detail": "overshot by 5% of the step",
      "extra": null
     },
     {
      "check": "pitch to 15 degrees: settling",
      "passed": true,
-     "value": 0.1559999999999988,
+     "value": 0.35199999999999676,
      "limit": 0.5,
      "unit": "s",
-     "detail": "inside 5% of the step after 0.16 s",
+     "detail": "inside 5% of the step after 0.35 s",
      "extra": null
     },
     {
      "check": "pitch to 15 degrees: overshoot",
      "passed": true,
-     "value": 0.03332993023290687,
+     "value": 0.06375988246840669,
      "limit": 0.2,
      "unit": "",
-     "detail": "overshot by 3% of the step",
+     "detail": "overshot by 6% of the step",
      "extra": null
     },
     {
      "check": "pitch back from 15 degrees: settling",
      "passed": true,
-     "value": 0.19599999999999795,
+     "value": 0.1839999999999975,
      "limit": 0.5,
      "unit": "s",
-     "detail": "inside 5% of the step after 0.20 s",
+     "detail": "inside 5% of the step after 0.18 s",
      "extra": null
     },
     {
      "check": "pitch back from 15 degrees: overshoot",
      "passed": true,
-     "value": 0.042992908402622154,
+     "value": 0.031133618409148633,
      "limit": 0.2,
      "unit": "",
-     "detail": "overshot by 4% of the step",
+     "detail": "overshot by 3% of the step",
      "extra": null
     },
     {
@@ -480,12 +495,12 @@
    "setup": "C",
    "flown": true,
    "passed": false,
-   "note": "24 s of real time at 4x",
+   "note": "34 s of real time at 4x",
    "findings": [
     {
      "check": "no fly-away",
      "passed": true,
-     "value": 0.8995833665143261,
+     "value": 1.2252628554192955,
      "limit": 30.0,
      "unit": "m",
      "detail": "ended on the ground, 1 m from where it was then",
@@ -494,10 +509,19 @@
     {
      "check": "touchdown",
      "passed": false,
-     "value": 25.136606216430664,
+     "value": 25.027433395385742,
      "limit": 2.0,
      "unit": "m/s",
-     "detail": "came down at 25.1 m/s at the end, too fast for a controlled landing",
+     "detail": "came down at 25.0 m/s at the end, too fast for a controlled landing",
+     "extra": null
+    },
+    {
+     "check": "safety monitor",
+     "passed": true,
+     "value": 0.5120000000000005,
+     "limit": null,
+     "unit": "s",
+     "detail": "its free fall trigger would fire 0.51 s after the failure",
      "extra": null
     }
    ]
@@ -507,25 +531,31 @@
    "setup": "C",
    "flown": true,
    "passed": false,
-   "note": "50 s of real time at 4x",
+   "note": "49 s of real time at 4x",
    "findings": [
     {
      "check": "hover endurance",
      "passed": true,
-     "value": 0.0015433443685124223,
+     "value": 0.001634449876941337,
      "limit": 0.1,
      "unit": "",
-     "detail": "29.2 min in the sim against the sizing model's 29.2, at 325 W",
-     "extra": null
+     "detail": "29.4 min in the sim against the sizing model's 29.4, at 322 W",
+     "extra": {
+      "sim_min": 29.44214009408394,
+      "sizing_min": 29.394096915996787
+     }
     },
     {
      "check": "cruise endurance",
      "passed": false,
-     "value": 0.2353507952194781,
+     "value": 0.2360248056782224,
      "limit": 0.1,
      "unit": "",
-     "detail": "29.3 min in the sim against the sizing model's 38.4, at 324 W",
-     "extra": null
+     "detail": "29.6 min in the sim against the sizing model's 38.7, at 321 W",
+     "extra": {
+      "sim_min": 29.564231409010983,
+      "sizing_min": 38.697894419539054
+     }
     },
     {
      "check": "false triggers",
@@ -542,7 +572,7 @@
    "scenario": "failed sensor",
    "setup": "C",
    "flown": true,
-   "passed": true,
+   "passed": false,
    "note": "30 s of real time at 4x",
    "findings": [
     {
@@ -556,20 +586,20 @@
     },
     {
      "check": "no fly-away",
-     "passed": true,
-     "value": 26.05821151319875,
+     "passed": false,
+     "value": 31.90336076386797,
      "limit": 30.0,
      "unit": "m",
-     "detail": "ended on the ground, 26 m from where it was then",
+     "detail": "ended on the ground, 32 m from where it was then",
      "extra": null
     },
     {
      "check": "touchdown",
      "passed": true,
-     "value": 0.8322948217391968,
+     "value": 0.7052215337753296,
      "limit": 2.0,
      "unit": "m/s",
-     "detail": "came down at 0.8 m/s at the end, a controlled landing",
+     "detail": "came down at 0.7 m/s at the end, a controlled landing",
      "extra": null
     },
     {
@@ -588,21 +618,21 @@
    "setup": "C",
    "flown": true,
    "passed": true,
-   "note": "33 s of real time at 4x",
+   "note": "30 s of real time at 4x",
    "findings": [
     {
      "check": "hover drift",
      "passed": true,
-     "value": 0.0787294747116947,
+     "value": 0.09510633450758585,
      "limit": 0.5,
      "unit": "m",
-     "detail": "drifted 0.08 m sideways over 60.004 s",
+     "detail": "drifted 0.10 m sideways over 60.016 s",
      "extra": null
     },
     {
      "check": "hover height",
      "passed": true,
-     "value": 0.059372901916503906,
+     "value": 0.062432289123535156,
      "limit": 0.3,
      "unit": "m",
      "detail": "held its height within 0.06 m",
@@ -624,7 +654,7 @@
    "setup": "C",
    "flown": true,
    "passed": true,
-   "note": "44 s of real time at 4x",
+   "note": "43 s of real time at 4x",
    "findings": [
     {
      "check": "the return",
@@ -638,7 +668,7 @@
     {
      "check": "no fly-away",
      "passed": true,
-     "value": 0.017840783718836354,
+     "value": 0.026370615953498034,
      "limit": 2.0,
      "unit": "m",
      "detail": "ended on the ground, 0 m from where it started",
@@ -659,16 +689,34 @@
    "scenario": "low battery",
    "setup": "C",
    "flown": true,
-   "passed": false,
-   "note": "512 s of real time at 4x",
+   "passed": true,
+   "note": "409 s of real time at 4x",
    "findings": [
     {
-     "check": "flown to the end",
-     "passed": false,
+     "check": "the return",
+     "passed": true,
      "value": null,
      "limit": null,
      "unit": "",
-     "detail": "it didn't finish within 1931.49 s of sim time",
+     "detail": "low battery then return then landed",
+     "extra": null
+    },
+    {
+     "check": "no fly-away",
+     "passed": true,
+     "value": 0.03936051352371687,
+     "limit": 2.0,
+     "unit": "m",
+     "detail": "ended on the ground, 0 m from where it started",
+     "extra": null
+    },
+    {
+     "check": "charge at landing",
+     "passed": true,
+     "value": 0.28822403349634335,
+     "limit": 0.2,
+     "unit": "",
+     "detail": "landed with 29% left by my battery model, against the 20% reserve",
      "extra": null
     },
     {
@@ -687,22 +735,22 @@
    "setup": "C",
    "flown": true,
    "passed": true,
-   "note": "33 s of real time at 4x",
+   "note": "45 s of real time at 4x",
    "findings": [
     {
      "check": "payload drift",
      "passed": true,
-     "value": 0.07381248071442413,
+     "value": 0.08511748508428048,
      "limit": 1.0,
      "unit": "m",
-     "detail": "stayed within 0.07 m after picking it up",
+     "detail": "stayed within 0.09 m after picking it up",
      "extra": null
     },
     {
      "check": "payload lifted",
      "passed": true,
-     "value": 1.1225372415926644,
-     "limit": 1.1228924053636515,
+     "value": 1.124093462494636,
+     "limit": 1.12365252723214,
      "unit": "",
      "detail": "the rotors' thrust grew 12%, against 12% for 250 g",
      "extra": null
@@ -723,7 +771,7 @@
    "setup": "C",
    "flown": true,
    "passed": true,
-   "note": "21 s of real time at 4x",
+   "note": "24 s of real time at 4x",
    "findings": [
     {
      "check": "the landing",
@@ -737,16 +785,16 @@
     {
      "check": "sagged top speed",
      "passed": true,
-     "value": 0.7881081081081082,
+     "value": 0.7845828933474129,
      "limit": null,
      "unit": "",
-     "detail": "the motors topped out at 79% of their usual top speed",
+     "detail": "the motors topped out at 78% of their usual top speed",
      "extra": null
     },
     {
      "check": "no fly-away",
      "passed": true,
-     "value": 0.025885323866746527,
+     "value": 0.03220627939327848,
      "limit": 30.0,
      "unit": "m",
      "detail": "ended on the ground, 0 m from where it was then",
@@ -755,7 +803,7 @@
     {
      "check": "touchdown",
      "passed": true,
-     "value": 0.7156715989112854,
+     "value": 0.6986598372459412,
      "limit": 2.0,
      "unit": "m/s",
      "detail": "came down at 0.7 m/s at the end, a controlled landing",
@@ -777,24 +825,24 @@
    "setup": "C",
    "flown": true,
    "passed": true,
-   "note": "22 s of real time at 4x",
+   "note": "21 s of real time at 4x",
    "findings": [
     {
      "check": "roll to 15 degrees: settling",
      "passed": true,
-     "value": 0.2079999999999984,
+     "value": 0.22399999999999665,
      "limit": 0.5,
      "unit": "s",
-     "detail": "inside 5% of the step after 0.21 s",
+     "detail": "inside 5% of the step after 0.22 s",
      "extra": null
     },
     {
      "check": "roll to 15 degrees: overshoot",
      "passed": true,
-     "value": 0.02731246853267799,
+     "value": 0.019302181657348205,
      "limit": 0.2,
      "unit": "",
-     "detail": "overshot by 3% of the step",
+     "detail": "overshot by 2% of the step",
      "extra": null
     },
     {
@@ -809,7 +857,7 @@
     {
      "check": "roll back from 15 degrees: overshoot",
      "passed": true,
-     "value": 0.0331950252527029,
+     "value": 0.027420080799447577,
      "limit": 0.2,
      "unit": "",
      "detail": "overshot by 3% of the step",
@@ -818,37 +866,37 @@
     {
      "check": "pitch to 15 degrees: settling",
      "passed": true,
-     "value": 0.19999999999999574,
+     "value": 0.21599999999999397,
      "limit": 0.5,
      "unit": "s",
-     "detail": "inside 5% of the step after 0.20 s",
+     "detail": "inside 5% of the step after 0.22 s",
      "extra": null
     },
     {
      "check": "pitch to 15 degrees: overshoot",
      "passed": true,
-     "value": 0.04278293203880601,
+     "value": 0.032277912266022835,
      "limit": 0.2,
      "unit": "",
-     "detail": "overshot by 4% of the step",
+     "detail": "overshot by 3% of the step",
      "extra": null
     },
     {
      "check": "pitch back from 15 degrees: settling",
      "passed": true,
-     "value": 0.17199999999999704,
+     "value": 0.19200000000000017,
      "limit": 0.5,
      "unit": "s",
-     "detail": "inside 5% of the step after 0.17 s",
+     "detail": "inside 5% of the step after 0.19 s",
      "extra": null
     },
     {
      "check": "pitch back from 15 degrees: overshoot",
      "passed": true,
-     "value": 0.04051981808909111,
+     "value": 0.03253126098834169,
      "limit": 0.2,
      "unit": "",
-     "detail": "overshot by 4% of the step",
+     "detail": "overshot by 3% of the step",
      "extra": null
     },
     {
@@ -867,12 +915,12 @@
    "setup": "max",
    "flown": true,
    "passed": true,
-   "note": "22 s of real time at 4x",
+   "note": "29 s of real time at 4x",
    "findings": [
     {
      "check": "no fly-away",
      "passed": true,
-     "value": 0.779401062893866,
+     "value": 0.8227690091427888,
      "limit": 30.0,
      "unit": "m",
      "detail": "ended on the ground, 1 m from where it was then",
@@ -884,25 +932,25 @@
      "value": null,
      "limit": null,
      "unit": "",
-     "detail": "the motors stopped 0.16 s before the canopy left",
+     "detail": "the motors stopped 0.13 s before the canopy left",
      "extra": null
     },
     {
      "check": "chute height lost",
      "passed": true,
-     "value": 9.546794891357422,
+     "value": 9.28337287902832,
      "limit": null,
      "unit": "m",
-     "detail": "lost 9.5 m before settling at 4.5 m/s",
+     "detail": "lost 9.3 m before settling at 4.4 m/s",
      "extra": null
     },
     {
      "check": "safety monitor",
      "passed": true,
-     "value": 0.480000000000004,
+     "value": 0.46000000000000085,
      "limit": null,
      "unit": "s",
-     "detail": "its free fall trigger would fire 0.48 s after the failure",
+     "detail": "its free fall trigger would fire 0.46 s after the failure",
      "extra": null
     }
    ]
@@ -912,30 +960,30 @@
    "setup": "max",
    "flown": true,
    "passed": false,
-   "note": "52 s of real time at 4x",
+   "note": "49 s of real time at 4x",
    "findings": [
     {
      "check": "hover endurance",
      "passed": true,
-     "value": 0.0012725827120648656,
+     "value": 0.001353355186021253,
      "limit": 0.1,
      "unit": "",
-     "detail": "22.7 min in the sim against the sizing model's 22.7, at 415 W",
+     "detail": "22.7 min in the sim against the sizing model's 22.6, at 414 W",
      "extra": {
-      "sim_min": 22.695924484114535,
-      "sizing_min": 22.667078751562283
+      "sim_min": 22.678383863468362,
+      "sizing_min": 22.647733435971166
      }
     },
     {
      "check": "cruise endurance",
      "passed": false,
-     "value": 0.20199383453617262,
+     "value": 0.20220960393152415,
      "limit": 0.1,
      "unit": "",
-     "detail": "22.7 min in the sim against the sizing model's 28.5, at 414 W",
+     "detail": "22.7 min in the sim against the sizing model's 28.5, at 413 W",
      "extra": {
-      "sim_min": 22.73721235260557,
-      "sizing_min": 28.492527171629
+      "sim_min": 22.723398021941197,
+      "sizing_min": 28.48291748549804
      }
     },
     {
@@ -953,8 +1001,8 @@
    "scenario": "failed sensor",
    "setup": "max",
    "flown": true,
-   "passed": false,
-   "note": "30 s of real time at 4x",
+   "passed": true,
+   "note": "29 s of real time at 4x",
    "findings": [
     {
      "check": "the landing",
@@ -967,17 +1015,17 @@
     },
     {
      "check": "no fly-away",
-     "passed": false,
-     "value": 50.1930936233035,
+     "passed": true,
+     "value": 23.041458908393075,
      "limit": 30.0,
      "unit": "m",
-     "detail": "ended on the ground, 50 m from where it was then",
+     "detail": "ended on the ground, 23 m from where it was then",
      "extra": null
     },
     {
      "check": "touchdown",
      "passed": true,
-     "value": 0.6954066157341003,
+     "value": 0.6957117915153503,
      "limit": 2.0,
      "unit": "m/s",
      "detail": "came down at 0.7 m/s at the end, a controlled landing",
@@ -999,21 +1047,21 @@
    "setup": "max",
    "flown": true,
    "passed": true,
-   "note": "34 s of real time at 4x",
+   "note": "33 s of real time at 4x",
    "findings": [
     {
      "check": "hover drift",
      "passed": true,
-     "value": 0.060453191791944486,
+     "value": 0.06259052040032165,
      "limit": 0.5,
      "unit": "m",
-     "detail": "drifted 0.06 m sideways over 60.016 s",
+     "detail": "drifted 0.06 m sideways over 60.008 s",
      "extra": null
     },
     {
      "check": "hover height",
      "passed": true,
-     "value": 0.12455272674560547,
+     "value": 0.1156473159790039,
      "limit": 0.3,
      "unit": "m",
      "detail": "held its height within 0.12 m",
@@ -1049,7 +1097,7 @@
     {
      "check": "no fly-away",
      "passed": true,
-     "value": 0.06783793366555821,
+     "value": 0.025841495900188114,
      "limit": 2.0,
      "unit": "m",
      "detail": "ended on the ground, 0 m from where it started",
@@ -1071,7 +1119,7 @@
    "setup": "max",
    "flown": true,
    "passed": true,
-   "note": "327 s of real time at 4x",
+   "note": "319 s of real time at 4x",
    "findings": [
     {
      "check": "the return",
@@ -1085,7 +1133,7 @@
     {
      "check": "no fly-away",
      "passed": true,
-     "value": 0.026846070079476033,
+     "value": 0.027428771598295848,
      "limit": 2.0,
      "unit": "m",
      "detail": "ended on the ground, 0 m from where it started",
@@ -1094,7 +1142,7 @@
     {
      "check": "charge at landing",
      "passed": true,
-     "value": 0.2810218133625555,
+     "value": 0.28337001577138976,
      "limit": 0.2,
      "unit": "",
      "detail": "landed with 28% left by my battery model, against the 20% reserve",
@@ -1116,7 +1164,7 @@
    "setup": "max",
    "flown": true,
    "passed": true,
-   "note": "21 s of real time at 4x",
+   "note": "23 s of real time at 4x",
    "findings": [
     {
      "check": "chute order",
@@ -1124,22 +1172,22 @@
      "value": null,
      "limit": null,
      "unit": "",
-     "detail": "the motors stopped 0.14 s before the canopy left",
+     "detail": "the motors stopped 0.12 s before the canopy left",
      "extra": null
     },
     {
      "check": "chute height lost",
      "passed": true,
-     "value": 4.914520263671875,
+     "value": 4.758335113525391,
      "limit": null,
      "unit": "m",
-     "detail": "lost 4.9 m before settling at 4.4 m/s",
+     "detail": "lost 4.8 m before settling at 4.4 m/s",
      "extra": null
     },
     {
      "check": "no fly-away",
      "passed": true,
-     "value": 0.16166904152979747,
+     "value": 0.011048393975886518,
      "limit": 30.0,
      "unit": "m",
      "detail": "ended on the ground, 0 m from where it was then",
@@ -1148,10 +1196,10 @@
     {
      "check": "safety monitor",
      "passed": true,
-     "value": 0.4519999999999982,
+     "value": 0.46000000000000085,
      "limit": null,
      "unit": "s",
-     "detail": "its free fall trigger would fire 0.45 s after the failure",
+     "detail": "its free fall trigger would fire 0.46 s after the failure",
      "extra": null
     }
    ]
@@ -1160,25 +1208,34 @@
    "scenario": "payload grab",
    "setup": "max",
    "flown": true,
-   "passed": false,
-   "note": "32 s of real time at 4x",
+   "passed": true,
+   "note": "45 s of real time at 4x",
    "findings": [
     {
-     "check": "flown to the end",
-     "passed": false,
-     "value": null,
-     "limit": null,
+     "check": "payload drift",
+     "passed": true,
+     "value": 0.09034437613933526,
+     "limit": 1.0,
+     "unit": "m",
+     "detail": "stayed within 0.09 m after picking it up",
+     "extra": null
+    },
+    {
+     "check": "payload lifted",
+     "passed": true,
+     "value": 1.1053887950856658,
+     "limit": 1.1054767375261376,
      "unit": "",
-     "detail": "it never climbed to 3 m (got to -59.2 m)",
+     "detail": "the rotors' thrust grew 11%, against 11% for 250 g",
      "extra": null
     },
     {
      "check": "false triggers",
-     "passed": false,
-     "value": 6,
+     "passed": true,
+     "value": 0,
      "limit": 0,
      "unit": "",
-     "detail": "the safety monitor's triggers fired: tumble tilt at 77.5 s, tumble tilt at 78.7 s, tumble tilt at 80.1 s, tumble tilt at 83.7 s, tumble tilt at 85.2 s, tumble tilt at 89.2 s",
+     "detail": "the safety monitor's triggers fired: none",
      "extra": null
     }
    ]
@@ -1188,7 +1245,7 @@
    "setup": "max",
    "flown": true,
    "passed": true,
-   "note": "23 s of real time at 4x",
+   "note": "24 s of real time at 4x",
    "findings": [
     {
      "check": "the landing",
@@ -1202,16 +1259,16 @@
     {
      "check": "sagged top speed",
      "passed": true,
-     "value": 0.7881081081081082,
+     "value": 0.7845828933474129,
      "limit": null,
      "unit": "",
-     "detail": "the motors topped out at 79% of their usual top speed",
+     "detail": "the motors topped out at 78% of their usual top speed",
      "extra": null
     },
     {
      "check": "no fly-away",
      "passed": true,
-     "value": 0.061467919018538035,
+     "value": 0.05070636281603125,
      "limit": 30.0,
      "unit": "m",
      "detail": "ended on the ground, 0 m from where it was then",
@@ -1220,7 +1277,7 @@
     {
      "check": "touchdown",
      "passed": true,
-     "value": 0.6891504526138306,
+     "value": 0.6960673332214355,
      "limit": 2.0,
      "unit": "m/s",
      "detail": "came down at 0.7 m/s at the end, a controlled landing",
@@ -1245,36 +1302,36 @@
    "note": "21 s of real time at 4x",
    "findings": [
     {
-     "check": "roll to 16 degrees: settling",
+     "check": "roll to 15 degrees: settling",
      "passed": true,
-     "value": 0.1840000000000046,
+     "value": 0.17599999999999483,
      "limit": 0.5,
      "unit": "s",
      "detail": "inside 5% of the step after 0.18 s",
      "extra": null
     },
     {
-     "check": "roll to 16 degrees: overshoot",
+     "check": "roll to 15 degrees: overshoot",
      "passed": true,
-     "value": 0.03286056450975616,
+     "value": 0.02293901724379288,
      "limit": 0.2,
      "unit": "",
-     "detail": "overshot by 3% of the step",
+     "detail": "overshot by 2% of the step",
      "extra": null
     },
     {
      "check": "roll back from 15 degrees: settling",
      "passed": true,
-     "value": 0.17200000000000415,
+     "value": 0.2079999999999984,
      "limit": 0.5,
      "unit": "s",
-     "detail": "inside 5% of the step after 0.17 s",
+     "detail": "inside 5% of the step after 0.21 s",
      "extra": null
     },
     {
      "check": "roll back from 15 degrees: overshoot",
      "passed": true,
-     "value": 0.02957135605630512,
+     "value": 0.028653870147072436,
      "limit": 0.2,
      "unit": "",
      "detail": "overshot by 3% of the step",
@@ -1283,37 +1340,37 @@
     {
      "check": "pitch to 15 degrees: settling",
      "passed": true,
-     "value": 0.1599999999999966,
+     "value": 0.30799999999999983,
      "limit": 0.5,
      "unit": "s",
-     "detail": "inside 5% of the step after 0.16 s",
+     "detail": "inside 5% of the step after 0.31 s",
      "extra": null
     },
     {
      "check": "pitch to 15 degrees: overshoot",
      "passed": true,
-     "value": 0.03506654213287619,
+     "value": 0.06313297343734159,
      "limit": 0.2,
      "unit": "",
-     "detail": "overshot by 4% of the step",
+     "detail": "overshot by 6% of the step",
      "extra": null
     },
     {
      "check": "pitch back from 15 degrees: settling",
      "passed": true,
-     "value": 0.14000000000000057,
+     "value": 0.35200000000000387,
      "limit": 0.5,
      "unit": "s",
-     "detail": "inside 5% of the step after 0.14 s",
+     "detail": "inside 5% of the step after 0.35 s",
      "extra": null
     },
     {
      "check": "pitch back from 15 degrees: overshoot",
      "passed": true,
-     "value": 0.044999787283403814,
+     "value": 0.061224008748650416,
      "limit": 0.2,
      "unit": "",
-     "detail": "overshot by 4% of the step",
+     "detail": "overshot by 6% of the step",
      "extra": null
     },
     {
@@ -1330,35 +1387,78 @@
   {
    "scenario": "dead motor",
    "setup": "mission",
-   "flown": false,
-   "passed": false,
-   "note": "PX4's clock stopped for 30 s of real time",
-   "findings": []
+   "flown": true,
+   "passed": true,
+   "note": "34 s of real time at 4x",
+   "findings": [
+    {
+     "check": "no fly-away",
+     "passed": true,
+     "value": 0.8265757239214995,
+     "limit": 30.0,
+     "unit": "m",
+     "detail": "ended on the ground, 1 m from where it was then",
+     "extra": null
+    },
+    {
+     "check": "chute order",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "unit": "",
+     "detail": "the motors stopped 0.12 s before the canopy left",
+     "extra": null
+    },
+    {
+     "check": "chute height lost",
+     "passed": true,
+     "value": 9.333295822143555,
+     "limit": null,
+     "unit": "m",
+     "detail": "lost 9.3 m before settling at 4.3 m/s",
+     "extra": null
+    },
+    {
+     "check": "safety monitor",
+     "passed": true,
+     "value": 0.5079999999999956,
+     "limit": null,
+     "unit": "s",
+     "detail": "its free fall trigger would fire 0.51 s after the failure",
+     "extra": null
+    }
+   ]
   },
   {
    "scenario": "endurance",
    "setup": "mission",
    "flown": true,
    "passed": false,
-   "note": "50 s of real time at 4x",
+   "note": "49 s of real time at 4x",
    "findings": [
     {
      "check": "hover endurance",
      "passed": true,
-     "value": 0.0014429461887519512,
+     "value": 0.0014015025424944758,
      "limit": 0.1,
      "unit": "",
-     "detail": "25.2 min in the sim against the sizing model's 25.1, at 376 W",
-     "extra": null
+     "detail": "25.2 min in the sim against the sizing model's 25.2, at 375 W",
+     "extra": {
+      "sim_min": 25.19039160426977,
+      "sizing_min": 25.155136616345164
+     }
     },
     {
      "check": "cruise endurance",
      "passed": false,
-     "value": 0.2145260599869258,
+     "value": 0.21526657743310829,
      "limit": 0.1,
      "unit": "",
-     "detail": "25.2 min in the sim against the sizing model's 32.1, at 375 W",
-     "extra": null
+     "detail": "25.3 min in the sim against the sizing model's 32.2, at 374 W",
+     "extra": {
+      "sim_min": 25.260674884232454,
+      "sizing_min": 32.19013509276037
+     }
     },
     {
      "check": "false triggers",
@@ -1375,8 +1475,8 @@
    "scenario": "failed sensor",
    "setup": "mission",
    "flown": true,
-   "passed": true,
-   "note": "29 s of real time at 4x",
+   "passed": false,
+   "note": "27 s of real time at 4x",
    "findings": [
     {
      "check": "the landing",
@@ -1389,17 +1489,17 @@
     },
     {
      "check": "no fly-away",
-     "passed": true,
-     "value": 18.029619526725963,
+     "passed": false,
+     "value": 36.00292960035313,
      "limit": 30.0,
      "unit": "m",
-     "detail": "ended on the ground, 18 m from where it was then",
+     "detail": "ended on the ground, 36 m from where it was then",
      "extra": null
     },
     {
      "check": "touchdown",
      "passed": true,
-     "value": 0.7045315504074097,
+     "value": 0.6887587904930115,
      "limit": 2.0,
      "unit": "m/s",
      "detail": "came down at 0.7 m/s at the end, a controlled landing",
@@ -1426,19 +1526,19 @@
     {
      "check": "hover drift",
      "passed": true,
-     "value": 0.10576767812724179,
+     "value": 0.07517212106211708,
      "limit": 0.5,
      "unit": "m",
-     "detail": "drifted 0.11 m sideways over 60.012 s",
+     "detail": "drifted 0.08 m sideways over 60.008 s",
      "extra": null
     },
     {
      "check": "hover height",
      "passed": true,
-     "value": 0.0517425537109375,
+     "value": 0.09396553039550781,
      "limit": 0.3,
      "unit": "m",
-     "detail": "held its height within 0.05 m",
+     "detail": "held its height within 0.09 m",
      "extra": null
     },
     {
@@ -1471,7 +1571,7 @@
     {
      "check": "no fly-away",
      "passed": true,
-     "value": 0.0258550773213322,
+     "value": 0.02103359012603646,
      "limit": 2.0,
      "unit": "m",
      "detail": "ended on the ground, 0 m from where it started",
@@ -1492,16 +1592,34 @@
    "scenario": "low battery",
    "setup": "mission",
    "flown": true,
-   "passed": false,
-   "note": "24 s of real time at 4x",
+   "passed": true,
+   "note": "356 s of real time at 4x",
    "findings": [
     {
-     "check": "flown to the end",
-     "passed": false,
+     "check": "the return",
+     "passed": true,
      "value": null,
      "limit": null,
      "unit": "",
-     "detail": "it never climbed to 20 m (got to 19.7 m)",
+     "detail": "low battery then return then landed",
+     "extra": null
+    },
+    {
+     "check": "no fly-away",
+     "passed": true,
+     "value": 0.05761421365260962,
+     "limit": 2.0,
+     "unit": "m",
+     "detail": "ended on the ground, 0 m from where it started",
+     "extra": null
+    },
+    {
+     "check": "charge at landing",
+     "passed": true,
+     "value": 0.2841999089700389,
+     "limit": 0.2,
+     "unit": "",
+     "detail": "landed with 28% left by my battery model, against the 20% reserve",
      "extra": null
     },
     {
@@ -1520,7 +1638,7 @@
    "setup": "mission",
    "flown": true,
    "passed": true,
-   "note": "25 s of real time at 4x",
+   "note": "23 s of real time at 4x",
    "findings": [
     {
      "check": "chute order",
@@ -1528,25 +1646,34 @@
      "value": null,
      "limit": null,
      "unit": "",
-     "detail": "the motors stopped 0.12 s before the canopy left",
+     "detail": "the motors stopped 0.11 s before the canopy left",
      "extra": null
     },
     {
      "check": "chute height lost",
      "passed": true,
-     "value": 4.883449554443359,
+     "value": 4.705543518066406,
      "limit": null,
      "unit": "m",
-     "detail": "lost 4.9 m before settling at 4.3 m/s",
+     "detail": "lost 4.7 m before settling at 4.3 m/s",
      "extra": null
     },
     {
      "check": "no fly-away",
      "passed": true,
-     "value": 0.026350555905531408,
+     "value": 0.09513637013909602,
      "limit": 30.0,
      "unit": "m",
      "detail": "ended on the ground, 0 m from where it was then",
+     "extra": null
+    },
+    {
+     "check": "safety monitor",
+     "passed": true,
+     "value": 0.4439999999999955,
+     "limit": null,
+     "unit": "s",
+     "detail": "its free fall trigger would fire 0.44 s after the failure",
      "extra": null
     }
    ]
@@ -1556,7 +1683,7 @@
    "setup": "mission",
    "flown": true,
    "passed": true,
-   "note": "24 s of real time at 4x",
+   "note": "26 s of real time at 4x",
    "findings": [
     {
      "check": "the landing",
@@ -1570,16 +1697,16 @@
     {
      "check": "sagged top speed",
      "passed": true,
-     "value": 0.7881081081081082,
+     "value": 0.7845828933474129,
      "limit": null,
      "unit": "",
-     "detail": "the motors topped out at 79% of their usual top speed",
+     "detail": "the motors topped out at 78% of their usual top speed",
      "extra": null
     },
     {
      "check": "no fly-away",
      "passed": true,
-     "value": 0.0952936308491655,
+     "value": 0.02326989475973997,
      "limit": 30.0,
      "unit": "m",
      "detail": "ended on the ground, 0 m from where it was then",
@@ -1588,7 +1715,7 @@
     {
      "check": "touchdown",
      "passed": true,
-     "value": 0.706853985786438,
+     "value": 0.6819049715995789,
      "limit": 2.0,
      "unit": "m/s",
      "detail": "came down at 0.7 m/s at the end, a controlled landing",
@@ -1610,64 +1737,10 @@
    "setup": "mission",
    "flown": true,
    "passed": true,
-   "note": "18 s of real time at 4x",
+   "note": "22 s of real time at 4x",
    "findings": [
     {
      "check": "roll to 15 degrees: settling",
-     "passed": true,
-     "value": 0.16799999999999926,
-     "limit": 0.5,
-     "unit": "s",
-     "detail": "inside 5% of the step after 0.17 s",
-     "extra": null
-    },
-    {
-     "check": "roll to 15 degrees: overshoot",
-     "passed": true,
-     "value": 0.027543270845380885,
-     "limit": 0.2,
-     "unit": "",
-     "detail": "overshot by 3% of the step",
-     "extra": null
-    },
-    {
-     "check": "roll back from 15 degrees: settling",
-     "passed": true,
-     "value": 0.21199999999999974,
-     "limit": 0.5,
-     "unit": "s",
-     "detail": "inside 5% of the step after 0.21 s",
-     "extra": null
-    },
-    {
-     "check": "roll back from 15 degrees: overshoot",
-     "passed": true,
-     "value": 0.036137717425618776,
-     "limit": 0.2,
-     "unit": "",
-     "detail": "overshot by 4% of the step",
-     "extra": null
-    },
-    {
-     "check": "pitch to 15 degrees: settling",
-     "passed": true,
-     "value": 0.1840000000000046,
-     "limit": 0.5,
-     "unit": "s",
-     "detail": "inside 5% of the step after 0.18 s",
-     "extra": null
-    },
-    {
-     "check": "pitch to 15 degrees: overshoot",
-     "passed": true,
-     "value": 0.04369325734657248,
-     "limit": 0.2,
-     "unit": "",
-     "detail": "overshot by 4% of the step",
-     "extra": null
-    },
-    {
-     "check": "pitch back from 15 degrees: settling",
      "passed": true,
      "value": 0.22400000000000375,
      "limit": 0.5,
@@ -1676,12 +1749,66 @@
      "extra": null
     },
     {
-     "check": "pitch back from 15 degrees: overshoot",
+     "check": "roll to 15 degrees: overshoot",
      "passed": true,
-     "value": 0.04726506272462605,
+     "value": 0.023314434174949827,
      "limit": 0.2,
      "unit": "",
-     "detail": "overshot by 5% of the step",
+     "detail": "overshot by 2% of the step",
+     "extra": null
+    },
+    {
+     "check": "roll back from 15 degrees: settling",
+     "passed": true,
+     "value": 0.3640000000000043,
+     "limit": 0.5,
+     "unit": "s",
+     "detail": "inside 5% of the step after 0.36 s",
+     "extra": null
+    },
+    {
+     "check": "roll back from 15 degrees: overshoot",
+     "passed": true,
+     "value": 0.0671009214495002,
+     "limit": 0.2,
+     "unit": "",
+     "detail": "overshot by 7% of the step",
+     "extra": null
+    },
+    {
+     "check": "pitch to 15 degrees: settling",
+     "passed": true,
+     "value": 0.3719999999999999,
+     "limit": 0.5,
+     "unit": "s",
+     "detail": "inside 5% of the step after 0.37 s",
+     "extra": null
+    },
+    {
+     "check": "pitch to 15 degrees: overshoot",
+     "passed": true,
+     "value": 0.08437923074774978,
+     "limit": 0.2,
+     "unit": "",
+     "detail": "overshot by 8% of the step",
+     "extra": null
+    },
+    {
+     "check": "pitch back from 15 degrees: settling",
+     "passed": true,
+     "value": 0.3359999999999985,
+     "limit": 0.5,
+     "unit": "s",
+     "detail": "inside 5% of the step after 0.34 s",
+     "extra": null
+    },
+    {
+     "check": "pitch back from 15 degrees: overshoot",
+     "passed": true,
+     "value": 0.08566248856418235,
+     "limit": 0.2,
+     "unit": "",
+     "detail": "overshot by 9% of the step",
      "extra": null
     },
     {
@@ -1700,12 +1827,12 @@
    "setup": "mission",
    "flown": true,
    "passed": true,
-   "note": "33 s of real time at 4x",
+   "note": "32 s of real time at 4x",
    "findings": [
     {
      "check": "top speed",
      "passed": true,
-     "value": 24.37150805539708,
+     "value": 24.36971546788913,
      "limit": 22.22222222222222,
      "unit": "m/s",
      "detail": "held 88 km/h for 1 s, against 80",
@@ -1736,30 +1863,30 @@
    "setup": "mission",
    "flown": true,
    "passed": true,
-   "note": "47 s of real time at 4x",
+   "note": "27 s of real time at 4x",
    "findings": [
     {
      "check": "wind drift",
      "passed": true,
-     "value": 0.09235701563560737,
+     "value": 0.13875693704182743,
      "limit": 1.0,
      "unit": "m",
-     "detail": "drifted 0.09 m in the wind",
+     "detail": "drifted 0.14 m in the wind",
      "extra": null
     },
     {
      "check": "motor headroom",
      "passed": true,
-     "value": 0.6378378378378379,
+     "value": 0.6209081309398099,
      "limit": 0.9,
      "unit": "",
-     "detail": "the busiest motor reached 64% of its top speed",
+     "detail": "the busiest motor reached 62% of its top speed",
      "extra": null
     },
     {
      "check": "leaning into the wind",
      "passed": true,
-     "value": 3.278643663152513,
+     "value": 3.269660645324929,
      "limit": 0.5,
      "unit": "degrees",
      "detail": "leaned 3.3 degrees into a 10 m/s wind",
@@ -1781,12 +1908,12 @@
    "setup": "P",
    "flown": true,
    "passed": true,
-   "note": "24 s of real time at 4x",
+   "note": "33 s of real time at 4x",
    "findings": [
     {
      "check": "no fly-away",
      "passed": true,
-     "value": 0.7926085389282149,
+     "value": 0.7299287646224226,
      "limit": 30.0,
      "unit": "m",
      "detail": "ended on the ground, 1 m from where it was then",
@@ -1798,16 +1925,25 @@
      "value": null,
      "limit": null,
      "unit": "",
-     "detail": "the motors stopped 0.16 s before the canopy left",
+     "detail": "the motors stopped 0.14 s before the canopy left",
      "extra": null
     },
     {
      "check": "chute height lost",
      "passed": true,
-     "value": 8.928619384765625,
+     "value": 8.918718338012695,
      "limit": null,
      "unit": "m",
-     "detail": "lost 8.9 m before settling at 4.2 m/s",
+     "detail": "lost 8.9 m before settling at 4.1 m/s",
+     "extra": null
+    },
+    {
+     "check": "safety monitor",
+     "passed": true,
+     "value": 0.5040000000000049,
+     "limit": null,
+     "unit": "s",
+     "detail": "its free fall trigger would fire 0.50 s after the failure",
      "extra": null
     }
    ]
@@ -1817,25 +1953,31 @@
    "setup": "P",
    "flown": true,
    "passed": false,
-   "note": "50 s of real time at 4x",
+   "note": "49 s of real time at 4x",
    "findings": [
     {
      "check": "hover endurance",
      "passed": true,
-     "value": 0.0014933280001456569,
+     "value": 0.0015361302559413427,
      "limit": 0.1,
      "unit": "",
-     "detail": "29.0 min in the sim against the sizing model's 29.0, at 327 W",
-     "extra": null
+     "detail": "29.3 min in the sim against the sizing model's 29.2, at 324 W",
+     "extra": {
+      "sim_min": 29.290544635618136,
+      "sizing_min": 29.24561955456662
+     }
     },
     {
      "check": "cruise endurance",
      "passed": false,
-     "value": 0.2404856763297581,
+     "value": 0.24094850392059827,
      "limit": 0.1,
      "unit": "",
-     "detail": "29.2 min in the sim against the sizing model's 38.4, at 326 W",
-     "extra": null
+     "detail": "29.4 min in the sim against the sizing model's 38.8, at 322 W",
+     "extra": {
+      "sim_min": 29.426297281446953,
+      "sizing_min": 38.767194891832176
+     }
     },
     {
      "check": "false triggers",
@@ -1867,16 +2009,16 @@
     {
      "check": "no fly-away",
      "passed": true,
-     "value": 19.859395753978042,
+     "value": 29.914188343121612,
      "limit": 30.0,
      "unit": "m",
-     "detail": "ended on the ground, 20 m from where it was then",
+     "detail": "ended on the ground, 30 m from where it was then",
      "extra": null
     },
     {
      "check": "touchdown",
      "passed": true,
-     "value": 0.7019972205162048,
+     "value": 0.6799976825714111,
      "limit": 2.0,
      "unit": "m/s",
      "detail": "came down at 0.7 m/s at the end, a controlled landing",
@@ -1903,19 +2045,19 @@
     {
      "check": "hover drift",
      "passed": true,
-     "value": 0.060631612050700875,
+     "value": 0.06406424092718767,
      "limit": 0.5,
      "unit": "m",
-     "detail": "drifted 0.06 m sideways over 60.016 s",
+     "detail": "drifted 0.06 m sideways over 60.004 s",
      "extra": null
     },
     {
      "check": "hover height",
      "passed": true,
-     "value": 0.10054397583007812,
+     "value": 0.10560321807861328,
      "limit": 0.3,
      "unit": "m",
-     "detail": "held its height within 0.10 m",
+     "detail": "held its height within 0.11 m",
      "extra": null
     },
     {
@@ -1934,7 +2076,7 @@
    "setup": "P",
    "flown": true,
    "passed": true,
-   "note": "44 s of real time at 4x",
+   "note": "41 s of real time at 4x",
    "findings": [
     {
      "check": "the return",
@@ -1948,7 +2090,7 @@
     {
      "check": "no fly-away",
      "passed": true,
-     "value": 0.017978027329044494,
+     "value": 0.012441234239239063,
      "limit": 2.0,
      "unit": "m",
      "detail": "ended on the ground, 0 m from where it started",
@@ -1970,7 +2112,7 @@
    "setup": "P",
    "flown": true,
    "passed": true,
-   "note": "413 s of real time at 4x",
+   "note": "415 s of real time at 4x",
    "findings": [
     {
      "check": "the return",
@@ -1984,7 +2126,7 @@
     {
      "check": "no fly-away",
      "passed": true,
-     "value": 0.04873732505811283,
+     "value": 0.03149150541799863,
      "limit": 2.0,
      "unit": "m",
      "detail": "ended on the ground, 0 m from where it started",
@@ -1993,7 +2135,7 @@
     {
      "check": "charge at landing",
      "passed": true,
-     "value": 0.2914005937143295,
+     "value": 0.28822067791592515,
      "limit": 0.2,
      "unit": "",
      "detail": "landed with 29% left by my battery model, against the 20% reserve",
@@ -2015,7 +2157,7 @@
    "setup": "P",
    "flown": true,
    "passed": true,
-   "note": "25 s of real time at 4x",
+   "note": "21 s of real time at 4x",
    "findings": [
     {
      "check": "chute order",
@@ -2023,25 +2165,34 @@
      "value": null,
      "limit": null,
      "unit": "",
-     "detail": "the motors stopped 0.10 s before the canopy left",
+     "detail": "the motors stopped 0.14 s before the canopy left",
      "extra": null
     },
     {
      "check": "chute height lost",
      "passed": true,
-     "value": 4.800163269042969,
+     "value": 4.744937896728516,
      "limit": null,
      "unit": "m",
-     "detail": "lost 4.8 m before settling at 4.1 m/s",
+     "detail": "lost 4.7 m before settling at 4.1 m/s",
      "extra": null
     },
     {
      "check": "no fly-away",
      "passed": true,
-     "value": 0.03948136766704804,
+     "value": 0.03288960480897976,
      "limit": 30.0,
      "unit": "m",
      "detail": "ended on the ground, 0 m from where it was then",
+     "extra": null
+    },
+    {
+     "check": "safety monitor",
+     "passed": true,
+     "value": 0.4239999999999995,
+     "limit": null,
+     "unit": "s",
+     "detail": "its free fall trigger would fire 0.42 s after the failure",
      "extra": null
     }
    ]
@@ -2065,16 +2216,16 @@
     {
      "check": "sagged top speed",
      "passed": true,
-     "value": 0.7881081081081082,
+     "value": 0.7845828933474129,
      "limit": null,
      "unit": "",
-     "detail": "the motors topped out at 79% of their usual top speed",
+     "detail": "the motors topped out at 78% of their usual top speed",
      "extra": null
     },
     {
      "check": "no fly-away",
      "passed": true,
-     "value": 0.03713494427574191,
+     "value": 0.06136032621033095,
      "limit": 30.0,
      "unit": "m",
      "detail": "ended on the ground, 0 m from where it was then",
@@ -2083,7 +2234,7 @@
     {
      "check": "touchdown",
      "passed": true,
-     "value": 0.694221019744873,
+     "value": 0.6806342005729675,
      "limit": 2.0,
      "unit": "m/s",
      "detail": "came down at 0.7 m/s at the end, a controlled landing",
@@ -2105,12 +2256,12 @@
    "setup": "P",
    "flown": true,
    "passed": true,
-   "note": "22 s of real time at 4x",
+   "note": "24 s of real time at 4x",
    "findings": [
     {
      "check": "roll to 15 degrees: settling",
      "passed": true,
-     "value": 0.20400000000000063,
+     "value": 0.20000000000000284,
      "limit": 0.5,
      "unit": "s",
      "detail": "inside 5% of the step after 0.20 s",
@@ -2119,7 +2270,7 @@
     {
      "check": "roll to 15 degrees: overshoot",
      "passed": true,
-     "value": 0.0208506137563087,
+     "value": 0.0200644108973842,
      "limit": 0.2,
      "unit": "",
      "detail": "overshot by 2% of the step",
@@ -2128,16 +2279,16 @@
     {
      "check": "roll back from 15 degrees: settling",
      "passed": true,
-     "value": 0.20400000000000063,
+     "value": 0.16799999999999926,
      "limit": 0.5,
      "unit": "s",
-     "detail": "inside 5% of the step after 0.20 s",
+     "detail": "inside 5% of the step after 0.17 s",
      "extra": null
     },
     {
      "check": "roll back from 15 degrees: overshoot",
      "passed": true,
-     "value": 0.0324611236763066,
+     "value": 0.030700073479716705,
      "limit": 0.2,
      "unit": "",
      "detail": "overshot by 3% of the step",
@@ -2146,37 +2297,37 @@
     {
      "check": "pitch to 15 degrees: settling",
      "passed": true,
-     "value": 0.14399999999999835,
+     "value": 0.15200000000000102,
      "limit": 0.5,
      "unit": "s",
-     "detail": "inside 5% of the step after 0.14 s",
+     "detail": "inside 5% of the step after 0.15 s",
      "extra": null
     },
     {
      "check": "pitch to 15 degrees: overshoot",
      "passed": true,
-     "value": 0.04684640471306589,
+     "value": 0.03756235077446357,
      "limit": 0.2,
      "unit": "",
-     "detail": "overshot by 5% of the step",
+     "detail": "overshot by 4% of the step",
      "extra": null
     },
     {
      "check": "pitch back from 15 degrees: settling",
      "passed": true,
-     "value": 0.3760000000000048,
+     "value": 0.19999999999999574,
      "limit": 0.5,
      "unit": "s",
-     "detail": "inside 5% of the step after 0.38 s",
+     "detail": "inside 5% of the step after 0.20 s",
      "extra": null
     },
     {
      "check": "pitch back from 15 degrees: overshoot",
      "passed": true,
-     "value": 0.07318452751202598,
+     "value": 0.04049108648406463,
      "limit": 0.2,
      "unit": "",
-     "detail": "overshot by 7% of the step",
+     "detail": "overshot by 4% of the step",
      "extra": null
     },
     {
@@ -2195,12 +2346,12 @@
    "setup": "P",
    "flown": true,
    "passed": true,
-   "note": "34 s of real time at 4x",
+   "note": "33 s of real time at 4x",
    "findings": [
     {
      "check": "top speed",
      "passed": true,
-     "value": 24.521804688307622,
+     "value": 24.513175210532697,
      "limit": 22.22222222222222,
      "unit": "m/s",
      "detail": "held 88 km/h for 1 s, against 80",
@@ -2212,7 +2363,7 @@
      "value": 1.0,
      "limit": null,
      "unit": "",
-     "detail": "the busiest motor at 100% of its top speed, leaning up to 48 degrees",
+     "detail": "the busiest motor at 100% of its top speed, leaning up to 47 degrees",
      "extra": null
     },
     {
@@ -2231,12 +2382,12 @@
    "setup": "P",
    "flown": true,
    "passed": true,
-   "note": "27 s of real time at 4x",
+   "note": "25 s of real time at 4x",
    "findings": [
     {
      "check": "wind drift",
      "passed": true,
-     "value": 0.13086126085096242,
+     "value": 0.1310948520850022,
      "limit": 1.0,
      "unit": "m",
      "detail": "drifted 0.13 m in the wind",
@@ -2245,19 +2396,19 @@
     {
      "check": "motor headroom",
      "passed": true,
-     "value": 0.6118918918918919,
+     "value": 0.5955649419218585,
      "limit": 0.9,
      "unit": "",
-     "detail": "the busiest motor reached 61% of its top speed",
+     "detail": "the busiest motor reached 60% of its top speed",
      "extra": null
     },
     {
      "check": "leaning into the wind",
      "passed": true,
-     "value": 2.5387095883466557,
+     "value": 2.558661521380871,
      "limit": 0.5,
      "unit": "degrees",
-     "detail": "leaned 2.5 degrees into a 10 m/s wind",
+     "detail": "leaned 2.6 degrees into a 10 m/s wind",
      "extra": null
     },
     {
@@ -2276,15 +2427,15 @@
    "setup": "P+C",
    "flown": true,
    "passed": true,
-   "note": "25 s of real time at 4x",
+   "note": "33 s of real time at 4x",
    "findings": [
     {
      "check": "no fly-away",
      "passed": true,
-     "value": 0.6479792604686019,
+     "value": 0.4675017745521414,
      "limit": 30.0,
      "unit": "m",
-     "detail": "ended on the ground, 1 m from where it was then",
+     "detail": "ended on the ground, 0 m from where it was then",
      "extra": null
     },
     {
@@ -2293,16 +2444,16 @@
      "value": null,
      "limit": null,
      "unit": "",
-     "detail": "the motors stopped 0.10 s before the canopy left",
+     "detail": "the motors stopped 0.14 s before the canopy left",
      "extra": null
     },
     {
      "check": "chute height lost",
      "passed": true,
-     "value": 9.279657363891602,
+     "value": 9.120586395263672,
      "limit": null,
      "unit": "m",
-     "detail": "lost 9.3 m before settling at 4.3 m/s",
+     "detail": "lost 9.1 m before settling at 4.3 m/s",
      "extra": null
     },
     {
@@ -2321,30 +2472,30 @@
    "setup": "P+C",
    "flown": true,
    "passed": false,
-   "note": "49 s of real time at 4x",
+   "note": "50 s of real time at 4x",
    "findings": [
     {
      "check": "hover endurance",
      "passed": true,
-     "value": 0.0016605303498593328,
+     "value": 0.0014733611520379283,
      "limit": 0.1,
      "unit": "",
-     "detail": "25.9 min in the sim against the sizing model's 25.8, at 366 W",
+     "detail": "26.0 min in the sim against the sizing model's 25.9, at 364 W",
      "extra": {
-      "sim_min": 25.857890017590552,
-      "sizing_min": 25.81502338777283
+      "sim_min": 25.983192321886584,
+      "sizing_min": 25.94496601686639
      }
     },
     {
      "check": "cruise endurance",
      "passed": false,
-     "value": 0.22380593414485184,
+     "value": 0.22454070804180545,
      "limit": 0.1,
      "unit": "",
-     "detail": "25.9 min in the sim against the sizing model's 33.4, at 365 W",
+     "detail": "26.1 min in the sim against the sizing model's 33.6, at 362 W",
      "extra": {
-      "sim_min": 25.938578937171243,
-      "sizing_min": 33.41764653739552
+      "sim_min": 26.065980193664682,
+      "sizing_min": 33.613602240605964
      }
     },
     {
@@ -2362,8 +2513,8 @@
    "scenario": "failed sensor",
    "setup": "P+C",
    "flown": true,
-   "passed": true,
-   "note": "40 s of real time at 4x",
+   "passed": false,
+   "note": "30 s of real time at 4x",
    "findings": [
     {
      "check": "the landing",
@@ -2376,17 +2527,17 @@
     },
     {
      "check": "no fly-away",
-     "passed": true,
-     "value": 19.896323215599047,
+     "passed": false,
+     "value": 30.792730986277025,
      "limit": 30.0,
      "unit": "m",
-     "detail": "ended on the ground, 20 m from where it was then",
+     "detail": "ended on the ground, 31 m from where it was then",
      "extra": null
     },
     {
      "check": "touchdown",
      "passed": true,
-     "value": 0.6734053492546082,
+     "value": 0.7028239369392395,
      "limit": 2.0,
      "unit": "m/s",
      "detail": "came down at 0.7 m/s at the end, a controlled landing",
@@ -2408,24 +2559,24 @@
    "setup": "P+C",
    "flown": true,
    "passed": true,
-   "note": "30 s of real time at 4x",
+   "note": "32 s of real time at 4x",
    "findings": [
     {
      "check": "hover drift",
      "passed": true,
-     "value": 0.1000274841858681,
+     "value": 0.09153761945973128,
      "limit": 0.5,
      "unit": "m",
-     "detail": "drifted 0.10 m sideways over 60.036 s",
+     "detail": "drifted 0.09 m sideways over 60 s",
      "extra": null
     },
     {
      "check": "hover height",
      "passed": true,
-     "value": 0.09484291076660156,
+     "value": 0.06491756439208984,
      "limit": 0.3,
      "unit": "m",
-     "detail": "held its height within 0.09 m",
+     "detail": "held its height within 0.06 m",
      "extra": null
     },
     {
@@ -2444,7 +2595,7 @@
    "setup": "P+C",
    "flown": true,
    "passed": true,
-   "note": "47 s of real time at 4x",
+   "note": "42 s of real time at 4x",
    "findings": [
     {
      "check": "the return",
@@ -2458,7 +2609,7 @@
     {
      "check": "no fly-away",
      "passed": true,
-     "value": 0.006786973605517807,
+     "value": 0.012860186514701236,
      "limit": 2.0,
      "unit": "m",
      "detail": "ended on the ground, 0 m from where it started",
@@ -2480,7 +2631,7 @@
    "setup": "P+C",
    "flown": true,
    "passed": true,
-   "note": "370 s of real time at 4x",
+   "note": "364 s of real time at 4x",
    "findings": [
     {
      "check": "the return",
@@ -2494,7 +2645,7 @@
     {
      "check": "no fly-away",
      "passed": true,
-     "value": 0.03681032913151806,
+     "value": 0.08449285433193084,
      "limit": 2.0,
      "unit": "m",
      "detail": "ended on the ground, 0 m from where it started",
@@ -2503,10 +2654,10 @@
     {
      "check": "charge at landing",
      "passed": true,
-     "value": 0.28505702007567885,
+     "value": 0.2848689805562608,
      "limit": 0.2,
      "unit": "",
-     "detail": "landed with 29% left by my battery model, against the 20% reserve",
+     "detail": "landed with 28% left by my battery model, against the 20% reserve",
      "extra": null
     },
     {
@@ -2525,7 +2676,7 @@
    "setup": "P+C",
    "flown": true,
    "passed": true,
-   "note": "25 s of real time at 4x",
+   "note": "23 s of real time at 4x",
    "findings": [
     {
      "check": "chute order",
@@ -2539,16 +2690,16 @@
     {
      "check": "chute height lost",
      "passed": true,
-     "value": 4.881813049316406,
+     "value": 4.767295837402344,
      "limit": null,
      "unit": "m",
-     "detail": "lost 4.9 m before settling at 4.3 m/s",
+     "detail": "lost 4.8 m before settling at 4.3 m/s",
      "extra": null
     },
     {
      "check": "no fly-away",
      "passed": true,
-     "value": 0.16193575874198293,
+     "value": 0.14916277828606916,
      "limit": 30.0,
      "unit": "m",
      "detail": "ended on the ground, 0 m from where it was then",
@@ -2557,7 +2708,7 @@
     {
      "check": "safety monitor",
      "passed": true,
-     "value": 0.4239999999999995,
+     "value": 0.4159999999999968,
      "limit": null,
      "unit": "s",
      "detail": "its free fall trigger would fire 0.42 s after the failure",
@@ -2569,16 +2720,25 @@
    "scenario": "payload grab",
    "setup": "P+C",
    "flown": true,
-   "passed": false,
-   "note": "60 s of real time at 4x",
+   "passed": true,
+   "note": "42 s of real time at 4x",
    "findings": [
     {
-     "check": "flown to the end",
-     "passed": false,
-     "value": null,
-     "limit": null,
+     "check": "payload drift",
+     "passed": true,
+     "value": 0.09802218599108858,
+     "limit": 1.0,
+     "unit": "m",
+     "detail": "stayed within 0.10 m after picking it up",
+     "extra": null
+    },
+    {
+     "check": "payload lifted",
+     "passed": true,
+     "value": 1.113043521766842,
+     "limit": 1.113718620286059,
      "unit": "",
-     "detail": "it never got to 0 m north, 0 m east, 1 m up",
+     "detail": "the rotors' thrust grew 11%, against 11% for 250 g",
      "extra": null
     },
     {
@@ -2597,7 +2757,7 @@
    "setup": "P+C",
    "flown": true,
    "passed": true,
-   "note": "24 s of real time at 4x",
+   "note": "23 s of real time at 4x",
    "findings": [
     {
      "check": "the landing",
@@ -2611,16 +2771,16 @@
     {
      "check": "sagged top speed",
      "passed": true,
-     "value": 0.7881081081081082,
+     "value": 0.7845828933474129,
      "limit": null,
      "unit": "",
-     "detail": "the motors topped out at 79% of their usual top speed",
+     "detail": "the motors topped out at 78% of their usual top speed",
      "extra": null
     },
     {
      "check": "no fly-away",
      "passed": true,
-     "value": 0.03438832989491798,
+     "value": 0.052301865157102896,
      "limit": 30.0,
      "unit": "m",
      "detail": "ended on the ground, 0 m from where it was then",
@@ -2629,7 +2789,7 @@
     {
      "check": "touchdown",
      "passed": true,
-     "value": 0.6762542128562927,
+     "value": 0.7012460231781006,
      "limit": 2.0,
      "unit": "m/s",
      "detail": "came down at 0.7 m/s at the end, a controlled landing",
@@ -2651,78 +2811,78 @@
    "setup": "P+C",
    "flown": true,
    "passed": true,
-   "note": "18 s of real time at 4x",
+   "note": "21 s of real time at 4x",
    "findings": [
     {
      "check": "roll to 15 degrees: settling",
      "passed": true,
-     "value": 0.19200000000000017,
+     "value": 0.17199999999999704,
      "limit": 0.5,
      "unit": "s",
-     "detail": "inside 5% of the step after 0.19 s",
+     "detail": "inside 5% of the step after 0.17 s",
      "extra": null
     },
     {
      "check": "roll to 15 degrees: overshoot",
      "passed": true,
-     "value": 0.019432677051004488,
+     "value": 0.03728086792787022,
      "limit": 0.2,
      "unit": "",
-     "detail": "overshot by 2% of the step",
+     "detail": "overshot by 4% of the step",
      "extra": null
     },
     {
      "check": "roll back from 15 degrees: settling",
      "passed": true,
-     "value": 0.2079999999999984,
+     "value": 0.15200000000000102,
      "limit": 0.5,
      "unit": "s",
-     "detail": "inside 5% of the step after 0.21 s",
+     "detail": "inside 5% of the step after 0.15 s",
      "extra": null
     },
     {
      "check": "roll back from 15 degrees: overshoot",
      "passed": true,
-     "value": 0.03226600598632534,
+     "value": 0.04697163706557772,
      "limit": 0.2,
      "unit": "",
-     "detail": "overshot by 3% of the step",
+     "detail": "overshot by 5% of the step",
      "extra": null
     },
     {
      "check": "pitch to 15 degrees: settling",
      "passed": true,
-     "value": 0.347999999999999,
+     "value": 0.19599999999999795,
      "limit": 0.5,
      "unit": "s",
-     "detail": "inside 5% of the step after 0.35 s",
+     "detail": "inside 5% of the step after 0.20 s",
      "extra": null
     },
     {
      "check": "pitch to 15 degrees: overshoot",
      "passed": true,
-     "value": 0.07312051922067919,
+     "value": 0.03682211121741541,
      "limit": 0.2,
      "unit": "",
-     "detail": "overshot by 7% of the step",
+     "detail": "overshot by 4% of the step",
      "extra": null
     },
     {
      "check": "pitch back from 15 degrees: settling",
      "passed": true,
-     "value": 0.30400000000000205,
+     "value": 0.1599999999999966,
      "limit": 0.5,
      "unit": "s",
-     "detail": "inside 5% of the step after 0.30 s",
+     "detail": "inside 5% of the step after 0.16 s",
      "extra": null
     },
     {
      "check": "pitch back from 15 degrees: overshoot",
      "passed": true,
-     "value": 0.05110777386107701,
+     "value": 0.03974183959137911,
      "limit": 0.2,
      "unit": "",
-     "detail": "overshot by 5% of the step",
+     "detail": "overshot by 4% of the step",
      "extra": null
     },
     {
@@ -2741,24 +2901,33 @@
    "setup": "V",
    "flown": true,
    "passed": false,
-   "note": "21 s of real time at 4x",
+   "note": "34 s of real time at 4x",
    "findings": [
     {
      "check": "no fly-away",
      "passed": true,
-     "value": 2.7062498481398145,
+     "value": 1.859124226942705,
      "limit": 30.0,
      "unit": "m",
-     "detail": "ended on the ground, 3 m from where it was then",
+     "detail": "ended on the ground, 2 m from where it was then",
      "extra": null
     },
     {
      "check": "touchdown",
      "passed": false,
-     "value": 24.156444549560547,
+     "value": 24.56013298034668,
      "limit": 2.0,
      "unit": "m/s",
-     "detail": "came down at 24.2 m/s at the end, too fast for a controlled landing",
+     "detail": "came down at 24.6 m/s at the end, too fast for a controlled landing",
+     "extra": null
+    },
+    {
+     "check": "safety monitor",
+     "passed": true,
+     "value": 0.5080000000000027,
+     "limit": null,
+     "unit": "s",
+     "detail": "its free fall trigger would fire 0.51 s after the failure",
      "extra": null
     }
    ]
@@ -2768,25 +2937,31 @@
    "setup": "V",
    "flown": true,
    "passed": false,
-   "note": "49 s of real time at 4x",
+   "note": "46 s of real time at 4x",
    "findings": [
     {
      "check": "hover endurance",
      "passed": true,
-     "value": 0.0015551838631858164,
+     "value": 0.0015257352873924623,
      "limit": 0.1,
      "unit": "",
-     "detail": "28.3 min in the sim against the sizing model's 28.3, at 335 W",
-     "extra": null
+     "detail": "28.4 min in the sim against the sizing model's 28.4, at 333 W",
+     "extra": {
+      "sim_min": 28.436885533395277,
+      "sizing_min": 28.393564470148316
+     }
     },
     {
      "check": "cruise endurance",
      "passed": false,
-     "value": 0.22487991548530212,
+     "value": 0.22526208042994478,
      "limit": 0.1,
      "unit": "",
-     "detail": "28.4 min in the sim against the sizing model's 36.7, at 334 W",
-     "extra": null
+     "detail": "28.5 min in the sim against the sizing model's 36.8, at 332 W",
+     "extra": {
+      "sim_min": 28.540731752591512,
+      "sizing_min": 36.83920850089581
+     }
     },
     {
      "check": "false triggers",
@@ -2803,8 +2978,8 @@
    "scenario": "failed sensor",
    "setup": "V",
    "flown": true,
-   "passed": false,
-   "note": "31 s of real time at 4x",
+   "passed": true,
+   "note": "30 s of real time at 4x",
    "findings": [
     {
      "check": "the landing",
@@ -2817,17 +2992,17 @@
     },
     {
      "check": "no fly-away",
-     "passed": false,
-     "value": 32.915071179788725,
+     "passed": true,
+     "value": 22.04058208366433,
      "limit": 30.0,
      "unit": "m",
-     "detail": "ended on the ground, 33 m from where it was then",
+     "detail": "ended on the ground, 22 m from where it was then",
      "extra": null
     },
     {
      "check": "touchdown",
      "passed": true,
-     "value": 0.7063986659049988,
+     "value": 0.6947140097618103,
      "limit": 2.0,
      "unit": "m/s",
      "detail": "came down at 0.7 m/s at the end, a controlled landing",
@@ -2849,24 +3024,24 @@
    "setup": "V",
    "flown": true,
    "passed": true,
-   "note": "34 s of real time at 4x",
+   "note": "32 s of real time at 4x",
    "findings": [
     {
      "check": "hover drift",
      "passed": true,
-     "value": 0.06256781141840907,
+     "value": 0.09458994218840139,
      "limit": 0.5,
      "unit": "m",
-     "detail": "drifted 0.06 m sideways over 60 s",
+     "detail": "drifted 0.09 m sideways over 60 s",
      "extra": null
     },
     {
      "check": "hover height",
      "passed": true,
-     "value": 0.13949871063232422,
+     "value": 0.07177734375,
      "limit": 0.3,
      "unit": "m",
-     "detail": "held its height within 0.14 m",
+     "detail": "held its height within 0.07 m",
      "extra": null
     },
     {
@@ -2885,7 +3060,7 @@
    "setup": "V",
    "flown": true,
    "passed": true,
-   "note": "44 s of real time at 4x",
+   "note": "41 s of real time at 4x",
    "findings": [
     {
      "check": "the return",
@@ -2899,7 +3074,7 @@
     {
      "check": "no fly-away",
      "passed": true,
-     "value": 0.041219078310594126,
+     "value": 0.03444052900022877,
      "limit": 2.0,
      "unit": "m",
      "detail": "ended on the ground, 0 m from where it started",
@@ -2919,17 +3094,54 @@
   {
    "scenario": "low battery",
    "setup": "V",
-   "flown": false,
-   "passed": false,
-   "note": "PX4's clock stopped for 30 s of real time",
-   "findings": []
+   "flown": true,
+   "passed": true,
+   "note": "398 s of real time at 4x",
+   "findings": [
+    {
+     "check": "the return",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "unit": "",
+     "detail": "low battery then return then landed",
+     "extra": null
+    },
+    {
+     "check": "no fly-away",
+     "passed": true,
+     "value": 0.021715988401236234,
+     "limit": 2.0,
+     "unit": "m",
+     "detail": "ended on the ground, 0 m from where it started",
+     "extra": null
+    },
+    {
+     "check": "charge at landing",
+     "passed": true,
+     "value": 0.28983006675002304,
+     "limit": 0.2,
+     "unit": "",
+     "detail": "landed with 29% left by my battery model, against the 20% reserve",
+     "extra": null
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none",
+     "extra": null
+    }
+   ]
   },
   {
    "scenario": "sagging pack",
    "setup": "V",
    "flown": true,
    "passed": true,
-   "note": "25 s of real time at 4x",
+   "note": "24 s of real time at 4x",
    "findings": [
     {
      "check": "the landing",
@@ -2943,16 +3155,16 @@
     {
      "check": "sagged top speed",
      "passed": true,
-     "value": 0.7881081081081082,
+     "value": 0.7845828933474129,
      "limit": null,
      "unit": "",
-     "detail": "the motors topped out at 79% of their usual top speed",
+     "detail": "the motors topped out at 78% of their usual top speed",
      "extra": null
     },
     {
      "check": "no fly-away",
      "passed": true,
-     "value": 0.04972652422556861,
+     "value": 0.037631275266431896,
      "limit": 30.0,
      "unit": "m",
      "detail": "ended on the ground, 0 m from where it was then",
@@ -2961,7 +3173,7 @@
     {
      "check": "touchdown",
      "passed": true,
-     "value": 0.7218354940414429,
+     "value": 0.696077823638916,
      "limit": 2.0,
      "unit": "m/s",
      "detail": "came down at 0.7 m/s at the end, a controlled landing",
@@ -2983,57 +3195,57 @@
    "setup": "V",
    "flown": true,
    "passed": true,
-   "note": "21 s of real time at 4x",
+   "note": "22 s of real time at 4x",
    "findings": [
     {
      "check": "roll to 15 degrees: settling",
      "passed": true,
-     "value": 0.21600000000000108,
+     "value": 0.14399999999999835,
      "limit": 0.5,
      "unit": "s",
-     "detail": "inside 5% of the step after 0.22 s",
+     "detail": "inside 5% of the step after 0.14 s",
      "extra": null
     },
     {
      "check": "roll to 15 degrees: overshoot",
      "passed": true,
-     "value": 0.022300822694923728,
-     "limit": 0.2,
-     "unit": "",
-     "detail": "overshot by 2% of the step",
-     "extra": null
-    },
-    {
-     "check": "roll back from 15 degrees: settling",
-     "passed": true,
-     "value": 0.2120000000000033,
-     "limit": 0.5,
-     "unit": "s",
-     "detail": "inside 5% of the step after 0.21 s",
-     "extra": null
-    },
-    {
-     "check": "roll back from 15 degrees: overshoot",
-     "passed": true,
-     "value": 0.04365879006915119,
+     "value": 0.03820971929194683,
      "limit": 0.2,
      "unit": "",
      "detail": "overshot by 4% of the step",
      "extra": null
     },
     {
-     "check": "pitch to 16 degrees: settling",
+     "check": "roll back from 15 degrees: settling",
      "passed": true,
-     "value": 0.20400000000000063,
+     "value": 0.1839999999999975,
      "limit": 0.5,
      "unit": "s",
-     "detail": "inside 5% of the step after 0.20 s",
+     "detail": "inside 5% of the step after 0.18 s",
      "extra": null
     },
     {
-     "check": "pitch to 16 degrees: overshoot",
+     "check": "roll back from 15 degrees: overshoot",
      "passed": true,
-     "value": 0.048429216967999844,
+     "value": 0.04487481075883504,
+     "limit": 0.2,
+     "unit": "",
+     "detail": "overshot by 4% of the step",
+     "extra": null
+    },
+    {
+     "check": "pitch to 15 degrees: settling",
+     "passed": true,
+     "value": 0.35999999999999943,
+     "limit": 0.5,
+     "unit": "s",
+     "detail": "inside 5% of the step after 0.36 s",
+     "extra": null
+    },
+    {
+     "check": "pitch to 15 degrees: overshoot",
+     "passed": true,
+     "value": 0.05167255772101931,
      "limit": 0.2,
      "unit": "",
      "detail": "overshot by 5% of the step",
@@ -3042,19 +3254,19 @@
     {
      "check": "pitch back from 15 degrees: settling",
      "passed": true,
-     "value": 0.17999999999999972,
+     "value": 0.1599999999999966,
      "limit": 0.5,
      "unit": "s",
-     "detail": "inside 5% of the step after 0.18 s",
+     "detail": "inside 5% of the step after 0.16 s",
      "extra": null
     },
     {
      "check": "pitch back from 15 degrees: overshoot",
      "passed": true,
-     "value": 0.04103518974966458,
+     "value": 0.033102625897639903,
      "limit": 0.2,
      "unit": "",
-     "detail": "overshot by 4% of the step",
+     "detail": "overshot by 3% of the step",
      "extra": null
     },
     {
@@ -3073,12 +3285,12 @@
    "setup": "V",
    "flown": true,
    "passed": true,
-   "note": "30 s of real time at 4x",
+   "note": "32 s of real time at 4x",
    "findings": [
     {
      "check": "top speed",
      "passed": true,
-     "value": 24.392615848549855,
+     "value": 24.378647914919377,
      "limit": 22.22222222222222,
      "unit": "m/s",
      "detail": "held 88 km/h for 1 s, against 80",
@@ -3109,33 +3321,33 @@
    "setup": "V",
    "flown": true,
    "passed": true,
-   "note": "49 s of real time at 4x",
+   "note": "31 s of real time at 4x",
    "findings": [
     {
      "check": "wind drift",
      "passed": true,
-     "value": 0.1161999256737939,
+     "value": 0.15399766868481418,
      "limit": 1.0,
      "unit": "m",
-     "detail": "drifted 0.12 m in the wind",
+     "detail": "drifted 0.15 m in the wind",
      "extra": null
     },
     {
      "check": "motor headroom",
      "passed": true,
-     "value": 0.6129729729729729,
+     "value": 0.5955649419218585,
      "limit": 0.9,
      "unit": "",
-     "detail": "the busiest motor reached 61% of its top speed",
+     "detail": "the busiest motor reached 60% of its top speed",
      "extra": null
     },
     {
      "check": "leaning into the wind",
      "passed": true,
-     "value": 3.112057752092577,
+     "value": 2.3420623537015977,
      "limit": 0.5,
      "unit": "degrees",
-     "detail": "leaned 3.1 degrees into a 10 m/s wind",
+     "detail": "leaned 2.3 degrees into a 10 m/s wind",
      "extra": null
     },
     {
@@ -3152,35 +3364,69 @@
   {
    "scenario": "dead motor",
    "setup": "V+C",
-   "flown": false,
+   "flown": true,
    "passed": false,
-   "note": "PX4's clock stopped for 30 s of real time",
-   "findings": []
+   "note": "28 s of real time at 4x",
+   "findings": [
+    {
+     "check": "no fly-away",
+     "passed": true,
+     "value": 6.493384298169345,
+     "limit": 30.0,
+     "unit": "m",
+     "detail": "ended on the ground, 6 m from where it was then",
+     "extra": null
+    },
+    {
+     "check": "touchdown",
+     "passed": false,
+     "value": 24.050580978393555,
+     "limit": 2.0,
+     "unit": "m/s",
+     "detail": "came down at 24.1 m/s at the end, too fast for a controlled landing",
+     "extra": null
+    },
+    {
+     "check": "safety monitor",
+     "passed": true,
+     "value": 0.4960000000000022,
+     "limit": null,
+     "unit": "s",
+     "detail": "its free fall trigger would fire 0.50 s after the failure",
+     "extra": null
+    }
+   ]
   },
   {
    "scenario": "endurance",
    "setup": "V+C",
    "flown": true,
    "passed": false,
-   "note": "49 s of real time at 4x",
+   "note": "45 s of real time at 4x",
    "findings": [
     {
      "check": "hover endurance",
      "passed": true,
-     "value": 0.001374015499479679,
+     "value": 0.0014898457452647317,
      "limit": 0.1,
      "unit": "",
-     "detail": "25.3 min in the sim against the sizing model's 25.2, at 374 W",
-     "extra": null
+     "detail": "25.3 min in the sim against the sizing model's 25.3, at 373 W",
+     "extra": {
+      "sim_min": 25.303845338417656,
+      "sizing_min": 25.266202593984012
+     }
     },
     {
      "check": "cruise endurance",
      "passed": false,
-     "value": 0.2159069415740758,
+     "value": 0.21083131427729543,
      "limit": 0.1,
      "unit": "",
-     "detail": "25.2 min in the sim against the sizing model's 32.1, at 376 W",
-     "extra": null
+     "detail": "25.4 min in the sim against the sizing model's 32.1, at 372 W",
+     "extra": {
+      "sim_min": 25.369426654722563,
+      "sizing_min": 32.14702650231206
+     }
     },
     {
      "check": "false triggers",
@@ -3197,8 +3443,8 @@
    "scenario": "failed sensor",
    "setup": "V+C",
    "flown": true,
-   "passed": true,
-   "note": "30 s of real time at 4x",
+   "passed": false,
+   "note": "29 s of real time at 4x",
    "findings": [
     {
      "check": "the landing",
@@ -3211,17 +3457,17 @@
     },
     {
      "check": "no fly-away",
-     "passed": true,
-     "value": 17.542448858034163,
+     "passed": false,
+     "value": 32.41431071158151,
      "limit": 30.0,
      "unit": "m",
-     "detail": "ended on the ground, 18 m from where it was then",
+     "detail": "ended on the ground, 32 m from where it was then",
      "extra": null
     },
     {
      "check": "touchdown",
      "passed": true,
-     "value": 0.6943517923355103,
+     "value": 0.7199630737304688,
      "limit": 2.0,
      "unit": "m/s",
      "detail": "came down at 0.7 m/s at the end, a controlled landing",
@@ -3243,24 +3489,24 @@
    "setup": "V+C",
    "flown": true,
    "passed": true,
-   "note": "33 s of real time at 4x",
+   "note": "34 s of real time at 4x",
    "findings": [
     {
      "check": "hover drift",
      "passed": true,
-     "value": 0.0886441192859829,
+     "value": 0.05556888722228051,
      "limit": 0.5,
      "unit": "m",
-     "detail": "drifted 0.09 m sideways over 60 s",
+     "detail": "drifted 0.06 m sideways over 60.012 s",
      "extra": null
     },
     {
      "check": "hover height",
      "passed": true,
-     "value": 0.11145401000976562,
+     "value": 0.20147037506103516,
      "limit": 0.3,
      "unit": "m",
-     "detail": "held its height within 0.11 m",
+     "detail": "held its height within 0.20 m",
      "extra": null
     },
     {
@@ -3279,7 +3525,7 @@
    "setup": "V+C",
    "flown": true,
    "passed": true,
-   "note": "47 s of real time at 4x",
+   "note": "45 s of real time at 4x",
    "findings": [
     {
      "check": "the return",
@@ -3293,7 +3539,7 @@
     {
      "check": "no fly-away",
      "passed": true,
-     "value": 0.043925198841737456,
+     "value": 0.026002279585258053,
      "limit": 2.0,
      "unit": "m",
      "detail": "ended on the ground, 0 m from where it started",
@@ -3315,7 +3561,7 @@
    "setup": "V+C",
    "flown": true,
    "passed": true,
-   "note": "358 s of real time at 4x",
+   "note": "361 s of real time at 4x",
    "findings": [
     {
      "check": "the return",
@@ -3329,7 +3575,7 @@
     {
      "check": "no fly-away",
      "passed": true,
-     "value": 0.038474748668467965,
+     "value": 0.027230184971263078,
      "limit": 2.0,
      "unit": "m",
      "detail": "ended on the ground, 0 m from where it started",
@@ -3338,7 +3584,7 @@
     {
      "check": "charge at landing",
      "passed": true,
-     "value": 0.284155838002097,
+     "value": 0.28454468921335707,
      "limit": 0.2,
      "unit": "",
      "detail": "landed with 28% left by my battery model, against the 20% reserve",
@@ -3359,34 +3605,34 @@
    "scenario": "payload grab",
    "setup": "V+C",
    "flown": true,
-   "passed": false,
-   "note": "43 s of real time at 4x",
+   "passed": true,
+   "note": "35 s of real time at 4x",
    "findings": [
     {
      "check": "payload drift",
      "passed": true,
-     "value": 0.09469790089001526,
+     "value": 0.04747647855432412,
      "limit": 1.0,
      "unit": "m",
-     "detail": "stayed within 0.09 m after picking it up",
+     "detail": "stayed within 0.05 m after picking it up",
      "extra": null
     },
     {
      "check": "payload lifted",
      "passed": true,
-     "value": 1.1131443727111194,
-     "limit": 1.113747614912536,
+     "value": 1.1137872379960194,
+     "limit": 1.113969116756268,
      "unit": "",
      "detail": "the rotors' thrust grew 11%, against 11% for 250 g",
      "extra": null
     },
     {
      "check": "false triggers",
-     "passed": false,
-     "value": 1,
+     "passed": true,
+     "value": 0,
      "limit": 0,
      "unit": "",
-     "detail": "the safety monitor's triggers fired: tumble tilt at 131.4 s",
+     "detail": "the safety monitor's triggers fired: none",
      "extra": null
     }
    ]
@@ -3396,7 +3642,7 @@
    "setup": "V+C",
    "flown": true,
    "passed": true,
-   "note": "21 s of real time at 4x",
+   "note": "24 s of real time at 4x",
    "findings": [
     {
      "check": "the landing",
@@ -3410,16 +3656,16 @@
     {
      "check": "sagged top speed",
      "passed": true,
-     "value": 0.7881081081081082,
+     "value": 0.7845828933474129,
      "limit": null,
      "unit": "",
-     "detail": "the motors topped out at 79% of their usual top speed",
+     "detail": "the motors topped out at 78% of their usual top speed",
      "extra": null
     },
     {
      "check": "no fly-away",
      "passed": true,
-     "value": 0.009940645201254142,
+     "value": 0.038383539542515964,
      "limit": 30.0,
      "unit": "m",
      "detail": "ended on the ground, 0 m from where it was then",
@@ -3428,7 +3674,7 @@
     {
      "check": "touchdown",
      "passed": true,
-     "value": 0.6913323998451233,
+     "value": 0.6886134147644043,
      "limit": 2.0,
      "unit": "m/s",
      "detail": "came down at 0.7 m/s at the end, a controlled landing",
@@ -3453,75 +3699,75 @@
    "note": "22 s of real time at 4x",
    "findings": [
     {
-     "check": "roll to 15 degrees: settling",
+     "check": "roll to 16 degrees: settling",
      "passed": true,
-     "value": 0.16400000000000148,
-     "limit": 0.5,
-     "unit": "s",
-     "detail": "inside 5% of the step after 0.16 s",
-     "extra": null
-    },
-    {
-     "check": "roll to 15 degrees: overshoot",
-     "passed": true,
-     "value": 0.01770636053042418,
-     "limit": 0.2,
-     "unit": "",
-     "detail": "overshot by 2% of the step",
-     "extra": null
-    },
-    {
-     "check": "roll back from 15 degrees: settling",
-     "passed": true,
-     "value": 0.20400000000000063,
-     "limit": 0.5,
-     "unit": "s",
-     "detail": "inside 5% of the step after 0.20 s",
-     "extra": null
-    },
-    {
-     "check": "roll back from 15 degrees: overshoot",
-     "passed": true,
-     "value": 0.02736666171353086,
-     "limit": 0.2,
-     "unit": "",
-     "detail": "overshot by 3% of the step",
-     "extra": null
-    },
-    {
-     "check": "pitch to 15 degrees: settling",
-     "passed": true,
-     "value": 0.16400000000000148,
-     "limit": 0.5,
-     "unit": "s",
-     "detail": "inside 5% of the step after 0.16 s",
-     "extra": null
-    },
-    {
-     "check": "pitch to 15 degrees: overshoot",
-     "passed": true,
-     "value": 0.04090314092097036,
-     "limit": 0.2,
-     "unit": "",
-     "detail": "overshot by 4% of the step",
-     "extra": null
-    },
-    {
-     "check": "pitch back from 15 degrees: settling",
-     "passed": true,
-     "value": 0.19200000000000017,
+     "value": 0.1880000000000024,
      "limit": 0.5,
      "unit": "s",
      "detail": "inside 5% of the step after 0.19 s",
      "extra": null
     },
     {
-     "check": "pitch back from 15 degrees: overshoot",
+     "check": "roll to 16 degrees: overshoot",
      "passed": true,
-     "value": 0.04858382486102708,
+     "value": 0.03913270534098112,
      "limit": 0.2,
      "unit": "",
-     "detail": "overshot by 5% of the step",
+     "detail": "overshot by 4% of the step",
+     "extra": null
+    },
+    {
+     "check": "roll back from 16 degrees: settling",
+     "passed": true,
+     "value": 0.22399999999999665,
+     "limit": 0.5,
+     "unit": "s",
+     "detail": "inside 5% of the step after 0.22 s",
+     "extra": null
+    },
+    {
+     "check": "roll back from 16 degrees: overshoot",
+     "passed": true,
+     "value": 0.0019772928819545843,
+     "limit": 0.2,
+     "unit": "",
+     "detail": "overshot by 0% of the step",
+     "extra": null
+    },
+    {
+     "check": "pitch to 15 degrees: settling",
+     "passed": true,
+     "value": 0.3999999999999986,
+     "limit": 0.5,
+     "unit": "s",
+     "detail": "inside 5% of the step after 0.40 s",
+     "extra": null
+    },
+    {
+     "check": "pitch to 15 degrees: overshoot",
+     "passed": true,
+     "value": 0.08575143678446073,
+     "limit": 0.2,
+     "unit": "",
+     "detail": "overshot by 9% of the step",
+     "extra": null
+    },
+    {
+     "check": "pitch back from 15 degrees: settling",
+     "passed": true,
+     "value": 0.1839999999999975,
+     "limit": 0.5,
+     "unit": "s",
+     "detail": "inside 5% of the step after 0.18 s",
+     "extra": null
+    },
+    {
+     "check": "pitch back from 15 degrees: overshoot",
+     "passed": true,
+     "value": 0.03627736680500515,
+     "limit": 0.2,
+     "unit": "",
+     "detail": "overshot by 4% of the step",
      "extra": null
     },
     {
@@ -3853,63 +4099,112 @@
  "closing": {
   "flight_time": [
    {
-    "setup": "base"
+    "setup": "base",
+    "hover_sim_min": 33.67893132449848,
+    "hover_sizing_min": 33.62321831586155,
+    "cruise_sim_min": 33.846368548297725,
+    "cruise_sizing_min": 45.44331962192726
    },
    {
-    "setup": "V"
+    "setup": "V",
+    "hover_sim_min": 28.436885533395277,
+    "hover_sizing_min": 28.393564470148316,
+    "cruise_sim_min": 28.540731752591512,
+    "cruise_sizing_min": 36.83920850089581
    },
    {
-    "setup": "P"
+    "setup": "P",
+    "hover_sim_min": 29.290544635618136,
+    "hover_sizing_min": 29.24561955456662,
+    "cruise_sim_min": 29.426297281446953,
+    "cruise_sizing_min": 38.767194891832176
    },
    {
-    "setup": "C"
+    "setup": "C",
+    "hover_sim_min": 29.44214009408394,
+    "hover_sizing_min": 29.394096915996787,
+    "cruise_sim_min": 29.564231409010983,
+    "cruise_sizing_min": 38.697894419539054
    },
    {
-    "setup": "mission"
+    "setup": "mission",
+    "hover_sim_min": 25.19039160426977,
+    "hover_sizing_min": 25.155136616345164,
+    "cruise_sim_min": 25.260674884232454,
+    "cruise_sizing_min": 32.19013509276037
    },
    {
-    "setup": "V+C"
+    "setup": "V+C",
+    "hover_sim_min": 25.303845338417656,
+    "hover_sizing_min": 25.266202593984012,
+    "cruise_sim_min": 25.369426654722563,
+    "cruise_sizing_min": 32.14702650231206
    },
    {
     "setup": "P+C",
-    "hover_sim_min": 25.857890017590552,
-    "hover_sizing_min": 25.81502338777283,
-    "cruise_sim_min": 25.938578937171243,
-    "cruise_sizing_min": 33.41764653739552
+    "hover_sim_min": 25.983192321886584,
+    "hover_sizing_min": 25.94496601686639,
+    "cruise_sim_min": 26.065980193664682,
+    "cruise_sizing_min": 33.613602240605964
    },
    {
     "setup": "max",
-    "hover_sim_min": 22.695924484114535,
-    "hover_sizing_min": 22.667078751562283,
-    "cruise_sim_min": 22.73721235260557,
-    "cruise_sizing_min": 28.492527171629
+    "hover_sim_min": 22.678383863468362,
+    "hover_sizing_min": 22.647733435971166,
+    "cruise_sim_min": 22.723398021941197,
+    "cruise_sizing_min": 28.48291748549804
    }
   ],
-  "healthy_runs": 65,
-  "false_triggers": [
-   {
-    "scenario": "payload grab",
-    "setup": "max",
-    "detail": "the safety monitor's triggers fired: tumble tilt at 77.5 s, tumble tilt at 78.7 s, tumble tilt at 80.1 s, tumble tilt at 83.7 s, tumble tilt at 85.2 s, tumble tilt at 89.2 s"
-   },
-   {
-    "scenario": "payload grab",
-    "setup": "V+C",
-    "detail": "the safety monitor's triggers fired: tumble tilt at 131.4 s"
-   }
-  ],
+  "healthy_runs": 66,
+  "false_triggers": [],
   "caught": [
    {
     "scenario": "dead motor",
+    "setup": "base",
+    "delay_s": 0.5,
+    "detail": "its free fall trigger would fire 0.50 s after the failure"
+   },
+   {
+    "scenario": "dead motor",
+    "setup": "C",
+    "delay_s": 0.5120000000000005,
+    "detail": "its free fall trigger would fire 0.51 s after the failure"
+   },
+   {
+    "scenario": "dead motor",
     "setup": "max",
-    "delay_s": 0.480000000000004,
-    "detail": "its free fall trigger would fire 0.48 s after the failure"
+    "delay_s": 0.46000000000000085,
+    "detail": "its free fall trigger would fire 0.46 s after the failure"
    },
    {
     "scenario": "parachute drop",
     "setup": "max",
-    "delay_s": 0.4519999999999982,
-    "detail": "its free fall trigger would fire 0.45 s after the failure"
+    "delay_s": 0.46000000000000085,
+    "detail": "its free fall trigger would fire 0.46 s after the failure"
+   },
+   {
+    "scenario": "dead motor",
+    "setup": "mission",
+    "delay_s": 0.5079999999999956,
+    "detail": "its free fall trigger would fire 0.51 s after the failure"
+   },
+   {
+    "scenario": "parachute drop",
+    "setup": "mission",
+    "delay_s": 0.4439999999999955,
+    "detail": "its free fall trigger would fire 0.44 s after the failure"
+   },
+   {
+    "scenario": "dead motor",
+    "setup": "P",
+    "delay_s": 0.5040000000000049,
+    "detail": "its free fall trigger would fire 0.50 s after the failure"
+   },
+   {
+    "scenario": "parachute drop",
+    "setup": "P",
+    "delay_s": 0.4239999999999995,
+    "detail": "its free fall trigger would fire 0.42 s after the failure"
    },
    {
     "scenario": "dead motor",
@@ -3920,8 +4215,20 @@
    {
     "scenario": "parachute drop",
     "setup": "P+C",
-    "delay_s": 0.4239999999999995,
+    "delay_s": 0.4159999999999968,
     "detail": "its free fall trigger would fire 0.42 s after the failure"
+   },
+   {
+    "scenario": "dead motor",
+    "setup": "V",
+    "delay_s": 0.5080000000000027,
+    "detail": "its free fall trigger would fire 0.51 s after the failure"
+   },
+   {
+    "scenario": "dead motor",
+    "setup": "V+C",
+    "delay_s": 0.4960000000000022,
+    "detail": "its free fall trigger would fire 0.50 s after the failure"
    }
   ]
  },
@@ -3945,6 +4252,7 @@
   "stills/drop-square.png",
   "stills/drop-vertical.png",
   "stills/drop-wide.png",
+  "stills/steps.png",
   "flight-sim/models/pcs14_base/model.sdf",
   "flight-sim/models/pcs14_c/model.sdf",
   "flight-sim/models/pcs14_max/model.sdf",

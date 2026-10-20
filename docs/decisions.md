@@ -148,7 +148,7 @@ I wanted to see the drag, not just read a number, so the Aero side track's visua
 
 ### What flying the scenarios changed (2026-10-20)
 
-- **PX4's attitude gains are 9, not the x500's 6.5** (MC_ROLL_P and MC_PITCH_P). At 6.5 a 15° stick step settled in 0.6 s against the 0.5 s target; at 9 it settles in 0.25 s and overshoots 3 to 4%. The tuning lives in one place in the generator, with the reason next to it.
+- **PX4's attitude gains are 9, not the x500's 6.5** (MC_ROLL_P and MC_PITCH_P). At 6.5 a 15° stick step settled in 0.6 s against the 0.5 s target; at 9 it settles in 0.25 s and overshoots 3 to 4%. The tuning lives in one place in the generator, with the reason next to it. *Corrected 2026-10-20:* in the final batch the x500's 6.5 settles in 0.29 s and 9 in 0.17 s, so both make the target; the 0.6 s came from early runs, before the runner's fixes. 9 stays, because it settles 1.7 times faster with 3% overshoot.
 - **The chute is PX4's output function 401.** I first used 400, which is PX4's landing gear: the "gear" retracted after take-off, the servo swung over, and the plugin fired the chute 4 m up. Mission then crawled along at 4 m/s with an open canopy, and the wind blew it over. One wrong number, two failed scenarios.
 - **Stick inputs are flown in PX4's altitude mode, over MAVLink,** the way a pilot flies it (COM_RC_IN_MODE 1 for that run). The script waits until PX4 really is in altitude mode, because once it wasn't, and the first stick movement dropped PX4 from Hold into Position mode, where a stick means a speed.
 - **A dead motor is flown with CA_FAILURE_MODE 1,** PX4's "drop the failed motor from the mix". The x500 ignores motor failures, so without it the injected failure never reached the motor. It's the setting I'd want on the real drone anyway.
@@ -160,6 +160,12 @@ I wanted to see the drag, not just read a number, so the Aero side track's visua
 - **The safety monitor's triggers are timed on the real failures too:** for the drop and the dead motor, how soon after the failure its first trigger would fire. Not a pass or fail of the drone: they're in shadow mode.
 - **Every miss in the report gets its reason, or says it hasn't been looked into.** The reasons are written once in the report code, next to the unproven list.
 - **Low battery runs on PX4's simulated battery, drained at my battery model's hover rate,** with the return called at 30% and a warning at 35%. That's a stand-in for my firmware's energy-based return; whether it landed above the reserve is judged by my battery model from the logged rotors.
+
+### The flight sim's last batch (2026-10-20)
+
+- **Batches fly one at a time at 4x,** with nothing else running. Two at a time kept the PC at a load of about 12 on 16 threads, and about ten runs failed in ways that weren't the drone: a short stall at 4x is four times longer in the sim, and it starves PX4's control loop. Every one of them passed flown alone.
+- **A take-off where the model never climbs at all is the sim failing,** not the drone, and the run is "not flown". A drone that climbs and then crashes stays the drone's.
+- **Step 4 is done with three findings,** all in [the log](log/2026-10-20-flight-sim-final.md): a dead motor without P is a crash, a GPS failure is a blind descent that can drift past 30 m, and cruise endurance is 25% under the sizing model. The design questions they raise (P in every combination, an optical flow sensor in Base) are mine to decide.
 
 ### What finishing the flight sim changed (2026-10-20)
 
