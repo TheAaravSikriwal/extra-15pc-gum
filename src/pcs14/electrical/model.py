@@ -102,6 +102,8 @@ class CheckNumbers(Strict):
     # ceilings checked without the margin, for a part whose maker publishes no maximum (the
     # reason goes on the unproven list)
     pin_ceilings: dict[str, float] = Field(default_factory=dict)
+    # connectors (board.CONNECTOR) whose heat my firmware limits by easing the current cap
+    heat_limited: list[str] = Field(default_factory=list)
     supply_typical_share: float = Field(gt=0, le=1)  # of a supply's continuous rating
     fuse_hold_factor: float = Field(ge=1)
     cell_link_blow_s: float = Field(gt=0)  # a dead short melts the link this fast

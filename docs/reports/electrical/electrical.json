@@ -2,7 +2,7 @@
  "generated": "2026-10-19",
  "pcs14_version": "0.1.0",
  "build": "E3 2814 850KV / 1050 3-blade / 6S2P Molicel INR-21700-P45B",
- "verdict": "fail",
+ "verdict": "pass",
  "connection_list": {
   "boards": 33,
   "wires": 128,
@@ -2819,12 +2819,12 @@
   {
    "check": "connector burst",
    "subject": "pack.XT60.+",
-   "passed": false,
-   "value": 134.08361742324274,
+   "passed": true,
+   "value": 100.0,
    "limit": 100.0,
    "unit": "C",
    "where": "max, burst",
-   "detail": "90 A for 10 s ends 94 K over the air (heating with a 98 s time constant)",
+   "detail": "90 A lasts 3.1 s before 100 C; then my firmware eases the cap to hold 100 C, which 29 A does forever (its heat limit, from this model)",
    "rests_on": [
     "amass-xt60: rating.contact_mass_g"
    ]
@@ -2845,12 +2845,12 @@
   {
    "check": "connector burst",
    "subject": "pack.XT60.-",
-   "passed": false,
-   "value": 134.08361741768255,
+   "passed": true,
+   "value": 100.0,
    "limit": 100.0,
    "unit": "C",
    "where": "P, burst",
-   "detail": "90 A for 10 s ends 94 K over the air (heating with a 98 s time constant)",
+   "detail": "90 A lasts 3.1 s before 100 C; then my firmware eases the cap to hold 100 C, which 29 A does forever (its heat limit, from this model)",
    "rests_on": [
     "amass-xt60: rating.contact_mass_g"
    ]
@@ -5231,13 +5231,13 @@
   {
    "part": "pack.XT60.+",
    "start_c": 83.59,
-   "end_c": 134.08,
+   "end_c": 100.0,
    "limit_c": 100.0
   },
   {
    "part": "pack.XT60.-",
    "start_c": 83.59,
-   "end_c": 134.08,
+   "end_c": 100.0,
    "limit_c": 100.0
   },
   {
@@ -10137,7 +10137,8 @@
   "Powering the Pi 5 through its GPIO 5 V pins, which Raspberry Pi's docs don't describe.",
   "The Pi 5's highest safe input. Raspberry Pi publishes only a 5.1 V supply and the 4.63 V undervoltage warning, so its 5.19 V from the BEC is checked against USB's 5.25 V ceiling, with no margin.",
   "The ESC cable's re-pinning: Holybro doesn't say which end of its plug is pin 1.",
-  "Whether the ARK FPV terminates its CAN port. If it does, the harness's terminator at that end comes off."
+  "Whether the ARK FPV terminates its CAN port. If it does, the harness's terminator at that end comes off.",
+  "The XT60's contact mass, a 2.5 g guess. The firmware's heat limit and the burst check both rest on it: heavier contacts give the burst more time."
  ],
  "kicad_rules_violations": 0,
  "files": [

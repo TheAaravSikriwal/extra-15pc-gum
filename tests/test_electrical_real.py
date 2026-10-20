@@ -129,35 +129,45 @@ def test_the_real_drones_open_findings(real, loads):
     # the release servo's two went with the Schottkys (2026-10-19): through the ideal diodes it
     # gets 5.16 V, and 4.92 V on its backup. The Pi's 5.185 V is checked against USB's 5.25 V
     # without the margin, since Raspberry Pi publishes no maximum
-    assert failing == [
-        ("connector burst", "pack.XT60.+"),  # 134 C after 10 s at 90 A, against 100
-        ("connector burst", "pack.XT60.-"),
-    ]
+    # and the XT60's went with the firmware's heat limit on the current cap
+    assert failing == []
     assert len(findings) > 250
     heat = {f.check for f in findings}
     assert {"wire current", "wire temperature", "wire burst", "connector temperature"} <= heat
     assert {"ESC current", "ESC burst", "motor current"} <= heat
 
 
-def test_the_xt60_is_the_one_part_past_its_limit_in_the_burst(real, loads):
-    from pcs14.electrical import thermal
-    from pcs14.electrical.checks import LI_ION_NOMINAL, Context
+def test_the_firmware_heat_limit_keeps_the_xt60_at_its_limit(real, loads):
+    # my firmware eases the 90 A cap as the XT60 nears its limit (decided 2026-10-19), so the
+    # burst works it to exactly its limit, and nothing else passes one
+    from pcs14.electrical import checks, thermal
 
-    catalog, build, design, _, _ = real
-    parts = {p.id: p for p in catalog.all_parts()}
-    ctx = Context.make(
-        design, parts, listed_in(build), design.checks, LI_ION_NOMINAL * build.pack.series
-    )
+    catalog, build, design, settings, _ = real
+    assert "pack.XT60" in design.checks.heat_limited
+    ctx = checks.design_context(design, catalog, build, settings)
     connectors = thermal.connector_working(ctx, loads)
-    assert (
-        connectors[("max", "hover")]["pack.XT60.+"]
-        < 1
-        < connectors[("max", "burst")]["pack.XT60.+"]
-    )
-    hot = {ref for shares in connectors.values() for ref, share in shares.items() if share > 1}
-    assert hot == {"pack.XT60.+", "pack.XT60.-"}
+    assert connectors[("max", "hover")]["pack.XT60.+"] < 1
+    assert connectors[("max", "burst")]["pack.XT60.+"] == pytest.approx(1.0)
+    assert max(s for shares in connectors.values() for s in shares.values()) <= 1 + 1e-9
     wires = thermal.wire_working(ctx, loads)
     assert max(max(shares.values()) for shares in wires.values()) < 1
+    burst = [
+        f
+        for f in thermal.connector_heat(ctx, loads)
+        if f.check == "connector burst" and f.subject == "pack.XT60.+"
+    ]
+    assert burst and burst[0].passed and "firmware" in burst[0].detail
+    curves = {name: curve for name, curve, _ in thermal.burst_curves(ctx, loads)}
+    assert max(c for _, c in curves["pack.XT60.+"]) == pytest.approx(100.0)
+    # every combination ends at the limit, so the curve shown is the one that gets there soonest:
+    # the heaviest hover's, starting hottest
+    hottest_start = max(
+        thermal._connector_model(ctx, "pack.XT60.+")[0].steady_rise(
+            loads[(name, "hover")].contacts["pack.XT60.+"]
+        )
+        for name, _ in loads
+    )
+    assert curves["pack.XT60.+"][0][1] == pytest.approx(design.checks.air_c + hottest_start)
 
 
 def test_the_cases_start_at_the_packs_own_terminals(real, loads):

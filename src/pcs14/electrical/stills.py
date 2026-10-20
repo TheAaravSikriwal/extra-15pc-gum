@@ -136,12 +136,27 @@ def burst_heat(curves, path: Path, air_c: float) -> Path:
     charts._label(ax, "seconds into the burst", "°C")
     name, curve, limit = hottest
     over = curve[-1][1] > limit
-    canvas.headline(
-        f"{curve[-1][1]:.0f} °C",
-        f"{name[0].upper()}{name[1:]} after {seconds:g} s at the cap, against its {limit:g} °C "
-        + ("limit. It rests on a guessed contact mass." if over else "limit."),
-        color="pop" if over else "accent",
-    )
+    held = [i for i, (_, c) in enumerate(curve) if c >= limit - 0.01]
+    if held and not over:
+        # it flattens at its limit: the firmware's heat limit easing the current cap. The
+        # samples are coarse, so carry the rise just before it on to the limit
+        k = held[0]
+        reach = curve[k][0]
+        if k >= 2:
+            (t0, c0), (t1, c1) = curve[k - 2], curve[k - 1]
+            reach = t1 + (limit - c1) * (t1 - t0) / (c1 - c0)
+        canvas.headline(
+            f"{reach:.1f} s",
+            f"of the full current before {name} reaches its {limit:g} °C limit, starting from "
+            "the heaviest hover. Then my firmware eases the current cap to hold it there.",
+        )
+    else:
+        canvas.headline(
+            f"{curve[-1][1]:.0f} °C",
+            f"{name[0].upper()}{name[1:]} after {seconds:g} s at the cap, against its "
+            f"{limit:g} °C " + ("limit. It rests on a guessed contact mass." if over else "limit."),
+            color="pop" if over else "accent",
+        )
     canvas.save(path)
     return path
 
@@ -188,8 +203,11 @@ def wire_work(route_shares: dict, connectors: dict, path: Path, case: str = "bur
     text = (
         f"The hardest working route, {hardest_route[0]}, uses {hardest_route[1]:.0%} of its limit."
     )
+    who = f"{_nice(connector)[0].upper()}{_nice(connector)[1:]}" if connector else ""
     if connector is not None and share > 1:
-        text += f" {_nice(connector)[0].upper()}{_nice(connector)[1:]} is the one thing past it."
+        text += f" {who} is the one thing past it."
+    elif connector is not None and share >= 0.999:
+        text += f" {who} runs right at its limit, where my firmware holds it."
     canvas.headline(f"{hardest_route[1]:.0%}", text)
     # the long route names need more room on the left than the other charts give
     left = 0.30

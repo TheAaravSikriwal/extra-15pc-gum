@@ -285,7 +285,8 @@ def render(run: ElectricalRun, generated: str | None = None) -> str:
         "## Heat through the burst",
         "",
         "Each starts from its hottest steady temperature and takes the burst's current for "
-        "its whole length.",
+        "its whole length. A connector my firmware protects (`heat_limited`) stops at its limit, "
+        "where the firmware eases the current cap.",
         "",
         "| Part | Before | At the end | Limit |",
         "|---|---|---|---|",

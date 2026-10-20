@@ -66,7 +66,7 @@ Every check, one by one:
 
 ## Heat through the burst
 
-Each starts from its hottest steady temperature and takes the burst's current for its whole length.
+Each starts from its hottest steady temperature and takes the burst's current for its whole length. A connector my firmware protects (`heat_limited`) stops at its limit, where the firmware eases the current cap.
 
 | Part | Before | At the end | Limit |
 |---|---|---|---|

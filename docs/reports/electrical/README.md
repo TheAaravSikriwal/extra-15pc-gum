@@ -6,12 +6,7 @@
 
 ## The verdict
 
-**Fail.** 2 of 438 checks miss.
-
-| Check | Where | In | What it found | Rests on |
-|---|---|---|---|---|
-| connector burst | pack.XT60.+ | max, burst | 90 A for 10 s ends 94 K over the air (heating with a 98 s time constant) | amass-xt60: rating.contact_mass_g |
-| connector burst | pack.XT60.- | P, burst | 90 A for 10 s ends 94 K over the air (heating with a 98 s time constant) | amass-xt60: rating.contact_mass_g |
+**Pass.** All 438 checks pass in all 8 module combinations.
 
 Built from E3 2814 850KV / 1050 3-blade / 6S2P Molicel INR-21700-P45B. The connection list has 33 boards, 128 wires and 27 safety paths.
 It passes every rule in all 8 module combinations: every pin exists, one driver per line, no supplies tied together, no pin over its voltage, every board powered and grounded, two CAN terminators, and every safety path there.
@@ -48,7 +43,7 @@ Every rating gets 80% at most, steady. Heat is checked in 40 °C air, steady and
 | wire temperature | 54 | 54 | lead.XT60.+ to esc.BAT.VBAT, max, hover: 64 C at 25.07 A in 12 AWG silicone, good to 200 C |
 | wire burst | 14 | 14 | lead.XT60.+ to esc.BAT.VBAT, max, burst: 90.0 A for 10 s from 64 C ends at 83 C in 12 AWG silicone |
 | connector temperature | 8 | 8 | pack.XT60.+, max, hover: 25.1 A rises 44 K over the 40 C air; Amass rates 85 K at 35 A |
-| connector burst | 2 | 0 | pack.XT60.+, max, burst: 90 A for 10 s ends 94 K over the air (heating with a 98 s time constant) |
+| connector burst | 2 | 2 | pack.XT60.+, max, burst: 90 A lasts 3.1 s before 100 C; then my firmware eases the cap to hold 100 C, which 29 A does forever (its heat limit, from this model) |
 | ESC current | 1 | 1 | holybro-tekko32-f4-50a, max, hover: 6.0 A a motor, against 80% of its 50 A |
 | ESC burst | 1 | 1 | holybro-tekko32-f4-50a, base, burst: 22.4 A a motor at the cap, against its 60 A burst |
 | motor current | 1 | 1 | emax-e3-2814-850kv, base, burst: 22.4 A at the cap, against its 58.4 A peak |
@@ -383,12 +378,12 @@ Every check, one by one:
 </details>
 
 <details>
-<summary>connector burst: 2 checked, 2 miss</summary>
+<summary>connector burst: 2 checked</summary>
 
 | What | In | Found | Verdict |
 |---|---|---|---|
-| pack.XT60.+ | max, burst | 90 A for 10 s ends 94 K over the air (heating with a 98 s time constant) | fail |
-| pack.XT60.- | P, burst | 90 A for 10 s ends 94 K over the air (heating with a 98 s time constant) | fail |
+| pack.XT60.+ | max, burst | 90 A lasts 3.1 s before 100 C; then my firmware eases the cap to hold 100 C, which 29 A does forever (its heat limit, from this model) | pass |
+| pack.XT60.- | P, burst | 90 A lasts 3.1 s before 100 C; then my firmware eases the cap to hold 100 C, which 29 A does forever (its heat limit, from this model) | pass |
 
 </details>
 
@@ -633,12 +628,12 @@ Every check, one by one:
 
 ## Heat through the burst
 
-Each starts from its hottest steady temperature and takes the burst's current for its whole length.
+Each starts from its hottest steady temperature and takes the burst's current for its whole length. A connector my firmware protects (`heat_limited`) stops at its limit, where the firmware eases the current cap.
 
 | Part | Before | At the end | Limit |
 |---|---|---|---|
-| pack.XT60.+ | 84 °C | 134 °C | 100 °C |
-| pack.XT60.- | 84 °C | 134 °C | 100 °C |
+| pack.XT60.+ | 84 °C | 100 °C | 100 °C |
+| pack.XT60.- | 84 °C | 100 °C | 100 °C |
 | lead.XT60.+ to esc.BAT.VBAT | 64 °C | 83 °C | 180 °C |
 | lead.XT60.- to esc.BAT.GND | 64 °C | 83 °C | 180 °C |
 | esc.MOTORS.M1A to m1.leads.A | 49 °C | 60 °C | 180 °C |
@@ -889,6 +884,7 @@ Every number comes from a maker's datasheet or a measurement, except these estim
 - The Pi 5's highest safe input. Raspberry Pi publishes only a 5.1 V supply and the 4.63 V undervoltage warning, so its 5.19 V from the BEC is checked against USB's 5.25 V ceiling, with no margin.
 - The ESC cable's re-pinning: Holybro doesn't say which end of its plug is pin 1.
 - Whether the ARK FPV terminates its CAN port. If it does, the harness's terminator at that end comes off.
+- The XT60's contact mass, a 2.5 g guess. The firmware's heat limit and the burst check both rest on it: heavier contacts give the burst more time.
 - The switch sims use generic models built from datasheet numbers, with no ground bounce or noise from the motor current. A clean sim isn't a scope on the real thing.
 
 ## Files

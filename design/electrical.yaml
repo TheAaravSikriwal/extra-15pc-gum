@@ -302,6 +302,7 @@ unproven:
   - "The Pi 5's highest safe input. Raspberry Pi publishes only a 5.1 V supply and the 4.63 V undervoltage warning, so its 5.19 V from the BEC is checked against USB's 5.25 V ceiling, with no margin."
   - "The ESC cable's re-pinning: Holybro doesn't say which end of its plug is pin 1."
   - "Whether the ARK FPV terminates its CAN port. If it does, the harness's terminator at that end comes off."
+  - "The XT60's contact mass, a 2.5 g guess. The firmware's heat limit and the burst check both rest on it: heavier contacts give the burst more time."
 
 # The check numbers, from the spec's "The check numbers" (2026-10-18)
 checks:
@@ -313,6 +314,7 @@ checks:
   load_margin_v: 0.1 # every load this far inside its voltage range, at both ends
   pin_minimums:
     pi.GPIO.5V: 4.75 # the Pi's undervoltage warning (4.63 V) plus about 0.1 V
+  heat_limited: [pack.XT60] # my firmware eases the current cap to keep the XT60 under its limit (2026-10-19)
   pin_ceilings:
     pi.GPIO.5V: 5.25 # USB's 5 V ceiling, with no margin: Raspberry Pi publishes no maximum (2026-10-19)
   supply_typical_share: 0.8 # typical draw against a supply's continuous rating

@@ -79,7 +79,7 @@ No custom PCB: everything is off-the-shelf boards and breakouts. The talk (2026-
 2. **A pin map:**
    - the flight controller: four bidirectional DShot outputs on timers, serial ports for the receiver, GPS, safety monitor and companion computer, SPI for the IMU
    - the Teensy: the receiver feed, its own IMU, the signal switch, the chute trigger, the heartbeat
-3. **Power:** the battery connector (the frame's XT60), the ESC, 5 V supplies for the flight controller and the companion computer, the current sensor, fuses on the branches and on each cell (no main fuse), wire gauges and connector ratings.
+3. **Power:** the battery connector (the frame's XT60), the ESC, 5 V supplies for the flight controller and the companion computer, the current sensor, fuses on the branches (no main fuse, and the cell fuses came out in the build), wire gauges and connector ratings.
 4. **Checks:**
    - voltage drop, using wire lengths from the CAD
    - peak and continuous currents in every setup
@@ -87,7 +87,7 @@ No custom PCB: everything is off-the-shelf boards and breakouts. The talk (2026-
    - the power budget for every module combination
 5. **Circuit sim (ngspice):** the safety monitor's multiplexer passes bidirectional DShot cleanly, still passes it with the Teensy unpowered, and hands the lines over to the Teensy's stop frames with at most one broken frame. A dead Teensy doesn't load the lines it listens to.
 
-**Done when:** every connection is specified, and every current, voltage and temperature is inside its rating with margin.
+**Done when:** every connection is specified, and every current, voltage and temperature is inside its rating with margin. *Done 2026-10-19: see [the electrical report](reports/electrical/README.md).*
 
 ## Step 4: Flight sim (PX4)
 
@@ -122,7 +122,8 @@ Gazebo Harmonic and PX4, in WSL2.
    - low battery, counted in mAh
    - the geofence, enforced on the flight controller
    - the limits profiles
-5. **Safety monitor firmware:** its own program with its own simulated IMU and the receiver feed. It handles the kill switch and the heartbeat, and runs its automatic triggers in shadow mode.
+   - the current cap at the pack's rating, with a heat limit on the XT60: it tracks the connector's temperature and eases the cap as it nears 100 °C (from step 3d)
+5. **Safety monitor firmware:** its own program with its own simulated IMU and the receiver feed. It handles the kill switch and the heartbeat, and runs its automatic triggers in shadow mode. After a takeover it holds each DShot line high between its stop frames and lets go only while the ESC answers (from step 3's switch sims).
 6. **Ground station v1** on the laptop: live telemetry, live PID tuning, and the active limits profile always on screen. It speaks MAVLink, so QGroundControl works too.
 7. **Hardware-in-the-loop (optional):** the same firmware on a Nucleo-H743, fed by the sim.
 

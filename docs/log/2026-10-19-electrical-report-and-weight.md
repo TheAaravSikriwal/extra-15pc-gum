@@ -79,6 +79,22 @@ The Pi sees 5.185 V from the BEC, and the check wanted it under 5.15 V: USB's 5.
 
 A second regulator just for the Pi would fix it properly, but that's grams and a part to protect against a limit nobody has published. So the Pi now gets a ceiling of its own, checked without the margin: USB's 5.25 V, which any USB-C charger can already hand it. It passes with 65 mV to spare, and the missing maximum is on the report's unproven list, where it belongs.
 
+## The XT60
+
+The last finding was the battery connector. At the 90 A cap it passes its 100 °C limit (Amass's 120 °C, less the margin) after 8.3 seconds from Base's hover, 4.9 from Mission's and 3.1 from Max's, since a heavier drone hovers on more current and starts the burst warmer. It can carry 29 A forever, more than any setup hovers on.
+
+An XT90 has more metal to soak up the heat, but it's grams on both halves and might still not last 10 seconds. The cap is already my own firmware's, so the fix goes there: the flight controller tracks the XT60's temperature with the same model the check uses (I² heating with a 98 second time constant, from the current it already measures) and eases the cap down as the estimate nears 100 °C. A punch-out still gets the full 90 A for a few seconds, and then the drone keeps flying on less. It's a setting I can tune, it weighs nothing, and it joins step 5's list next to the safety monitor holding the DShot line between frames. It rests on the 2.5 g contact mass I guessed, so it's on the unproven side until someone weighs a real XT60.
+
+![Ten seconds flat out](../reports/electrical/stills/burst-heat.png)
+
+With that, the electrical report passes: 438 checks in all eight combinations, nothing missing.
+
+## Step 3, done
+
+Every wire, pin and connector is in one file, and everything else comes from it: the checks, the currents, the heat, the switch sims, the harness diagrams, the pin maps, the schematic and the report. Along the way it dropped the cell fuse links, moved the cells to P45B, put the fuses inline and the release servo on an ideal diode, and handed my firmware two jobs. Mission is 2414 g and hovers 22.25 minutes on the pessimistic model, against 21.
+
+What's still mine to do: ask Fruity Chutes for the Harrier's servo, and set up WSL2 on the PC for the flight sim.
+
 ## Next
 
-The last finding: the XT60 in the burst.
+Step 4, the flight sim in PX4, starting with the talk.

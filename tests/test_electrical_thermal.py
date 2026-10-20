@@ -134,3 +134,21 @@ def test_burst_curves_start_hot_and_carry_their_limits():
     assert limit_c == 180
     assert curve[0][0] == 0 and curve[-1][0] == pytest.approx(10)
     assert curve[0][1] > 40 and curve[-1][1] > curve[0][1]
+
+
+def test_how_long_a_connector_takes_to_reach_its_limit_by_hand():
+    xt60 = thermal.ConnectorModel(rated_a=35, rise_c=85, contact_ohms=1.0e-3, heat_capacity=2.0)
+    start, allowed = 40.0, 60.0
+    final = 85 * (90 / 35) ** 2
+    tau = xt60.time_constant
+    expected = -tau * math.log((final - allowed) / (final - start))
+    assert xt60.time_to(start, 90, allowed) == pytest.approx(expected)
+    assert xt60.burst_rise(start, 90, expected) == pytest.approx(allowed)
+    assert xt60.time_to(start, 20, allowed) is None  # 20 A never gets there
+    assert xt60.time_to(70.0, 90, allowed) == 0.0  # already past it
+
+
+def test_the_current_a_connector_holds_forever():
+    xt60 = thermal.ConnectorModel(rated_a=35, rise_c=85, contact_ohms=1.0e-3, heat_capacity=2.0)
+    assert xt60.holds(60.0) == pytest.approx(35 * math.sqrt(60 / 85))
+    assert xt60.steady_rise(xt60.holds(60.0)) == pytest.approx(60.0)

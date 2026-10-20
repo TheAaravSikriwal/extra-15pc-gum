@@ -197,6 +197,20 @@ class ConnectorModel:
         final = self.steady_rise(amps)
         return final + (start_rise - final) * math.exp(-seconds / self.time_constant)
 
+    def time_to(self, start_rise: float, amps: float, allowed_rise: float) -> float | None:
+        """Seconds at `amps` until the rise reaches `allowed_rise`: 0 if it's already there,
+        None if this current never gets it there."""
+        if start_rise >= allowed_rise:
+            return 0.0
+        final = self.steady_rise(amps)
+        if final <= allowed_rise:
+            return None
+        return -self.time_constant * math.log((final - allowed_rise) / (final - start_rise))
+
+    def holds(self, allowed_rise: float) -> float:
+        """The current it can carry forever without passing `allowed_rise`."""
+        return self.rated_a * math.sqrt(allowed_rise / self.rise_c)
+
 
 def _wire_model(ctx, run):
     """A run's heat model and its temperature limit (its insulation's, less the margin), or
@@ -264,6 +278,11 @@ def _connector_steady(solutions, setup) -> dict[str, float]:
     return out
 
 
+def _heat_limited(ctx, ref: str) -> bool:
+    """Whether my firmware eases the current cap to keep this connector under its limit."""
+    return ref.rsplit(".", 1)[0] in ctx.numbers.heat_limited
+
+
 def wire_working(ctx, solutions) -> dict:
     """How hard each wire works, in each combination and case: the share of its allowed heating
     it uses, which is its temperature rise over the air against the rise to its limit. Past 1,
@@ -308,6 +327,8 @@ def connector_working(ctx, solutions) -> dict:
                 continue
             if case == "burst":
                 rise = model.burst_rise(model.steady_rise(steady.get(ref, 0.0)), amps, seconds)
+                if _heat_limited(ctx, ref):
+                    rise = min(rise, limit_c - air)
             else:
                 rise = model.steady_rise(amps)
             shares[ref] = rise / (limit_c - air)
@@ -318,16 +339,17 @@ def connector_working(ctx, solutions) -> dict:
 def burst_curves(ctx, solutions, wires: int = 3) -> list[tuple[str, list, float]]:
     """Temperature through the burst for the few wires that end it nearest their limits, and
     for the power connectors the burst heats: (name, [(s, C)], limit in C), the hardest
-    working first. Each comes from the combination where it ends hottest."""
+    working first. Each comes from the combination where it ends hottest, or, for one held
+    at its limit, the one that starts hottest (it gets there soonest)."""
     air, seconds = ctx.numbers.air_c, ctx.numbers.burst_s
     models = {run.label: _wire_model(ctx, run) for run in ctx.design.wires}
     starts = _steady_temps(ctx, solutions, models)
-    worst: dict[str, tuple] = {}  # name -> (share at the end, draw it)
+    worst: dict[str, tuple] = {}  # name -> ((share at the end, start), draw it)
 
-    def keep(name, end_c, limit_c, draw):
-        share = (end_c - air) / (limit_c - air)
-        if share > worst.get(name, (-1.0,))[0]:
-            worst[name] = (share, draw)
+    def keep(name, end_c, limit_c, draw, start_c):
+        rank = (round((end_c - air) / (limit_c - air), 9), start_c)
+        if rank > worst.get(name, ((-1.0, -math.inf),))[0]:
+            worst[name] = (rank, draw)
 
     contacts = set()
     for (setup, case), solution in solutions.items():
@@ -339,7 +361,8 @@ def burst_curves(ctx, solutions, wires: int = 3) -> list[tuple[str, list, float]
                 continue
             start = starts.get(setup, {}).get(label, air)
             end = model.burst(start, amps, seconds, air)
-            keep(label, end, limit_c, (model.trajectory, (start, amps, seconds, air), limit_c))
+            draw = (model.trajectory, (start, amps, seconds, air), limit_c)
+            keep(label, end, limit_c, draw, start)
         steady = _connector_steady(solutions, setup)
         for ref, amps in solution.contacts.items():
             model, limit_c = _connector_model(ctx, ref)
@@ -348,16 +371,21 @@ def burst_curves(ctx, solutions, wires: int = 3) -> list[tuple[str, list, float]
             contacts.add(ref)
             rise = model.steady_rise(steady.get(ref, 0.0))
             end = air + model.burst_rise(rise, amps, seconds)
-            keep(ref, end, limit_c, (model.trajectory, (rise, amps, seconds), limit_c, air))
+            ceiling = limit_c - air if _heat_limited(ctx, ref) else None
+            if ceiling is not None:
+                end = min(end, limit_c)
+            draw = (model.trajectory, (rise, amps, seconds), limit_c, air, ceiling)
+            keep(ref, end, limit_c, draw, air + rise)
 
     ranked = sorted(worst.items(), key=lambda item: item[1][0], reverse=True)
     chosen = [item for item in ranked if item[0] not in contacts][:wires]
     chosen += [item for item in ranked if item[0] in contacts]
     out = []
     for name, (_, draw) in sorted(chosen, key=lambda item: item[1][0], reverse=True):
-        trajectory, args, limit_c, *offset = draw
-        lift = offset[0] if offset else 0.0
-        out.append((name, [(t, lift + c) for t, c in trajectory(*args)], limit_c))
+        trajectory, args, limit_c, *rest = draw
+        lift = rest[0] if rest else 0.0
+        ceiling = rest[1] if len(rest) > 1 and rest[1] is not None else math.inf
+        out.append((name, [(t, lift + min(c, ceiling)) for t, c in trajectory(*args)], limit_c))
     return out
 
 
@@ -476,7 +504,30 @@ def connector_heat(ctx, solutions) -> list:
             )
         )
         burst_amps, burst_where = bursts.get(ref, (0.0, ""))
-        if burst_amps > 1.05 * amps:
+        if burst_amps > 1.05 * amps and _heat_limited(ctx, ref):
+            allowed = limit_c - numbers.air_c
+            seconds = model.time_to(rise, burst_amps, allowed)
+            end = min(model.burst_rise(rise, burst_amps, numbers.burst_s), allowed)
+            lasts = (
+                f"{burst_amps:.0f} A never reaches {limit_c:g} C"
+                if seconds is None
+                else f"{burst_amps:.0f} A lasts {seconds:.1f} s before {limit_c:g} C"
+            )
+            findings.append(
+                Finding(
+                    "connector burst",
+                    ref,
+                    True,
+                    numbers.air_c + end,
+                    limit_c,
+                    "C",
+                    burst_where,
+                    f"{lasts}; then my firmware eases the cap to hold {limit_c:g} C, which "
+                    f"{model.holds(allowed):.0f} A does forever (its heat limit, from this model)",
+                    family_rests,
+                )
+            )
+        elif burst_amps > 1.05 * amps:
             end = model.burst_rise(rise, burst_amps, numbers.burst_s)
             findings.append(
                 Finding(
