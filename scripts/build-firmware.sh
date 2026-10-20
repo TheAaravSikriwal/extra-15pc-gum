@@ -14,6 +14,6 @@ cmake -S "$here/firmware" -B "$HOME/build/fw" -DCMAKE_BUILD_TYPE=Debug "${python
 cmake --build "$HOME/build/fw" -j "$jobs"
 cmake -S "$here/firmware" -B "$HOME/build/fw-sitl" -DCMAKE_BUILD_TYPE=Release \
   -DPCS14_SITL=ON -DPCS14_SANITIZE=OFF
-cmake --build "$HOME/build/fw-sitl" -j "$jobs" --target pcs14_sitl
+cmake --build "$HOME/build/fw-sitl" -j "$jobs" --target pcs14_sitl pcs14_monitor_sitl
 ctest --test-dir "$HOME/build/fw" --output-on-failure
 echo "pcs14_sitl: $HOME/build/fw-sitl/sitl/pcs14_sitl"

@@ -91,6 +91,25 @@ SENSORS = """      <sensor name="air_pressure_sensor" type="air_pressure">
         <always_on>1</always_on>
         <update_rate>30</update_rate>
       </sensor>
+      <!-- the safety monitor's own IMU (the Teensy's, in Base), separate from the flight
+           controller's; PX4 never reads it -->
+      <sensor name="monitor_imu_sensor" type="imu">
+        <gz_frame_id>base_link</gz_frame_id>
+        <always_on>1</always_on>
+        <update_rate>250</update_rate>
+        <imu>
+          <angular_velocity>
+            <x><noise type="gaussian"><mean>0</mean><stddev>0.0008726646</stddev></noise></x>
+            <y><noise type="gaussian"><mean>0</mean><stddev>0.0008726646</stddev></noise></y>
+            <z><noise type="gaussian"><mean>0</mean><stddev>0.0008726646</stddev></noise></z>
+          </angular_velocity>
+          <linear_acceleration>
+            <x><noise type="gaussian"><mean>0</mean><stddev>0.00637</stddev></noise></x>
+            <y><noise type="gaussian"><mean>0</mean><stddev>0.00637</stddev></noise></y>
+            <z><noise type="gaussian"><mean>0</mean><stddev>0.00686</stddev></noise></z>
+          </linear_acceleration>
+        </imu>
+      </sensor>
 """
 
 

@@ -112,3 +112,41 @@ def test_altitude_mode_climbs_holds_and_comes_down():
     assert heights.max() - heights.min() < 0.6, (heights.min(), heights.max())
     assert np.degrees(ulog.tilt_of(flight.attitude[inside])).max() < 2.0
     assert flight.position[-1, 2] < 0.2  # back on the ground
+
+
+def test_the_safety_monitor_cuts_a_hung_flight_controller():
+    """Hovering at 5 m, my firmware's process freezes (SIGSTOP: a hung flight controller). The
+    safety monitor, on its own IMU, sees the heartbeat stop and cuts within its 0.25 s
+    timeout, and the drone falls instead of hovering on at its last motor speeds (step 5,
+    task 10)."""
+    import os
+    import signal
+    import time
+
+    async def fly():
+        s = run.Session(TOOLS, "pcs14_base", {}, EXPORTS, "hang-check", instance=6,
+                        firmware="mine")  # fmt: skip
+        try:
+            await s.start()
+            truth = firmware.GroundTruth(run.gz_bindings(), s.partition, s.entity)
+            await s.drone.action.set_takeoff_altitude(5.0)
+            await s.drone.action.arm()
+            await s.drone.action.takeoff()
+            await s.clock.until(lambda: s.state.height > 4.8, 30.0)
+            await s.clock.sleep(3.0)
+            t0, h0, _ = truth.now()
+            sitl = next(p for name, p in s._processes if name == "sitl")
+            os.kill(sitl.pid, signal.SIGSTOP)
+            time.sleep(1.5)  # wall time: the flight controller's clock is frozen with it
+            _, h1, _ = truth.now()
+            os.kill(sitl.pid, signal.SIGCONT)
+        finally:
+            await s.stop()
+        return t0, h0, h1, s.result.notes.get("monitor", [])
+
+    t0, h0, h1, said = asyncio.run(fly())
+    cuts = [line for line in said if line.startswith("cut flight controller silent")]
+    assert cuts, said
+    cut_at = float(cuts[0].rsplit(" ", 1)[1])
+    assert 0 < cut_at - t0 < 0.4
+    assert h0 > 4.5 and h1 < 1.0  # it came down

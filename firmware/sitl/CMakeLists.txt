@@ -8,3 +8,8 @@ add_executable(pcs14_sitl src/main.cpp)
 target_link_libraries(pcs14_sitl PRIVATE pcs14_core gz-transport13::gz-transport13 gz-msgs10::gz-msgs10)
 # Gazebo's and protobuf's headers aren't written for this many warnings
 target_compile_options(pcs14_sitl PRIVATE -Wno-conversion -Wno-shadow -Wno-pedantic)
+
+# the safety monitor in the sim, between pcs14_sitl and the motors, on its own IMU
+add_executable(pcs14_monitor_sitl ../monitor/sitl/main.cpp)
+target_link_libraries(pcs14_monitor_sitl PRIVATE pcs14_monitor gz-transport13::gz-transport13 gz-msgs10::gz-msgs10)
+target_compile_options(pcs14_monitor_sitl PRIVATE -Wno-conversion -Wno-shadow -Wno-pedantic)

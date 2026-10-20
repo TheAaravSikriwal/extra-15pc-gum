@@ -183,13 +183,24 @@ def params_text(params: dict) -> str:
     return "\n".join(lines) + "\n"
 
 
-def sitl_command(binary, entity: str, airframe, instance: int, params) -> list[str]:
-    """My firmware's sim layer, flying Gazebo's `entity`, on PX4's ports for `instance`."""
+def sitl_command(binary, entity: str, airframe, instance: int, params, monitor=False):
+    """My firmware's sim layer, flying Gazebo's `entity`, on PX4's ports for `instance`; with
+    `monitor`, through the safety monitor."""
     return [
         Path(binary).as_posix(), "--world", WORLD, "--model", entity,
         "--airframe", Path(airframe).as_posix(), "--instance", str(instance),
         "--params", Path(params).as_posix(), "--log", "log/sitl.ulg",
-    ]  # fmt: skip
+    ] + (["--monitor"] if monitor else [])  # fmt: skip
+
+
+def monitor_command(binary, entity: str, live: bool = False) -> list[str]:
+    """The safety monitor in the sim, between my firmware and `entity`'s motors."""
+    return [Path(binary).as_posix(), "--world", WORLD, "--model", entity] + (
+        ["--live"] if live else []
+    )
+
+
+MONITOR_LINES = ("cut ", "trigger ")  # what the monitor's log says that a run's record keeps
 
 
 def gz_command(world, verbose: int = 2) -> list[str]:
@@ -461,10 +472,12 @@ class Session:
         speed: float = 1.0,
         work: Path | None = None,
         firmware: str = "px4",
+        monitor: bool = True,
     ):
         if firmware not in FIRMWARES:
             raise ValueError(f"no firmware called {firmware}: there's {', '.join(FIRMWARES)}")
         self.firmware = firmware
+        self.monitor = monitor and firmware == "mine"  # the safety monitor, with my firmware
         self.tools, self.model, self.params = tools, model, params
         self.exports, self.scenario = Path(exports), scenario
         self.instance, self.speed = instance, speed
@@ -650,8 +663,15 @@ class Session:
             )  # fmt: skip
         params = self.folder / "params.txt"
         params.write_text(params_text({**self.params, **RUN_PARAMS}), encoding="utf-8")
+        if self.monitor:
+            watcher = binary.parent / "pcs14_monitor_sitl"
+            if not watcher.exists():
+                raise SimError(f"no pcs14_monitor_sitl at {watcher}; run scripts/build-firmware.sh")
+            await self._spawn(monitor_command(watcher, self.entity), "monitor", env=self.gz_env,
+                              cwd=self.folder)  # fmt: skip
         process = await self._spawn(
-            sitl_command(binary, self.entity, home / "firmware.txt", self.instance, params),
+            sitl_command(binary, self.entity, home / "firmware.txt", self.instance, params,
+                         self.monitor),
             "sitl", env=self.gz_env, cwd=self.folder,
         )  # fmt: skip
         # a bridge that can't start (a missing file, a bad parameter) says so and leaves at once
@@ -692,6 +712,10 @@ class Session:
             await _end(process, 20.0 if name == "px4" else 10.0)
         for out in self._outputs:
             out.close()
+        monitor_log = self.folder / "monitor.log"
+        if monitor_log.exists():
+            said = monitor_log.read_text(errors="replace").splitlines()
+            self.result.notes["monitor"] = [s for s in said if s.startswith(MONITOR_LINES)]
         gz_log = self.folder / "gz.log"
         if gz_log.exists():
             self.result.marks += gz_marks(gz_log.read_text(errors="replace"))

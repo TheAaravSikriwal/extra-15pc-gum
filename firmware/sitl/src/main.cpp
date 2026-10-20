@@ -2,7 +2,7 @@
 // its Gazebo bridge. GPL-3.0.
 //
 //   pcs14_sitl --world pcs14 --model pcs14_base_0 --airframe models/pcs14_base/firmware.txt
-//              [--instance 0] [--params params.txt] [--log log/sitl.ulg] [--stdin]
+//              [--instance 0] [--params params.txt] [--log log/sitl.ulg] [--stdin] [--monitor]
 //
 // The sensors are the model's own Gazebo sensors, the ones PX4 reads. Gazebo gives them in the
 // body's forward-left-up frame and an east-north-up world; they turn into forward-right-down
@@ -26,6 +26,7 @@
 #include <arpa/inet.h>
 #include <common/mavlink.h>
 #include <gz/msgs/actuators.pb.h>
+#include <gz/msgs/boolean.pb.h>
 #include <gz/msgs/double.pb.h>
 #include <gz/msgs/fluid_pressure.pb.h>
 #include <gz/msgs/imu.pb.h>
@@ -96,6 +97,7 @@ struct Options {
   std::string world = "pcs14", model, airframe, params, log = "log/sitl.ulg";
   int instance = 0;
   bool stdin_commands = false;
+  bool monitor = false;  // the safety monitor sits between this and the motors
 };
 
 bool parse_options(int argc, char** argv, Options& o) {
@@ -103,6 +105,10 @@ bool parse_options(int argc, char** argv, Options& o) {
     const std::string key = argv[k];
     if (key == "--stdin") {
       o.stdin_commands = true;
+      continue;
+    }
+    if (key == "--monitor") {
+      o.monitor = true;
       continue;
     }
     if (k + 1 >= argc) return false;
@@ -287,8 +293,12 @@ class Bridge {
     log_ = std::make_unique<pcs14::FlightLogWriter>(ulog_, true);
     const std::string sensors =
         "/world/" + o.world + "/model/" + o.model + "/link/base_link/sensor/";
-    // the motor plugins have no namespace set, so they listen under the model's own name
-    motors_ = node_.Advertise<gz::msgs::Actuators>("/" + o.model + "/command/motor_speed");
+    // the motor plugins have no namespace set, so they listen under the model's own name; with
+    // the safety monitor, the speeds go to it instead (pcs14_monitor_sitl), with a heartbeat
+    motors_ = node_.Advertise<gz::msgs::Actuators>(
+        "/" + o.model + (o.monitor ? "/fc/motor_speed" : "/command/motor_speed"));
+    if (o.monitor) heartbeat_ = node_.Advertise<gz::msgs::Boolean>("/" + o.model + "/fc/heartbeat");
+    monitor_ = o.monitor;
     // the first servo, where PX4's parachute output (function 401) goes in the P combinations
     chute_ = node_.Advertise<gz::msgs::Double>("/model/" + o.model + "/servo_0");
     node_.Subscribe(sensors + "imu_sensor/imu", &Bridge::on_imu, this);
@@ -468,6 +478,11 @@ class Bridge {
     const pcs14::Mix mix = flight_.step(gyro, accel, dt);
     send(mix.rad_s);
     send_chute();
+    if (monitor_) {
+      gz::msgs::Boolean beat;
+      beat.set_data(flight_.armed());
+      heartbeat_.Publish(beat);
+    }
     const uint64_t us = micros(t);
     log_->log(pcs14::ImuLog{us, gyro, accel});
     log_->log(pcs14::EscSample{us, mix.rad_s});
@@ -643,7 +658,8 @@ class Bridge {
   pcs14::Link link_;
   Telemetry telemetry_;
   gz::transport::Node node_;
-  gz::transport::Node::Publisher motors_, chute_;
+  gz::transport::Node::Publisher motors_, chute_, heartbeat_;
+  bool monitor_ = false;
   std::mutex mutex_;
   std::thread listener_;
   double last_ = -1, next_status_ = 0, next_sample_ = 0;
@@ -659,7 +675,7 @@ int main(int argc, char** argv) {
   if (!parse_options(argc, argv, options)) {
     std::fprintf(stderr,
                  "usage: pcs14_sitl [--world pcs14] --model <name in Gazebo> --airframe <file> "
-                 "[--instance 0] [--params <file>] [--log log/sitl.ulg] [--stdin]\n");
+                 "[--instance 0] [--params <file>] [--log log/sitl.ulg] [--stdin] [--monitor]\n");
     return 2;
   }
   std::string text;
