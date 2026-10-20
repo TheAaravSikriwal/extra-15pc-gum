@@ -47,6 +47,8 @@ Where to look:
 
 **Step 4c, task 11, mostly done (2026-10-20).** All twelve scenarios fly. Passing: hover, stick steps (after tuning PX4's attitude gain from 6.5 to 9), top speed (88 km/h), 10 m/s wind, lost link, low battery (home with 29% left), the parachute drop, a dead motor with P, the sagging pack, the payload grab. Not passing, and why: **a dead motor without P is a crash** (a quad can't fly on three motors); **losing GPS means a blind descent** that drifts 34 to 38 m in calm air (no optical flow sensor); **cruise endurance disagrees with the sizing model by about 25%** (Gazebo's rotors don't gain from forward flight; the sizing model's do). Fixed on the way: the chute was on PX4's landing gear output (400, not 401) and opened on take-off. The [log](docs/log/2026-10-20-flight-sim-scenarios.md).
 
+**The first wind tunnel visuals (2026-10-20).** FluidX3D on the RTX 3060: the drone (every module on) at 10 m/s, streamlines and shed vortices, 60 million cells, four minutes a run. FluidX3D lives in `C:\dr\fluidx3d` (altered source, committed locally; it needs its public fork before any picture is posted). Its drag reads about 230 cm² against the sizing model's 202, but that's visual-grade. The [log](docs/log/2026-10-20-first-wind-tunnel.md).
+
 **Offline?** Study from [docs/learning.md](docs/learning.md). Topics 1 and 2 (how quads fly; props, motors and batteries) are what the sizing model needs.
 
 ## Up next
@@ -57,8 +59,10 @@ Where to look:
    - Regrade everything (`pcs14 flight-sim regrade`, inside WSL or on Windows) so the drop and dead-motor runs get the safety monitor's catch time.
    - Fly the before-and-after for the steps still: `pcs14 flight-sim run --setup base --scenario steps --tag x500-gains --param MC_ROLL_P=6.5 --param MC_PITCH_P=6.5 --speed 4`.
    - Then `pcs14 flight-sim report --replays` writes the report, the stills and a Rerun replay of every run. Commit the report and stills.
-2. **Task 12, closing the loop:** the report's new sections do most of it (flight times against the sizing model, false triggers, the monitor's catch times, why each miss misses). Write it up, and decide what the three design findings mean (below).
-3. **The project site's spec** (what it's built with). The goal is written down in decisions: a complete blueprint, from the structure to the circuits.
+   - **More batch runs failed only in the batch:** steps in Mission ("never climbed"), low battery in Mission (19.7 of 20 m) and the payload grab in C (tipped over), on top of wind in P. Some overlapped the FluidX3D runs, which also load the PC. Rerun each alone, with nothing else running, before believing any of them.
+2. **The wind tunnel, next:** a true side view, post-sized stills (FluidX3D's frame size is a build switch), the props spinning, and the 10 m/s crosswind. Make the public FluidX3D fork (mine to OK) before posting any of it.
+3. **Task 12, closing the loop:** the report's new sections do most of it (flight times against the sizing model, false triggers, the monitor's catch times, why each miss misses). Write it up, and decide what the three design findings mean (below).
+4. **The project site's spec** (what it's built with). The goal is written down in decisions: a complete blueprint, from the structure to the circuits.
 2. **The project site's spec** (what it's built with). The goal is written down in decisions: a complete blueprint, from the structure to the circuits.
 
 ## Still open

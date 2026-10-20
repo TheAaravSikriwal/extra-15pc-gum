@@ -137,6 +137,15 @@ And one from the plan: **the GPS is the ARK GPS on DroneCAN** (16 g, 8 g over th
 - **New pass/fail numbers in the targets,** my picks: a return lands within 2 m of where it took off; after a failure, a controlled landing comes down slower than 2 m/s at the end, and ending more than 30 m from where the failure hit is a fly-away.
 - **A script's marks come in pairs,** "hold start" and "hold end", because a bare "hold" collided with PX4's Hold mode in the first flight's grading.
 
+### The first wind tunnel visuals (decided 2026-10-20)
+
+I wanted to see the drag, not just read a number, so the Aero side track's visual half starts now, ahead of its OpenFOAM half.
+
+- **FluidX3D on the PC's RTX 3060, on Windows,** in `C:\dr\fluidx3d`, outside this repo (its license isn't GPL-compatible). My changes are marked as altered source and committed in that clone; it becomes a public fork before any picture from it is posted, since its license requires publishing altered source with results.
+- **The first case:** the CAD's watertight body with every module on (Max), props left out, at the 10 m/s cruise, in a 1.4 by 3.2 by 1.1 m tunnel of 4.3 mm cells (60 million), with the Smagorinsky subgrid model for the high Reynolds number (about 260,000).
+- **What it shows:** streamlines in the drone's middle plane and the vortices it sheds, colored by speed in turbo, the project's CFD colormap, swapped in for FluidX3D's rainbow.
+- **Pictures, not numbers.** FluidX3D's drag (about 230 cm² of drag area here) is labeled visual-grade: its own docs say it runs 1.3 to 2x high without a wall model. The drag tables still come from OpenFOAM, proven on a sphere first.
+
 ### What flying the scenarios changed (2026-10-20)
 
 - **PX4's attitude gains are 9, not the x500's 6.5** (MC_ROLL_P and MC_PITCH_P). At 6.5 a 15° stick step settled in 0.6 s against the 0.5 s target; at 9 it settles in 0.25 s and overshoots 3 to 4%. The tuning lives in one place in the generator, with the reason next to it.
