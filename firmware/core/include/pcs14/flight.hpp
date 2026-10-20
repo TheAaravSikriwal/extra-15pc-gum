@@ -22,6 +22,7 @@
 #include "pcs14/attitude.hpp"
 #include "pcs14/height.hpp"
 #include "pcs14/land.hpp"
+#include "pcs14/limits.hpp"
 #include "pcs14/mixer.hpp"
 #include "pcs14/modes.hpp"
 #include "pcs14/position.hpp"
@@ -34,6 +35,9 @@ struct Airframe {
   float mass_kg = 0;
   Vec3 inertia;  // kg m^2: the diagonal; the cross terms are small on a symmetric quad
   MixerSetup mixer;
+  // for the current cap's estimate (0: no estimate, no cap): a motor's power is
+  // power_coefficient * speed^power_exponent; the pack's voltage; the avionics' power
+  float power_coefficient = 0, power_exponent = 3, pack_volts = 0, avionics_w = 0;
 };
 
 struct FlightGains {
@@ -122,6 +126,13 @@ class Flight {
   // stops (or restarts) using the GPS, as PX4's EKF2_GPS_CTRL does; a second without it and the
   // position is no longer valid
   void use_gps(bool use) { use_gps_ = use; }
+  // the highest an automatic setpoint may go, in m over home (the limits profile's ceiling and
+  // the parachute rule; pcs14/limits.hpp)
+  void set_height_limit(float m) { height_limit_ = m; }
+  // the battery current the motors are estimated to draw (A), and what the cap allows
+  float current() const { return current_; }
+  float current_allowed() const { return current_allowed_; }
+  const CurrentCap& current_cap() const { return cap_; }
 
   // one control step: gyro (rad/s) and accelerometer (m/s^2, specific force), body frame.
   // Returns the motors' speeds: zero when disarmed, idle or more when armed.
@@ -177,6 +188,9 @@ class Flight {
   bool have_gps_velocity_ = false;
   bool flown_ = false;  // taken off since it armed
   bool use_gps_ = true;
+  float height_limit_ = 1e9f;
+  CurrentCap cap_;
+  float current_ = 0, current_allowed_ = 1e9f;
   float gps_t_ = -1e9f;  // when the GPS was last used
   bool failed_[4]{};
   static constexpr float kGpsTimeout = 1.0f;  // s

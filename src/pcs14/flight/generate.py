@@ -517,7 +517,7 @@ def model_info(model: FlightModel) -> dict:
     return info
 
 
-def firmware_airframe(model: FlightModel) -> str:
+def firmware_airframe(model: FlightModel, power=None) -> str:
     """My firmware's airframe file (firmware/core's airframe_file.hpp): the whole drone as one
     rigid body, props included, in the body frame forward-right-down about its center of
     gravity. Gazebo carries the props as links of their own, and at 0.21 m out their 67 g add
@@ -552,7 +552,39 @@ def firmware_airframe(model: FlightModel) -> str:
         f"max_rad_s {_n(motor.max_rot_velocity)}",
         f"hover_rad_s {_n(motor.hover_rot_velocity)}  # for people: what it should hover at",
     ]
+    if power is not None:  # (coefficient, exponent, the pack's volts, the avionics' W)
+        coefficient, exponent, volts, avionics = power
+        lines += [
+            "# for the current cap: each motor's power as coefficient * speed^exponent, through",
+            "# the thrust table's hover and top (pessimistic); the pack at the reserve; avionics",
+            f"power_coefficient {_n(coefficient)}",
+            f"power_exponent {_n(exponent)}",
+            f"pack_volts {_n(volts)}",
+            f"avionics_w {_n(avionics)}",
+        ]
     return "\n".join(lines) + "\n"
+
+
+CELL_AT_RESERVE_V = 3.5  # V a cell under load near the reserve, for my firmware's current cap
+
+
+def firmware_power(model: FlightModel, build, setup) -> tuple[float, float, float, float]:
+    """My firmware's current estimate: a motor's power as a power law in its speed through the
+    thrust table's hover and top (pessimistic, as the sizing model reads it), where speed cubed
+    alone would read the top 40% low; the pack's voltage near the reserve; the avionics."""
+    import math
+
+    from pcs14.flight.power import thrust_power
+    from pcs14.sizing.flight import avionics_power
+    from pcs14.sizing.rotor import Rotor
+
+    motor, rotor = model.motor, Rotor.from_build(build, pessimistic=True)
+    low, high = motor.hover_rot_velocity, motor.max_rot_velocity
+    p_low = thrust_power(rotor, motor.motor_constant * low * low)
+    p_high = thrust_power(rotor, motor.motor_constant * high * high)
+    exponent = math.log(p_high / p_low) / math.log(high / low)
+    volts = build.pack.series * CELL_AT_RESERVE_V
+    return p_low / low**exponent, exponent, volts, avionics_power(build, setup)
 
 
 def write_models(folder, drone, build, targets, setups, meshes: bool = True) -> list:
@@ -580,7 +612,8 @@ def write_models(folder, drone, build, targets, setups, meshes: bool = True) -> 
         (home / "params.json").write_text(params, encoding="utf-8")
         info = json.dumps(model_info(model), indent=1, sort_keys=True) + "\n"
         (home / "model.json").write_text(info, encoding="utf-8")
-        (home / "firmware.txt").write_text(firmware_airframe(model), encoding="utf-8")
+        power = firmware_power(model, build, setup)
+        (home / "firmware.txt").write_text(firmware_airframe(model, power), encoding="utf-8")
         if meshes:
             pieces = [p for p in trim(drone, setup.modules).pieces if p.kind != "prop"]
             export_gazebo(pieces, home / "meshes" / "body.stl")

@@ -276,6 +276,13 @@ Mix Flight::step(const Vec3& gyro, const Vec3& accel, float dt) {
       idle = land_.landed() && (mode_ != Mode::Takeoff || phase_ > 0);
     }
     if (position_valid()) {
+      // the ceiling: no automatic setpoint above the limit over home (down is positive)
+      const float top = (home_set_ ? home_.z : takeoff_z_) - height_limit_;
+      if (sp.hold_z && sp.z < top) sp.z = top;
+      if (!sp.hold_z && sp.vz < 0 && height_.z() <= top) {
+        sp.hold_z = true;
+        sp.z = top;
+      }
       const Thrust t = control_.update(sp, position(), velocity(), mass, dt);
       rate_sp = angle_rates(q, t.attitude, gains_.angle);
       thrust = t.thrust;
@@ -294,6 +301,10 @@ Mix Flight::step(const Vec3& gyro, const Vec3& accel, float dt) {
     control_.reset();
     yaw_setpoint_ = q.yaw();
   }
+  // the current cap: when the estimate runs over what the cap allows, the collective thrust
+  // comes down with it (power goes as thrust to the 1.5, so thrust as current to the 2/3)
+  if (current_ > current_allowed_ && current_ > 0)
+    thrust *= std::pow(current_allowed_ / current_, 2.0f / 3.0f);
   const Vec3 accel_wanted = rate_.update(rate_sp, rate, dt, saturated_);
   // torque = J a + w x (J w): the second part is the body's own gyroscopic coupling
   const Vec3& j = airframe_.inertia;
@@ -309,6 +320,14 @@ Mix Flight::step(const Vec3& gyro, const Vec3& accel, float dt) {
     }
   }
   saturated_ = mix.saturated;
+  if (airframe_.power_coefficient > 0 && airframe_.pack_volts > 0) {
+    float watts = airframe_.avionics_w;
+    for (float w : mix.rad_s)
+      watts += airframe_.power_coefficient * std::pow(w, airframe_.power_exponent);
+    current_ = watts / airframe_.pack_volts;
+    cap_.update(current_, dt);
+    current_allowed_ = cap_.allowed(dt);
+  }
   float total = 0;
   for (float t : mix.thrust) total += t;
   land_.update(true, total / (mass * kG), height_.vz(), takeoff_z_ - height_.z(), dt);

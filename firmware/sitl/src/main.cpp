@@ -56,6 +56,7 @@
 #include "pcs14/airframe_file.hpp"
 #include "pcs14/failsafe.hpp"
 #include "pcs14/flight.hpp"
+#include "pcs14/limits.hpp"
 #include "pcs14/link.hpp"
 #include "pcs14/log_topics.hpp"
 #include "pcs14/modes.hpp"
@@ -175,6 +176,10 @@ void default_params(pcs14::Params& p) {
   p.add_int("EKF2_GPS_CTRL", 7);         // anything but 0 uses the GPS
   // the sim only: PX4's own sim defaults
   p.add_int("SYS_FAILURE_EN", 1);    // failure injection, on in PX4's SITL
+  // the limits (pcs14/limits.hpp): the profile, 0 max or 1 us-recreational, and my own
+  // parachute rule, on unless it's switched off
+  p.add_int("PCS14_LIMITS", 0);
+  p.add_int("PCS14_CHUTE_RULE", 1);
   p.add("SIM_BAT_DRAIN", 60.0f);     // s to drain the simulated pack
   p.add("SIM_BAT_MIN_PCT", 50.0f);   // where it stops draining
 }
@@ -285,6 +290,8 @@ class Bridge {
     ulog_.begin(0);
     ulog_.info("sys_name", "pcs14");
     ulog_.info("ver_hw", "SITL");
+    // the active limits profile goes into every log ("I always know which one is on")
+    ulog_.info("limits_profile", pcs14::limits_profile(params.get_int("PCS14_LIMITS", 0)).name);
     for (size_t k = 0; k < params_.size(); ++k) {
       const pcs14::Params::Param& p = params_.at(k);
       if (p.type == pcs14::Params::Type::Float) ulog_.parameter(p.name, p.f);
@@ -306,6 +313,8 @@ class Bridge {
     node_.Subscribe(sensors + "air_pressure_sensor/air_pressure", &Bridge::on_pressure, this);
     node_.Subscribe(sensors + "navsat_sensor/navsat", &Bridge::on_navsat, this);
     node_.Subscribe("/world/" + o.world + "/pose/info", &Bridge::on_poses, this);
+    // the kill switch, as the receiver's channel would carry it: motors off, at once
+    node_.Subscribe("/" + o.model + "/kill", &Bridge::on_kill, this);
     listener_ = std::thread([this] { listen(); });
   }
 
@@ -473,6 +482,11 @@ class Bridge {
     for (int n = 1; n <= 4; ++n)
       top = std::fmin(top, params_.get("SIM_GZ_EC_MAX" + std::to_string(n), 1e9f));
     flight_.set_max_rad_s(top);
+    // the ceiling: the profile's, and without the chute my 30 m rule
+    const bool chute = params_.get_int("SIM_GZ_SV_FUNC1", 0) == 401;
+    const bool rule = params_.get_int("PCS14_CHUTE_RULE", 1) != 0;
+    flight_.set_height_limit(pcs14::allowed_height(
+        pcs14::limits_profile(params_.get_int("PCS14_LIMITS", 0)), chute || !rule));
     if (flight_.armed()) battery_.armed_s += dt;
     failsafe(dt);
     const pcs14::Mix mix = flight_.step(gyro, accel, dt);
@@ -562,6 +576,14 @@ class Bridge {
     gz::msgs::Double out;
     out.set_data(deg * pcs14::kPi / 180);
     chute_.Publish(out);
+  }
+
+  void on_kill(const gz::msgs::Boolean& msg) {
+    std::lock_guard<std::mutex> lock(mutex_);
+    if (msg.data() && !flight_.terminated() && flight_.armed()) {
+      flight_.set_mode(pcs14::Mode::Termination);
+      ulog_.text(2, micros(last_), "kill switch");
+    }
   }
 
   void on_mag(const gz::msgs::Magnetometer& msg) {

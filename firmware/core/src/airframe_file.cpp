@@ -60,6 +60,18 @@ bool parse_airframe(const std::string& text, Airframe& airframe, std::string& er
       if (!want(1)) return false;
       out.mixer.max_rad_s = values[0];
       top = true;
+    } else if (key == "power_coefficient") {
+      if (!want(1)) return false;
+      out.power_coefficient = values[0];
+    } else if (key == "power_exponent") {
+      if (!want(1)) return false;
+      out.power_exponent = values[0];
+    } else if (key == "pack_volts") {
+      if (!want(1)) return false;
+      out.pack_volts = values[0];
+    } else if (key == "avionics_w") {
+      if (!want(1)) return false;
+      out.avionics_w = values[0];
     }
     // anything else is for someone else (the file also carries notes for people)
   }
