@@ -72,6 +72,12 @@ How CFD works: meshes, solvers, boundary conditions, turbulence models (what RAN
 - [ ] **Read:** Wolf Dynamics' free OpenFOAM training slides (Joel Guerrero). Long, practical, and great offline.
 - [ ] **Read, later:** H. K. Versteeg and W. Malalasekera, *An Introduction to Computational Fluid Dynamics: The Finite Volume Method*, 2nd ed. (Pearson, 2007). The standard textbook.
 
+**The lattice Boltzmann method** (added 2026-10-20). FluidX3D, which makes the wind tunnel's pictures, doesn't solve the Navier-Stokes equations on a mesh the way OpenFOAM does. It moves little packets of fluid between the cells of a uniform grid and lets them collide, which a GPU does very fast. Worth knowing why that is quick, why it needs the Smagorinsky model at our Reynolds number, and why its drag numbers run high without a wall model.
+
+- [ ] **Read:** FluidX3D's own documentation ([github.com/ProjectPhysX/FluidX3D](https://github.com/ProjectPhysX/FluidX3D)), the README and DOCUMENTATION.md.
+- [ ] **Read:** Moritz Lehmann, Mathias J. Krause, Giorgio Amati, Marcello Sega, Jens Harting and Stephan Gekle, "Accuracy and performance of the lattice Boltzmann method with 64-bit, 32-bit, and customized 16-bit number formats," *Physical Review E* 106, 2022. Why FluidX3D can store its numbers in 16 bits.
+- [ ] **Read, later:** Timm Krüger, Halim Kusumaatmaja, Alexandr Kuzmin, Orest Shardt, Goncalo Silva and Erlend Magnus Viggen, *The Lattice Boltzmann Method: Principles and Practice* (Springer, 2017). The textbook.
+
 ## 5. Showing data well
 
 *Needed throughout, especially for posts.*
@@ -131,6 +137,11 @@ Feedback loops, PID (what each term does, and why the D term hates noise), casca
 - [ ] **Watch:** Steve Brunton, *Control Bootcamp* (YouTube).
 - [ ] **Read:** Karl Johan Åström and Richard M. Murray, *Feedback Systems: An Introduction for Scientists and Engineers* (Princeton University Press). There's a free PDF from the authors.
 - [ ] **Read:** Beard and McLain (from topic 1), the chapters on autopilot design.
+
+**Control allocation, the mixer** (added 2026-10-20). Turning "this much torque about each axis, this much thrust" into four motor speeds, and deciding what to give up when the motors can't do it all. My mixer gives up yaw first, then climbing, and only then roll and pitch, because a drone that can't hold its attitude can't do anything else.
+
+- [ ] **Read:** PX4's guide to control allocation ([docs.px4.io](https://docs.px4.io), "Control Allocation (Mixing)"). The same geometry my mixer uses.
+- [ ] **Read:** Matthias Faessler, Davide Falanga and Davide Scaramuzza, "Thrust Mixing, Saturation, and Body-Rate Control for Accurate Aggressive Quadrotor Flight," *IEEE Robotics and Automation Letters* 2(2), 2017.
 
 ## 10. Sensor fusion and state estimation
 

@@ -23,10 +23,12 @@ Gazebo partition.
 
 import asyncio
 import contextlib
+import importlib
 import os
 import re
 import shutil
 import signal
+import sys
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -49,6 +51,9 @@ CONNECT_S = 90.0  # wall seconds for PX4 to boot, spawn the model and talk
 # the relay). PX4's own default, scaled by the sim speed, is 1 s of real time
 OFFBOARD_LOSS_S = 3.0
 STALL_S = 30.0  # wall seconds PX4's clock may stand still before the run counts as hung
+GZ_SYSTEM_PYTHON = "/usr/lib/python3/dist-packages"  # where Ubuntu's python3-gz-* packages go
+GZ_MSGS = "gz.msgs10"  # Harmonic's message package
+CONNECT_TOPIC_S = 2.0  # wall seconds a new publisher waits for Gazebo to hear about it
 
 
 class SimError(RuntimeError):
@@ -188,6 +193,66 @@ def px4_command(tools: Toolchain, workdir, instance: int = 0) -> list[str]:
 def model_name(instance: int, name: str) -> str:
     """What PX4 calls the model it spawns."""
     return f"{name}_{instance}"
+
+
+def gz_message(message_type: str) -> tuple[str, str]:
+    """The Python module and class for a Gazebo message type: gz.msgs.EntityFactory is
+    EntityFactory in gz.msgs10.entity_factory_pb2."""
+    name = message_type.rsplit(".", 1)[-1]
+    return f"{GZ_MSGS}.{re.sub(r'(?<!^)(?=[A-Z])', '_', name).lower()}_pb2", name
+
+
+def gz_bindings():
+    """Gazebo's own Python bindings for its transport, or None where they aren't installed.
+    Ubuntu's packages put them in the system Python's folder, outside the venv, so that folder
+    goes at the end of the search path, behind everything the venv has."""
+    try:
+        return importlib.import_module("gz.transport13")
+    except ImportError:
+        if GZ_SYSTEM_PYTHON in sys.path or not Path(GZ_SYSTEM_PYTHON).is_dir():
+            return None
+        sys.path.append(GZ_SYSTEM_PYTHON)
+    try:
+        return importlib.import_module("gz.transport13")
+    except ImportError:
+        return None
+
+
+class GzTopics:
+    """Publishes on Gazebo topics from inside the runner, through Gazebo's Python bindings.
+
+    The first version started gz's command line for every message: about 0.9 s and a quarter
+    of a CPU second each (measured 2026-10-20), against 0.04 s here. Two runs at 4x already
+    load the PC to about 12 of its 16 threads, and a spike on top can starve PX4 of its sensors
+    for tens of milliseconds of sim time."""
+
+    def __init__(self, transport, partition: str, parse=None, load=importlib.import_module):
+        os.environ["GZ_IP"] = "127.0.0.1"  # the same discovery as Gazebo's (gz_environment)
+        options = transport.NodeOptions()
+        options.partition = partition
+        self.node = transport.Node(options)
+        self._publishers: dict = {}
+        self._load = load
+        if parse is None:
+            from google.protobuf import text_format
+
+            parse = text_format.Parse
+        self._parse = parse
+
+    async def publish(self, topic: str, message_type: str, payload: str):
+        module, name = gz_message(message_type)
+        kind = getattr(self._load(module), name)
+        publisher = self._publishers.get((topic, message_type))
+        if publisher is None:
+            publisher = self.node.advertise(topic, kind)
+            self._publishers[(topic, message_type)] = publisher
+            # a message sent before Gazebo has heard about the publisher goes nowhere
+            deadline = time.monotonic() + CONNECT_TOPIC_S
+            while not publisher.has_connections() and time.monotonic() < deadline:
+                await asyncio.sleep(0.02)
+        message = kind()
+        self._parse(payload, message)
+        publisher.publish(message)
 
 
 class Relay:
@@ -392,6 +457,7 @@ class Session:
         self._tasks: list = []
         self._outputs: list = []
         self.gz_env: dict = {}
+        self._topics: GzTopics | None = None
 
     @property
     def entity(self) -> str:
@@ -416,7 +482,13 @@ class Session:
         return process
 
     async def gz_publish(self, topic: str, message_type: str, payload: str):
-        """Publishes one message on a Gazebo topic, through gz's own command line."""
+        """Publishes one message on a Gazebo topic: through Gazebo's Python bindings when
+        they're installed (GzTopics), otherwise through gz's own command line."""
+        if self._topics is None and (transport := gz_bindings()) is not None:
+            self._topics = GzTopics(transport, self.partition)
+        if self._topics is not None:
+            await self._topics.publish(topic, message_type, payload)
+            return
         process = await asyncio.create_subprocess_exec(
             "gz", "topic", "-t", topic, "-m", message_type, "-p", payload,
             env=self.gz_env,
@@ -546,6 +618,7 @@ class Session:
                 with contextlib.suppress(Exception):
                     stop()
         self.relay.close()
+        self._topics = None  # its node goes, and with it the publishers
         # PX4 first, so its log closes cleanly, then Gazebo
         for name, process in sorted(self._processes, key=lambda p: p[0] != "px4"):
             await _end(process, 20.0 if name == "px4" else 10.0)

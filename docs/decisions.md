@@ -161,6 +161,41 @@ I wanted to see the drag, not just read a number, so the Aero side track's visua
 - **Every miss in the report gets its reason, or says it hasn't been looked into.** The reasons are written once in the report code, next to the unproven list.
 - **Low battery runs on PX4's simulated battery, drained at my battery model's hover rate,** with the return called at 30% and a warning at 35%. That's a stand-in for my firmware's energy-based return; whether it landed above the reserve is judged by my battery model from the logged rotors.
 
+### What finishing the flight sim changed (2026-10-20)
+
+Design changes, from the open list:
+
+- **The pack's insides are worked out, not guessed.** The cells are joined by nickel-plated copper strip (10 by 0.3 mm), spot-welded to the cells and soldered to the leads, with 80 mm of 12 AWG silicone lead, the balance lead, the XT60's half and the wrap. That comes to 2.32 mOhm and 43.3 g, against a 60 g guess, at 15 A/mm² in the copper at the 90 A cap. Plain nickel strip would have been several times the resistance at this current. The sizing model's wiring resistance is 6.12 mOhm now, with the pack's own share in it.
+- **The ARK GPS sits in a printed cradle on its mast,** held with four foam tape pads. The cradle is its own printed part, because with it on, the mast no longer printed flat.
+- **Each module locks onto the rail with M3 thumb screws into heat-set inserts,** three of them along the rail. The inserts, screws and nuts are in the hardware lists, counted from the CAD.
+- **The sizing model reads full throttle off the motor's table at the motor's power,** for both the capped and the uncapped case, extrapolating past the top row as thrust going with power to the 2/3 and rpm to the 1/3. Before, it scaled the top row with a power law, which landed about 4% off the table's own rpm.
+- With all of that, Mission is 2408 g in the sizing model (with the 200 g margin) and 2208 g in the CAD, and hovers 25.8 min (22.2 pessimistic). Still a pass, still thin.
+
+The flight sim runner, from flying the batch:
+
+- **The wind ramp follows the sim clock,** not a count of publishes: at 4x, each publish took real time that turned into sim time, and a 10 s ramp stretched to about 110 s.
+- **The payload grab lets go 2 m east of the pickup, 1.5 m up, and lands clear of it.** Landing on the dropped box tipped the drone. The detach is sent four times, because once it was lost.
+- **Dead-motor runs use a world with a 2 ms physics step,** after Gazebo's physics engine hit an internal assertion in the tumble at the usual 4 ms.
+- **Less telemetry, and a longer offboard timeout.** MAVSDK asks for the IMU at 50 Hz, position at 10 Hz and the battery at 1 Hz, with no heading stream. PX4 calls offboard lost after 3 s of real time instead of 1, because the runner's own Python could fall behind for a moment under load and PX4 flew home in the middle of a payload grab. A dropped radio is still tested, by the lost-link scenario's relay.
+- **Gazebo messages go out through Gazebo's own Python bindings** (Ubuntu's python3-gz-transport13), with gz's command line as the fallback. Each command-line publish cost about 0.9 s and a quarter of a CPU second; the bindings take 0.04 s. Two runs at 4x already keep the PC at a load of about 12 on 16 threads, and in the wind scenario in P, PX4's IMU went quiet for 44 ms of sim time right as the wind changed, just before it tumbled. Whether that is the whole story gets checked by flying it alone.
+
+Research, closing two open questions as far as reading can:
+
+- **HaLow on the Pi 5:** I found no working report for Heltec's SPI card (the HT-HC01P) on a Pi 5. The SDIO version (HT-HC01) on Heltec's HT-HR01 carrier was reported working once on the Morse Micro forum, with driver 1.12.4, and USB HaLow adapters work through an OpenWrt backport for the Pi 5. The part swap waits for step 6, where the video link gets designed anyway.
+- **The motor cut board's two 1 kOhm resistors:** still no schematic for the CJMCU-5018. TI's datasheet wants the TS3A5018's control inputs pulled low, and the design already adds its own 10 kOhm pull-down, plus a meter check of the board before it goes in, so the board fails the safe way whatever those two resistors turn out to be.
+
+### My firmware (decided 2026-10-20)
+
+Step 5's talk, which I asked to run without stopping, so I made the calls and wrote down why. The full reasons are in the [firmware spec](specs/2026-10-20-firmware.md).
+
+- **C++17,** on all three targets: my PC (the sim and the tests), the ARK FPV's STM32H743 and the Teensy 4.1. Host tests run with the address and undefined behavior sanitizers, in CI.
+- **One core library with no hardware in it,** and thin layers around it for the sim, the ARK FPV and the safety monitor.
+- **It speaks PX4's MAVLink dialect and writes ULog,** so the flight sim's scenarios and graders fly and grade it unchanged. That makes "passing the same tests as PX4" literal.
+- **My own code, reading PX4's (BSD) and dRehmFlight's (GPL-3.0),** with anything adapted saying where it came from. This closes "which open-source flight code to start from".
+- **Estimators simple first:** Mahony's complementary filter for attitude, small Kalman filters for height and position, and an EKF only if the scenarios show these aren't enough.
+- **Control is model-based:** each rate loop asks for an angular acceleration, and the mixer turns that into torque with the CAD's inertia and into motor speeds with the motor model. The mixer gives up yaw first when the motors run out, then collective thrust, and only then roll and pitch.
+- **The safety monitor is its own program from day one,** with its own simulated IMU, and its triggers have to match the Python reference from step 4 on the same data.
+
 ### What the electrical build changed (2026-10-18)
 
 - **The safety monitor's IMU is ST's LSM6DSOX** on Adafruit's breakout (1.7 g, in stock). No usable ICM-42688-P breakout is sold.
@@ -678,10 +713,9 @@ Everything that came up while brainstorming, so nothing gets lost.
 
 - Final pick of the extras
 - Cruise speed: 10 m/s until the sizing model says otherwise
-- Which open-source flight code to start from (the chip is decided: STM32H743)
 - How many clean shadow-mode flights a real build would need before the safety monitor's automatic triggers go live
 - Whether to get Part 107 (in the build package's legal checklist)
-- Data/video link to the laptop: HaLow is the lead option, confirmed in step 6 (the control link is decided: 2.4 GHz ExpressLRS)
+- Data/video link to the laptop: HaLow is the lead option, confirmed in step 6 (the control link is decided: 2.4 GHz ExpressLRS). Heltec's SPI card has no working Pi 5 report; its SDIO version or a USB adapter are the likely swaps
 - Where the Meshtastic relay (#30) lives: in V, in Base, or as its own little module
 - Exactly what goes in the `us-recreational` limits profile, checked against the current FAA and FCC rules for the build package
 - Camera: FPV video, stills for mapping, or both

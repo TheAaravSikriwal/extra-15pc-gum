@@ -193,3 +193,52 @@ def test_a_one_shot_wait_closes_its_stream():
 
     assert asyncio.run(run.first(stream(), lambda k: k == 3)) == 3
     assert closed["yes"]  # MAVSDK stops queueing for a stream once it's closed
+
+
+def test_gazebo_message_types_map_to_their_python_modules():
+    assert run.gz_message("gz.msgs.Vector3d") == ("gz.msgs10.vector3d_pb2", "Vector3d")
+    assert run.gz_message("gz.msgs.EntityFactory") == ("gz.msgs10.entity_factory_pb2",
+                                                        "EntityFactory")  # fmt: skip
+
+
+def test_topics_publish_in_our_partition_and_reuse_each_publisher():
+    sent = []
+
+    class Publisher:
+        def has_connections(self):
+            return True
+
+        def publish(self, message):
+            sent.append(message)
+
+    class FakeNode:
+        def __init__(self, options):
+            self.options, self.advertised = options, []
+
+        def advertise(self, topic, kind):
+            self.advertised.append((topic, kind.__name__))
+            return Publisher()
+
+    class Options:
+        partition = ""
+
+    class Transport:
+        NodeOptions, Node = Options, FakeNode
+
+    class Vector3d:
+        text = ""
+
+    class Messages:
+        pass
+
+    Messages.Vector3d = Vector3d
+
+    def parse(text, message):
+        message.text = text
+
+    topics = run.GzTopics(Transport, "pcs14_1_0", parse=parse, load=lambda module: Messages)
+    for speed in (2, 4):
+        asyncio.run(topics.publish("/pcs14/wind", "gz.msgs.Vector3d", f"x: {speed}"))
+    assert topics.node.options.partition == "pcs14_1_0"
+    assert topics.node.advertised == [("/pcs14/wind", "Vector3d")]
+    assert [m.text for m in sent] == ["x: 2", "x: 4"]
