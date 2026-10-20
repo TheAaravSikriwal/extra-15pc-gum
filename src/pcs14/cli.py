@@ -6,6 +6,7 @@
     pcs14 validate the honesty check: the model against published builds and cell curves
     pcs14 cad      build the drone in CAD, check every module combination, export it
     pcs14 electrical  every wire, pin and connector, checked in every combination
+    pcs14 flight-sim  Gazebo models of every combination for PX4, and the flight sim report
 
 Every run saves a Rerun recording to outputs/rerun/ (or wherever --record says), and --live
 opens the viewer and streams into it as the run happens.
@@ -107,6 +108,23 @@ def build_parser() -> argparse.ArgumentParser:
         "--quick",
         action="store_true",
         help="just the checks and the report: no sims, diagrams, schematic or stills",
+    )
+    flight = add(
+        "flight-sim",
+        "The flight sim: a Gazebo model of every combination for PX4, and the report.",
+    )
+    flight.add_argument("--cad", type=Path, default=Path("design/cad.yaml"))
+    flight.add_argument(
+        "--out", type=Path, default=Path("docs/reports/flight-sim"), help="report folder"
+    )
+    flight.add_argument(
+        "--exports",
+        type=Path,
+        default=Path("outputs/flight-sim"),
+        help="where the generated models, worlds and flight logs go",
+    )
+    flight.add_argument(
+        "--no-meshes", action="store_true", help="skip the CAD meshes (the models still fly)"
     )
     report = add("report", "Write the sizing report: Markdown, charts and the data file.")
     report.add_argument("--out", type=Path, help="report folder (default: docs/reports/sizing)")
@@ -437,6 +455,39 @@ def run_electrical(args) -> int:
     return 0
 
 
+def run_flight_sim(args) -> int:
+    from pcs14.cad.assembly import Drone
+    from pcs14.cad.settings import load_settings
+    from pcs14.flight import report
+    from pcs14.flight.generate import write_models
+
+    _, build, targets = _load(args)
+    if targets.flight_sim is None:
+        raise ValueError("the targets have no flight_sim section, so nothing can be graded")
+    drone = Drone(build, load_settings(args.cad))
+    setups = targets.combinations()
+    exports = Path(args.exports)
+    models = write_models(exports, drone, build, targets, setups, meshes=not args.no_meshes)
+    run = report.FlightSimRun(
+        build_label=build.label,
+        px4="v1.17.0",
+        gazebo="Harmonic",
+        combinations=tuple(setups),
+        models=tuple(report.summary_of(m) for m in models),
+        results=(),
+        estimates=report.estimates_for(models, build),
+        files=tuple(
+            sorted(p.relative_to(exports.parent).as_posix() for p in exports.rglob("*.sdf"))
+        ),
+        skipped=("flying the scenarios: PX4 and Gazebo run in WSL2 on the PC (task 10)",),
+    )
+    out = report.write(args.out, run, date.today().isoformat())
+    print(_made_up_line(args) + report.summary(run))
+    print(f"\nModels written to {exports.resolve()}")
+    print(f"Report written to {out.resolve()}")
+    return 0
+
+
 COMMANDS = {
     "size": run_size,
     "sweep": run_sweep,
@@ -444,4 +495,5 @@ COMMANDS = {
     "validate": run_validate,
     "cad": run_cad,
     "electrical": run_electrical,
+    "flight-sim": run_flight_sim,
 }

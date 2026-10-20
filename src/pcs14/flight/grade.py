@@ -44,6 +44,7 @@ class FlightLog:
     velocity: np.ndarray  # m/s, (n, 3)
     rotor_speed: np.ndarray  # rad/s, (n, 4)
     events: list = field(default_factory=list)  # (s, name)
+    attitude: np.ndarray | None = None  # (n, 4) quaternions, x y z w, body to the local frame
 
     def window(self, start: float, end: float) -> np.ndarray:
         return (self.t >= start) & (self.t <= end)

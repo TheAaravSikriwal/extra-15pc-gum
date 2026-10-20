@@ -1,0 +1,452 @@
+{
+ "generated": "2026-10-19",
+ "pcs14_version": "0.1.0",
+ "build": "E3 2814 850KV / 1050 3-blade / 6S2P Molicel INR-21700-P45B",
+ "px4": "v1.17.0",
+ "gazebo": "Harmonic",
+ "verdict": "not flown yet",
+ "combinations": [
+  "base",
+  "V",
+  "P",
+  "C",
+  "mission",
+  "V+C",
+  "P+C",
+  "max"
+ ],
+ "models": [
+  {
+   "setup": "base",
+   "mass_g": 1875.399835374073,
+   "hover_throttle": 0.531,
+   "top_rpm": 8835.790886291203,
+   "motor_constant": 1.5776537090465367e-05,
+   "moment_constant": 0.015954863157051722,
+   "drag_area_cm2": 120.0,
+   "chute": false,
+   "payload_g": 0.0
+  },
+  {
+   "setup": "V",
+   "mass_g": 2038.9482818495349,
+   "hover_throttle": 0.559,
+   "top_rpm": 8835.790886291203,
+   "motor_constant": 1.5776537090465367e-05,
+   "moment_constant": 0.015964642380165258,
+   "drag_area_cm2": 177.0,
+   "chute": false,
+   "payload_g": 0.0
+  },
+  {
+   "setup": "P",
+   "mass_g": 2049.946640166359,
+   "hover_throttle": 0.56,
+   "top_rpm": 8835.790886291203,
+   "motor_constant": 1.5776537090465367e-05,
+   "moment_constant": 0.015967315679020398,
+   "drag_area_cm2": 145.0,
+   "chute": true,
+   "payload_g": 0.0
+  },
+  {
+   "setup": "C",
+   "mass_g": 2034.2998353740734,
+   "hover_throttle": 0.595,
+   "top_rpm": 8835.790886291203,
+   "motor_constant": 1.5776537090465367e-05,
+   "moment_constant": 0.016085026711543843,
+   "drag_area_cm2": 160.0,
+   "chute": false,
+   "payload_g": 250.0
+  },
+  {
+   "setup": "mission",
+   "mass_g": 2213.4950866418208,
+   "hover_throttle": 0.584,
+   "top_rpm": 8835.790886291203,
+   "motor_constant": 1.5776537090465367e-05,
+   "moment_constant": 0.016038988522483824,
+   "drag_area_cm2": 202.0,
+   "chute": true,
+   "payload_g": 0.0
+  },
+  {
+   "setup": "V+C",
+   "mass_g": 2197.848281849535,
+   "hover_throttle": 0.619,
+   "top_rpm": 8835.790886291203,
+   "motor_constant": 1.5776537090465367e-05,
+   "moment_constant": 0.016217877038481966,
+   "drag_area_cm2": 217.0,
+   "chute": false,
+   "payload_g": 250.0
+  },
+  {
+   "setup": "P+C",
+   "mass_g": 2208.846640166359,
+   "hover_throttle": 0.62,
+   "top_rpm": 8835.790886291203,
+   "motor_constant": 1.5776537090465367e-05,
+   "moment_constant": 0.016227808191904274,
+   "drag_area_cm2": 185.00000000000003,
+   "chute": true,
+   "payload_g": 250.0
+  },
+  {
+   "setup": "max",
+   "mass_g": 2372.395086641821,
+   "hover_throttle": 0.644,
+   "top_rpm": 8835.790886291203,
+   "motor_constant": 1.5776537090465367e-05,
+   "moment_constant": 0.016389850873446434,
+   "drag_area_cm2": 242.0,
+   "chute": true,
+   "payload_g": 250.0
+  }
+ ],
+ "results": [],
+ "planned": [
+  {
+   "scenario": "hover",
+   "setup": "base"
+  },
+  {
+   "scenario": "steps",
+   "setup": "base"
+  },
+  {
+   "scenario": "endurance",
+   "setup": "base"
+  },
+  {
+   "scenario": "lost link",
+   "setup": "base"
+  },
+  {
+   "scenario": "low battery",
+   "setup": "base"
+  },
+  {
+   "scenario": "dead motor",
+   "setup": "base"
+  },
+  {
+   "scenario": "failed sensor",
+   "setup": "base"
+  },
+  {
+   "scenario": "sagging pack",
+   "setup": "base"
+  },
+  {
+   "scenario": "hover",
+   "setup": "V"
+  },
+  {
+   "scenario": "steps",
+   "setup": "V"
+  },
+  {
+   "scenario": "top speed",
+   "setup": "V"
+  },
+  {
+   "scenario": "wind",
+   "setup": "V"
+  },
+  {
+   "scenario": "endurance",
+   "setup": "V"
+  },
+  {
+   "scenario": "lost link",
+   "setup": "V"
+  },
+  {
+   "scenario": "low battery",
+   "setup": "V"
+  },
+  {
+   "scenario": "dead motor",
+   "setup": "V"
+  },
+  {
+   "scenario": "failed sensor",
+   "setup": "V"
+  },
+  {
+   "scenario": "sagging pack",
+   "setup": "V"
+  },
+  {
+   "scenario": "hover",
+   "setup": "P"
+  },
+  {
+   "scenario": "steps",
+   "setup": "P"
+  },
+  {
+   "scenario": "top speed",
+   "setup": "P"
+  },
+  {
+   "scenario": "wind",
+   "setup": "P"
+  },
+  {
+   "scenario": "endurance",
+   "setup": "P"
+  },
+  {
+   "scenario": "lost link",
+   "setup": "P"
+  },
+  {
+   "scenario": "low battery",
+   "setup": "P"
+  },
+  {
+   "scenario": "parachute drop",
+   "setup": "P"
+  },
+  {
+   "scenario": "dead motor",
+   "setup": "P"
+  },
+  {
+   "scenario": "failed sensor",
+   "setup": "P"
+  },
+  {
+   "scenario": "sagging pack",
+   "setup": "P"
+  },
+  {
+   "scenario": "hover",
+   "setup": "C"
+  },
+  {
+   "scenario": "steps",
+   "setup": "C"
+  },
+  {
+   "scenario": "endurance",
+   "setup": "C"
+  },
+  {
+   "scenario": "lost link",
+   "setup": "C"
+  },
+  {
+   "scenario": "low battery",
+   "setup": "C"
+  },
+  {
+   "scenario": "dead motor",
+   "setup": "C"
+  },
+  {
+   "scenario": "failed sensor",
+   "setup": "C"
+  },
+  {
+   "scenario": "sagging pack",
+   "setup": "C"
+  },
+  {
+   "scenario": "payload grab",
+   "setup": "C"
+  },
+  {
+   "scenario": "hover",
+   "setup": "mission"
+  },
+  {
+   "scenario": "steps",
+   "setup": "mission"
+  },
+  {
+   "scenario": "top speed",
+   "setup": "mission"
+  },
+  {
+   "scenario": "wind",
+   "setup": "mission"
+  },
+  {
+   "scenario": "endurance",
+   "setup": "mission"
+  },
+  {
+   "scenario": "lost link",
+   "setup": "mission"
+  },
+  {
+   "scenario": "low battery",
+   "setup": "mission"
+  },
+  {
+   "scenario": "parachute drop",
+   "setup": "mission"
+  },
+  {
+   "scenario": "dead motor",
+   "setup": "mission"
+  },
+  {
+   "scenario": "failed sensor",
+   "setup": "mission"
+  },
+  {
+   "scenario": "sagging pack",
+   "setup": "mission"
+  },
+  {
+   "scenario": "hover",
+   "setup": "V+C"
+  },
+  {
+   "scenario": "steps",
+   "setup": "V+C"
+  },
+  {
+   "scenario": "endurance",
+   "setup": "V+C"
+  },
+  {
+   "scenario": "lost link",
+   "setup": "V+C"
+  },
+  {
+   "scenario": "low battery",
+   "setup": "V+C"
+  },
+  {
+   "scenario": "dead motor",
+   "setup": "V+C"
+  },
+  {
+   "scenario": "failed sensor",
+   "setup": "V+C"
+  },
+  {
+   "scenario": "sagging pack",
+   "setup": "V+C"
+  },
+  {
+   "scenario": "payload grab",
+   "setup": "V+C"
+  },
+  {
+   "scenario": "hover",
+   "setup": "P+C"
+  },
+  {
+   "scenario": "steps",
+   "setup": "P+C"
+  },
+  {
+   "scenario": "endurance",
+   "setup": "P+C"
+  },
+  {
+   "scenario": "lost link",
+   "setup": "P+C"
+  },
+  {
+   "scenario": "low battery",
+   "setup": "P+C"
+  },
+  {
+   "scenario": "parachute drop",
+   "setup": "P+C"
+  },
+  {
+   "scenario": "dead motor",
+   "setup": "P+C"
+  },
+  {
+   "scenario": "failed sensor",
+   "setup": "P+C"
+  },
+  {
+   "scenario": "sagging pack",
+   "setup": "P+C"
+  },
+  {
+   "scenario": "payload grab",
+   "setup": "P+C"
+  },
+  {
+   "scenario": "hover",
+   "setup": "max"
+  },
+  {
+   "scenario": "steps",
+   "setup": "max"
+  },
+  {
+   "scenario": "endurance",
+   "setup": "max"
+  },
+  {
+   "scenario": "lost link",
+   "setup": "max"
+  },
+  {
+   "scenario": "low battery",
+   "setup": "max"
+  },
+  {
+   "scenario": "parachute drop",
+   "setup": "max"
+  },
+  {
+   "scenario": "dead motor",
+   "setup": "max"
+  },
+  {
+   "scenario": "failed sensor",
+   "setup": "max"
+  },
+  {
+   "scenario": "sagging pack",
+   "setup": "max"
+  },
+  {
+   "scenario": "payload grab",
+   "setup": "max"
+  }
+ ],
+ "estimates": [
+  "The props' in-plane drag, their rolling moment and the motors' spin-up and spin-down times: PX4's x500 model (PX4-gazebo-models b6127f4, pinned by PX4 v1.17.0)",
+  "fruity-chutes-harrier-40-42: ejection_s, opening_s. Fruity Chutes doesn't publish its timing. A spring launcher clears the tube in a fraction of a second, and a canopy this size takes about a second to fill at low speed; both are guesses for the flight sim, which reports the height lost while it opens",
+  "The frame's drag area: Frontal area from the published size, times a drag coefficient of 1.0 for a blunt body: body 35 x 100 mm, arms 7 x 297 mm, four motors about 35 x 25 mm, and a 6S2P 21700 pack end-on about 42 x 70 mm, about 0.012 m2 in all. The battery is counted here. Replaced when the wind tunnel side track has real numbers",
+  "The safety monitor's trigger thresholds are starting numbers, to be tuned against the false-trigger replays"
+ ],
+ "unproven": [
+  "The parachute's descent rate. Its drag comes from Fruity Chutes' own rating, so the sim only repeats it; the drop checks the order of events and the height lost.",
+  "The payload grab. Gazebo's attach joint stands in for the claws, which are a placeholder anyway.",
+  "My firmware's current cap and the XT60's heat limit. This is PX4, which has neither, so the motors are held at their worst-case top speed instead.",
+  "The props' in-plane drag, their rolling moment and the motors' spin-up times, which are PX4's x500 values.",
+  "Body drag beyond a frontal-area estimate, until the wind tunnel side track has real tables.",
+  "Vibration, and anything else a real IMU sees that clean Gaussian noise doesn't."
+ ],
+ "files": [
+  "flight-sim/models/pcs14_base/model.sdf",
+  "flight-sim/models/pcs14_c/model.sdf",
+  "flight-sim/models/pcs14_max/model.sdf",
+  "flight-sim/models/pcs14_mission/model.sdf",
+  "flight-sim/models/pcs14_p/model.sdf",
+  "flight-sim/models/pcs14_p_c/model.sdf",
+  "flight-sim/models/pcs14_payload/model.sdf",
+  "flight-sim/models/pcs14_v/model.sdf",
+  "flight-sim/models/pcs14_v_c/model.sdf",
+  "flight-sim/worlds/pcs14.sdf"
+ ],
+ "skipped": [
+  "flying the scenarios: PX4 and Gazebo run in WSL2 on the PC (task 10)"
+ ]
+}

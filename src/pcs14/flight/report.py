@@ -1,0 +1,301 @@
+"""The flight sim's report and data file: docs/reports/flight-sim/README.md and flight-sim.json.
+
+The run holds plain results, so the report can be written (and tested) without PX4 or Gazebo.
+Until the scenarios have flown, it shows each one as not flown yet, next to the generated
+models' numbers and every estimate they rest on.
+"""
+
+from dataclasses import dataclass
+
+from pcs14 import __version__
+
+# every scenario, in the order the report lists them
+SCENARIOS = (
+    "hover",
+    "steps",
+    "top speed",
+    "wind",
+    "endurance",
+    "lost link",
+    "low battery",
+    "parachute drop",
+    "dead motor",
+    "failed sensor",
+    "sagging pack",
+    "payload grab",
+)
+UNPROVEN = (
+    "The parachute's descent rate. Its drag comes from Fruity Chutes' own rating, so the sim "
+    "only repeats it; the drop checks the order of events and the height lost.",
+    "The payload grab. Gazebo's attach joint stands in for the claws, which are a placeholder "
+    "anyway.",
+    "My firmware's current cap and the XT60's heat limit. This is PX4, which has neither, so "
+    "the motors are held at their worst-case top speed instead.",
+    "The props' in-plane drag, their rolling moment and the motors' spin-up times, which are "
+    "PX4's x500 values.",
+    "Body drag beyond a frontal-area estimate, until the wind tunnel side track has real tables.",
+    "Vibration, and anything else a real IMU sees that clean Gaussian noise doesn't.",
+)
+
+
+def applies(scenario: str, setup) -> bool:
+    """Which scenarios a combination flies: top speed and wind where the targets set them, the
+    drop with P, the grab with C, the rest everywhere."""
+    if scenario == "top speed":
+        return setup.min_top_speed is not None
+    if scenario == "wind":
+        return setup.hold_position_in_wind is not None
+    if scenario == "parachute drop":
+        return "P" in setup.modules
+    if scenario == "payload grab":
+        return "C" in setup.modules
+    return True
+
+
+@dataclass(frozen=True)
+class ModelSummary:
+    setup: str
+    mass_g: float
+    hover_throttle: float
+    top_rpm: float
+    motor_constant: float
+    moment_constant: float
+    drag_area_cm2: float
+    chute: bool
+    payload_g: float
+
+
+@dataclass(frozen=True)
+class ScenarioResult:
+    scenario: str
+    setup: str
+    flown: bool
+    findings: tuple = ()  # pcs14.flight.grade.Finding
+    note: str = ""
+
+    @property
+    def passed(self) -> bool:
+        return self.flown and all(f.passed for f in self.findings)
+
+
+@dataclass(frozen=True)
+class FlightSimRun:
+    build_label: str
+    px4: str
+    gazebo: str
+    combinations: tuple  # the setups, in order (pcs14.design.SetupTargets)
+    models: tuple[ModelSummary, ...]
+    results: tuple[ScenarioResult, ...]
+    estimates: tuple[str, ...]
+    files: tuple[str, ...] = ()
+    skipped: tuple[str, ...] = ()
+
+    def result(self, scenario: str, setup: str) -> ScenarioResult | None:
+        return next((r for r in self.results if r.scenario == scenario and r.setup == setup), None)
+
+    def expected(self) -> list[tuple[str, str]]:
+        return [(sc, s.name) for s in self.combinations for sc in SCENARIOS if applies(sc, s)]
+
+    @property
+    def verdict(self) -> str:
+        found = [self.result(sc, s) for sc, s in self.expected()]
+        if not any(r is not None and r.flown for r in found):
+            return "not flown yet"
+        if all(r is not None and r.passed for r in found):
+            return "pass"
+        return "fail"
+
+
+def _cell(run: FlightSimRun, scenario: str, setup) -> str:
+    if not applies(scenario, setup):
+        return ""
+    r = run.result(scenario, setup.name)
+    if r is None or not r.flown:
+        return "not yet"
+    return "pass" if r.passed else "**fail**"
+
+
+def render(run: FlightSimRun, generated: str | None = None) -> str:
+    when = f" on {generated}" if generated else ""
+    lines = [
+        "# The flight sim",
+        "",
+        f"*Generated{when} by pcs14 {__version__}, the flight sim in `src/pcs14/flight/`. "
+        f"PX4 {run.px4} flies a Gazebo {run.gazebo} model of this drone, generated from the "
+        "build, the sizing model and the CAD, in every module combination.*",
+        "",
+        "## The verdict",
+        "",
+    ]
+    expected = run.expected()
+    flown = [r for r in (run.result(sc, s) for sc, s in expected) if r is not None and r.flown]
+    failed = [r for r in flown if not r.passed]
+    if run.verdict == "not flown yet":
+        lines.append(
+            f"**Not flown yet.** {len(expected)} scenario runs are planned across "
+            f"{len(run.combinations)} combinations; the models are generated and waiting."
+        )
+    elif run.verdict == "pass":
+        lines.append(f"**Pass.** All {len(expected)} scenario runs pass.")
+    else:
+        lines.append(
+            f"**Fail.** {len(flown)} of {len(expected)} runs flown, and {len(failed)} miss: "
+            + "; ".join(f"{r.scenario} in {r.setup}" for r in failed)
+            + "."
+        )
+    lines += ["", f"Built from {run.build_label}.", "", "## Every scenario, every combination", ""]
+    header = "| Scenario | " + " | ".join(s.name for s in run.combinations) + " |"
+    lines += [header, "|---|" + "---|" * len(run.combinations)]
+    for scenario in SCENARIOS:
+        cells = [_cell(run, scenario, s) for s in run.combinations]
+        lines.append(f"| {scenario} | " + " | ".join(cells) + " |")
+    lines += [
+        "",
+        "A blank cell is a scenario that combination doesn't fly: top speed and wind only where "
+        "the targets set them, the parachute drop with P, the payload grab with C.",
+        "",
+    ]
+    for r in run.results:
+        if not r.flown or not r.findings:
+            continue
+        verdict = "pass" if r.passed else "fail"
+        lines += [
+            "<details>",
+            f"<summary>{r.scenario}, {r.setup}: {verdict}</summary>",
+            "",
+            "| Check | Found | Verdict |",
+            "|---|---|---|",
+        ]
+        lines += [
+            f"| {f.check} | {f.detail} | {'pass' if f.passed else 'fail'} |" for f in r.findings
+        ]
+        lines += ["", "</details>", ""]
+    lines += [
+        "## The models",
+        "",
+        "Each combination's model, as generated. The weight is the CAD's, without the sizing "
+        "model's growth margin; the top speed is where each motor makes the sizing model's "
+        "full-throttle thrust, at the 20% reserve and the 90 A cap.",
+        "",
+        "| Setup | Weight | Hover throttle | Top speed | Thrust constant | Torque per thrust | "
+        "Drag area | Chute | Payload |",
+        "|---|---|---|---|---|---|---|---|---|",
+    ]
+    for m in run.models:
+        lines.append(
+            f"| {m.setup} | {m.mass_g:.0f} g | {m.hover_throttle:.0%} | {m.top_rpm:.0f} rpm | "
+            f"{m.motor_constant:.3g} N/(rad/s)² | {m.moment_constant * 1000:.1f} mm | "
+            f"{m.drag_area_cm2:.0f} cm² | {'yes' if m.chute else ''} | "
+            f"{f'{m.payload_g:.0f} g' if m.payload_g else ''} |"
+        )
+    lines += ["", "## What it rests on", ""]
+    lines += [f"- {e}" for e in run.estimates] or ["Nothing."]
+    lines += ["", "## What it can't prove", ""]
+    lines += [f"- {u}" for u in UNPROVEN]
+    lines += ["", "## Files", ""]
+    if run.files:
+        lines += ["Generated on every run, not committed (they're build outputs):", ""]
+        lines += [f"- `{p}`" for p in run.files]
+    else:
+        lines.append("Nothing but this report and `flight-sim.json` on this run.")
+    if run.skipped:
+        lines += ["", "Skipped on this run:", ""] + [f"- {s}" for s in run.skipped]
+    lines.append("")
+    return "\n".join(lines)
+
+
+def to_data(run: FlightSimRun, generated: str | None = None) -> dict:
+    return {
+        "generated": generated,
+        "pcs14_version": __version__,
+        "build": run.build_label,
+        "px4": run.px4,
+        "gazebo": run.gazebo,
+        "verdict": run.verdict,
+        "combinations": [s.name for s in run.combinations],
+        "models": [vars(m) for m in run.models],
+        "results": [
+            {
+                "scenario": r.scenario,
+                "setup": r.setup,
+                "flown": r.flown,
+                "passed": r.passed,
+                "note": r.note,
+                "findings": [vars(f) for f in r.findings],
+            }
+            for r in run.results
+        ],
+        "planned": [{"scenario": sc, "setup": s} for sc, s in run.expected()],
+        "estimates": list(run.estimates),
+        "unproven": list(UNPROVEN),
+        "files": list(run.files),
+        "skipped": list(run.skipped),
+    }
+
+
+def summary_of(model) -> ModelSummary:
+    """A generated pcs14.flight.generate.FlightModel, for the report."""
+    import math
+
+    return ModelSummary(
+        setup=model.setup,
+        mass_g=model.total_mass * 1000,
+        hover_throttle=model.params.get("MPC_THR_HOVER", 0.0),
+        top_rpm=model.motor.max_rot_velocity * 60 / (2 * math.pi),
+        motor_constant=model.motor.motor_constant,
+        moment_constant=model.motor.moment_constant,
+        drag_area_cm2=model.drag_area * 1e4,
+        chute=model.chute is not None,
+        payload_g=model.payload * 1000,
+    )
+
+
+def estimates_for(models, build) -> tuple[str, ...]:
+    """What the generated models rest on beyond the build's sourced numbers."""
+    out = []
+    if models:
+        motor = models[0].motor
+        out.append(
+            f"The props' in-plane drag, their rolling moment and the motors' spin-up and "
+            f"spin-down times: {motor.estimate_note}"
+        )
+    for part in build.modules.get("P", ()):
+        chute = getattr(part, "parachute", None)
+        if chute is not None and chute.estimates:
+            out.append(f"{part.id}: {', '.join(chute.estimates)}. {chute.estimate_note}")
+    drag = build.frame.drag_source
+    if drag is not None and drag.kind.value == "estimate":
+        out.append(f"The frame's drag area: {drag.note}")
+    out.append(
+        "The safety monitor's trigger thresholds are starting numbers, to be tuned against the "
+        "false-trigger replays"
+    )
+    return tuple(out)
+
+
+def write(out, run: FlightSimRun, generated: str | None = None):
+    import json
+    from pathlib import Path
+
+    out = Path(out)
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "README.md").write_bytes(render(run, generated).encode("utf-8"))
+    data = json.dumps(to_data(run, generated), indent=1) + "\n"
+    (out / "flight-sim.json").write_bytes(data.encode("utf-8"))
+    return out
+
+
+def summary(run: FlightSimRun) -> str:
+    planned = len(run.expected())
+    flown = sum(1 for r in run.results if r.flown)
+    lines = [
+        f"Flight sim: {len(run.models)} models, {planned} scenario runs planned, {flown} flown. "
+        f"Verdict: {run.verdict}"
+    ]
+    for m in run.models:
+        lines.append(
+            f"  {m.setup:8s}{m.mass_g:6.0f} g, hovering at {m.hover_throttle:.0%}, top "
+            f"{m.top_rpm:.0f} rpm"
+        )
+    lines += [f"Skipped: {s}" for s in run.skipped]
+    return "\n".join(lines)
