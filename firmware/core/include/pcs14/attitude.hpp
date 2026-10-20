@@ -44,6 +44,8 @@ class Attitude {
               const Vec3* motion = nullptr);
 
   const Quat& q() const { return q_; }
+  void set_gains(const AttitudeGains& gains) { gains_ = gains; }
+  const AttitudeGains& gains() const { return gains_; }
   // rad/s: the gyro's bias as learned so far
   const Vec3& bias() const { return bias_; }
   // rad/s: the gyro with its bias taken out, as used by the last update

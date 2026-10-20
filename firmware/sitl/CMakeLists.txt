@@ -13,3 +13,8 @@ target_compile_options(pcs14_sitl PRIVATE -Wno-conversion -Wno-shadow -Wno-pedan
 add_executable(pcs14_monitor_sitl ../monitor/sitl/main.cpp)
 target_link_libraries(pcs14_monitor_sitl PRIVATE pcs14_monitor gz-transport13::gz-transport13 gz-msgs10::gz-msgs10)
 target_compile_options(pcs14_monitor_sitl PRIVATE -Wno-conversion -Wno-shadow -Wno-pedantic)
+
+# the sim layer's own host test: Gazebo's magnetometer, put right
+add_executable(pcs14_sitl_tests ../core/tests/main.cpp tests/test_gz_mag.cpp)
+target_link_libraries(pcs14_sitl_tests PRIVATE pcs14_core doctest::doctest)
+add_test(NAME sitl COMMAND pcs14_sitl_tests)

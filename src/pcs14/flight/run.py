@@ -52,6 +52,10 @@ CONNECT_S = 90.0  # wall seconds for PX4 to boot, spawn the model and talk
 OFFBOARD_LOSS_S = 3.0
 STALL_S = 30.0  # wall seconds PX4's clock may stand still before the run counts as hung
 FIRMWARES = ("px4", "mine")  # what flies: PX4 v1.17.0, or my own (firmware/, step 5)
+# what my firmware's scenario runs set on top: the scenarios compare it with PX4, which doesn't
+# have my parachute rule (no autonomous flight above 30 m without P), so the rule is off for
+# them; it has its own test (firmware/core/tests/test_limits.cpp)
+MINE_RUN_PARAMS = {"PCS14_CHUTE_RULE": 0}
 GZ_SYSTEM_PYTHON = "/usr/lib/python3/dist-packages"  # where Ubuntu's python3-gz-* packages go
 GZ_MSGS = "gz.msgs10"  # Harmonic's message package
 CONNECT_TOPIC_S = 2.0  # wall seconds a new publisher waits for Gazebo to hear about it
@@ -664,7 +668,8 @@ class Session:
                 f"real_time_factor: {_number(float(self.speed))}",
             )  # fmt: skip
         params = self.folder / "params.txt"
-        params.write_text(params_text({**self.params, **RUN_PARAMS}), encoding="utf-8")
+        values = {**self.params, **RUN_PARAMS, **MINE_RUN_PARAMS}
+        params.write_text(params_text(values), encoding="utf-8")
         if self.monitor:
             watcher = binary.parent / "pcs14_monitor_sitl"
             if not watcher.exists():

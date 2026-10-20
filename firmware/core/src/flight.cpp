@@ -17,6 +17,7 @@ constexpr float kHome = 1.0f;     // m: close enough to home to start down
 Flight::Flight(const Airframe& airframe, const FlightGains& gains)
     : airframe_(airframe),
       gains_(gains),
+      ground_kp_accel_(AttitudeGains{}.kp_accel),
       height_(gains.height_crossover),
       altitude_(gains.altitude),
       control_(gains.position, gains.altitude),
@@ -44,6 +45,7 @@ void Flight::arm() {
     takeoff_z_ = height_.z();
     altitude_.reset(height_.z());
     flown_ = false;
+    land_.restart();  // the 10 s to take off count from the arming, not from power-on
     home_ = position();
     home_set_ = position_valid();
     for (bool& f : failed_) f = false;
@@ -208,6 +210,15 @@ Setpoint Flight::automatic(float, bool& done) {
 
 Mix Flight::step(const Vec3& gyro, const Vec3& accel, float dt) {
   t_ += dt;
+  // the accelerometer's pull: full on the ground, softer in the air
+  {
+    AttitudeGains a = attitude_.gains();
+    const float wanted = (armed_ && !land_.landed()) ? gains_.kp_accel_air : ground_kp_accel_;
+    if (a.kp_accel != wanted) {
+      a.kp_accel = wanted;
+      attitude_.set_gains(a);
+    }
+  }
   attitude_.update(gyro, accel, have_mag_ ? &mag_ : nullptr, dt,
                    have_gps_velocity_ ? &motion_ : nullptr);
   have_mag_ = false;

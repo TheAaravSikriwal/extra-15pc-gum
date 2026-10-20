@@ -167,8 +167,8 @@ def test_the_ground_station_sees_my_firmware_and_tunes_it_live():
             await station.start(timeout_s=30.0)
             await s.clock.sleep(2.0)
             seen = station.snapshot()
-            echoed = await station.set_param("MC_ROLL_P", 7.5)
-            runner_reads = await s.drone.param.get_param_float("MC_ROLL_P")
+            echoed = await station.set_param("PCS14_ANGLE_P", 7.5)
+            runner_reads = await s.drone.param.get_param_float("PCS14_ANGLE_P")
         finally:
             await station.stop()
             await s.stop()

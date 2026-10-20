@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <cmath>
 #include <random>
+#include <string>
+#include <vector>
 
 #include "pcs14/flight.hpp"
 #include "pcs14/height.hpp"
@@ -128,4 +130,46 @@ TEST_CASE("the land detector waits for quiet before it calls a landing") {
   CHECK_FALSE(d.landed());  // half a second isn't enough
   for (int k = 0; k < 6; ++k) d.update(true, 0.4f, 0.0f, 0.0f, 0.1f);
   CHECK(d.landed());
+}
+
+TEST_CASE("a 15 degree roll stick in altitude mode settles inside 5% within 0.5 s") {
+  // the flight sim's steps scenario, on the host: PX4 (tuned) settles in 0.17 s
+  Sim s;
+  s.flight.set_mode(Mode::Altitude);
+  s.flight.arm();
+  s.flight.set_sticks({0, 0, 0, 0.8f});
+  s.fly(3.0f);
+  s.flight.set_sticks({0, 0, 0, 0.5f});
+  s.fly(4.0f);
+  const float stick = 15.0f / 35.0f;
+  s.flight.set_sticks({stick, 0, 0, 0.5f});
+  std::vector<float> roll;
+  for (int k = 0; k < 500; ++k) {  // 2 s
+    s.fly(kDt);
+    roll.push_back(s.plant.q.roll() * 180 / kPi);
+  }
+  const float final = roll.back();
+  int settled = 0;
+  for (int k = static_cast<int>(roll.size()) - 1; k >= 0; --k) {
+    if (std::abs(roll[static_cast<size_t>(k)] - final) > 0.05f * 15.0f) {
+      settled = k + 1;
+      break;
+    }
+  }
+  const float settle_s = static_cast<float>(settled) * kDt;
+  CHECK(final == Approx(15.0f).epsilon(0.07));
+  CHECK(settle_s < 0.5f);
+  MESSAGE("settles in " << settle_s << " s at " << final << " degrees");
+}
+
+TEST_CASE("armed long after power-on, it still gets its 10 s to take off") {
+  Sim s;
+  s.flight.set_mode(Mode::Altitude);
+  s.fly(20.0f);  // sitting on the ground, disarmed, for 20 s
+  s.flight.arm();
+  s.flight.set_sticks({0, 0, 0, 0.5f});
+  s.fly(5.0f);
+  CHECK(s.flight.armed());  // not disarmed at once
+  s.fly(6.0f);
+  CHECK_FALSE(s.flight.armed());  // but after 10 s without taking off, it is
 }

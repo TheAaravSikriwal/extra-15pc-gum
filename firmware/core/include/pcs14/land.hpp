@@ -15,6 +15,8 @@ class LandDetector {
   // height above where it took off (m, up)
   void update(bool armed, float thrust_share, float vz, float height, float dt);
   bool landed() const { return landed_; }
+  // starts the on-the-ground clock again, as arming does (the auto-disarm counts from there)
+  void restart() { landed_for_ = 0; }
   float landed_for() const { return landed_for_; }  // s
 
  private:

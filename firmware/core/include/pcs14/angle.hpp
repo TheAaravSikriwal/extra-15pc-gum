@@ -13,7 +13,9 @@
 namespace pcs14 {
 
 struct AngleGains {
-  float kp_roll_pitch = 9.0f;  // 1/s, the flight sim's tuned PX4 value
+  // 1/s. PX4's x500 default, 6.5, as it happens: on my rate loops 9 (PX4's tuned value for
+  // PX4's own loops) overshot 16% on a 15 degree step, and 6.5 settles in 0.26 s at 8%
+  float kp_roll_pitch = 6.5f;
   float kp_yaw = 2.8f;         // 1/s, PX4's default
   float max_rate_roll_pitch = 220.0f * kPi / 180;  // rad/s
   float max_rate_yaw = 200.0f * kPi / 180;

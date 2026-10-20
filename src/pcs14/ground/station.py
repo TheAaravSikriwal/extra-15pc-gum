@@ -11,8 +11,8 @@ import time
 
 # what the page can tune, by parameter, with what each one is (shown next to it)
 TUNING = {
-    "MC_ROLL_P": "self-level: roll and pitch angle gain (1/s)",
-    "MC_YAW_P": "self-level: heading gain (1/s)",
+    "PCS14_ANGLE_P": "self-level: roll and pitch angle gain (1/s)",
+    "PCS14_YAW_P": "self-level: heading gain (1/s)",
     "PCS14_RATE_P": "rate loops, roll and pitch: P (rad/s^2 per rad/s)",
     "PCS14_RATE_I": "rate loops, roll and pitch: I",
     "PCS14_RATE_D": "rate loops, roll and pitch: D",

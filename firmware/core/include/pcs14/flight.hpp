@@ -43,9 +43,11 @@ struct Airframe {
 struct FlightGains {
   // The integrator is what holds an off-center weight in rate mode, and the tilt the drone
   // picks up before it catches up is about the weight's pull (rad/s^2) over ki: 3 mm off
-  // center is 4.4 rad/s^2 on base, so 2.5 degrees at ki 100, against 6 at 40.
-  RateGains roll{20.0f, 100.0f, 0.5f, 0.0f, 40.0f, 400.0f, 400.0f};
-  RateGains pitch{20.0f, 100.0f, 0.5f, 0.0f, 40.0f, 400.0f, 400.0f};
+  // center is 4.4 rad/s^2 on base, so 3.6 degrees at ki 70. Higher holds the weight better
+  // and leaves a slow tail on every stick step in the angle modes: at 100 a 15 degree step
+  // took 0.62 s to settle, at 70 it takes 0.26 s (the host's sweep, 2026-10-20).
+  RateGains roll{20.0f, 70.0f, 0.5f, 0.0f, 40.0f, 400.0f, 400.0f};
+  RateGains pitch{20.0f, 70.0f, 0.5f, 0.0f, 40.0f, 400.0f, 400.0f};
   RateGains yaw{8.0f, 8.0f, 0.0f, 0.0f, 40.0f, 50.0f, 100.0f};
   AngleGains angle;
   AltitudeGains altitude;
@@ -58,7 +60,11 @@ struct FlightGains {
   float ground_throttle = 0.15f;
   float disarm_after_landing_s = 2.0f;    // PX4's COM_DISARM_LAND
   float disarm_before_takeoff_s = 10.0f;  // armed and never taken off: PX4's COM_DISARM_PRFLT
-  float motion_smoothing_s = 0.2f;        // the low-pass on the GPS's acceleration
+  float motion_smoothing_s = 0.1f;        // the low-pass on the GPS's acceleration
+  // the accelerometer's pull on the attitude: full on the ground, so it aligns in seconds, and
+  // softer in the air, where the drone's own acceleration fools it (at 1.0 a held stick let
+  // the tilt sag 1.5 degrees in a second and a step took 1.7 s to settle; at 0.3, 0.26 s)
+  float kp_accel_air = 0.3f;
   float height_crossover = 1.0f;  // rad/s: where the height filter hands over to the barometer
 };
 
@@ -108,6 +114,10 @@ class Flight {
   // integrators keep what they've learned
   void set_tuning(const FlightGains& gains);
   const FlightGains& gains() const { return gains_; }
+  void set_attitude_gains(const AttitudeGains& gains) {
+    attitude_.set_gains(gains);
+    ground_kp_accel_ = gains.kp_accel;
+  }
   // an offboard setpoint, at `t` s (the flight loop's own clock: the sum of its steps)
   void set_offboard(const OffboardTarget& target);
   // a magnetometer sample, body frame, any unit; used by the next step
@@ -166,6 +176,7 @@ class Flight {
   Setpoint automatic(float dt, bool& done);
   Airframe airframe_;
   FlightGains gains_;
+  float ground_kp_accel_;
   AutoSettings auto_;
   Attitude attitude_;
   HeightFilter height_;

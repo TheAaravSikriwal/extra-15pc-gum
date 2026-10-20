@@ -54,6 +54,7 @@
 
 #include <gz/transport/Node.hh>
 
+#include "gz_mag.hpp"
 #include "pcs14/airframe_file.hpp"
 #include "pcs14/failsafe.hpp"
 #include "pcs14/flight.hpp"
@@ -182,8 +183,8 @@ void default_params(pcs14::Params& p) {
   // parachute rule, on unless it's switched off
   p.add_int("PCS14_LIMITS", 0);
   const pcs14::FlightGains g;  // the tuning the ground station can change in flight
-  p.add("MC_ROLL_P", g.angle.kp_roll_pitch);
-  p.add("MC_YAW_P", g.angle.kp_yaw);
+  p.add("PCS14_ANGLE_P", g.angle.kp_roll_pitch);
+  p.add("PCS14_YAW_P", g.angle.kp_yaw);
   p.add("PCS14_RATE_P", g.roll.kp);
   p.add("PCS14_RATE_I", g.roll.ki);
   p.add("PCS14_RATE_D", g.roll.kd);
@@ -244,8 +245,10 @@ pcs14::AutoSettings auto_settings(const pcs14::Params& p) {
 // the flight gains PX4's parameters set (the ones the generator writes)
 pcs14::FlightGains flight_gains(const pcs14::Params& p) {
   pcs14::FlightGains g;
-  g.angle.kp_roll_pitch = p.get("MC_ROLL_P", g.angle.kp_roll_pitch);
-  g.angle.kp_yaw = p.get("MC_YAW_P", g.angle.kp_yaw);
+  // my own names: PX4's MC_ROLL_P and the rest tune PX4's loops, which work in other units,
+  // and the flight sim's models set them for PX4
+  g.angle.kp_roll_pitch = p.get("PCS14_ANGLE_P", g.angle.kp_roll_pitch);
+  g.angle.kp_yaw = p.get("PCS14_YAW_P", g.angle.kp_yaw);
   // the rate loops, in my units (rad/s^2 per rad/s): mine, so mine to name
   g.roll.kp = g.pitch.kp = p.get("PCS14_RATE_P", g.roll.kp);
   g.roll.ki = g.pitch.ki = p.get("PCS14_RATE_I", g.roll.ki);
@@ -621,13 +624,15 @@ class Bridge {
 
   void on_mag(const gz::msgs::Magnetometer& msg) {
     std::lock_guard<std::mutex> lock(mutex_);
-    // Gazebo Harmonic's magnetometer, despite the field's name, gives gauss in a left-handed
-    // frame (gz-sim pull request 2460); PX4's bridge maps it to forward-right-down as
-    // (-y, -x, z), and so does this. Read as forward-left-up, the heading came out a quarter
-    // turn wrong and the position loop spiralled
+    // Gazebo Harmonic's magnetometer gives gauss (despite the field's name) from a field laid
+    // out left-handed (gz-sim pull request 2460). PX4's bridge maps it as (-y, -x, z), which
+    // is right only when level; this undoes it at any tilt (gz_mag.hpp). Read as plain
+    // forward-left-up the heading came out a quarter turn wrong; with the fixed mapping it
+    // went wrong in a 45 degree dash
     const gz::msgs::Vector3d& f = msg.field_tesla();
-    const Vec3 field{static_cast<float>(-f.y()), static_cast<float>(-f.x()),
-                     static_cast<float>(f.z())};
+    const Vec3 field = pcs14::sim::gazebo_magnetometer(
+        {static_cast<float>(f.x()), static_cast<float>(f.y()), static_cast<float>(f.z())},
+        flight_.attitude().q());
     flight_.on_mag(field);
     telemetry_.mag = field;  // gauss, as MAVLink carries it
   }
