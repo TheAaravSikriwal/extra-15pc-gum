@@ -502,7 +502,7 @@ def firmware_airframe(model: FlightModel) -> str:
     """My firmware's airframe file (firmware/core's airframe_file.hpp): the whole drone as one
     rigid body, props included, in the body frame forward-right-down about its center of
     gravity. Gazebo carries the props as links of their own, and at 0.21 m out their 67 g add
-    about a fifth to the roll and pitch inertia, so they go in here."""
+    about a sixth to the inertia (base: 0.0111 to 0.0129 kg m^2 in roll), so they go in here."""
     rotors = model.rotors
     total = model.total_mass
     parts = [(model.mass, model.center)] + [(r.mass, r.position) for r in rotors]

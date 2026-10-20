@@ -7,7 +7,7 @@
 // The sensors are the model's own Gazebo sensors, the ones PX4 reads. Gazebo gives them in the
 // body's forward-left-up frame; they turn into forward-right-down here. The loop runs once per
 // IMU sample (250 Hz), the way PX4's runs on each gyro sample, and each run sends the four
-// motor speeds on the model's command/motor_speed topic, which the motor plugins listen to.
+// motor speeds on /<model>/command/motor_speed, which the motor plugins listen to.
 //
 // It writes a ULog with the topics the flight sim's graders read, ground truth included: the
 // world's pose of the model, as PX4's bridge logs it. Times are Gazebo's clock, as in PX4's sim
@@ -99,7 +99,8 @@ class Bridge {
     log_ = std::make_unique<pcs14::FlightLogWriter>(ulog_, true);
     const std::string sensors =
         "/world/" + o.world + "/model/" + o.model + "/link/base_link/sensor/";
-    motors_ = node_.Advertise<gz::msgs::Actuators>("/model/" + o.model + "/command/motor_speed");
+    // the motor plugins have no namespace set, so they listen under the model's own name
+    motors_ = node_.Advertise<gz::msgs::Actuators>("/" + o.model + "/command/motor_speed");
     node_.Subscribe(sensors + "imu_sensor/imu", &Bridge::on_imu, this);
     node_.Subscribe(sensors + "magnetometer_sensor/magnetometer", &Bridge::on_mag, this);
     node_.Subscribe("/world/" + o.world + "/pose/info", &Bridge::on_poses, this);
@@ -147,6 +148,8 @@ class Bridge {
     const bool first = last_ < 0;
     last_ = t;
     if (first) {
+      // a first status sample before any command can come in, so the log shows the arming
+      log_status(micros(t));
       std::printf("ready t=%.3f\n", t);
       std::fflush(stdout);
       return;
@@ -160,10 +163,7 @@ class Bridge {
     log_->log(pcs14::EscSample{us, mix.rad_s});
     if (t >= next_sample_) {
       next_sample_ = t + kStatusEvery;
-      log_->log(pcs14::StatusLog{
-          us, flight_.armed() ? pcs14::kArmingArmed : pcs14::kArmingStandby, pcs14::kNavAcro});
-      log_->log(pcs14::LandLog{us, flight_.on_ground()});
-      log_->log(pcs14::FailsafeLog{us});
+      log_status(us);
     }
     if (t >= next_status_) {
       next_status_ = t + 1.0;
@@ -174,6 +174,13 @@ class Bridge {
                   mix.rad_s[1], mix.rad_s[2], mix.rad_s[3]);
       std::fflush(stdout);
     }
+  }
+
+  void log_status(uint64_t us) {
+    log_->log(pcs14::StatusLog{
+        us, flight_.armed() ? pcs14::kArmingArmed : pcs14::kArmingStandby, pcs14::kNavAcro});
+    log_->log(pcs14::LandLog{us, flight_.on_ground()});
+    log_->log(pcs14::FailsafeLog{us});
   }
 
   void on_mag(const gz::msgs::Magnetometer& msg) {

@@ -17,6 +17,7 @@ from pcs14.flight.scenarios import Aborted, Scenario
 SMOKE_HEIGHT = 2.5  # m
 SMOKE_HOLD_S = 10.0
 SETTLE_S = 3.0  # after reaching a height or a point, before a hold counts
+GROUNDED_M = 0.3  # m: under this after a take-off, it never left the ground
 STILL_MS = 0.3  # m/s: slower than this counts as stopped
 
 
@@ -27,6 +28,13 @@ async def take_off(s, height: float, timeout: float = 60.0):
     s.mark("arm")
     await s.drone.action.takeoff()
     if not await s.clock.until(lambda: s.state.height >= height - 0.2, timeout):
+        if s.state.in_air and s.state.height < GROUNDED_M:
+            # PX4 thinks it's flying, with the motors run up, and the model never moved: in
+            # the batch of 2026-10-20 this happened only with two runs at once, when Gazebo
+            # never got PX4's motor commands. That's the sim failing, not the drone
+            from pcs14.flight.run import SimError
+
+            raise SimError("PX4 ran the motors up for take-off and the model never moved")
         raise Aborted(f"it never climbed to {height:g} m (got to {s.state.height:.1f} m)")
     await s.clock.sleep(SETTLE_S)
 
