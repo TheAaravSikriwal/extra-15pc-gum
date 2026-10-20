@@ -29,7 +29,7 @@ This is the live version. When a step finishes, its outcome goes here, with a li
 | 1. Sizing and parts | Real, orderable parts that hit the targets | Done, 2026-10-17 | Emax 2814 850KV motors, Gemfan 10x5 props, a 6S2P Molicel P42A pack and a Nazgul XL10 frame. Every setup passes, Max included: 25.7 min hover with Mission's loadout at 2254 g ([report](docs/reports/sizing/README.md), [log](docs/log/2026-10-17-first-real-sweep.md)) |
 | 2. The virtual drone (CAD) | Every part modeled and connected | Done, 2026-10-18 | Every part modeled and every module combination passing its checks, with the real weights back in the sizing model: Mission 2293 g, still passing ([report](docs/reports/cad/README.md), [log](docs/log/2026-10-18-cad-build.md)) |
 | 3. Electrical design | Every wire, pin and connector | Done, 2026-10-19 | One connection list behind every check, diagram and the schematic: 438 checks pass in all eight combinations, and ngspice shows the safety monitor's switch working. Weighing the real wiring and hardware moved the cells to P45B: Mission is 2414 g with a 22.25 min pessimistic hover ([report](docs/reports/electrical/README.md), [log](docs/log/2026-10-19-electrical-report-and-weight.md)) |
-| 4. Flight sim (PX4) | Prove the airframe flies, in all eight module combinations | Up next, after the setup | |
+| 4. Flight sim (PX4) | Prove the airframe flies, in all eight module combinations | In progress | The talk and the plan are done ([spec](docs/specs/2026-10-19-flight-sim.md), [plan](docs/plans/2026-10-19-flight-sim.md)). Next is the build |
 | 5. My firmware | My flight code and the safety monitor, passing the same tests as PX4 | Not started | |
 | 6. Modules in sim | Parachute, vision & nav, and claws if they happen | Not started | |
 | 7. Smart features in sim | Mapping, safe spots, the LLM, object detection, soar mode, the spiral descent and more | Not started | |
@@ -69,6 +69,15 @@ This is the live version. When a step finishes, its outcome goes here, with a li
 | 3b. Plan | The new parts researched (a DroneCAN GPS, servo nodes, the multiplexers, connectors and fuses), then the implementation plan | Done, 2026-10-18 | 14 test-first tasks. The lightest DroneCAN GPS is 8 g over the old one, and with the servo nodes Max will land around 2514 g, over its limit ([plan](docs/plans/2026-10-18-electrical.md)) |
 | 3c. Build | Test-first: the connection list, the ARK FPV swap, the checks, the generators (WireViz, pin maps, KiCad), ngspice, Rerun and the report | Done | The connection list passes every rule in all eight combinations, and the checks found real problems: the cell fuse links can't work at 90 A (they're out), the release servo sits under its range, and the XT60 overheats through a long burst ([log](docs/log/2026-10-18-electrical-checks.md)). Tasks 8 to 12: ngspice shows the safety monitor's switch passing DShot with the Teensy on, off and cutting; the harness diagrams, pin maps and a clean KiCad schematic come from the list; Rerun shows every wire by how hard it works ([log](docs/log/2026-10-18-electrical-sims.md)). Task 13: `pcs14 electrical` runs all of it and writes [the report](docs/reports/electrical/README.md) ([log](docs/log/2026-10-19-electrical-report-and-weight.md)) |
 | 3d. Close the loop | The new parts' weights back into the CAD and the sizing model, with Max only 7 g under its limit | Done, 2026-10-19 | The wiring weighs 59.7 g in Base (the guess was 45) and the screws 37 g, so the fuses are soldered inline and the cells are Molicel P45B: Mission is 2414 g and passes at 22.25 min pessimistic hover. The release servo runs through an ideal-diode OR, the Pi's 5 V is checked against USB's 5.25 V, and my firmware gets a heat limit for the XT60, so the report passes ([log](docs/log/2026-10-19-electrical-report-and-weight.md)) |
+
+### Step 4, in detail
+
+| Part | What happens | Status | Outcome |
+|---|---|---|---|
+| 4a. Talk | Settle the versions, the air, the battery, what passing means, the runner and where it runs | Done, 2026-10-19 | PX4 v1.17.0 on Gazebo Harmonic, a drag plugin of our own, motors topping out at the sizing model's worst case, and a pass/fail table ([log](docs/log/2026-10-19-flight-sim-talk.md), [spec](docs/specs/2026-10-19-flight-sim.md#settled-in-the-flight-sim-talk)) |
+| 4b. Plan | The implementation plan | Done, 2026-10-19 | 12 test-first tasks; the first eight need only Windows ([plan](docs/plans/2026-10-19-flight-sim.md)) |
+| 4c. Build | Test-first: the targets, the motor fit, the drag math, the generator, power, the triggers, grading and the report, then the setup, the runner and every scenario | Up next | |
+| 4d. Close the loop | The sim's results against the sizing model, the false-trigger counts against the thresholds | Not started | |
 
 ## Modules
 

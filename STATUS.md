@@ -1,7 +1,7 @@
 # Status
 
 **Last updated:** 2026-10-19, on the PC's Windows side
-**Step:** step 3, electrical design, is done (2026-10-19). Next is step 4, the flight sim, after the WSL2 setup on the PC.
+**Step:** step 4, the flight sim. The talk (4a) and the plan (4b) are done (2026-10-19); the build (4c) is next.
 **Main machine:** the PC, with WSL2 Ubuntu 24.04 for the Linux tools
 
 ## Right now
@@ -39,14 +39,16 @@ Where to look:
 
 **The CAD talk is done (2026-10-17).** Seven answers, all in the spec under "Settled in the CAD talk": I model every part myself from published dimensions, after checking whether a CAD model of it already exists; battery underneath and modules on top, so the chute fires straight up; real printable designs for our own brackets, legs, tray and rail; check limits based on what each one costs; Rerun and styled stills for watching; STEP, meshes, a GLB for the site and print files on every run, with `cad.json` committed; and rough wire routes now. The [log](docs/log/2026-10-17-cad-talk.md) has the story.
 
+**Step 4a and 4b, the flight sim talk and plan, are done (2026-10-19).** PX4 v1.17.0 on Gazebo Harmonic, pinned; a small drag plugin of our own for body drag, wind and the parachute; each motor topping out at the sizing model's worst case (the reserve, the 90 A cap); a pass/fail table in the targets; MAVSDK-Python flying the scenarios headless; a Python reference for the safety monitor's triggers; PX4 unmodified. The [spec](docs/specs/2026-10-19-flight-sim.md), the [plan](docs/plans/2026-10-19-flight-sim.md) (12 tasks, the first eight Windows-only) and the [log](docs/log/2026-10-19-flight-sim-talk.md). From here on, routine choices get made and written down, and only drastic ones get asked.
+
 **Offline?** Study from [docs/learning.md](docs/learning.md). Topics 1 and 2 (how quads fly; props, motors and batteries) are what the sizing model needs.
 
 ## Up next
 
-1. **Set up WSL2 on the PC** with [docs/setup-pc.md](docs/setup-pc.md). The `wsl --install` step needs an admin PowerShell and one reboot. Then commit `docs/machines/pc.md`.
-2. **Step 4, the flight sim (PX4):** the talk first, then the spec, the plan and the build. It needs WSL2 on the PC.
-3. **The project site's spec** (what it's built with), so its first pages can come with the sizing model.
-4. **Write the first half of `scripts/setup-ubuntu.sh`** (inside WSL2): Gazebo, PX4 and the Python tools, with pinned versions.
+1. **Install Ubuntu in WSL2 on the PC** (mine to do): WSL2 is already on, with no distribution yet. In an administrator PowerShell, `wsl --install -d Ubuntu-24.04`, then set the Ubuntu username and password, then step 3 of [docs/setup-pc.md](docs/setup-pc.md). Tasks 9 to 12 of the flight sim need it.
+2. **Step 4c, the build:** tasks 1 to 8 of the [plan](docs/plans/2026-10-19-flight-sim.md) (Windows only), then the setup, the runner and every scenario.
+3. **The project site's spec** (what it's built with). The goal is now written down in decisions: a complete blueprint, from the structure to the circuits.
+4. **Write the first half of `scripts/setup-ubuntu.sh`** (inside WSL2): Gazebo Harmonic, PX4 v1.17.0 and the Python tools, pinned. It's task 9 of the flight sim now.
 
 ## Still open
 
