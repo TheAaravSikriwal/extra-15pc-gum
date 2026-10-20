@@ -143,6 +143,11 @@ Feedback loops, PID (what each term does, and why the D term hates noise), casca
 - [ ] **Read:** PX4's guide to control allocation ([docs.px4.io](https://docs.px4.io), "Control Allocation (Mixing)"). The same geometry my mixer uses.
 - [ ] **Read:** Matthias Faessler, Davide Falanga and Davide Scaramuzza, "Thrust Mixing, Saturation, and Body-Rate Control for Accurate Aggressive Quadrotor Flight," *IEEE Robotics and Automation Letters* 2(2), 2017.
 
+**Robustness: how wrong the model can be** (added 2026-10-20). My rate loops ask for an angular acceleration and multiply by the inertia they were told. Carry something heavy far below the drone and the real inertia is several times that, so the loop's gain drops by the same factor, its crossover slides down under the self-level loop's, and the cascade starts to swing. That's what happened in the sim's payload grab. Gain and phase margin are how much of that a loop can take; keeping each outer loop several times slower than the one inside it is how cascades keep their margin.
+
+- [ ] **Watch:** Brian Douglas, *Gain and Phase Margins Explained!* (YouTube).
+- [ ] **Read:** Åström and Murray, *Feedback Systems* (above), the chapter on robust performance.
+
 ## 10. Sensor fusion and state estimation
 
 *Needed for step 5: the drone has to know which way is up.*
@@ -167,6 +172,13 @@ Timers, interrupts, DMA, SPI (talking to the IMU), UART (talking to the receiver
 - [ ] **Read:** the dRehmFlight source ([github.com/nickrehm/dRehmFlight](https://github.com/nickrehm/dRehmFlight)). A whole flight controller in one readable file.
 - [ ] **Do:** run dRehmFlight on the Teensy 4.1 with an IMU breakout and no motors (the optional warm-up in step 5).
 - [ ] **Read:** ExpressLRS docs ([expresslrs.org](https://expresslrs.org)) on the CRSF protocol.
+
+**Watchdogs and CRCs** (added 2026-10-20). The hardware watchdog is a timer on its own clock that resets the chip unless the loop reloads it in time, which is how "a hung CPU means the motors stop" gets enforced by hardware. CRCs are how a chip's stored calibration (the barometer's trim) and every CRSF frame prove they arrived intact; the same few lines of code cover a whole family of them, set by a polynomial, a starting value and a final XOR.
+
+- [ ] **Read:** Jack Ganssle, "Great Watchdog Timers for Embedded Systems" ([ganssle.com](http://www.ganssle.com)).
+- [ ] **Read:** RM0433, the "Independent watchdog (IWDG)" chapter.
+- [ ] **Read:** Ross N. Williams, "A Painless Guide to CRC Error Detection Algorithms" (1993).
+- [ ] **Read:** Greg Cook, "Catalogue of parametrised CRC algorithms" ([reveng.sourceforge.io/crc-catalogue](https://reveng.sourceforge.io/crc-catalogue/)). Where the check values in my tests come from.
 
 ## 12. Building and soldering
 

@@ -65,3 +65,31 @@ def test_a_parameter_set_goes_to_the_drone_and_comes_back():
 
 def test_the_profiles_are_the_firmwares():
     assert PROFILES == {0: "max", 1: "us-recreational"}
+
+
+def test_the_drones_messages_are_kept_newest_last():
+    """Status texts (a preflight failure, "safety monitor quiet") show on the page."""
+    from types import SimpleNamespace as NS
+
+    from pcs14.ground.station import MESSAGES_KEPT, Station
+
+    async def texts():
+        for k in range(MESSAGES_KEPT + 2):
+            yield NS(type="WARNING", text=f"message {k}")
+
+    station = Station()
+    station.drone = NS(telemetry=NS(status_text=texts))
+    asyncio.run(station._status_text())
+    got = station.snapshot()["messages"]
+    assert len(got) == MESSAGES_KEPT
+    assert got[-1] == {"type": "WARNING", "text": f"message {MESSAGES_KEPT + 1}",
+                       "at": got[-1]["at"]}  # fmt: skip
+
+
+def test_the_page_has_somewhere_to_show_them():
+    server, url = serve(FakeStation())
+    try:
+        page = urllib.request.urlopen(url + "/").read().decode()
+    finally:
+        server.shutdown()
+    assert 'id="messages"' in page

@@ -43,6 +43,9 @@
   button:hover { background: var(--mint); color: var(--black); }
   #note { color: var(--fog); font-family: var(--mono); min-height: 1.4em; }
   svg { width: 100%; height: auto; max-width: 260px; display: block; margin: 0 auto; }
+  #messages { list-style: none; margin: 0; padding: 0; font-family: var(--mono); font-size: 13px; }
+  #messages li { padding: 4px 0; border-bottom: 1px solid var(--graphite); }
+  #messages li.warn { color: var(--magenta); }
 </style>
 </head>
 <body>
@@ -90,6 +93,10 @@
     <div id="tuning"></div>
   </section>
   <section>
+    <h2>Messages</h2>
+    <ul id="messages"><li>nothing yet</li></ul>
+  </section>
+  <section>
     <h2>Limits profile</h2>
     <div class="row">
       <label for="profile">The legal numbers, switched here. The engineering safety rules don't
@@ -114,6 +121,7 @@ const TUNING = {
   PCS14_RATE_D: "rate loops, roll and pitch: D",
   PCS14_YAWRATE_P: "rate loop, yaw: P",
 };
+const WARNINGS = new Set(["WARNING", "ERROR", "CRITICAL", "ALERT", "EMERGENCY"]);
 const $ = (id) => document.getElementById(id);
 const fix = (v, n = 1) => (typeof v === "number" ? v.toFixed(n) : "--");
 const tuning = $("tuning");
@@ -155,6 +163,16 @@ function show(s) {
   $("yaw").textContent = `${fix(s.yaw_deg)}°`;
   const roll = s.roll_deg || 0, pitch = s.pitch_deg || 0;
   $("horizon").setAttribute("transform", `rotate(${-roll}) translate(0 ${pitch * 2})`);
+  const list = $("messages");
+  const said = s.messages || [];
+  if (said.length) {
+    list.replaceChildren(...said.slice().reverse().map((m) => {
+      const li = document.createElement("li");
+      li.textContent = m.text;  // as text: what the drone says never becomes markup
+      if (WARNINGS.has(m.type)) li.className = "warn";
+      return li;
+    }));
+  }
   for (const [name, value] of Object.entries(s.params || {})) {
     const box = $(`v-${name}`);
     if (box && !edited.has(box.id)) box.value = value;

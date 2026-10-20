@@ -20,6 +20,7 @@ TUNING = {
 }
 INTS = {"PCS14_LIMITS"}  # int32 parameters; the rest are floats
 PROFILES = {0: "max", 1: "us-recreational"}  # PCS14_LIMITS, as firmware/core's limits.hpp has
+MESSAGES_KEPT = 8  # the drone's latest status texts, shown on the page
 
 
 class Station:
@@ -30,7 +31,7 @@ class Station:
         self.address, self.grpc_port = address, grpc_port
         self.drone = None
         self.loop: asyncio.AbstractEventLoop | None = None
-        self.state: dict = {"connected": False, "params": {}, "updated": 0.0}
+        self.state: dict = {"connected": False, "params": {}, "messages": [], "updated": 0.0}
         self._tasks: list = []
 
     async def start(self, timeout_s: float = 60.0):
@@ -48,7 +49,7 @@ class Station:
         await asyncio.wait_for(connected(), timeout_s)
         self.state["connected"] = True
         for follow in (self._attitude, self._position, self._battery, self._mode,
-                       self._armed, self._landed):  # fmt: skip
+                       self._armed, self._landed, self._status_text):  # fmt: skip
             self._tasks.append(asyncio.create_task(follow()))
         await self.refresh_params()
 
@@ -94,6 +95,13 @@ class Station:
     async def _landed(self):
         async for in_air in self.drone.telemetry.in_air():
             self._set(in_air=in_air)
+
+    async def _status_text(self):
+        """What the drone says: why it won't arm, a failsafe, the safety monitor gone quiet."""
+        async for m in self.drone.telemetry.status_text():
+            kept = self.state["messages"][-(MESSAGES_KEPT - 1) :]
+            kept.append({"type": str(m.type), "text": m.text, "at": time.time()})
+            self._set(messages=kept)
 
     async def refresh_params(self):
         """Reads the tuning and the limits profile off the drone."""
