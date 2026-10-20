@@ -66,6 +66,7 @@
       <dt>climb</dt><dd id="climb">--</dd>
       <dt>north, east</dt><dd id="where">--</dd>
       <dt>battery</dt><dd id="battery">--</dd>
+      <dt>current, used</dt><dd id="current">--</dd>
     </dl>
   </section>
   <section>
@@ -158,6 +159,8 @@ function show(s) {
   $("climb").textContent = `${fix(s.climb_m_s)} m/s`;
   $("where").textContent = `${fix(s.north_m)}, ${fix(s.east_m)} m`;
   $("battery").textContent = s.battery_v ? `${fix(s.battery_v, 2)} V, ${fix(s.battery_pct, 0)}%` : "--";
+  $("current").textContent = typeof s.battery_a === "number"
+    ? `${fix(s.battery_a)} A, ${typeof s.battery_mah === "number" ? fix(s.battery_mah, 0) : "--"} mAh` : "--";
   $("roll").textContent = `${fix(s.roll_deg)}°`;
   $("pitch").textContent = `${fix(s.pitch_deg)}°`;
   $("yaw").textContent = `${fix(s.yaw_deg)}°`;

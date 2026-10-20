@@ -48,6 +48,7 @@ struct Telemetry {
   uint8_t satellites = 0;
   float battery_v = 0, battery_a = 0;
   float battery_remaining = -1;  // 0 to 1, or -1 when unknown
+  float battery_used_mah = -1;   // the fuel gauge's count, or -1 when there's none
   bool armable = false;          // the pre-arm checks pass
 };
 

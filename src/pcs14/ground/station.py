@@ -82,7 +82,10 @@ class Station:
 
     async def _battery(self):
         async for b in self.drone.telemetry.battery():
-            self._set(battery_v=b.voltage_v, battery_pct=b.remaining_percent)
+            used = getattr(b, "capacity_consumed_ah", None)  # the fuel gauge's count
+            mah = None if used is None or used != used else used * 1000  # NaN when there's none
+            self._set(battery_v=b.voltage_v, battery_pct=b.remaining_percent,
+                      battery_a=getattr(b, "current_battery_a", None), battery_mah=mah)  # fmt: skip
 
     async def _mode(self):
         async for m in self.drone.telemetry.flight_mode():

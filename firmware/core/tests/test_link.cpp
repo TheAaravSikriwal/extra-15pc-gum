@@ -280,3 +280,41 @@ TEST_CASE("asked for, AUTOPILOT_VERSION says it encodes parameters bytewise") {
   CHECK((a.capabilities & MAV_PROTOCOL_CAPABILITY_PARAM_ENCODE_BYTEWISE) != 0);
   CHECK((a.capabilities & MAV_PROTOCOL_CAPABILITY_MAVLINK2) != 0);
 }
+
+TEST_CASE("BATTERY_STATUS carries the gauge's mAh used, and -1 when there's no count") {
+  Params params;
+  Ground ground;
+  Vehicle vehicle;
+  Link link(params, ground.ear(), vehicle.handlers());
+  Telemetry t;
+  t.battery_v = 24.1f;
+  t.battery_a = 18.5f;
+  t.battery_remaining = 0.62f;
+  t.battery_used_mah = 3420.4f;
+  for (int k = 0; k < 1100; ++k) {  // a little over a second: one BATTERY_STATUS at 1 Hz
+    t.t_us = 1000000 + static_cast<uint64_t>(k) * 1000;
+    link.update(t);
+  }
+  const auto sent = ground.of(MAVLINK_MSG_ID_BATTERY_STATUS);
+  REQUIRE_FALSE(sent.empty());
+  mavlink_battery_status_t b;
+  mavlink_msg_battery_status_decode(&sent.back(), &b);
+  const int32_t consumed = b.current_consumed;  // packed fields, copied out first
+  const int16_t current = b.current_battery;
+  const int8_t remaining = b.battery_remaining;
+  CHECK(consumed == 3420);
+  CHECK(remaining == 62);
+  CHECK(current == 1850);  // in 10 mA
+
+  Telemetry unknown = t;
+  unknown.battery_used_mah = -1;
+  Ground other;
+  Link second(params, other.ear(), vehicle.handlers());
+  for (int k = 0; k < 1100; ++k) {
+    unknown.t_us = 1000000 + static_cast<uint64_t>(k) * 1000;
+    second.update(unknown);
+  }
+  mavlink_msg_battery_status_decode(&other.of(MAVLINK_MSG_ID_BATTERY_STATUS).back(), &b);
+  const int32_t none = b.current_consumed;
+  CHECK(none == -1);
+}

@@ -56,6 +56,7 @@
 
 #include "gz_mag.hpp"
 #include "pcs14/airframe_file.hpp"
+#include "pcs14/battery.hpp"
 #include "pcs14/failsafe.hpp"
 #include "pcs14/flight.hpp"
 #include "pcs14/limits.hpp"
@@ -594,6 +595,11 @@ class Bridge {
     telemetry_.armable = armable();
     telemetry_.battery_remaining = battery_.remaining(params_);
     telemetry_.battery_v = battery_.voltage(params_);
+    // the fuel gauge counts the current my firmware estimates from the motors (the drone will
+    // have the ESC's sensor); the failsafe still goes by the simulated pack, like PX4's
+    if (flight_.armed()) gauge_.update(telemetry_.battery_v, flight_.current(), dt);
+    telemetry_.battery_a = flight_.current();
+    telemetry_.battery_used_mah = gauge_.used_mah();
     telemetry_.position_valid = flight_.position_valid();
     telemetry_.position = flight_.position();
     telemetry_.velocity = flight_.velocity();
@@ -625,7 +631,8 @@ class Bridge {
     flags.battery_warning = f.battery_warning;
     flags.geofence_breached = f.geofence_breached;
     log_->log(flags);
-    log_->log(pcs14::BatteryLog{us, battery_.voltage(params_), 0, battery_.remaining(params_)});
+    log_->log(pcs14::BatteryLog{us, battery_.voltage(params_), flight_.current(),
+                                battery_.remaining(params_)});
   }
 
   void failsafe(float dt) {
@@ -792,6 +799,7 @@ class Bridge {
   bool have_imu_ = false, have_gps_ = false, have_baro_ = false, have_mag_ = false;
   bool kill_on_ = false, monitor_cutting_ = false, warned_quiet_ = false;
   double monitor_t_ = -1;  // s, when the monitor's heartbeat last came in
+  pcs14::BatteryGauge gauge_{pcs14::PackModel{}};  // counts mAh; the share comes from battery_
 };
 
 }  // namespace

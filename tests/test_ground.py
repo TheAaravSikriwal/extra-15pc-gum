@@ -93,3 +93,25 @@ def test_the_page_has_somewhere_to_show_them():
     finally:
         server.shutdown()
     assert 'id="messages"' in page
+
+
+def test_the_battery_shows_its_current_and_charge_used():
+    from types import SimpleNamespace as NS
+
+    from pcs14.ground.station import Station
+
+    async def readings():
+        yield NS(voltage_v=24.1, remaining_percent=62.0, current_battery_a=18.5,
+                 capacity_consumed_ah=3.4204)  # fmt: skip
+
+    station = Station()
+    station.drone = NS(telemetry=NS(battery=readings))
+    asyncio.run(station._battery())
+    s = station.snapshot()
+    assert s["battery_a"] == 18.5 and round(s["battery_mah"]) == 3420
+    server, url = serve(FakeStation())
+    try:
+        page = urllib.request.urlopen(url + "/").read().decode()
+    finally:
+        server.shutdown()
+    assert 'id="current"' in page

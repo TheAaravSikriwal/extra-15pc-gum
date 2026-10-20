@@ -379,7 +379,9 @@ struct Link::Impl {
         for (int k = 0; k < 10; ++k) b.voltages[k] = UINT16_MAX;
         b.voltages[0] = static_cast<uint16_t>(t.battery_v * 1000);
         b.current_battery = static_cast<int16_t>(t.battery_a * 100);
-        b.current_consumed = b.energy_consumed = -1;
+        b.current_consumed =
+            t.battery_used_mah < 0 ? -1 : static_cast<int32_t>(std::lround(t.battery_used_mah));
+        b.energy_consumed = -1;
         b.battery_remaining =
             t.battery_remaining < 0 ? -1 : static_cast<int8_t>(std::lround(t.battery_remaining * 100));
         mavlink_msg_battery_status_encode(system, component, &msg, &b);
