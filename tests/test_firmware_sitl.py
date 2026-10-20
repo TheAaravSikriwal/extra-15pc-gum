@@ -152,6 +152,42 @@ def test_the_safety_monitor_cuts_a_hung_flight_controller():
     assert h0 > 4.5 and h1 < 1.0  # it came down
 
 
+def test_it_wont_arm_without_a_live_safety_monitor():
+    """The safety monitor frozen (SIGSTOP), its heartbeat stops and my firmware refuses to arm;
+    let it go again and the same arm goes through (step 5, task 9: the pre-arm checks)."""
+    import os
+    import signal
+    import time
+
+    from mavsdk.action import ActionError
+
+    async def fly():
+        s = run.Session(TOOLS, "pcs14_base", {}, EXPORTS, "prearm-check", instance=6,
+                        firmware="mine")  # fmt: skip
+        try:
+            await s.start()
+            monitor = next(p for name, p in s._processes if name == "monitor")
+            os.kill(monitor.pid, signal.SIGSTOP)
+            time.sleep(1.0)  # wall time: about 4 s of sim at the default speed's worst
+            refused = False
+            try:
+                await s.drone.action.arm()
+            except ActionError:
+                refused = True
+            os.kill(monitor.pid, signal.SIGCONT)
+            await s.clock.sleep(1.0)
+            await s.drone.action.arm()
+            armed = await s.clock.until(lambda: s.state.armed, 5.0)
+            await s.drone.action.disarm()
+        finally:
+            await s.stop()
+        return refused, armed
+
+    refused, armed = asyncio.run(fly())
+    assert refused, "it armed with the safety monitor frozen"
+    assert armed, "it wouldn't arm once the monitor was back"
+
+
 def test_the_ground_station_sees_my_firmware_and_tunes_it_live():
     """The ground station on my firmware's ground station link (PX4's port, 14550 plus the
     instance), next to the runner's own MAVSDK: it gets the telemetry and the limits profile,

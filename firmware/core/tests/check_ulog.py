@@ -50,6 +50,7 @@ def main(path: str) -> int:
             (topics["vehicle_land_detected"]["landed"][k], 1 if k < 8 else 0),
             (topics["failsafe_flags"]["gcs_connection_lost"][k], 1 if k >= 15 else 0),
             (topics["failsafe_flags"]["battery_warning"][k], 1 if k >= 18 else 0),
+            (topics["failsafe_flags"]["geofence_breached"][k], 1 if k >= 12 else 0),
             (topics["battery_status"]["remaining"][k], 1 - 0.01 * f),
         ]
         for n, (got, expected) in enumerate(checks):

@@ -104,3 +104,49 @@ TEST_CASE("a failed motor gets nothing, and the mixer knows it's short") {
   CHECK(m.rad_s[0] > 0.0f);
   CHECK(m.saturated);
 }
+
+TEST_CASE("past the geofence it holds, once a breach, and asks again after coming back in") {
+  FailsafeSettings s;
+  s.fence_m = 50;  // GF_MAX_HOR_DIST, with PX4's default GF_ACTION 2: hold
+  Failsafes f(s);
+  FailsafeInputs in = flying();
+  Mode m{};
+  in.distance_m = 49;
+  CHECK_FALSE(f.update(in, 0.1f, m));
+  in.distance_m = 51;
+  REQUIRE(f.update(in, 0.1f, m));
+  CHECK(m == Mode::Hold);
+  CHECK(f.flags().geofence_breached);
+  in.mode = Mode::Hold;
+  CHECK_FALSE(f.update(in, 0.1f, m));  // one breach, one ask
+  in.distance_m = 40;                  // flown back in by hand
+  CHECK_FALSE(f.update(in, 0.1f, m));
+  CHECK_FALSE(f.flags().geofence_breached);
+  in.distance_m = 52;
+  REQUIRE(f.update(in, 0.1f, m));
+  CHECK(m == Mode::Hold);
+}
+
+TEST_CASE("over the fence's height it does what GF_ACTION says, and no fence is no fence") {
+  FailsafeSettings s;
+  s.fence_height_m = 100;  // GF_MAX_VER_DIST
+  s.fence_action = 3;      // return
+  Failsafes f(s);
+  FailsafeInputs in = flying();
+  Mode m{};
+  in.height_m = 101;
+  REQUIRE(f.update(in, 0.1f, m));
+  CHECK(m == Mode::Return);
+
+  Failsafes none;  // both 0, PX4's defaults
+  in.distance_m = 5000;
+  in.height_m = 900;
+  CHECK_FALSE(none.update(in, 0.1f, m));
+  CHECK_FALSE(none.flags().geofence_breached);
+
+  s.fence_action = 4;  // terminate, but termination isn't allowed without the chute: land
+  Failsafes no_chute(s);
+  in.height_m = 101;
+  REQUIRE(no_chute.update(in, 0.1f, m));
+  CHECK(m == Mode::Land);
+}

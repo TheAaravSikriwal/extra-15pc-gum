@@ -46,3 +46,11 @@ TEST_CASE("the profiles' ceilings, and the parachute rule without the chute") {
   CHECK(allowed_height(limits_profile(0), true) > 1000.0f);  // max: none
   CHECK(allowed_height(limits_profile(0), false) == Approx(30.0f));
 }
+
+TEST_CASE("the fence is the tighter of the day's and the profile's") {
+  LimitsProfile p{"test", 0, 300, false};
+  CHECK(fence_radius(p, 0) == 300);    // only the profile's
+  CHECK(fence_radius(p, 120) == 120);  // the day's is tighter
+  CHECK(fence_radius(p, 500) == 300);
+  CHECK(fence_radius(limits_profile(0), 0) == 0);  // max has none: no fence at all
+}

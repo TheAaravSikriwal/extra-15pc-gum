@@ -12,8 +12,10 @@
 // leave the motors at their last speed: exactly what the monitor is there to prevent.
 //
 // The flight controller's heartbeat comes on /<model>/fc/heartbeat (its armed state), and the
-// kill switch on /<model>/kill. Its triggers run in shadow mode unless --live. It prints a line
-// when it cuts and for every trigger, which is its log.
+// kill switch on /<model>/kill. Its own heartbeat goes out on /<model>/monitor/heartbeat,
+// carrying whether it's cutting: the flight controller won't arm without it. Its triggers run
+// in shadow mode unless --live. It prints a line when it cuts and for every trigger, which is
+// its log.
 #include <gz/msgs/actuators.pb.h>
 #include <gz/msgs/boolean.pb.h>
 #include <gz/msgs/imu.pb.h>
@@ -47,6 +49,7 @@ class MonitorBridge {
   MonitorBridge(const std::string& world, const std::string& model, bool live)
       : monitor_(settings(live)) {
     motors_ = node_.Advertise<gz::msgs::Actuators>("/" + model + "/command/motor_speed");
+    heartbeat_out_ = node_.Advertise<gz::msgs::Boolean>("/" + model + "/monitor/heartbeat");
     node_.Subscribe("/world/" + world + "/model/" + model +
                         "/link/base_link/sensor/monitor_imu_sensor/imu",
                     &MonitorBridge::on_imu, this);
@@ -82,6 +85,11 @@ class MonitorBridge {
       std::printf("cut %s at %.3f\n", pcs14::cut_name(monitor_.why()), monitor_.cut_at());
     if (!monitor_.cutting() && was) std::printf("cut cleared at %.3f\n", t);
     std::fflush(stdout);
+    if (++beats_ % kHeartbeatEvery == 0) {  // 25 Hz, on its own clock
+      gz::msgs::Boolean beat;
+      beat.set_data(monitor_.cutting());
+      heartbeat_out_.Publish(beat);
+    }
     // cutting: stop frames, every step, on the monitor's own clock
     if (monitor_.cutting()) {
       gz::msgs::Actuators stop;
@@ -108,7 +116,9 @@ class MonitorBridge {
 
   pcs14::Monitor monitor_;
   gz::transport::Node node_;
-  gz::transport::Node::Publisher motors_;
+  gz::transport::Node::Publisher motors_, heartbeat_out_;
+  static constexpr int kHeartbeatEvery = 10;  // IMU samples (250 Hz) between heartbeats
+  int beats_ = 0;
   std::mutex mutex_;
   double last_ = -1;
   bool heartbeat_ = false, armed_ = false, kill_ = false;

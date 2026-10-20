@@ -57,6 +57,7 @@ FAILSAFES = {  # failsafe_flags fields, and the event each one's rising edge mak
     "global_position_invalid": "position lost",
     "fd_critical_failure": "critical failure",
     "fd_motor_failure": "motor failure",
+    "geofence_breached": "geofence",
 }
 STOPPED = 1.0  # rad/s: a motor commanded under this is stopped
 # the two frame changes, as quaternions (w, x, y, z): north-east-down to east-north-up is half a

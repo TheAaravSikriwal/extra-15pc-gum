@@ -63,6 +63,7 @@
 #include "pcs14/log_topics.hpp"
 #include "pcs14/modes.hpp"
 #include "pcs14/params.hpp"
+#include "pcs14/prearm.hpp"
 #include "pcs14/ulog.hpp"
 
 namespace {
@@ -176,6 +177,9 @@ void default_params(pcs14::Params& p) {
   p.add_int("FD_FAIL_P", 60);
   p.add("FD_FAIL_R_TTRI", f.fail_time_s);
   p.add_int("CBRK_FLIGHTTERM", 121212);  // PX4's "termination off"; 0 allows it
+  p.add_int("GF_ACTION", f.fence_action);
+  p.add("GF_MAX_HOR_DIST", f.fence_m);
+  p.add("GF_MAX_VER_DIST", f.fence_height_m);
   p.add_int("EKF2_GPS_CTRL", 7);         // anything but 0 uses the GPS
   // the sim only: PX4's own sim defaults
   p.add_int("SYS_FAILURE_EN", 1);    // failure injection, on in PX4's SITL
@@ -205,6 +209,11 @@ pcs14::FailsafeSettings failsafe_settings(const pcs14::Params& p) {
   f.fail_tilt_rad = static_cast<float>(p.get_int("FD_FAIL_R", 60)) * pcs14::kPi / 180;
   f.fail_time_s = p.get("FD_FAIL_R_TTRI", f.fail_time_s);
   f.termination = p.get_int("CBRK_FLIGHTTERM", 121212) == 0;
+  // the fence: mine for the day, tightened by the limits profile's when it has one
+  f.fence_action = p.get_int("GF_ACTION", f.fence_action);
+  f.fence_m = pcs14::fence_radius(pcs14::limits_profile(p.get_int("PCS14_LIMITS", 0)),
+                                  p.get("GF_MAX_HOR_DIST", f.fence_m));
+  f.fence_height_m = p.get("GF_MAX_VER_DIST", f.fence_height_m);
   return f;
 }
 
@@ -324,7 +333,11 @@ class Bridge {
     // the safety monitor, the speeds go to it instead (pcs14_monitor_sitl), with a heartbeat
     motors_ = node_.Advertise<gz::msgs::Actuators>(
         "/" + o.model + (o.monitor ? "/fc/motor_speed" : "/command/motor_speed"));
-    if (o.monitor) heartbeat_ = node_.Advertise<gz::msgs::Boolean>("/" + o.model + "/fc/heartbeat");
+    if (o.monitor) {
+      heartbeat_ = node_.Advertise<gz::msgs::Boolean>("/" + o.model + "/fc/heartbeat");
+      // and the monitor's own heartbeat back, whether it's cutting: no live monitor, no arming
+      node_.Subscribe("/" + o.model + "/monitor/heartbeat", &Bridge::on_monitor, this);
+    }
     monitor_ = o.monitor;
     // the first servo, where PX4's parachute output (function 401) goes in the P combinations
     chute_ = node_.Advertise<gz::msgs::Double>("/model/" + o.model + "/servo_0");
@@ -399,7 +412,23 @@ class Bridge {
     return h;
   }
 
-  bool armable() const { return have_imu_ && have_gps_; }
+  // the pre-arm checks (pcs14/prearm.hpp), for the mode it's in now
+  uint32_t prearm() const {
+    pcs14::PreArmInputs in;
+    in.imu = have_imu_;
+    in.baro = have_baro_;
+    in.mag = have_mag_;
+    in.position_valid = have_gps_ && flight_.position_valid();
+    in.mode = flight_.mode();
+    in.battery = battery_.remaining(params_);
+    in.battery_critical = params_.get("BAT_CRIT_THR", in.battery_critical);
+    in.kill_switch = kill_on_;
+    in.monitor_required = monitor_;
+    in.monitor_silent_s = monitor_t_ < 0 ? 1e9f : static_cast<float>(last_ - monitor_t_);
+    in.monitor_cutting = monitor_cutting_;
+    return pcs14::prearm_failures(in);
+  }
+  bool armable() const { return prearm() == 0; }
 
   void arm() {
     if (!flight_.armed()) failsafes_.reset();
@@ -418,10 +447,18 @@ class Bridge {
   bool request(const pcs14::Request& r) {
     using K = pcs14::Request::Kind;
     switch (r.kind) {
-      case K::Arm:
-        if (!armable()) return false;
+      case K::Arm: {
+        const uint32_t failures = prearm();
+        if (failures != 0) {  // say why, as PX4 does, on both links and in the log
+          const char* why = pcs14::prearm_reason(failures);
+          link_.status_text(3, why);
+          gcs_link_.status_text(3, why);
+          ulog_.text(3, micros(last_), why);
+          return false;
+        }
         arm();
         return true;
+      }
       case K::Disarm:
         if (!flight_.on_ground()) return false;  // as PX4: not in the air, unless forced
         disarm();
@@ -521,6 +558,15 @@ class Bridge {
     flight_.set_height_limit(pcs14::allowed_height(
         pcs14::limits_profile(params_.get_int("PCS14_LIMITS", 0)), chute || !rule));
     if (flight_.armed()) battery_.armed_s += dt;
+    // the monitor gone quiet in flight: a warning, once a silence (the drone flies on without
+    // it, as it would with a dead Teensy)
+    const bool quiet = monitor_ && (monitor_t_ < 0 || t - monitor_t_ > pcs14::kMonitorTimeoutS);
+    if (quiet && flight_.armed() && !warned_quiet_) {
+      link_.status_text(4, "safety monitor quiet");
+      gcs_link_.status_text(4, "safety monitor quiet");
+      ulog_.text(4, micros(t), "safety monitor quiet");
+    }
+    warned_quiet_ = quiet && flight_.armed();
     failsafe(dt);
     const pcs14::Mix mix = flight_.step(gyro, accel, dt);
     send(mix.rad_s);
@@ -577,6 +623,7 @@ class Bridge {
     flags.critical_failure = f.critical_failure;
     flags.motor_failure = motor_failed_;
     flags.battery_warning = f.battery_warning;
+    flags.geofence_breached = f.geofence_breached;
     log_->log(flags);
     log_->log(pcs14::BatteryLog{us, battery_.voltage(params_), 0, battery_.remaining(params_)});
   }
@@ -595,6 +642,11 @@ class Bridge {
     in.position_valid = flight_.position_valid();
     in.home_valid = flight_.home_valid();
     in.tilt_rad = flight_.attitude().q().tilt();
+    if (flight_.home_valid()) {
+      const pcs14::Vec3 p = flight_.position(), home = flight_.home();
+      in.distance_m = std::hypot(p.x - home.x, p.y - home.y);
+      in.height_m = home.z - p.z;
+    }
     failsafes_.set(failsafe_settings(params_));
     pcs14::Mode mode;
     if (failsafes_.update(in, dt, mode) && mode != flight_.mode()) {
@@ -614,8 +666,15 @@ class Bridge {
     chute_.Publish(out);
   }
 
+  void on_monitor(const gz::msgs::Boolean& msg) {
+    std::lock_guard<std::mutex> lock(mutex_);
+    monitor_t_ = last_;  // the flight controller's own clock: the message has no stamp
+    monitor_cutting_ = msg.data();
+  }
+
   void on_kill(const gz::msgs::Boolean& msg) {
     std::lock_guard<std::mutex> lock(mutex_);
+    kill_on_ = msg.data();
     if (msg.data() && !flight_.terminated() && flight_.armed()) {
       flight_.set_mode(pcs14::Mode::Termination);
       ulog_.text(2, micros(last_), "kill switch");
@@ -634,12 +693,14 @@ class Bridge {
         {static_cast<float>(f.x()), static_cast<float>(f.y()), static_cast<float>(f.z())},
         flight_.attitude().q());
     flight_.on_mag(field);
+    have_mag_ = true;
     telemetry_.mag = field;  // gauss, as MAVLink carries it
   }
 
   void on_pressure(const gz::msgs::FluidPressure& msg) {
     std::lock_guard<std::mutex> lock(mutex_);
     const double t = seconds(msg.header());
+    have_baro_ = true;
     flight_.on_baro(static_cast<float>(msg.pressure()),
                     baro_t_ >= 0 ? static_cast<float>(t - baro_t_) : 0.0f);
     baro_t_ = t;
@@ -728,7 +789,9 @@ class Bridge {
   double last_ = -1, next_status_ = 0, next_sample_ = 0;
   double truth_t_ = -1, baro_t_ = -1, gps_t_ = -1;
   Vec3 truth_p_;
-  bool have_imu_ = false, have_gps_ = false;
+  bool have_imu_ = false, have_gps_ = false, have_baro_ = false, have_mag_ = false;
+  bool kill_on_ = false, monitor_cutting_ = false, warned_quiet_ = false;
+  double monitor_t_ = -1;  // s, when the monitor's heartbeat last came in
 };
 
 }  // namespace

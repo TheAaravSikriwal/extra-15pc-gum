@@ -13,7 +13,7 @@ bool automatic(Mode m) {
 void Failsafes::reset() {
   flags_ = {};
   tilted_s_ = 0;
-  link_done_ = low_done_ = critical_done_ = emergency_done_ = position_done_ = false;
+  link_done_ = low_done_ = critical_done_ = emergency_done_ = position_done_ = fence_done_ = false;
   terminated_ = false;
 }
 
@@ -27,6 +27,11 @@ bool Failsafes::update(const FailsafeInputs& in, float dt, Mode& mode) {
                              : in.battery < s_.battery_low      ? 1
                                                                 : 0;
   }
+  const bool outside = in.home_valid && in.position_valid &&
+                       ((s_.fence_m > 0 && in.distance_m > s_.fence_m) ||
+                        (s_.fence_height_m > 0 && in.height_m > s_.fence_height_m));
+  flags_.geofence_breached = outside;
+  if (!outside) fence_done_ = false;  // back inside: the next breach asks again
   if (!in.armed || !in.in_air) {
     tilted_s_ = 0;
     return false;
@@ -59,6 +64,17 @@ bool Failsafes::update(const FailsafeInputs& in, float dt, Mode& mode) {
     return true;
   }
   if (flags_.battery_warning >= 1) low_done_ = true;  // a warning only
+  // the geofence, by GF_ACTION
+  if (outside && !fence_done_) {
+    fence_done_ = true;
+    switch (s_.fence_action) {
+      case 2: mode = Mode::Hold; return true;
+      case 3: mode = in.home_valid ? Mode::Return : Mode::Land; return true;
+      case 4: mode = s_.termination ? Mode::Termination : Mode::Land; return true;
+      case 5: mode = Mode::Land; return true;
+      default: break;  // none, or a warning: the flag only
+    }
+  }
   // lost link, by NAV_DLL_ACT
   if (flags_.link_lost && !link_done_ && s_.link_action != 0) {
     link_done_ = true;

@@ -15,6 +15,7 @@ add_library(pcs14_core STATIC
   src/modes.cpp
   src/params.cpp
   src/position.cpp
+  src/prearm.cpp
   src/rate.cpp
   src/ulog.cpp
 )
@@ -54,6 +55,7 @@ add_executable(pcs14_core_tests
   tests/test_position.cpp
   tests/test_failsafe.cpp
   tests/test_limits.cpp
+  tests/test_prearm.cpp
 )
 target_link_libraries(pcs14_core_tests PRIVATE pcs14_core doctest::doctest)
 add_test(NAME core COMMAND pcs14_core_tests)

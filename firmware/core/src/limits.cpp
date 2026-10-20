@@ -34,4 +34,10 @@ float allowed_height(const LimitsProfile& profile, bool chute) {
   return h;
 }
 
+float fence_radius(const LimitsProfile& profile, float own_m) {
+  if (own_m <= 0) return profile.fence_m > 0 ? profile.fence_m : 0;
+  if (profile.fence_m <= 0) return own_m;
+  return own_m < profile.fence_m ? own_m : profile.fence_m;
+}
+
 }  // namespace pcs14

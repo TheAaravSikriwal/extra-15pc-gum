@@ -72,4 +72,8 @@ constexpr float kParachuteRuleM = 30.0f;  // without the chute, no autonomous fl
 // without the chute, the parachute rule
 float allowed_height(const LimitsProfile& profile, bool chute);
 
+// the geofence's radius (m from home): the tighter of the day's own (GF_MAX_HOR_DIST) and the
+// profile's, either one 0 for none; 0 when neither has one
+float fence_radius(const LimitsProfile& profile, float own_m);
+
 }  // namespace pcs14

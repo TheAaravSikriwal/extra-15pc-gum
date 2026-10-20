@@ -18,7 +18,8 @@ FlightLogWriter::FlightLogWriter(ULogWriter& out, bool ground_truth)
   out_.format("vehicle_land_detected:uint64_t timestamp;bool landed;");
   out_.format(
       "failsafe_flags:uint64_t timestamp;bool gcs_connection_lost;bool global_position_invalid;"
-      "bool fd_critical_failure;bool fd_motor_failure;uint8_t battery_warning;");
+      "bool fd_critical_failure;bool fd_motor_failure;uint8_t battery_warning;"
+      "bool geofence_breached;");
   out_.format("battery_status:uint64_t timestamp;float voltage_v;float current_a;float remaining;");
   if (truth_) {
     position_ = out_.subscribe("vehicle_local_position_groundtruth");
@@ -84,7 +85,8 @@ void FlightLogWriter::log(const FailsafeLog& s) {
       .put_bool(s.position_invalid)
       .put_bool(s.critical_failure)
       .put_bool(s.motor_failure)
-      .put(s.battery_warning);
+      .put(s.battery_warning)
+      .put_bool(s.geofence_breached);
   out_.data(failsafe_, p.data(), p.size());
 }
 

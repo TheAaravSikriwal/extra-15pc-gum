@@ -10,8 +10,12 @@
 // - attitude failure: tilted past FD_FAIL_R or FD_FAIL_P for FD_FAIL_R_TTRI, it's out of
 //   control; with termination allowed (CBRK_FLIGHTTERM 0, only where there's a chute) the
 //   motors stop and the chute goes
-// Each failsafe fires once per flight and stays latched, as PX4's do, and each one leaves a
-// flag in the log (failsafe_flags), which is how the graders see it.
+// - geofence: farther from home than GF_MAX_HOR_DIST, or higher over it than GF_MAX_VER_DIST
+//   (0 is no limit, PX4's default), then GF_ACTION (hold, PX4's default). The fence is mine for
+//   the day, tightened by the limits profile's when it has one (pcs14::fence_radius)
+// Each failsafe fires once per flight and stays latched, as PX4's do (the geofence once a
+// breach: back inside, it can ask again), and each one leaves a flag in the log
+// (failsafe_flags), which is how the graders see it.
 #pragma once
 
 #include <cstdint>
@@ -30,6 +34,11 @@ struct FailsafeSettings {
   float fail_tilt_rad = 60.0f * 3.14159265f / 180;  // FD_FAIL_R and FD_FAIL_P
   float fail_time_s = 0.3f;                         // FD_FAIL_R_TTRI
   bool termination = false;  // CBRK_FLIGHTTERM is 0: flight termination is allowed
+  float fence_m = 0;          // from home, GF_MAX_HOR_DIST; 0 is none
+  float fence_height_m = 0;   // over home, GF_MAX_VER_DIST; 0 is none
+  // GF_ACTION: 0 none, 1 warning, 2 hold, 3 return, 4 terminate (land where termination isn't
+  // allowed), 5 land
+  int fence_action = 2;
 };
 
 // what the failsafes see each step
@@ -42,10 +51,13 @@ struct FailsafeInputs {
   bool position_valid = false;
   bool home_valid = false;
   float tilt_rad = 0;
+  float distance_m = 0;  // from home, sideways
+  float height_m = 0;    // over home
 };
 
 struct FailsafeFlags {
-  bool link_lost = false, position_invalid = false, critical_failure = false;
+  bool link_lost = false, position_invalid = false, critical_failure = false,
+       geofence_breached = false;
   uint8_t battery_warning = 0;  // 0 none, 1 low, 2 critical, 3 emergency
 };
 
@@ -65,7 +77,7 @@ class Failsafes {
   FailsafeFlags flags_;
   float tilted_s_ = 0;
   bool link_done_ = false, low_done_ = false, critical_done_ = false, emergency_done_ = false,
-       position_done_ = false, terminated_ = false;
+       position_done_ = false, terminated_ = false, fence_done_ = false;
 };
 
 }  // namespace pcs14

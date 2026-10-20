@@ -46,6 +46,7 @@ struct FailsafeLog {
   bool link_lost = false, position_invalid = false, critical_failure = false,
        motor_failure = false;
   uint8_t battery_warning = 0;  // 0 none, 1 low, 2 critical
+  bool geofence_breached = false;
 };
 struct BatteryLog {
   uint64_t t_us;

@@ -82,6 +82,7 @@ TEST_CASE("write a sample flight log for pyulog") {
     FailsafeLog flags{t};
     flags.link_lost = k >= 15;
     flags.battery_warning = k >= 18 ? 1 : 0;
+    flags.geofence_breached = k >= 12;
     log.log(flags);
     log.log(BatteryLog{t, 24.0f - 0.1f * f, 20.0f, 1.0f - 0.01f * f});
   }
