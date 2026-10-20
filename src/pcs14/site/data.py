@@ -103,7 +103,7 @@ def glb_nodes(path) -> list[str]:
 
 def _write(out: Path, name: str, model) -> Path:
     path = out / f"{name}.json"
-    path.write_text(model.model_dump_json(indent=1) + "\n", encoding="utf-8")
+    path.write_bytes((model.model_dump_json(indent=1) + "\n").encode("utf-8"))  # LF anywhere
     return path
 
 
@@ -158,6 +158,6 @@ def write_schema(folder) -> list[Path]:
     out = []
     for name, model in schema.FILES.items():
         path = folder / f"{name}.schema.json"
-        path.write_text(json.dumps(model.model_json_schema(), indent=1) + "\n", encoding="utf-8")
+        path.write_bytes((json.dumps(model.model_json_schema(), indent=1) + "\n").encode())
         out.append(path)
     return out
