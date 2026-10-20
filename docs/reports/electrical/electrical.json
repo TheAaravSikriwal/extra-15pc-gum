@@ -9961,6 +9961,143 @@
    }
   }
  },
+ "routes": {
+  "battery leads": [
+   "lead.XT60.+ to esc.BAT.VBAT",
+   "lead.XT60.- to esc.BAT.GND"
+  ],
+  "motor leads front right": [
+   "esc.MOTORS.M1A to m1.leads.A",
+   "esc.MOTORS.M1B to m1.leads.B",
+   "esc.MOTORS.M1C to m1.leads.C"
+  ],
+  "motor leads back left": [
+   "esc.MOTORS.M2A to m2.leads.A",
+   "esc.MOTORS.M2B to m2.leads.B",
+   "esc.MOTORS.M2C to m2.leads.C"
+  ],
+  "motor leads front left": [
+   "esc.MOTORS.M3A to m3.leads.A",
+   "esc.MOTORS.M3B to m3.leads.B",
+   "esc.MOTORS.M3C to m3.leads.C"
+  ],
+  "motor leads back right": [
+   "esc.MOTORS.M4A to m4.leads.A",
+   "esc.MOTORS.M4B to m4.leads.B",
+   "esc.MOTORS.M4C to m4.leads.C"
+  ],
+  "battery taps": [
+   "esc.BAT.VBAT to fuses.F1.A",
+   "esc.BAT.VBAT to fuses.F2.A",
+   "esc.BAT.GND to fc.POWER_AUX.GND"
+  ],
+  "bec feed": [
+   "fuses.F1.B to bec.pads.IN",
+   "esc.BAT.GND to bec.pads.G"
+  ],
+  "fc battery feed": [
+   "fuses.F2.B to fc.POWER_AUX.VBAT"
+  ],
+  "module power to V": [
+   "bec.pads.OUT to sockets.V_POWER.5V",
+   "bec.pads.G2 to sockets.V_POWER.GND"
+  ],
+  "module power to P": [
+   "bec.pads.OUT to sockets.P_POWER.5V",
+   "bec.pads.G2 to sockets.P_POWER.GND"
+  ],
+  "module power to C": [
+   "bec.pads.OUT to sockets.C_POWER.5V",
+   "bec.pads.G2 to sockets.C_POWER.GND"
+  ],
+  "esc cable to switch": [
+   "fc.ESC.CH1 to cut.J1.NC1",
+   "fc.ESC.CH2 to cut.J1.NC2",
+   "fc.ESC.CH3 to cut.J1.NC3",
+   "fc.ESC.CH4 to cut.J1.NC4"
+  ],
+  "esc cable from switch": [
+   "cut.J1.CM1 to esc.FC.M1",
+   "cut.J1.CM2 to esc.FC.M2",
+   "cut.J1.CM3 to esc.FC.M3",
+   "cut.J1.CM4 to esc.FC.M4"
+  ],
+  "receiver": [
+   "fc.RC.5V to rx.pads.5V",
+   "fc.RC.GND to rx.pads.GND",
+   "rx.pads.TX to fc.RC.USART6_RX",
+   "fc.RC.USART6_TX to rx.pads.RX"
+  ],
+  "crsf tap": [
+   "rx.pads.TX to taps.B1.A"
+  ],
+  "lidar": [
+   "fc.GPS.5V to lidar.J1.5V",
+   "fc.GPS.GND to lidar.J1.GND",
+   "fc.GPS.USART1_TX to lidar.J1.RXD",
+   "lidar.J1.TXD to fc.GPS.USART1_RX"
+  ],
+  "teensy feed from fc": [
+   "fc.TELEM.5V to teensy_feed.D1.A1"
+  ],
+  "teensy feed from bec": [
+   "bec.pads.OUT to teensy_feed.D1.A2"
+  ],
+  "safety monitor": [
+   "fc.VTX.GND to teensy.pins.GND",
+   "fc.VTX.UART5_TX to taps.B6.A",
+   "teensy.pins.14 to fc.VTX.UART5_RX"
+  ],
+  "dshot taps": [
+   "fc.ESC.CH1 to taps.B2.A",
+   "fc.ESC.CH2 to taps.B3.A",
+   "fc.ESC.CH3 to taps.B4.A",
+   "fc.ESC.CH4 to taps.B5.A"
+  ],
+  "cut supply": [
+   "fc.SPI.5V to cut_3v3.J1.VIN",
+   "fc.SPI.GND to cut_3v3.J1.GND"
+  ],
+  "chute lines": [
+   "teensy.pins.31 to sockets.P_SIGNAL.TAKEOVER",
+   "teensy.pins.37 to sockets.P_SIGNAL.CHUTE"
+  ],
+  "module connector": [
+   "sockets.FC_CAN.CAN_P to sockets.V_SIGNAL.CAN_P",
+   "sockets.FC_CAN.CAN_N to sockets.V_SIGNAL.CAN_N",
+   "sockets.FC_CAN.5V to sockets.V_SIGNAL.CAN_5V",
+   "sockets.FC_CAN.GND to sockets.V_SIGNAL.GND"
+  ],
+  "module bus v to p": [
+   "sockets.V_SIGNAL.CAN_P to sockets.P_SIGNAL.CAN_P",
+   "sockets.V_SIGNAL.CAN_N to sockets.P_SIGNAL.CAN_N",
+   "sockets.V_SIGNAL.CAN_5V to sockets.P_SIGNAL.CAN_5V"
+  ],
+  "module bus p to c": [
+   "sockets.P_SIGNAL.CAN_P to sockets.C_SIGNAL.CAN_P",
+   "sockets.P_SIGNAL.CAN_N to sockets.C_SIGNAL.CAN_N",
+   "sockets.P_SIGNAL.CAN_5V to sockets.C_SIGNAL.CAN_5V"
+  ],
+  "gps": [
+   "vplug.SIGNAL.CAN_P to gps.CAN1.CAN_P",
+   "vplug.SIGNAL.CAN_N to gps.CAN1.CAN_N",
+   "vplug.SIGNAL.CAN_5V to gps.CAN1.5V",
+   "vplug.SIGNAL.GND to gps.CAN1.GND"
+  ],
+  "chute servo": [
+   "p_diodes.pads.VOUT to chute.servo.V+",
+   "pplug.POWER.GND to chute.servo.GND",
+   "p_switch.U1.Y to chute.servo.SIG"
+  ],
+  "claws": [
+   "cplug.POWER.5V to claws.servo1.V+",
+   "cplug.POWER.5V to claws.servo2.V+",
+   "cplug.POWER.GND to claws.servo1.GND",
+   "cplug.POWER.GND to claws.servo2.GND",
+   "c_node.PWM.PWM1 to claws.servo1.SIG",
+   "c_node.PWM.PWM2 to claws.servo2.SIG"
+  ]
+ },
  "estimates": [
   {
    "part": "holybro-tekko32-f4-50a",

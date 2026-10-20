@@ -123,4 +123,8 @@ def test_every_piece_in_the_glb_has_a_part_and_the_other_way_round():
     cad = json.loads((REPORTS / "cad" / "cad.json").read_text(encoding="utf-8"))
     if not glb.is_file() or "pieces" not in cad:
         pytest.skip("needs pcs14 cad run since 2026-10-20 (its GLB and the pieces in cad.json)")
-    assert set(data.glb_nodes(glb)) == {p["name"] for p in cad["pieces"]}
+    nodes = set(data.glb_nodes(glb))
+    assert nodes == {p["name"] for p in cad["pieces"]}
+    electrical = json.loads((REPORTS / "electrical" / "electrical.json").read_text("utf-8"))
+    if "routes" in electrical:  # and every route the wires take is drawn in it
+        assert {r.node for r in data.wires(electrical).routes} <= nodes

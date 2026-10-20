@@ -786,23 +786,23 @@
    "center_of_gravity_mm": [
     0.112,
     0.221,
-    4.324
+    4.287
    ],
    "inertia_kg_m2": [
     [
-     0.014203127855131496,
+     0.014190028532300641,
      5.300743939623507e-05,
-     0.00023588759430775129
+     0.00023142208323744968
     ],
     [
      5.300743939623507e-05,
-     0.017210387506078825,
-     -4.1687639791404604e-05
+     0.017197288183247977,
+     -4.170464641837427e-05
     ],
     [
-     0.00023588759430775129,
-     -4.1687639791404604e-05,
-     0.026521723779527016
+     0.00023142208323744968,
+     -4.170464641837427e-05,
+     0.02652104682028752
     ]
    ],
    "busiest_motor_extra": 0.002244,
@@ -3508,23 +3508,23 @@
    "center_of_gravity_mm": [
     -0.069,
     0.235,
-    13.279
+    13.244
    ],
    "inertia_kg_m2": [
     [
-     0.01665666392993081,
+     0.016644941039432173,
      4.989547783497111e-05,
-     -0.0007191643196940677
+     -0.000723615924616833
     ],
     [
      4.989547783497111e-05,
-     0.02003732232066847,
-     -3.9993187476081176e-05
+     0.020025599430169808,
+     -4.0011208734529045e-05
     ],
     [
-     -0.0007191643196940677,
-     -3.9993187476081176e-05,
-     0.026946276536782655
+     -0.000723615924616833,
+     -4.0011208734529045e-05,
+     0.026945599577543156
     ]
    ],
    "busiest_motor_extra": 0.002044,
@@ -4684,23 +4684,23 @@
    "center_of_gravity_mm": [
     0.18,
     0.224,
-    2.062
+    2.027
    ],
    "inertia_kg_m2": [
     [
-     0.014430797641989868,
+     0.01441735090872762,
      5.698840607774087e-05,
-     0.00020240521533592285
+     0.00019793449167990836
     ],
     [
      5.698840607774087e-05,
-     0.020292994531366692,
-     -4.278309610913278e-05
+     0.020279547798104428,
+     -4.280032390250509e-05
     ],
     [
-     0.00020240521533592285,
-     -4.278309610913278e-05,
-     0.029470362629623752
+     0.00019793449167990836,
+     -4.280032390250509e-05,
+     0.029469685670384254
     ]
    ],
    "busiest_motor_extra": 0.002721,
@@ -6635,23 +6635,23 @@
    "center_of_gravity_mm": [
     0.006,
     0.236,
-    10.574
+    10.541
    ],
    "inertia_kg_m2": [
     [
-     0.016980057808748374,
+     0.01696791932189399,
      5.387753923422524e-05,
-     -0.0007502991480060854
+     -0.0007547565275243797
     ],
     [
      5.387753923422524e-05,
-     0.022890645826320492,
-     -4.111378941922543e-05
+     0.022878507339466097,
+     -4.1131946018299975e-05
     ],
     [
-     -0.0007502991480060854,
-     -4.111378941922543e-05,
-     0.029569907519957504
+     -0.0007547565275243797,
+     -4.1131946018299975e-05,
+     0.029569230560718005
     ]
    ],
    "busiest_motor_extra": 0.001633,
@@ -7800,6 +7800,696 @@
    ]
   }
  ],
+ "pieces": [
+  {
+   "name": "frame",
+   "kind": "frame",
+   "module": "base",
+   "mass_g": 343.0,
+   "part_id": "iflight-nazgul-xl10-v6",
+   "moving": false
+  },
+  {
+   "name": "motor front left",
+   "kind": "motor",
+   "module": "base",
+   "mass_g": 82.0,
+   "part_id": "emax-e3-2814-850kv",
+   "moving": false
+  },
+  {
+   "name": "prop front left",
+   "kind": "prop",
+   "module": "base",
+   "mass_g": 16.8,
+   "part_id": "gemfan-1050x3",
+   "moving": false
+  },
+  {
+   "name": "motor front right",
+   "kind": "motor",
+   "module": "base",
+   "mass_g": 82.0,
+   "part_id": "emax-e3-2814-850kv",
+   "moving": false
+  },
+  {
+   "name": "prop front right",
+   "kind": "prop",
+   "module": "base",
+   "mass_g": 16.8,
+   "part_id": "gemfan-1050x3",
+   "moving": false
+  },
+  {
+   "name": "motor back left",
+   "kind": "motor",
+   "module": "base",
+   "mass_g": 82.0,
+   "part_id": "emax-e3-2814-850kv",
+   "moving": false
+  },
+  {
+   "name": "prop back left",
+   "kind": "prop",
+   "module": "base",
+   "mass_g": 16.8,
+   "part_id": "gemfan-1050x3",
+   "moving": false
+  },
+  {
+   "name": "motor back right",
+   "kind": "motor",
+   "module": "base",
+   "mass_g": 82.0,
+   "part_id": "emax-e3-2814-850kv",
+   "moving": false
+  },
+  {
+   "name": "prop back right",
+   "kind": "prop",
+   "module": "base",
+   "mass_g": 16.8,
+   "part_id": "gemfan-1050x3",
+   "moving": false
+  },
+  {
+   "name": "holybro-tekko32-f4-50a",
+   "kind": "bought",
+   "module": "base",
+   "mass_g": 25.267,
+   "part_id": "holybro-tekko32-f4-50a",
+   "moving": false
+  },
+  {
+   "name": "ark-fpv",
+   "kind": "bought",
+   "module": "base",
+   "mass_g": 7.5,
+   "part_id": "ark-fpv",
+   "moving": false
+  },
+  {
+   "name": "radiomaster-rp2-v2",
+   "kind": "bought",
+   "module": "base",
+   "mass_g": 0.55,
+   "part_id": "radiomaster-rp2-v2",
+   "moving": false
+  },
+  {
+   "name": "matek-bec12s-pro",
+   "kind": "bought",
+   "module": "base",
+   "mass_g": 5.0,
+   "part_id": "matek-bec12s-pro",
+   "moving": false
+  },
+  {
+   "name": "pjrc-teensy-41",
+   "kind": "bought",
+   "module": "base",
+   "mass_g": 15.0,
+   "part_id": "pjrc-teensy-41",
+   "moving": false
+  },
+  {
+   "name": "adafruit-lsm6dsox",
+   "kind": "bought",
+   "module": "base",
+   "mass_g": 1.7,
+   "part_id": "adafruit-lsm6dsox",
+   "moving": false
+  },
+  {
+   "name": "cjmcu-5018",
+   "kind": "bought",
+   "module": "base",
+   "mass_g": 1.1,
+   "part_id": "cjmcu-5018",
+   "moving": false
+  },
+  {
+   "name": "safety-monitor-buffers",
+   "kind": "bought",
+   "module": "base",
+   "mass_g": 1.2,
+   "part_id": "safety-monitor-buffers",
+   "moving": false
+  },
+  {
+   "name": "bat54c-on-adapter",
+   "kind": "bought",
+   "module": "base",
+   "mass_g": 0.16,
+   "part_id": "bat54c-on-adapter",
+   "moving": false
+  },
+  {
+   "name": "pololu-d36v6f3@base",
+   "kind": "bought",
+   "module": "base",
+   "mass_g": 0.5,
+   "part_id": "pololu-d36v6f3",
+   "moving": false
+  },
+  {
+   "name": "module-socket 1",
+   "kind": "bought",
+   "module": "base",
+   "mass_g": 1.3,
+   "part_id": "module-socket",
+   "moving": false
+  },
+  {
+   "name": "module-socket 2",
+   "kind": "bought",
+   "module": "base",
+   "mass_g": 1.3,
+   "part_id": "module-socket",
+   "moving": false
+  },
+  {
+   "name": "module-socket 3",
+   "kind": "bought",
+   "module": "base",
+   "mass_g": 1.3,
+   "part_id": "module-socket",
+   "moving": false
+  },
+  {
+   "name": "branch-fuses 1",
+   "kind": "bought",
+   "module": "base",
+   "mass_g": 1.05,
+   "part_id": "branch-fuses",
+   "moving": false
+  },
+  {
+   "name": "branch-fuses 2",
+   "kind": "bought",
+   "module": "base",
+   "mass_g": 1.05,
+   "part_id": "branch-fuses",
+   "moving": false
+  },
+  {
+   "name": "ruko-r111",
+   "kind": "bought",
+   "module": "base",
+   "mass_g": 14.0,
+   "part_id": "ruko-r111",
+   "moving": false
+  },
+  {
+   "name": "benewake-tf-luna",
+   "kind": "bought",
+   "module": "base",
+   "mass_g": 5.119,
+   "part_id": "benewake-tf-luna",
+   "moving": false
+  },
+  {
+   "name": "rpi-camera-module-3",
+   "kind": "bought",
+   "module": "V",
+   "mass_g": 4.259,
+   "part_id": "rpi-camera-module-3",
+   "moving": false
+  },
+  {
+   "name": "ark-gps",
+   "kind": "bought",
+   "module": "V",
+   "mass_g": 16.88,
+   "part_id": "ark-gps",
+   "moving": false
+  },
+  {
+   "name": "module-plug@V",
+   "kind": "bought",
+   "module": "V",
+   "mass_g": 1.2,
+   "part_id": "module-plug",
+   "moving": false
+  },
+  {
+   "name": "rpi-5-4gb",
+   "kind": "bought",
+   "module": "V",
+   "mass_g": 46.832,
+   "part_id": "rpi-5-4gb",
+   "moving": false
+  },
+  {
+   "name": "rpi-active-cooler",
+   "kind": "bought",
+   "module": "V",
+   "mass_g": 15.0,
+   "part_id": "rpi-active-cooler",
+   "moving": false
+  },
+  {
+   "name": "heltec-ht-hc01p",
+   "kind": "bought",
+   "module": "V",
+   "mass_g": 16.213,
+   "part_id": "heltec-ht-hc01p",
+   "moving": false
+  },
+  {
+   "name": "halow-antenna-915",
+   "kind": "bought",
+   "module": "V",
+   "mass_g": 12.0,
+   "part_id": "halow-antenna-915",
+   "moving": true
+  },
+  {
+   "name": "fruity-chutes-harrier-40-42",
+   "kind": "bought",
+   "module": "P",
+   "mass_g": 155.681,
+   "part_id": "fruity-chutes-harrier-40-42",
+   "moving": false
+  },
+  {
+   "name": "module-plug@P",
+   "kind": "bought",
+   "module": "P",
+   "mass_g": 1.2,
+   "part_id": "module-plug",
+   "moving": false
+  },
+  {
+   "name": "ark-cannode@P",
+   "kind": "bought",
+   "module": "P",
+   "mass_g": 5.0,
+   "part_id": "ark-cannode",
+   "moving": false
+  },
+  {
+   "name": "p-chute-switch",
+   "kind": "bought",
+   "module": "P",
+   "mass_g": 0.2,
+   "part_id": "p-chute-switch",
+   "moving": false
+  },
+  {
+   "name": "pololu-d36v6f3@P",
+   "kind": "bought",
+   "module": "P",
+   "mass_g": 0.5,
+   "part_id": "pololu-d36v6f3",
+   "moving": false
+  },
+  {
+   "name": "adafruit-lm66200",
+   "kind": "bought",
+   "module": "P",
+   "mass_g": 0.5,
+   "part_id": "adafruit-lm66200",
+   "moving": false
+  },
+  {
+   "name": "claws-placeholder",
+   "kind": "bought",
+   "module": "C",
+   "mass_g": 153.092,
+   "part_id": "claws-placeholder",
+   "moving": false
+  },
+  {
+   "name": "ark-cannode@C",
+   "kind": "bought",
+   "module": "C",
+   "mass_g": 5.0,
+   "part_id": "ark-cannode",
+   "moving": false
+  },
+  {
+   "name": "module-plug@C",
+   "kind": "bought",
+   "module": "C",
+   "mass_g": 1.2,
+   "part_id": "module-plug",
+   "moving": false
+  },
+  {
+   "name": "leg front left",
+   "kind": "printed",
+   "module": "base",
+   "mass_g": 9.846,
+   "part_id": "landing-legs",
+   "moving": false
+  },
+  {
+   "name": "leg front right",
+   "kind": "printed",
+   "module": "base",
+   "mass_g": 9.846,
+   "part_id": "landing-legs",
+   "moving": false
+  },
+  {
+   "name": "leg back left",
+   "kind": "printed",
+   "module": "base",
+   "mass_g": 9.846,
+   "part_id": "landing-legs",
+   "moving": false
+  },
+  {
+   "name": "leg back right",
+   "kind": "printed",
+   "module": "base",
+   "mass_g": 9.846,
+   "part_id": "landing-legs",
+   "moving": false
+  },
+  {
+   "name": "battery tray",
+   "kind": "printed",
+   "module": "base",
+   "mass_g": 35.094,
+   "part_id": "battery-tray",
+   "moving": false
+  },
+  {
+   "name": "module rail",
+   "kind": "printed",
+   "module": "base",
+   "mass_g": 13.441,
+   "part_id": "module-mount",
+   "moving": false
+  },
+  {
+   "name": "gps mast",
+   "kind": "printed",
+   "module": "V",
+   "mass_g": 3.91,
+   "part_id": "gps-mast",
+   "moving": false
+  },
+  {
+   "name": "gps cradle",
+   "kind": "printed",
+   "module": "V",
+   "mass_g": 7.663,
+   "part_id": "gps-mast",
+   "moving": false
+  },
+  {
+   "name": "lidar bracket",
+   "kind": "printed",
+   "module": "base",
+   "mass_g": 2.764,
+   "part_id": "lidar-bracket",
+   "moving": false
+  },
+  {
+   "name": "remote id mount",
+   "kind": "printed",
+   "module": "base",
+   "mass_g": 1.444,
+   "part_id": "remote-id-mount",
+   "moving": false
+  },
+  {
+   "name": "safety monitor carrier",
+   "kind": "printed",
+   "module": "base",
+   "mass_g": 3.154,
+   "part_id": "safety-monitor-carrier",
+   "moving": false
+  },
+  {
+   "name": "camera bracket",
+   "kind": "printed",
+   "module": "V",
+   "mass_g": 2.722,
+   "part_id": "camera-bracket",
+   "moving": false
+  },
+  {
+   "name": "v housing",
+   "kind": "printed",
+   "module": "V",
+   "mass_g": 40.803,
+   "part_id": "v-housing",
+   "moving": false
+  },
+  {
+   "name": "p holder",
+   "kind": "printed",
+   "module": "P",
+   "mass_g": 10.433,
+   "part_id": "p-mount",
+   "moving": false
+  },
+  {
+   "name": "wire battery leads",
+   "kind": "wire",
+   "module": "base",
+   "mass_g": 11.227,
+   "part_id": null,
+   "moving": true
+  },
+  {
+   "name": "wire motor leads front left",
+   "kind": "wire",
+   "module": "base",
+   "mass_g": 9.166,
+   "part_id": null,
+   "moving": true
+  },
+  {
+   "name": "wire motor leads front right",
+   "kind": "wire",
+   "module": "base",
+   "mass_g": 9.166,
+   "part_id": null,
+   "moving": true
+  },
+  {
+   "name": "wire motor leads back left",
+   "kind": "wire",
+   "module": "base",
+   "mass_g": 9.166,
+   "part_id": null,
+   "moving": true
+  },
+  {
+   "name": "wire motor leads back right",
+   "kind": "wire",
+   "module": "base",
+   "mass_g": 9.166,
+   "part_id": null,
+   "moving": true
+  },
+  {
+   "name": "wire receiver",
+   "kind": "wire",
+   "module": "base",
+   "mass_g": 0.37,
+   "part_id": null,
+   "moving": true
+  },
+  {
+   "name": "wire gps",
+   "kind": "wire",
+   "module": "V",
+   "mass_g": 2.3,
+   "part_id": null,
+   "moving": true
+  },
+  {
+   "name": "wire lidar",
+   "kind": "wire",
+   "module": "base",
+   "mass_g": 1.33,
+   "part_id": null,
+   "moving": true
+  },
+  {
+   "name": "wire safety monitor",
+   "kind": "wire",
+   "module": "base",
+   "mass_g": 0.138,
+   "part_id": null,
+   "moving": true
+  },
+  {
+   "name": "wire bec feed",
+   "kind": "wire",
+   "module": "base",
+   "mass_g": 0.656,
+   "part_id": null,
+   "moving": true
+  },
+  {
+   "name": "wire module connector",
+   "kind": "wire",
+   "module": "base",
+   "mass_g": 0.064,
+   "part_id": null,
+   "moving": true
+  },
+  {
+   "name": "wire camera cable",
+   "kind": "wire",
+   "module": "V",
+   "mass_g": 2.0,
+   "part_id": null,
+   "moving": true
+  },
+  {
+   "name": "wire chute servo",
+   "kind": "wire",
+   "module": "P",
+   "mass_g": 3.1,
+   "part_id": null,
+   "moving": true
+  },
+  {
+   "name": "wire battery taps",
+   "kind": "wire",
+   "module": "base",
+   "mass_g": 1.892,
+   "part_id": null,
+   "moving": true
+  },
+  {
+   "name": "wire fc battery feed",
+   "kind": "wire",
+   "module": "base",
+   "mass_g": 0.16,
+   "part_id": null,
+   "moving": true
+  },
+  {
+   "name": "wire module power to V",
+   "kind": "wire",
+   "module": "base",
+   "mass_g": 1.073,
+   "part_id": null,
+   "moving": true
+  },
+  {
+   "name": "wire module power to P",
+   "kind": "wire",
+   "module": "base",
+   "mass_g": 2.339,
+   "part_id": null,
+   "moving": true
+  },
+  {
+   "name": "wire module power to C",
+   "kind": "wire",
+   "module": "base",
+   "mass_g": 0.422,
+   "part_id": null,
+   "moving": true
+  },
+  {
+   "name": "wire esc cable to switch",
+   "kind": "wire",
+   "module": "base",
+   "mass_g": 0.507,
+   "part_id": null,
+   "moving": true
+  },
+  {
+   "name": "wire dshot taps",
+   "kind": "wire",
+   "module": "base",
+   "mass_g": 0.732,
+   "part_id": null,
+   "moving": true
+  },
+  {
+   "name": "wire crsf tap",
+   "kind": "wire",
+   "module": "base",
+   "mass_g": 0.249,
+   "part_id": null,
+   "moving": true
+  },
+  {
+   "name": "wire teensy feed from fc",
+   "kind": "wire",
+   "module": "base",
+   "mass_g": 0.08,
+   "part_id": null,
+   "moving": true
+  },
+  {
+   "name": "wire teensy feed from bec",
+   "kind": "wire",
+   "module": "base",
+   "mass_g": 0.145,
+   "part_id": null,
+   "moving": true
+  },
+  {
+   "name": "wire cut supply",
+   "kind": "wire",
+   "module": "base",
+   "mass_g": 0.268,
+   "part_id": null,
+   "moving": true
+  },
+  {
+   "name": "wire chute lines",
+   "kind": "wire",
+   "module": "base",
+   "mass_g": 0.078,
+   "part_id": null,
+   "moving": true
+  },
+  {
+   "name": "wire module bus v to p",
+   "kind": "wire",
+   "module": "base",
+   "mass_g": 0.296,
+   "part_id": null,
+   "moving": true
+  },
+  {
+   "name": "wire module bus p to c",
+   "kind": "wire",
+   "module": "base",
+   "mass_g": 0.851,
+   "part_id": null,
+   "moving": true
+  },
+  {
+   "name": "wire claws",
+   "kind": "wire",
+   "module": "C",
+   "mass_g": 2.7,
+   "part_id": null,
+   "moving": true
+  },
+  {
+   "name": "wire esc cable from switch",
+   "kind": "wire",
+   "module": "base",
+   "mass_g": 0.357,
+   "part_id": null,
+   "moving": true
+  },
+  {
+   "name": "pack",
+   "kind": "pack",
+   "module": "base",
+   "mass_g": 883.325,
+   "part_id": "molicel-p45b",
+   "moving": false
+  }
+ ],
  "printed_parts": [
   {
    "name": "leg front left",
@@ -7846,7 +8536,14 @@
   {
    "name": "gps mast",
    "material": "tpu",
-   "mass_g": 11.573,
+   "mass_g": 3.91,
+   "module": "V",
+   "catalog_id": "gps-mast"
+  },
+  {
+   "name": "gps cradle",
+   "material": "tpu",
+   "mass_g": 7.663,
    "module": "V",
    "catalog_id": "gps-mast"
   },
@@ -8345,8 +9042,8 @@
   "outputs/cad/print/leg-back-right.3mf",
   "outputs/cad/print/battery-tray.3mf",
   "outputs/cad/print/module-rail.3mf",
-  "outputs/cad/print/gps-mast-1.3mf",
-  "outputs/cad/print/gps-mast-2.3mf",
+  "outputs/cad/print/gps-mast.3mf",
+  "outputs/cad/print/gps-cradle.3mf",
   "outputs/cad/print/lidar-bracket.3mf",
   "outputs/cad/print/remote-id-mount.3mf",
   "outputs/cad/print/safety-monitor-carrier.3mf",

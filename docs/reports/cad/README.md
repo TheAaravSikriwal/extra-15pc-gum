@@ -18,10 +18,10 @@ Built from E3 2814 850KV / 1050 3-blade / 6S2P Molicel INR-21700-P45B.
 | V | V | 2032 g | -5 mm | 0.1, 0.2, 4.3 mm | +0.2% | pass |
 | P | P | 2036 g | -18 mm | -0.1, 0.0, 7.8 mm | +0.1% | pass |
 | C | C | 2022 g | 13 mm | 0.2, 0.0, -4.5 mm | +0.1% | pass |
-| mission | V+P | 2208 g | -13 mm | -0.1, 0.2, 13.3 mm | +0.2% | pass |
-| V+C | V+C | 2194 g | 18 mm | 0.2, 0.2, 2.1 mm | +0.3% | pass |
+| mission | V+P | 2208 g | -13 mm | -0.1, 0.2, 13.2 mm | +0.2% | pass |
+| V+C | V+C | 2194 g | 18 mm | 0.2, 0.2, 2.0 mm | +0.3% | pass |
 | P+C | P+C | 2198 g | 5 mm | -0.0, 0.1, 5.2 mm | +0.1% | pass |
-| max | V+P+C | 2370 g | 10 mm | 0.0, 0.2, 10.6 mm | +0.2% | pass |
+| max | V+P+C | 2370 g | 10 mm | 0.0, 0.2, 10.5 mm | +0.2% | pass |
 
 The pack's position is along x from the motors' center; it slides to balance each combination. The busiest motor column says how much harder the busiest motor works than the average in a hover (the limit is +5%).
 
@@ -793,7 +793,7 @@ Each part's weight spread over its solid, with the pack at its trim. Inertia is 
 | V | 2032 g | 14.2 g m² | 17.2 g m² | 26.5 g m² |
 | P | 2036 g | 15.6 g m² | 18.6 g m² | 26.4 g m² |
 | C | 2022 g | 13.1 g m² | 18.3 g m² | 28.6 g m² |
-| mission | 2208 g | 16.7 g m² | 20.0 g m² | 26.9 g m² |
+| mission | 2208 g | 16.6 g m² | 20.0 g m² | 26.9 g m² |
 | V+C | 2194 g | 14.4 g m² | 20.3 g m² | 29.5 g m² |
 | P+C | 2198 g | 15.9 g m² | 21.2 g m² | 28.8 g m² |
 | max | 2370 g | 17.0 g m² | 22.9 g m² | 29.6 g m² |
@@ -810,7 +810,8 @@ Weighed from their geometry and material, next to what the catalog says for each
 | leg back right | tpu | 6.6 g | 26.3 g for all 4, from the CAD (landing-legs) |
 | battery tray | petg_cf | 29.3 g | 29.3 g, from the CAD (battery-tray) |
 | module rail | petg_cf | 11.5 g | 11.5 g, from the CAD (module-mount) |
-| gps mast | tpu | 11.6 g | 11.6 g, from the CAD (gps-mast) |
+| gps mast | tpu | 3.9 g | 11.6 g for all 2, from the CAD (gps-mast) |
+| gps cradle | tpu | 7.7 g | 11.6 g for all 2, from the CAD (gps-mast) |
 | lidar bracket | petg_cf | 2.4 g | 2.4 g, from the CAD (lidar-bracket) |
 | remote id mount | tpu | 1.4 g | 1.4 g, from the CAD (remote-id-mount) |
 | safety monitor carrier | petg_cf | 2.8 g | 2.8 g, from the CAD (safety-monitor-carrier) |
@@ -983,8 +984,8 @@ Generated on every run, and not committed (they're build outputs):
 - `outputs/cad/print/leg-back-right.3mf`
 - `outputs/cad/print/battery-tray.3mf`
 - `outputs/cad/print/module-rail.3mf`
-- `outputs/cad/print/gps-mast-1.3mf`
-- `outputs/cad/print/gps-mast-2.3mf`
+- `outputs/cad/print/gps-mast.3mf`
+- `outputs/cad/print/gps-cradle.3mf`
 - `outputs/cad/print/lidar-bracket.3mf`
 - `outputs/cad/print/remote-id-mount.3mf`
 - `outputs/cad/print/safety-monitor-carrier.3mf`
