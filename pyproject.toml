@@ -17,6 +17,14 @@ dependencies = [
     "wireviz==0.4.1",
 ]
 
+[project.optional-dependencies]
+# the flight sim's tools, installed in WSL2 by scripts/setup-ubuntu.sh (MAVSDK's 3.x line: 4.0 was
+# a month-old major version when these were pinned, 2026-10-19)
+flight = [
+    "mavsdk==3.17.4",
+    "pyulog==1.2.4",
+]
+
 [project.scripts]
 pcs14 = "pcs14.cli:main"
 

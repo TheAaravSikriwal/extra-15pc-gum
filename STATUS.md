@@ -48,7 +48,7 @@ Where to look:
 ## Up next
 
 1. **Install Ubuntu in WSL2 on the PC** (mine to do): WSL2 is already on, with no distribution yet. In an administrator PowerShell, `wsl --install -d Ubuntu-24.04`, then set the Ubuntu username and password, then step 3 of [docs/setup-pc.md](docs/setup-pc.md). Tasks 9 to 12 of the flight sim need it.
-2. **Step 4c, the rest:** tasks 9 to 12 of the [plan](docs/plans/2026-10-19-flight-sim.md): installing PX4 v1.17.0 and Gazebo Harmonic in Ubuntu (I'll ask before the downloads), building the drag plugin, the runner, then every scenario in every combination.
+2. **Step 4c, the rest:** tasks 9 to 12 of the [plan](docs/plans/2026-10-19-flight-sim.md). `scripts/setup-ubuntu.sh` (PX4 v1.17.0, Gazebo Harmonic through PX4's own setup, MAVSDK 3.17.4, pyulog 1.2.4, our drag plugin) and the plugin's C++ are written but not yet run: they need Ubuntu, and the downloads (roughly 3 to 5 GB) need my OK. Then the runner, and every scenario in every combination.
 3. **The project site's spec** (what it's built with). The goal is now written down in decisions: a complete blueprint, from the structure to the circuits.
 4. **Write the first half of `scripts/setup-ubuntu.sh`** (inside WSL2): Gazebo Harmonic, PX4 v1.17.0 and the Python tools, pinned. It's task 9 of the flight sim now.
 
