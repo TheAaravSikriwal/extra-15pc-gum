@@ -30,6 +30,11 @@ def test_the_case_file_says_everything_fluidx3ds_setup_reads():
     assert "mode = hover" in lines and "speed = 0" in lines and "props = 4" in lines
     assert "prop_2_spin = -1" in lines and "omega = 607.000" in lines
     assert "slice_x_m = 0.16" in lines  # the slice through the front pair
+    # the color scale: past the 10 m/s wind in the tunnel, the downwash's speed in the hover
+    # (the props' 71 m/s tips used to set it, and the downwash came out dark)
+    assert "color_max_m_s = 17" in cruise.text().splitlines()
+    assert "color_max_m_s = 10" in lines
+    assert hover.time_s >= 0.3  # long enough for the downwash to reach down past a meter
 
 
 def test_a_crop_keeps_the_aspect_and_stays_inside():

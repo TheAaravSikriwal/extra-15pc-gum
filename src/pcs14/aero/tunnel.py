@@ -59,6 +59,9 @@ class Case:
     props: tuple[Prop, ...] = field(default_factory=tuple)
     slice_x_m: float = 0.0  # m along the box's x from the drone: where the slice cuts
     zoom: float = 2.6
+    # m/s at the top of the speed colors: the 10 m/s wind at about 60% of the scale; in the
+    # hover, the downwash (about 7 m/s at the hover's thrust, by momentum theory)
+    color_max_m_s: float = 17.0
 
     def text(self) -> str:
         """The case file FluidX3D's setup reads: one key = value per line."""
@@ -82,6 +85,7 @@ class Case:
             f"radius = {self.radius:g}",
             f"slice_x_m = {self.slice_x_m:g}",
             f"zoom = {self.zoom:g}",
+            f"color_max_m_s = {self.color_max_m_s:g}",
             f"props = {len(self.props)}",
         ]
         for k, p in enumerate(self.props):
@@ -107,11 +111,13 @@ def cases(setup_name: str, cruise_pitch_deg: float, hover_omega: float, radius: 
     cruise = Case(f"{setup_name}-cruise", "tunnel", setup_name, body,
                   pitch_deg=cruise_pitch_deg)  # fmt: skip
     crosswind = replace(cruise, name=f"{setup_name}-crosswind", yaw_deg=0.0, pitch_deg=0.0)
-    # still air and spinning props: a tall box, the drone in its upper part so the downwash has
-    # room, and about a dozen turns of the props for it to develop
+    # still air and spinning props: a tall box with the drone a little above its middle, where
+    # the side views center, so the downwash has room below it in the picture; 0.3 s (about 30
+    # turns of the props) for it to reach down past a meter
     hover = Case(f"{setup_name}-hover", "hover", setup_name, body, speed=0.0, yaw_deg=0.0,
-                 box=(1.2, 1.2, 2.2), at=(0.5, 0.5, 0.7), time_s=0.12, omega=hover_omega,
-                 radius=radius, props=props, slice_x_m=slice_x_m, zoom=2.2)  # fmt: skip
+                 box=(1.2, 1.2, 2.2), at=(0.5, 0.5, 0.6), time_s=0.3, omega=hover_omega,
+                 radius=radius, props=props, slice_x_m=slice_x_m, zoom=1.6,
+                 color_max_m_s=10.0)  # fmt: skip
     return [cruise, crosswind, hover]
 
 
