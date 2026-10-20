@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ground station</title>
+<!-- Extra 15pc Gum's ground station, v1 (step 5, task 13). The project's look from
+     docs/style.md: tunnel black, chalk, spearmint for what matters, magenta for one warning. -->
+<style>
+  :root {
+    --black: #0B0B0B; --chalk: #F4F4F2; --mint: #3DDC97; --magenta: #E64FA0;
+    --fog: #B4B2A9; --graphite: #2C2C2A;
+    --head: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+    --body: Inter, "Segoe UI", system-ui, sans-serif;
+    --mono: "JetBrains Mono", Consolas, "Courier New", monospace;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--black); color: var(--chalk); font: 15px/1.4 var(--body); }
+  header { display: flex; align-items: center; gap: 16px; padding: 16px 24px;
+           border-bottom: 1px solid var(--graphite); flex-wrap: wrap; }
+  h1 { font: 500 20px var(--head); margin: 0; }
+  .badge { font: 600 14px var(--mono); padding: 6px 12px; border-radius: 4px;
+           border: 1px solid var(--mint); color: var(--mint); }
+  .badge.legal { border-color: var(--chalk); color: var(--chalk); }
+  .link { margin-left: auto; color: var(--fog); font-family: var(--mono); }
+  .link.down { color: var(--magenta); }
+  main { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+         gap: 16px; padding: 16px 24px; }
+  section { border: 1px solid var(--graphite); border-radius: 6px; padding: 16px; }
+  h2 { font: 500 14px var(--head); color: var(--fog); margin: 0 0 12px;
+       text-transform: uppercase; letter-spacing: 0.06em; }
+  dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; margin: 0; }
+  dt { color: var(--fog); }
+  dd { margin: 0; font-family: var(--mono); text-align: right; }
+  .big { font: 600 28px var(--mono); color: var(--mint); }
+  .row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+  .row label { flex: 1; color: var(--fog); font-size: 13px; }
+  .row code { font-family: var(--mono); color: var(--chalk); display: block; }
+  input, select, button { font: 14px var(--mono); background: var(--graphite); color: var(--chalk);
+                          border: 1px solid var(--graphite); border-radius: 4px; padding: 6px 8px; }
+  input { width: 90px; text-align: right; }
+  button { cursor: pointer; border-color: var(--mint); }
+  button:hover { background: var(--mint); color: var(--black); }
+  #note { color: var(--fog); font-family: var(--mono); min-height: 1.4em; }
+  svg { width: 100%; height: auto; max-width: 260px; display: block; margin: 0 auto; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Extra 15pc Gum</h1>
+  <span id="limits" class="badge">limits: ?</span>
+  <span id="mode" class="badge legal">mode: ?</span>
+  <span id="link" class="link down">not connected</span>
+</header>
+<main>
+  <section>
+    <h2>Flight</h2>
+    <div class="big" id="height">-- m</div>
+    <dl>
+      <dt>armed</dt><dd id="armed">--</dd>
+      <dt>in the air</dt><dd id="in_air">--</dd>
+      <dt>speed</dt><dd id="speed">--</dd>
+      <dt>climb</dt><dd id="climb">--</dd>
+      <dt>north, east</dt><dd id="where">--</dd>
+      <dt>battery</dt><dd id="battery">--</dd>
+    </dl>
+  </section>
+  <section>
+    <h2>Attitude</h2>
+    <svg viewBox="-100 -100 200 200" aria-label="attitude">
+      <clipPath id="round"><circle r="95"/></clipPath>
+      <g clip-path="url(#round)">
+        <g id="horizon">
+          <rect x="-300" y="-300" width="600" height="300" fill="#2C2C2A"/>
+          <rect x="-300" y="0" width="600" height="300" fill="#151514"/>
+          <line x1="-300" y1="0" x2="300" y2="0" stroke="#3DDC97" stroke-width="2"/>
+        </g>
+      </g>
+      <circle r="95" fill="none" stroke="#2C2C2A" stroke-width="2"/>
+      <path d="M -40 0 H -12 L 0 10 L 12 0 H 40" fill="none" stroke="#F4F4F2" stroke-width="3"/>
+    </svg>
+    <dl>
+      <dt>roll</dt><dd id="roll">--</dd>
+      <dt>pitch</dt><dd id="pitch">--</dd>
+      <dt>heading</dt><dd id="yaw">--</dd>
+    </dl>
+  </section>
+  <section>
+    <h2>Tuning, live</h2>
+    <div id="tuning"></div>
+  </section>
+  <section>
+    <h2>Limits profile</h2>
+    <div class="row">
+      <label for="profile">The legal numbers, switched here. The engineering safety rules don't
+        change with it.</label>
+    </div>
+    <div class="row">
+      <select id="profile">
+        <option value="0">max: only what the hardware can do</option>
+        <option value="1">us-recreational: the FAA's 400 ft ceiling</option>
+      </select>
+      <button id="profile-set">set</button>
+    </div>
+    <div id="note"></div>
+  </section>
+</main>
+<script>
+const TUNING = {
+  MC_ROLL_P: "self-level: roll and pitch angle gain (1/s)",
+  MC_YAW_P: "self-level: heading gain (1/s)",
+  PCS14_RATE_P: "rate loops, roll and pitch: P (rad/s^2 per rad/s)",
+  PCS14_RATE_I: "rate loops, roll and pitch: I",
+  PCS14_RATE_D: "rate loops, roll and pitch: D",
+  PCS14_YAWRATE_P: "rate loop, yaw: P",
+};
+const $ = (id) => document.getElementById(id);
+const fix = (v, n = 1) => (typeof v === "number" ? v.toFixed(n) : "--");
+const tuning = $("tuning");
+for (const [name, what] of Object.entries(TUNING)) {
+  const row = document.createElement("div");
+  row.className = "row";
+  row.innerHTML = `<label><code>${name}</code>${what}</label>
+    <input id="v-${name}" type="number" step="any"><button data-name="${name}">set</button>`;
+  tuning.appendChild(row);
+}
+async function setParam(name, value) {
+  $("note").textContent = `setting ${name}...`;
+  const r = await fetch("/param", { method: "POST", body: JSON.stringify({ name, value }) });
+  const j = await r.json();
+  $("note").textContent = r.ok ? `${name} is now ${j.value}` : `didn't take: ${j.error}`;
+}
+tuning.addEventListener("click", (e) => {
+  const name = e.target.dataset && e.target.dataset.name;
+  if (name) setParam(name, parseFloat($(`v-${name}`).value));
+});
+$("profile-set").addEventListener("click", () => setParam("PCS14_LIMITS", parseInt($("profile").value)));
+let edited = new Set();
+tuning.addEventListener("input", (e) => edited.add(e.target.id));
+function show(s) {
+  $("link").textContent = s.connected ? "connected" : "not connected";
+  $("link").className = "link" + (s.connected ? "" : " down");
+  $("limits").textContent = `limits: ${s.limits || "?"}`;
+  $("limits").className = "badge" + (s.limits === "us-recreational" ? " legal" : "");
+  $("mode").textContent = `mode: ${s.mode || "?"}`;
+  $("height").textContent = `${fix(s.height_m)} m`;
+  $("armed").textContent = s.armed === undefined ? "--" : (s.armed ? "yes" : "no");
+  $("in_air").textContent = s.in_air === undefined ? "--" : (s.in_air ? "yes" : "no");
+  $("speed").textContent = `${fix(s.speed_m_s)} m/s`;
+  $("climb").textContent = `${fix(s.climb_m_s)} m/s`;
+  $("where").textContent = `${fix(s.north_m)}, ${fix(s.east_m)} m`;
+  $("battery").textContent = s.battery_v ? `${fix(s.battery_v, 2)} V, ${fix(s.battery_pct, 0)}%` : "--";
+  $("roll").textContent = `${fix(s.roll_deg)}°`;
+  $("pitch").textContent = `${fix(s.pitch_deg)}°`;
+  $("yaw").textContent = `${fix(s.yaw_deg)}°`;
+  const roll = s.roll_deg || 0, pitch = s.pitch_deg || 0;
+  $("horizon").setAttribute("transform", `rotate(${-roll}) translate(0 ${pitch * 2})`);
+  for (const [name, value] of Object.entries(s.params || {})) {
+    const box = $(`v-${name}`);
+    if (box && !edited.has(box.id)) box.value = value;
+    if (name === "PCS14_LIMITS") $("profile").value = String(value);
+  }
+}
+const feed = new EventSource("/events");
+feed.onmessage = (e) => show(JSON.parse(e.data));
+feed.onerror = () => { $("link").textContent = "the ground station's server stopped"; $("link").className = "link down"; };
+</script>
+</body>
+</html>

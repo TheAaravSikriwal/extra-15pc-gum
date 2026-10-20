@@ -23,6 +23,13 @@ Flight::Flight(const Airframe& airframe, const FlightGains& gains)
       rate_{RateAxis(gains.roll), RateAxis(gains.pitch), RateAxis(gains.yaw)},
       mixer_(airframe.mixer) {}
 
+void Flight::set_tuning(const FlightGains& gains) {
+  gains_ = gains;
+  rate_.roll.set_gains(gains.roll);
+  rate_.pitch.set_gains(gains.pitch);
+  rate_.yaw.set_gains(gains.yaw);
+}
+
 void Flight::reset_integrators() {
   rate_.roll.reset();
   rate_.pitch.reset();

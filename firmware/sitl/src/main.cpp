@@ -37,6 +37,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
+#include <algorithm>
 #include <array>
 #include <atomic>
 #include <cmath>
@@ -70,6 +71,7 @@ using pcs14::Vec3;
 
 constexpr double kStatusEvery = 0.1;  // s of sim time between status, landed and failsafe samples
 constexpr int kApiPort = 14540, kLocalPort = 14580;  // PX4's API link, plus the instance
+constexpr int kGcsPort = 14550, kGcsLocalPort = 18570;  // PX4's ground station link, the same
 constexpr double kEarthRadius = 6371000.0;           // m, for positions near home
 std::atomic<bool> g_stop{false};
 
@@ -179,6 +181,13 @@ void default_params(pcs14::Params& p) {
   // the limits (pcs14/limits.hpp): the profile, 0 max or 1 us-recreational, and my own
   // parachute rule, on unless it's switched off
   p.add_int("PCS14_LIMITS", 0);
+  const pcs14::FlightGains g;  // the tuning the ground station can change in flight
+  p.add("MC_ROLL_P", g.angle.kp_roll_pitch);
+  p.add("MC_YAW_P", g.angle.kp_yaw);
+  p.add("PCS14_RATE_P", g.roll.kp);
+  p.add("PCS14_RATE_I", g.roll.ki);
+  p.add("PCS14_RATE_D", g.roll.kd);
+  p.add("PCS14_YAWRATE_P", g.yaw.kp);
   p.add_int("PCS14_CHUTE_RULE", 1);
   p.add("SIM_BAT_DRAIN", 60.0f);     // s to drain the simulated pack
   p.add("SIM_BAT_MIN_PCT", 50.0f);   // where it stops draining
@@ -237,6 +246,11 @@ pcs14::FlightGains flight_gains(const pcs14::Params& p) {
   pcs14::FlightGains g;
   g.angle.kp_roll_pitch = p.get("MC_ROLL_P", g.angle.kp_roll_pitch);
   g.angle.kp_yaw = p.get("MC_YAW_P", g.angle.kp_yaw);
+  // the rate loops, in my units (rad/s^2 per rad/s): mine, so mine to name
+  g.roll.kp = g.pitch.kp = p.get("PCS14_RATE_P", g.roll.kp);
+  g.roll.ki = g.pitch.ki = p.get("PCS14_RATE_I", g.roll.ki);
+  g.roll.kd = g.pitch.kd = p.get("PCS14_RATE_D", g.roll.kd);
+  g.yaw.kp = p.get("PCS14_YAWRATE_P", g.yaw.kp);
   g.position.max_speed = p.get("MPC_XY_VEL_MAX", g.position.max_speed);
   g.position.max_tilt = p.get("MPC_TILTMAX_AIR", 45.0f) * pcs14::kPi / 180;
   return g;
@@ -245,18 +259,18 @@ pcs14::FlightGains flight_gains(const pcs14::Params& p) {
 // MAVLink over UDP on the loopback
 class Udp {
  public:
-  explicit Udp(int instance) {
+  Udp(int local_port, int remote_port) {
     fd_ = socket(AF_INET, SOCK_DGRAM, 0);
     sockaddr_in local{};
     local.sin_family = AF_INET;
     local.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-    local.sin_port = htons(static_cast<uint16_t>(kLocalPort + instance));
+    local.sin_port = htons(static_cast<uint16_t>(local_port));
     bind(fd_, reinterpret_cast<sockaddr*>(&local), sizeof(local));
     timeval timeout{0, 100000};
     setsockopt(fd_, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
     remote_.sin_family = AF_INET;
     remote_.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-    remote_.sin_port = htons(static_cast<uint16_t>(kApiPort + instance));
+    remote_.sin_port = htons(static_cast<uint16_t>(remote_port));
   }
   ~Udp() { close(fd_); }
   void send(const uint8_t* data, size_t size) {
@@ -285,8 +299,11 @@ class Bridge {
         ulog_([this](const uint8_t* d, size_t n) {
           if (file_ != nullptr) std::fwrite(d, 1, n, file_);
         }),
-        udp_(o.instance),
-        link_(params, [this](const uint8_t* d, size_t n) { udp_.send(d, n); }, handlers()) {
+        udp_(kLocalPort + o.instance, kApiPort + o.instance),
+        link_(params, [this](const uint8_t* d, size_t n) { udp_.send(d, n); }, handlers()),
+        gcs_udp_(kGcsLocalPort + o.instance, kGcsPort + o.instance),
+        gcs_link_(params, [this](const uint8_t* d, size_t n) { gcs_udp_.send(d, n); },
+                  handlers()) {
     ulog_.begin(0);
     ulog_.info("sys_name", "pcs14");
     ulog_.info("ver_hw", "SITL");
@@ -315,12 +332,14 @@ class Bridge {
     node_.Subscribe("/world/" + o.world + "/pose/info", &Bridge::on_poses, this);
     // the kill switch, as the receiver's channel would carry it: motors off, at once
     node_.Subscribe("/" + o.model + "/kill", &Bridge::on_kill, this);
-    listener_ = std::thread([this] { listen(); });
+    listener_ = std::thread([this] { listen(udp_, link_); });
+    gcs_listener_ = std::thread([this] { listen(gcs_udp_, gcs_link_); });
   }
 
   ~Bridge() {
     g_stop = true;
     if (listener_.joinable()) listener_.join();
+    if (gcs_listener_.joinable()) gcs_listener_.join();
   }
 
   bool command(const std::string& line) {
@@ -449,13 +468,15 @@ class Bridge {
     }
   }
 
-  void listen() {
+  // one link's incoming bytes: the API link (the flight sim's scripts, MAVSDK) or the ground
+  // station's (pcs14 ground, QGroundControl)
+  void listen(Udp& udp, pcs14::Link& link) {
     uint8_t buffer[2048];
     while (!g_stop) {
-      const size_t n = udp_.receive(buffer, sizeof(buffer));
+      const size_t n = udp.receive(buffer, sizeof(buffer));
       if (n == 0) continue;
       std::lock_guard<std::mutex> lock(mutex_);
-      link_.receive(buffer, n, micros(last_));
+      link.receive(buffer, n, micros(last_));
     }
   }
 
@@ -477,6 +498,15 @@ class Bridge {
     if (dt <= 0 || dt > 0.1f) return;  // a repeat or a jump in the clock: skip a beat
     // parameters that act live: the automatic modes', the GPS's, a sagging pack's top speed
     flight_.set_auto(auto_settings(params_));
+    // tuning from the ground station applies at once
+    const pcs14::FlightGains gains = flight_gains(params_);
+    if (gains.angle.kp_roll_pitch != tuned_.angle.kp_roll_pitch ||
+        gains.angle.kp_yaw != tuned_.angle.kp_yaw || gains.roll.kp != tuned_.roll.kp ||
+        gains.roll.ki != tuned_.roll.ki || gains.roll.kd != tuned_.roll.kd ||
+        gains.yaw.kp != tuned_.yaw.kp) {
+      flight_.set_tuning(gains);
+      tuned_ = gains;
+    }
     flight_.use_gps(!gps_failed_ && params_.get_int("EKF2_GPS_CTRL", 7) != 0);
     float top = 1e9f;
     for (int n = 1; n <= 4; ++n)
@@ -520,6 +550,7 @@ class Bridge {
     telemetry_.velocity = flight_.velocity();
     if (flight_.home_valid()) telemetry_.home_position = flight_.home();
     link_.update(telemetry_);
+    gcs_link_.update(telemetry_);
     if (t >= next_status_) {
       next_status_ = t + 1.0;
       const Quat& q = flight_.attitude().q();
@@ -552,7 +583,9 @@ class Bridge {
     in.armed = flight_.armed();
     in.in_air = !flight_.on_ground();
     in.mode = flight_.mode();
-    const uint64_t heard = link_.last_ground_heartbeat_us();
+    // the ground is heard on either link
+    const uint64_t heard =
+        std::max(link_.last_ground_heartbeat_us(), gcs_link_.last_ground_heartbeat_us());
     in.ground_heard = heard > 0;
     in.ground_silent_s = heard > 0 ? static_cast<float>(micros(last_) - heard) * 1e-6f : 0;
     in.battery = battery_.remaining(params_);
@@ -678,12 +711,15 @@ class Bridge {
   std::unique_ptr<pcs14::FlightLogWriter> log_;
   Udp udp_;
   pcs14::Link link_;
+  Udp gcs_udp_;
+  pcs14::Link gcs_link_;
   Telemetry telemetry_;
   gz::transport::Node node_;
   gz::transport::Node::Publisher motors_, chute_, heartbeat_;
   bool monitor_ = false;
   std::mutex mutex_;
-  std::thread listener_;
+  std::thread listener_, gcs_listener_;
+  pcs14::FlightGains tuned_;
   double last_ = -1, next_status_ = 0, next_sample_ = 0;
   double truth_t_ = -1, baro_t_ = -1, gps_t_ = -1;
   Vec3 truth_p_;

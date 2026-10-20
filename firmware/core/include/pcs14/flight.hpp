@@ -104,6 +104,10 @@ class Flight {
   Mode mode() const { return mode_; }
   void set_sticks(const Sticks& sticks) { sticks_ = sticks; }
   void set_auto(const AutoSettings& settings) { auto_ = settings; }
+  // new gains, taking effect at the next step (live tuning from the ground station); the
+  // integrators keep what they've learned
+  void set_tuning(const FlightGains& gains);
+  const FlightGains& gains() const { return gains_; }
   // an offboard setpoint, at `t` s (the flight loop's own clock: the sum of its steps)
   void set_offboard(const OffboardTarget& target);
   // a magnetometer sample, body frame, any unit; used by the next step

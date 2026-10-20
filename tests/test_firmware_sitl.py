@@ -150,3 +150,31 @@ def test_the_safety_monitor_cuts_a_hung_flight_controller():
     cut_at = float(cuts[0].rsplit(" ", 1)[1])
     assert 0 < cut_at - t0 < 0.4
     assert h0 > 4.5 and h1 < 1.0  # it came down
+
+
+def test_the_ground_station_sees_my_firmware_and_tunes_it_live():
+    """The ground station on my firmware's ground station link (PX4's port, 14550 plus the
+    instance), next to the runner's own MAVSDK: it gets the telemetry and the limits profile,
+    and a gain it sets reaches the firmware (step 5, task 13)."""
+    from pcs14.ground.station import Station
+
+    async def fly():
+        s = run.Session(TOOLS, "pcs14_base", {}, EXPORTS, "ground-check", instance=6,
+                        firmware="mine")  # fmt: skip
+        station = Station("udpin://0.0.0.0:14556", grpc_port=50076)
+        try:
+            await s.start()
+            await station.start(timeout_s=30.0)
+            await s.clock.sleep(2.0)
+            seen = station.snapshot()
+            echoed = await station.set_param("MC_ROLL_P", 7.5)
+            runner_reads = await s.drone.param.get_param_float("MC_ROLL_P")
+        finally:
+            await station.stop()
+            await s.stop()
+        return seen, echoed, runner_reads
+
+    seen, echoed, runner_reads = asyncio.run(fly())
+    assert seen["connected"] and seen["limits"] == "max"
+    assert "height_m" in seen and seen["armed"] is False
+    assert echoed == 7.5 and runner_reads == 7.5

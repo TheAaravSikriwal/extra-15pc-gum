@@ -200,6 +200,18 @@ def build_parser() -> argparse.ArgumentParser:
     tunnel.add_argument(
         "--stills-only", action="store_true", help="don't run FluidX3D, just redraw the stills"
     )
+    ground = add(
+        "ground",
+        "The ground station: live telemetry, live tuning and the limits profile, on a web page.",
+    )
+    ground.add_argument(
+        "--connect",
+        default="udpin://0.0.0.0:14550",
+        help="where the drone's ground station MAVLink comes in (default: PX4's port, 14550)",
+    )
+    ground.add_argument("--host", default="127.0.0.1", help="the page's address")
+    ground.add_argument("--port", type=int, default=8714, help="the page's port")
+    ground.add_argument("--grpc-port", type=int, default=50060, help="MAVSDK's own server")
     report = add("report", "Write the sizing report: Markdown, charts and the data file.")
     report.add_argument("--out", type=Path, help="report folder (default: docs/reports/sizing)")
     report.add_argument(
@@ -732,6 +744,34 @@ def regrade_flight_sim(args, build, targets) -> int:
     return 0
 
 
+def run_ground(args) -> int:
+    import asyncio
+
+    from pcs14.ground.station import Station
+    from pcs14.ground.web import serve
+
+    async def main():
+        station = Station(args.connect, args.grpc_port)
+        print(f"Waiting for a drone on {args.connect}...")
+        await station.start()
+        server = serve(station, args.host, args.port)
+        host, port = server.server_address[:2]
+        print(f"Ground station at http://{host}:{port}/ (Ctrl-C to stop)")
+        try:
+            while True:
+                await asyncio.sleep(5.0)
+                await station.refresh_params()
+        finally:
+            server.shutdown()
+            await station.stop()
+
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        pass
+    return 0
+
+
 COMMANDS = {
     "size": run_size,
     "sweep": run_sweep,
@@ -741,4 +781,5 @@ COMMANDS = {
     "electrical": run_electrical,
     "flight-sim": run_flight_sim,
     "tunnel": run_tunnel,
+    "ground": run_ground,
 }
