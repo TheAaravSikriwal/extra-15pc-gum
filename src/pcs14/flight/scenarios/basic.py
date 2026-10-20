@@ -42,8 +42,11 @@ async def offboard_here(s):
     """Switches to offboard, holding the current position and heading."""
     from mavsdk.offboard import PositionNedYaw
 
+    from pcs14.flight.run import read_heading
+
+    heading = await read_heading(s.drone, s.state)
     st = s.state
-    await s.drone.offboard.set_position_ned(PositionNedYaw(st.north, st.east, st.down, st.heading))
+    await s.drone.offboard.set_position_ned(PositionNedYaw(st.north, st.east, st.down, heading))
     await s.drone.offboard.start()
 
 

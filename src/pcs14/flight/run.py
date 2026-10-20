@@ -43,6 +43,11 @@ RUN_PARAMS = {
     "SDLOG_MODE": 2,  # log from boot until shutdown, so what happens after a disarm is in it
 }
 CONNECT_S = 90.0  # wall seconds for PX4 to boot, spawn the model and talk
+# s of real time the offboard setpoints may pause before PX4 calls them lost. MAVSDK resends
+# them at 20 Hz, but under load the runner's own Python can fall behind for a moment, and that
+# isn't what any scenario tests (a real dropped radio is the lost-link scenario's job, through
+# the relay). PX4's own default, scaled by the sim speed, is 1 s of real time
+OFFBOARD_LOSS_S = 3.0
 STALL_S = 30.0  # wall seconds PX4's clock may stand still before the run counts as hung
 
 
@@ -281,7 +286,7 @@ class State:
     east: float = 0.0
     down: float = 0.0
     speed: float = 0.0  # m/s, sideways
-    heading: float = 0.0  # degrees from north, clockwise
+    heading: float = 0.0  # degrees from north, clockwise, as of the last heading() read
     battery: float | None = None  # PX4's remaining share, 1 is full
 
     @property
@@ -308,15 +313,20 @@ async def _follow_state(drone, state: State):
             state.north, state.east, state.down = p.north_m, p.east_m, p.down_m
             state.speed = (v.north_m_s**2 + v.east_m_s**2) ** 0.5
 
-    async def heading():
-        async for value in drone.telemetry.heading():
-            state.heading = value.heading_deg
-
     async def battery():
         async for value in drone.telemetry.battery():
             state.battery = value.remaining_percent / 100
 
-    await asyncio.gather(armed(), in_air(), mode(), position(), heading(), battery())
+    # no heading stream: the scripts read it when they need it (read_heading), which keeps
+    # the telemetry the runner's Python has to keep up with down
+    await asyncio.gather(armed(), in_air(), mode(), position(), battery())
+
+
+async def read_heading(drone, state: State) -> float:
+    """degrees: PX4's heading right now, into `state` too."""
+    value = await first(drone.telemetry.heading(), lambda _: True)
+    state.heading = value.heading_deg
+    return state.heading
 
 
 async def first(stream, condition):
@@ -492,8 +502,8 @@ class Session:
         except TimeoutError as e:
             raise SimError(f"PX4 didn't connect within {CONNECT_S:g} s; see px4.log") from e
         await self.drone.telemetry.set_rate_imu(50.0)
-        await self.drone.telemetry.set_rate_position_velocity_ned(20.0)
-        await self.drone.telemetry.set_rate_battery(2.0)
+        await self.drone.telemetry.set_rate_position_velocity_ned(10.0)
+        await self.drone.telemetry.set_rate_battery(1.0)
         self._tasks.append(asyncio.create_task(self.clock.follow(_imu_stamps(self.drone))))
         self._tasks.append(asyncio.create_task(_follow_state(self.drone, self.state)))
         await asyncio.wait_for(self.clock.started(), CONNECT_S)
@@ -506,6 +516,9 @@ class Session:
 
         if not _finished(await self.within(healthy(), 120.0)):
             raise SimError("PX4 never got a position fix and a home position")
+        # PX4's startup scales this by the sim speed itself, after reading our parameters, so
+        # it's set here, once it's up
+        await self.drone.param.set_param_float("COM_OF_LOSS_T", OFFBOARD_LOSS_S * self.speed)
         return self
 
     async def within(self, awaitable, sim_seconds: float) -> asyncio.Task:
