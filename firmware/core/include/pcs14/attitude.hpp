@@ -32,8 +32,13 @@ class Attitude {
   }
 
   // gyro in rad/s and accel in m/s^2 (specific force), both in the body frame; mag in any unit,
-  // body frame, or nullptr when there's no new sample; dt in s
-  void update(const Vec3& gyro, const Vec3& accel, const Vec3* mag, float dt);
+  // body frame, or nullptr when there's no new sample; dt in s. With `motion`, the drone's own
+  // acceleration in the world frame (north-east-down, m/s^2, from the GPS's velocity), which
+  // is taken out of the accelerometer first: while the drone speeds up sideways, what the
+  // accelerometer feels is mostly the thrust, and without this the filter would drift toward
+  // "level" while the drone leans
+  void update(const Vec3& gyro, const Vec3& accel, const Vec3* mag, float dt,
+              const Vec3* motion = nullptr);
 
   const Quat& q() const { return q_; }
   // rad/s: the gyro's bias as learned so far

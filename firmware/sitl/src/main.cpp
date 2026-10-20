@@ -271,8 +271,9 @@ class Bridge {
     ulog_.text(6, micros(last_), "disarmed");
   }
 
-  // what the ground asks for. So far it flies rate mode only (step 5, task 4); the rest come
-  // with the modes that need them, and until then the ground hears "denied"
+  // what the ground asks for. So far it flies rate mode, self-level and altitude hold (step 5,
+  // tasks 4 and 7); the rest come with the modes that need them, and until then the ground
+  // hears "denied"
   bool request(const pcs14::Request& r) {
     using K = pcs14::Request::Kind;
     switch (r.kind) {
@@ -288,7 +289,7 @@ class Bridge {
         disarm();
         return true;
       case K::SetMode:
-        return r.mode == pcs14::Mode::Acro;
+        return flight_.set_mode(r.mode);
       default:
         return false;
     }
@@ -335,7 +336,7 @@ class Bridge {
     telemetry_.attitude = flight_.attitude().q();
     telemetry_.rates = flight_.attitude().rate();
     telemetry_.armed = flight_.armed();
-    telemetry_.mode = pcs14::Mode::Acro;
+    telemetry_.mode = flight_.mode();
     telemetry_.landed = flight_.on_ground() ? pcs14::Landed::OnGround : pcs14::Landed::InAir;
     telemetry_.armable = armable();
     link_.update(telemetry_);
@@ -353,7 +354,7 @@ class Bridge {
   void log_status(uint64_t us) {
     log_->log(pcs14::StatusLog{
         us, flight_.armed() ? pcs14::kArmingArmed : pcs14::kArmingStandby,
-        pcs14::nav_state(pcs14::Mode::Acro)});
+        pcs14::nav_state(flight_.mode())});
     log_->log(pcs14::LandLog{us, flight_.on_ground()});
     log_->log(pcs14::FailsafeLog{us});
   }
@@ -367,6 +368,10 @@ class Bridge {
 
   void on_pressure(const gz::msgs::FluidPressure& msg) {
     std::lock_guard<std::mutex> lock(mutex_);
+    const double t = seconds(msg.header());
+    flight_.on_baro(static_cast<float>(msg.pressure()),
+                    baro_t_ >= 0 ? static_cast<float>(t - baro_t_) : 0.0f);
+    baro_t_ = t;
     telemetry_.pressure_hpa = static_cast<float>(msg.pressure() / 100.0);
   }
 
@@ -397,6 +402,9 @@ class Bridge {
     t.velocity = {static_cast<float>(msg.velocity_north()), static_cast<float>(msg.velocity_east()),
                   static_cast<float>(-msg.velocity_up())};
     t.position_valid = true;
+    const double now = seconds(msg.header());
+    flight_.on_gps_velocity(t.velocity, gps_t_ >= 0 ? static_cast<float>(now - gps_t_) : 0.0f);
+    gps_t_ = now;
   }
 
   // the ground truth, from the world's poses (east-north-up there, north-east-down here)
@@ -440,7 +448,7 @@ class Bridge {
   std::mutex mutex_;
   std::thread listener_;
   double last_ = -1, next_status_ = 0, next_sample_ = 0;
-  double truth_t_ = -1;
+  double truth_t_ = -1, baro_t_ = -1, gps_t_ = -1;
   Vec3 truth_p_;
   bool have_imu_ = false, have_gps_ = false;
 };

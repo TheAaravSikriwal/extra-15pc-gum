@@ -3,9 +3,12 @@
 
 namespace pcs14 {
 
-void Attitude::update(const Vec3& gyro, const Vec3& accel, const Vec3* mag, float dt) {
+void Attitude::update(const Vec3& gyro, const Vec3& accel_measured, const Vec3* mag, float dt,
+                      const Vec3* motion) {
   Vec3 error{};
-  // gravity: a still IMU feels the specific force pointing up, -z in the world frame
+  // gravity: a still IMU feels the specific force pointing up, -z in the world frame; a
+  // moving one feels its own acceleration on top, which comes out first when it's known
+  const Vec3 accel = motion != nullptr ? accel_measured - q_.unrotate(*motion) : accel_measured;
   const float g = accel.norm();
   if (g > (1 - gains_.accel_band) * kG && g < (1 + gains_.accel_band) * kG) {
     const Vec3 measured = (-accel).normalized();             // down, as the IMU sees it

@@ -21,6 +21,8 @@ struct Plant {
   std::array<float, 4> speed{};  // rad/s, each motor
   Vec3 cg_offset;           // m: where the weight really sits, against where the frame says
   Vec3 push;                // N, world: a steady outside force, like wind
+  float drag_area = 0.012f;         // m^2, base's, like the flight sim's drag plugin
+  float rotor_drag = 8.06428e-05f;  // N per (rad/s) per (m/s), each rotor, Gazebo's model's
   float tau_up = 0.0125f, tau_down = 0.025f;  // s
 
   explicit Plant(const Airframe& f) : frame(f) {}
@@ -29,6 +31,11 @@ struct Plant {
 
   // the accelerometer: the specific force in the body frame, what the IMU feels
   Vec3 accel() const { return q.unrotate(specific_force_world()); }
+
+  // the barometer, Pa: the standard atmosphere at the drone's height, from 101325 at the ground
+  float pressure() const {
+    return 101325.0f * std::pow(1.0f - (-position.z) / 44330.0f, 1.0f / 0.190295f);
+  }
 
   void step(const std::array<float, 4>& command, float dt) {
     constexpr float h = 0.001f;
@@ -41,8 +48,18 @@ struct Plant {
     for (float w : speed) total += frame.mixer.motor_constant * w * w;
     return {0, 0, -total};
   }
+  // the air's push: body drag on the speed squared, and the rotors' drag across their discs
+  Vec3 drag_world() const {
+    const float v = velocity.norm();
+    Vec3 f = velocity * (-0.5f * 1.225f * drag_area * v);
+    float spin = 0;
+    for (float w : speed) spin += w;
+    const Vec3 body = q.unrotate(velocity);
+    f += q.rotate(Vec3{body.x, body.y, 0} * (-rotor_drag * spin));
+    return f;
+  }
   Vec3 specific_force_world() const {
-    const Vec3 f = q.rotate(thrust_body()) + push;
+    const Vec3 f = q.rotate(thrust_body()) + push + drag_world();
     // resting on the ground, the ground carries what the rotors don't: the IMU feels 1 g up
     if (on_ground() && f.z + frame.mass_kg * kG >= 0) return {0, 0, -kG};
     return f / frame.mass_kg;
@@ -62,7 +79,8 @@ struct Plant {
     const Vec3& j = frame.inertia;
     const Vec3 jw{j.x * rate.x, j.y * rate.y, j.z * rate.z};
     const Vec3 net = torque - rate.cross(jw);
-    const Vec3 world_force = q.rotate(thrust_body()) + push + Vec3{0, 0, frame.mass_kg * kG};
+    const Vec3 world_force =
+        q.rotate(thrust_body()) + push + drag_world() + Vec3{0, 0, frame.mass_kg * kG};
     if (on_ground() && world_force.z >= 0) {
       // resting: the ground holds it level and still
       velocity = {};

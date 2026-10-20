@@ -1,8 +1,12 @@
 # The core: everything that decides anything, with no hardware in it.
 add_library(pcs14_core STATIC
   src/airframe_file.cpp
+  src/altitude.cpp
+  src/angle.cpp
   src/attitude.cpp
   src/flight.cpp
+  src/height.cpp
+  src/land.cpp
   src/link.cpp
   src/log_topics.cpp
   src/mixer.cpp
@@ -42,6 +46,7 @@ add_executable(pcs14_core_tests
   tests/test_ulog.cpp
   tests/test_modes.cpp
   tests/test_link.cpp
+  tests/test_altitude.cpp
 )
 target_link_libraries(pcs14_core_tests PRIVATE pcs14_core doctest::doctest)
 add_test(NAME core COMMAND pcs14_core_tests)

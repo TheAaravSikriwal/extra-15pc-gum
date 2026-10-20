@@ -71,3 +71,44 @@ def test_mavsdk_connects_reads_health_and_arms():
     armed, mode = asyncio.run(fly())
     assert armed
     assert mode == "ACRO"
+
+
+def test_altitude_mode_climbs_holds_and_comes_down():
+    """Altitude mode on the sticks over MAVLink, the way the steps scenario flies PX4: climb on
+    the stick, hold the height with it centered, then come down, land and disarm itself
+    (step 5, task 7). Graded from Gazebo's ground truth in my firmware's own log."""
+    import numpy as np
+
+    from pcs14.flight import ulog
+    from pcs14.flight.scenarios.basic import Sticks, window
+
+    async def fly():
+        s = run.Session(TOOLS, "pcs14_base", {}, EXPORTS, "altitude-check", instance=6,
+                        firmware="mine")  # fmt: skip
+        try:
+            await s.start()
+            async with Sticks(s) as sticks:
+                await s.drone.manual_control.start_altitude_control()
+                await s.drone.action.arm()
+                await sticks.move(z=0.8)
+                climbed = await s.clock.until(lambda: s.state.height > 5.0, 20.0)
+                await sticks.move(z=0.5)
+                await s.clock.sleep(3.0)
+                s.mark("hold start")
+                await s.clock.sleep(10.0)
+                s.mark("hold end")
+                await sticks.move(z=0.0)
+                disarmed = await s.clock.until(lambda: not s.state.armed, 40.0)
+            return climbed, disarmed, s
+        finally:
+            await s.stop()
+
+    climbed, disarmed, s = asyncio.run(fly())
+    assert climbed and disarmed
+    flight = ulog.flight_log(ulog.read(s.result.log), s.result.marks)
+    start, end = window(flight, "hold")
+    inside = (flight.t >= start) & (flight.t <= end)
+    heights = flight.position[inside, 2]
+    assert heights.max() - heights.min() < 0.6, (heights.min(), heights.max())
+    assert np.degrees(ulog.tilt_of(flight.attitude[inside])).max() < 2.0
+    assert flight.position[-1, 2] < 0.2  # back on the ground
