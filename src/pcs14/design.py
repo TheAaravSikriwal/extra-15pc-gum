@@ -44,6 +44,55 @@ class _EverySetupFile(_Strict):
     current_within_battery_rating: bool
 
 
+class _HoverPass(_Strict):
+    duration_s: float = Field(gt=0)
+    max_drift_m: float = Field(gt=0)  # sideways, in still air
+    max_height_error_m: float = Field(gt=0)
+
+
+class _StepsPass(_Strict):
+    max_settle_s: float = Field(gt=0)
+    max_overshoot: float = Field(ge=0)  # a share of the step
+
+
+class _WindPass(_Strict):
+    max_drift_m: float = Field(gt=0)  # the wind's speed is each setup's hold_position_in_wind_ms
+    max_motor_share: float = Field(gt=0, le=1)  # of each motor's top speed
+
+
+class _EndurancePass(_Strict):
+    max_difference: float = Field(gt=0, lt=1)  # a share of the sizing model's times
+
+
+class _PayloadPass(_Strict):
+    max_drift_m: float = Field(gt=0)
+
+
+class TriggerThresholds(_Strict):
+    """The safety monitor's automatic triggers, in shadow mode until they show no false
+    triggers (docs/specs/2026-10-19-flight-sim.md)."""
+
+    free_fall_g: float = Field(gt=0, lt=1)  # total acceleration under this, in g
+    free_fall_s: float = Field(gt=0)
+    tumble_rate_dps: float = Field(gt=0)  # body rate over this, in degrees a second
+    tumble_rate_s: float = Field(gt=0)
+    tumble_tilt_deg: float = Field(gt=0, lt=180)
+    tumble_tilt_s: float = Field(gt=0)
+
+
+class FlightSimTargets(_Strict):
+    """What passing means in the flight sim (step 4). Top speed, the wind's speed, the reserve and
+    the payload come from the setups and the rest of the targets."""
+
+    hover: _HoverPass
+    steps: _StepsPass
+    wind: _WindPass
+    endurance: _EndurancePass
+    payload: _PayloadPass
+    triggers: TriggerThresholds
+    max_false_triggers: int = Field(ge=0)
+
+
 class _TargetsFile(_Strict):
     reserve_battery_fraction: float = Field(gt=0, lt=1)
     cruise_speed_ms: float = Field(gt=0)
@@ -51,6 +100,7 @@ class _TargetsFile(_Strict):
     growth_margin_g: float = Field(ge=0)
     every_setup: _EverySetupFile
     setups: dict[str, _SetupFile]
+    flight_sim: FlightSimTargets | None = None
 
 
 @dataclass(frozen=True)
@@ -77,6 +127,7 @@ class Targets:
     min_thrust_to_weight: float
     current_within_battery_rating: bool
     setups: dict[str, SetupTargets]
+    flight_sim: FlightSimTargets | None = None
 
     def combinations(self) -> list[SetupTargets]:
         """All eight module combinations. The named setups keep their own targets; the others
@@ -145,6 +196,7 @@ def load_targets(path: Path) -> Targets:
         min_thrust_to_weight=raw.every_setup.min_thrust_to_weight,
         current_within_battery_rating=raw.every_setup.current_within_battery_rating,
         setups=setups,
+        flight_sim=raw.flight_sim,
     )
 
 

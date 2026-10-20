@@ -32,3 +32,30 @@ setups:
     min_cruise_time_min: 20
     min_hover_time_min: 17
     max_takeoff_weight_g: 2500
+
+# What passing means in the flight sim (step 4), decided 2026-10-19. Top speed, the wind's speed,
+# the reserve and the payload come from the setups above; the rest is here. The reasons are in
+# docs/specs/2026-10-19-flight-sim.md.
+flight_sim:
+  hover: # still air
+    duration_s: 60
+    max_drift_m: 0.5         # sideways
+    max_height_error_m: 0.3
+  steps: # sudden stick inputs
+    max_settle_s: 0.5
+    max_overshoot: 0.2       # a share of the step
+  wind: # at each setup's hold_position_in_wind_ms
+    max_drift_m: 1.0
+    max_motor_share: 0.9     # of each motor's top speed, so there's thrust left to fight a gust
+  endurance:
+    max_difference: 0.1      # hover and cruise times against the sizing model's
+  payload: # the claws picking up their payload
+    max_drift_m: 1.0
+  triggers: # the safety monitor's automatic triggers: starting numbers, tuned against the replays
+    free_fall_g: 0.3         # total acceleration under this...
+    free_fall_s: 0.3         # ...for this long
+    tumble_rate_dps: 400     # a body rate over this...
+    tumble_rate_s: 0.3       # ...for this long
+    tumble_tilt_deg: 75      # or a tilt past this...
+    tumble_tilt_s: 0.5       # ...for this long
+  max_false_triggers: 0      # in any healthy scenario: the shadow-mode rule
