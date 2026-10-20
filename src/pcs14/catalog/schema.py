@@ -252,6 +252,26 @@ class Frame(Part):
         return units.mm_to_m(self.wheelbase_mm)
 
 
+class ParachuteBlock(Strict):
+    """A parachute's rating and timing, for the flight sim's simple chute model."""
+
+    rated_mass_kg: float = Field(gt=0)  # the load its rated descent is quoted for
+    rated_descent_ms: float = Field(gt=0)
+    ejection_s: float = Field(ge=0)  # from firing to the canopy leaving the tube
+    opening_s: float = Field(gt=0)  # from leaving the tube to fully open
+    source: Source
+    estimates: list[Literal["rated_mass_kg", "rated_descent_ms", "ejection_s", "opening_s"]] = (
+        Field(default_factory=list)
+    )
+    estimate_note: str | None = None
+
+    @model_validator(mode="after")
+    def _estimates_explained(self):
+        if self.estimates and not self.estimate_note:
+            raise ValueError("estimates need an estimate_note saying how they were worked out")
+        return self
+
+
 class Component(Part):
     """Anything else with a mass: flight controller, receiver, module parts, wiring."""
 
@@ -260,6 +280,7 @@ class Component(Part):
     power_source: Source | None = None
     drag_area_cm2: float = Field(default=0, ge=0)
     drag_source: Source | None = None
+    parachute: ParachuteBlock | None = None
 
     @model_validator(mode="after")
     def _sourced(self):
@@ -271,6 +292,8 @@ class Component(Part):
 
     def sources(self) -> list[Source]:
         extra = [s for s in (self.power_source, self.drag_source) if s is not None]
+        if self.parachute is not None:
+            extra.append(self.parachute.source)
         return [*super().sources(), *extra]
 
     @property
