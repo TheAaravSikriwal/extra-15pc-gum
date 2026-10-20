@@ -44,3 +44,12 @@ jobs:
       - run: cmake -S firmware -B build/firmware -DCMAKE_BUILD_TYPE=Debug -DPython3_EXECUTABLE="$(which python)"
       - run: cmake --build build/firmware -j 4
       - run: ctest --test-dir build/firmware --output-on-failure
+
+  # My flight firmware for the ARK FPV's STM32H743: it has to build and link for the board.
+  h743:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib
+      - run: cmake -S firmware -B build/h743 -DCMAKE_TOOLCHAIN_FILE=firmware/cmake/arm-none-eabi.cmake -DCMAKE_BUILD_TYPE=Release
+      - run: cmake --build build/h743 --target pcs14_h743 -j 4

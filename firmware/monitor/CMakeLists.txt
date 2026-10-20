@@ -4,6 +4,7 @@ add_library(pcs14_monitor STATIC src/monitor.cpp)
 target_include_directories(pcs14_monitor PUBLIC include)
 target_link_libraries(pcs14_monitor PUBLIC pcs14_core)
 
+if(NOT CMAKE_CROSSCOMPILING)  # the tests run on the host only
 add_executable(pcs14_monitor_tests ../core/tests/main.cpp tests/test_monitor.cpp)
 target_link_libraries(pcs14_monitor_tests PRIVATE pcs14_monitor doctest::doctest)
 add_test(NAME monitor COMMAND pcs14_monitor_tests)
@@ -15,4 +16,5 @@ if(Python3_FOUND)
   add_test(NAME monitor_matches_reference
     COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/check_triggers.py
             $<TARGET_FILE:pcs14_monitor_replay>)
+endif()
 endif()

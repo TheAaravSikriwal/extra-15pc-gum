@@ -30,6 +30,7 @@ FetchContent_MakeAvailable(mavlink)
 # as system headers: they're generated, and not written for this many warnings
 target_include_directories(pcs14_core SYSTEM PUBLIC ${mavlink_SOURCE_DIR})
 
+if(NOT CMAKE_CROSSCOMPILING)  # the tests run on the host only
 # The host tests, with doctest (MIT), fetched at a pinned release
 FetchContent_Declare(doctest
   URL https://github.com/doctest/doctest/archive/refs/tags/v2.4.11.tar.gz
@@ -68,4 +69,5 @@ if(Python3_FOUND)
   else()
     message(STATUS "no pyulog for ${Python3_EXECUTABLE}: the ULog read-back check is skipped")
   endif()
+endif()
 endif()
