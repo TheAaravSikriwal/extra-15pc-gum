@@ -20,7 +20,8 @@ def test_the_props_turn_the_way_px4s_quad_x_does():
 
 
 def test_the_case_file_says_everything_fluidx3ds_setup_reads():
-    cruise, crosswind, hover = tunnel.cases("Max", 3.2, 607.0, 0.127, made_up_props(), 0.16)
+    cruise, crosswind, hover = tunnel.cases("Max", 3.2, 607.0, 0.127, made_up_props(), 0.16,
+                                            hover_thrust_n=5.8)  # fmt: skip
     text = cruise.text()
     for line in ("name = Max-cruise", "mode = tunnel", "body = max-body.stl", "speed = 10",
                  "yaw_deg = -90", "pitch_deg = 3.200", "props = 0"):  # fmt: skip
@@ -33,8 +34,12 @@ def test_the_case_file_says_everything_fluidx3ds_setup_reads():
     # the color scale: past the 10 m/s wind in the tunnel, the downwash's speed in the hover
     # (the props' 71 m/s tips used to set it, and the downwash came out dark)
     assert "color_max_m_s = 17" in cruise.text().splitlines()
-    assert "color_max_m_s = 10" in lines
+    assert "color_max_m_s = 15" in lines
     assert hover.time_s >= 0.3  # long enough for the downwash to reach down past a meter
+    # the props as actuator disks: at this resolution spinning blades are flat paddles that
+    # fling the air sideways (2026-10-20), so each disk pushes its share of the weight down
+    assert "rotor = disk" in lines and "thrust_n = 5.8" in lines
+    assert "rotor = disk" not in cruise.text().splitlines()
 
 
 def test_a_crop_keeps_the_aspect_and_stays_inside():

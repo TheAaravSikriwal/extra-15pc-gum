@@ -30,6 +30,17 @@ class Still:
 def stills_for(case, rpm: float | None = None) -> list[Still]:
     """What each case's stills say."""
     who = "the drone with every module on" if case.setup.lower() == "max" else case.setup
+    if case.mode == "hover" and case.rotor == "disk":
+        push = f"{case.thrust_n:.1f} N"
+        return [
+            Still("side-speed", "The downwash", f"{who}, hovering: each prop a disk pushing "
+                  f"{push} down", f"{push} a prop", "Each prop drives a column of air down; red "
+                  "is fastest. The props are modeled as disks, not blades. " + VISUAL,
+                  (0.5, 0.42)),
+            Still("quarter-vortices", "The wake's edge", f"{who}, hovering: each prop a disk "
+                  f"pushing {push} down", f"{push} a prop", "The edge of each column rolls up "
+                  "into rings of vortices as it falls. " + VISUAL, (0.5, 0.45)),
+        ]  # fmt: skip
     if case.mode == "hover":
         turning = f"{rpm:,.0f} rpm" if rpm else "hover speed"
         return [

@@ -7,8 +7,11 @@ forward, y left, z up) so the body and the props land together:
 
 - cruise: the drone nose-first into its 10 m/s cruise, pitched forward the way it flies
 - crosswind: the 10 m/s wind the hover holds against, from the drone's right
-- hover: still air, the props spinning at the hover's speed, the clockwise pair mirrored the way
-  real props are, so all four push air down
+- hover: still air, and each prop an actuator disk pushing its share of the weight down. The
+  first hover runs spun the real blades as moving boundaries, but at 3.4 mm cells a 10x5
+  blade's pitch rises about one cell across its chord, so the blades came out as flat paddles
+  that flung the air sideways and pushed none down. A disk of cells, each given its share of
+  the thrust as a force on the air, makes the downwash the momentum says it should
 
 Nothing FluidX3D makes goes into this repo until its public fork is up (its license wants the
 altered source published with any results), so the frames and the stills land in
@@ -60,8 +63,10 @@ class Case:
     slice_x_m: float = 0.0  # m along the box's x from the drone: where the slice cuts
     zoom: float = 2.6
     # m/s at the top of the speed colors: the 10 m/s wind at about 60% of the scale; in the
-    # hover, the downwash (about 7 m/s at the hover's thrust, by momentum theory)
+    # hover, the downwash, about 7 m/s at the disks by momentum theory and twice that below them
     color_max_m_s: float = 17.0
+    rotor: str = "geometry"  # the props as spinning blades, or "disk": actuator disks
+    thrust_n: float = 0.0  # N, each prop's push, for the disks
 
     def text(self) -> str:
         """The case file FluidX3D's setup reads: one key = value per line."""
@@ -86,6 +91,8 @@ class Case:
             f"slice_x_m = {self.slice_x_m:g}",
             f"zoom = {self.zoom:g}",
             f"color_max_m_s = {self.color_max_m_s:g}",
+            f"rotor = {self.rotor}",
+            f"thrust_n = {self.thrust_n:g}",
             f"props = {len(self.props)}",
         ]
         for k, p in enumerate(self.props):
@@ -105,7 +112,8 @@ def spin_at(x: float, y: float) -> int:
 
 
 def cases(setup_name: str, cruise_pitch_deg: float, hover_omega: float, radius: float,
-          props: tuple[Prop, ...], slice_x_m: float) -> list[Case]:  # fmt: skip
+          props: tuple[Prop, ...], slice_x_m: float,
+          hover_thrust_n: float = 0.0) -> list[Case]:  # fmt: skip
     """The three visual cases for one combination."""
     body = f"{setup_name.lower().replace('+', '_')}-body.stl"
     cruise = Case(f"{setup_name}-cruise", "tunnel", setup_name, body,
@@ -117,7 +125,7 @@ def cases(setup_name: str, cruise_pitch_deg: float, hover_omega: float, radius: 
     hover = Case(f"{setup_name}-hover", "hover", setup_name, body, speed=0.0, yaw_deg=0.0,
                  box=(1.2, 1.2, 2.2), at=(0.5, 0.5, 0.6), time_s=0.3, omega=hover_omega,
                  radius=radius, props=props, slice_x_m=slice_x_m, zoom=1.6,
-                 color_max_m_s=10.0)  # fmt: skip
+                 color_max_m_s=15.0, rotor="disk", thrust_n=hover_thrust_n)  # fmt: skip
     return [cruise, crosswind, hover]
 
 
@@ -172,7 +180,7 @@ def case_for(drone, build, targets, setup, folder: Path) -> list[Case]:
     pitch = math.degrees(power.tilt(targets.cruise_speed))
     # the box's x is the drone's x in the hover case (no yaw), so the slice sits on the front pair
     found = cases(setup.name, pitch, model.motor.hover_rot_velocity, build.prop.radius, props,
-                  slice_x_m=front)  # fmt: skip
+                  slice_x_m=front, hover_thrust_n=model.total_mass * G / 4)  # fmt: skip
     return [replace(c, body=body) for c in found]
 
 
