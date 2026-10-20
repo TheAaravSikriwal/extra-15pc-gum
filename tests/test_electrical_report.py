@@ -84,6 +84,7 @@ def made_up_run(**changes):
         skipped=(),
         harnesses=("harnesses/power.svg",),
         exports=("outputs/electrical/electrical.svg",),
+        routes={"main": ("pack.XT60.+ to reg.J.VIN",)},
     )
     return replace(run, **changes)
 
@@ -111,6 +112,8 @@ def test_the_data_file_matches_the_results(run):
     assert data["wire_amps"]["base"]["hover"]["pack.XT60.+ to reg.J.VIN"] == 1.2346
     assert data["switch_sims"][1]["esc_frames"] == [None, None]
     assert data["kicad_rules_violations"] == 0
+    # which wires run along each CAD route, so a route in 3D can name its wires' ends
+    assert data["routes"] == {"main": ["pack.XT60.+ to reg.J.VIN"]}
     json.dumps(data)  # it has to be plain JSON
 
 

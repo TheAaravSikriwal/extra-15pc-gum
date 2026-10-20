@@ -83,6 +83,7 @@ class ElectricalRun:
     skipped: tuple[str, ...] = ()  # what didn't run, and why
     harnesses: tuple[str, ...] = field(default=())  # harness diagrams, relative to the report
     exports: tuple[str, ...] = ()  # build outputs elsewhere, not committed
+    routes: dict = field(default_factory=dict)  # {CAD route: (wire labels, "a to b")}
     full: str = "max"  # the combination with every module in
     continuous_share: float = 0.8  # the check numbers, from the connection list
     air_c: float = 40.0
@@ -497,6 +498,7 @@ def _data(run: ElectricalRun, generated: str | None) -> dict:
         ],
         "route_heating_share": _keyed(run.route_shares, 4),
         "wire_amps": _keyed(run.wire_amps, 4),
+        "routes": {route: list(labels) for route, labels in run.routes.items()},
         "estimates": [
             {"part": e.part_id, "boards": list(e.boards), "items": list(e.items), "note": e.note}
             for e in run.estimates

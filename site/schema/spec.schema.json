@@ -1,0 +1,279 @@
+{
+ "$defs": {
+  "Check": {
+   "additionalProperties": false,
+   "properties": {
+    "name": {
+     "title": "Name",
+     "type": "string"
+    },
+    "unit": {
+     "title": "Unit",
+     "type": "string"
+    },
+    "nominal": {
+     "title": "Nominal",
+     "type": "number"
+    },
+    "pessimistic": {
+     "anyOf": [
+      {
+       "type": "number"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Pessimistic"
+    },
+    "limit": {
+     "anyOf": [
+      {
+       "type": "number"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Limit"
+    },
+    "higher_is_better": {
+     "default": true,
+     "title": "Higher Is Better",
+     "type": "boolean"
+    },
+    "verdict": {
+     "title": "Verdict",
+     "type": "string"
+    },
+    "note": {
+     "default": "",
+     "title": "Note",
+     "type": "string"
+    }
+   },
+   "required": [
+    "name",
+    "unit",
+    "nominal",
+    "verdict"
+   ],
+   "title": "Check",
+   "type": "object"
+  },
+  "Combination": {
+   "additionalProperties": false,
+   "properties": {
+    "name": {
+     "title": "Name",
+     "type": "string"
+    },
+    "modules": {
+     "items": {
+      "type": "string"
+     },
+     "title": "Modules",
+     "type": "array"
+    },
+    "verdict": {
+     "title": "Verdict",
+     "type": "string"
+    },
+    "mass_g": {
+     "title": "Mass G",
+     "type": "number"
+    },
+    "growth_margin_g": {
+     "title": "Growth Margin G",
+     "type": "number"
+    },
+    "cad_mass_g": {
+     "anyOf": [
+      {
+       "type": "number"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Cad Mass G"
+    },
+    "center_of_gravity_mm": {
+     "anyOf": [
+      {
+       "items": {
+        "type": "number"
+       },
+       "type": "array"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Center Of Gravity Mm"
+    },
+    "checks": {
+     "items": {
+      "$ref": "#/$defs/Check"
+     },
+     "title": "Checks",
+     "type": "array"
+    },
+    "top_speed_kmh": {
+     "additionalProperties": {
+      "type": "number"
+     },
+     "title": "Top Speed Kmh",
+     "type": "object"
+    },
+    "least_power_speed_ms": {
+     "title": "Least Power Speed Ms",
+     "type": "number"
+    },
+    "least_power_minutes": {
+     "title": "Least Power Minutes",
+     "type": "number"
+    }
+   },
+   "required": [
+    "name",
+    "modules",
+    "verdict",
+    "mass_g",
+    "growth_margin_g",
+    "checks",
+    "top_speed_kmh",
+    "least_power_speed_ms",
+    "least_power_minutes"
+   ],
+   "title": "Combination",
+   "type": "object"
+  },
+  "Part": {
+   "additionalProperties": false,
+   "properties": {
+    "role": {
+     "title": "Role",
+     "type": "string"
+    },
+    "module": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Module"
+    },
+    "id": {
+     "title": "Id",
+     "type": "string"
+    },
+    "maker": {
+     "title": "Maker",
+     "type": "string"
+    },
+    "model": {
+     "title": "Model",
+     "type": "string"
+    },
+    "mass_g": {
+     "title": "Mass G",
+     "type": "number"
+    },
+    "price_usd": {
+     "anyOf": [
+      {
+       "type": "number"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Price Usd"
+    },
+    "link": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Link"
+    },
+    "count": {
+     "default": 1,
+     "title": "Count",
+     "type": "integer"
+    }
+   },
+   "required": [
+    "role",
+    "id",
+    "maker",
+    "model",
+    "mass_g"
+   ],
+   "title": "Part",
+   "type": "object"
+  }
+ },
+ "additionalProperties": false,
+ "description": "spec.json: the live spec sheet, per combination.",
+ "properties": {
+  "schema_version": {
+   "title": "Schema Version",
+   "type": "integer"
+  },
+  "sizing_case": {
+   "title": "Sizing Case",
+   "type": "string"
+  },
+  "verdict": {
+   "title": "Verdict",
+   "type": "string"
+  },
+  "targets": {
+   "additionalProperties": {
+    "type": "number"
+   },
+   "title": "Targets",
+   "type": "object"
+  },
+  "combinations": {
+   "items": {
+    "$ref": "#/$defs/Combination"
+   },
+   "title": "Combinations",
+   "type": "array"
+  },
+  "parts": {
+   "items": {
+    "$ref": "#/$defs/Part"
+   },
+   "title": "Parts",
+   "type": "array"
+  }
+ },
+ "required": [
+  "schema_version",
+  "sizing_case",
+  "verdict",
+  "targets",
+  "combinations",
+  "parts"
+ ],
+ "title": "SpecSheet",
+ "type": "object"
+}

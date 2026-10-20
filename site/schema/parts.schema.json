@@ -1,0 +1,162 @@
+{
+ "$defs": {
+  "Part": {
+   "additionalProperties": false,
+   "properties": {
+    "role": {
+     "title": "Role",
+     "type": "string"
+    },
+    "module": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Module"
+    },
+    "id": {
+     "title": "Id",
+     "type": "string"
+    },
+    "maker": {
+     "title": "Maker",
+     "type": "string"
+    },
+    "model": {
+     "title": "Model",
+     "type": "string"
+    },
+    "mass_g": {
+     "title": "Mass G",
+     "type": "number"
+    },
+    "price_usd": {
+     "anyOf": [
+      {
+       "type": "number"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Price Usd"
+    },
+    "link": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Link"
+    },
+    "count": {
+     "default": 1,
+     "title": "Count",
+     "type": "integer"
+    }
+   },
+   "required": [
+    "role",
+    "id",
+    "maker",
+    "model",
+    "mass_g"
+   ],
+   "title": "Part",
+   "type": "object"
+  },
+  "Piece": {
+   "additionalProperties": false,
+   "properties": {
+    "name": {
+     "title": "Name",
+     "type": "string"
+    },
+    "kind": {
+     "title": "Kind",
+     "type": "string"
+    },
+    "module": {
+     "title": "Module",
+     "type": "string"
+    },
+    "mass_g": {
+     "title": "Mass G",
+     "type": "number"
+    },
+    "part_id": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Part Id"
+    },
+    "moving": {
+     "default": false,
+     "title": "Moving",
+     "type": "boolean"
+    },
+    "catalog": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Part"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    }
+   },
+   "required": [
+    "name",
+    "kind",
+    "module",
+    "mass_g"
+   ],
+   "title": "Piece",
+   "type": "object"
+  }
+ },
+ "additionalProperties": false,
+ "description": "parts.json: every piece of the full drone, for the 3D explorer's cards.",
+ "properties": {
+  "schema_version": {
+   "title": "Schema Version",
+   "type": "integer"
+  },
+  "glb": {
+   "title": "Glb",
+   "type": "string"
+  },
+  "pieces": {
+   "items": {
+    "$ref": "#/$defs/Piece"
+   },
+   "title": "Pieces",
+   "type": "array"
+  }
+ },
+ "required": [
+  "schema_version",
+  "glb",
+  "pieces"
+ ],
+ "title": "Parts",
+ "type": "object"
+}

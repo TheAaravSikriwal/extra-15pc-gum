@@ -35,13 +35,19 @@ def route_diameters(design: ConnectionList, parts) -> dict[str, float]:
     return {route: bundle_diameter(sizes) for route, sizes in inside.items()}
 
 
-def route_shares(design: ConnectionList, working: dict) -> dict:
-    """{(setup, case): {route: share}}: each route at its hardest working wire, from
-    thermal.wire_working."""
+def route_wires(design: ConnectionList) -> dict[str, tuple[str, ...]]:
+    """{route: the labels of the wires run through it}, in the connection list's order."""
     inside: dict[str, list[str]] = {}
     for run in design.wires:
         if run.route is not None:
             inside.setdefault(run.route, []).append(run.label)
+    return {route: tuple(labels) for route, labels in inside.items()}
+
+
+def route_shares(design: ConnectionList, working: dict) -> dict:
+    """{(setup, case): {route: share}}: each route at its hardest working wire, from
+    thermal.wire_working."""
+    inside = route_wires(design)
     return {
         key: {
             route: max(shares.get(label, 0.0) for label in labels)

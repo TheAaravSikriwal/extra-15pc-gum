@@ -227,6 +227,20 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="write up the sweep's top pick instead of the build file's build",
     )
+    site = commands.add_parser(
+        "site",
+        help="The project site's data: every report into the files the site reads.",
+        description="The project site's data: every report into the files the site reads.",
+    )
+    site.add_argument("--reports", type=Path, default=Path("docs/reports"))
+    site.add_argument("--out", type=Path, default=Path("site/public/data"))
+    site.add_argument(
+        "--schema",
+        type=Path,
+        nargs="?",
+        const=Path("site/schema"),
+        help="also export the data's shapes as JSON Schema (default folder: site/schema)",
+    )
     validate = commands.add_parser(
         "validate",
         help="The honesty check: the model against published builds and cell curves.",
@@ -776,6 +790,27 @@ def run_ground(args) -> int:
     return 0
 
 
+def run_site(args) -> int:
+    import subprocess
+
+    from pcs14.site import data
+
+    try:
+        commit = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True,
+                                text=True, check=True).stdout.strip() or None  # fmt: skip
+    except (OSError, subprocess.CalledProcessError):
+        commit = None
+    written = data.write_all(args.out, args.reports, commit)
+    if args.schema is not None:
+        written += data.write_schema(args.schema)
+    index = data.load(Path(args.out) / "index.json", data.schema.Index)
+    missing = [name for name, r in index.reports.items() if not r.found]
+    print(f"Wrote {len(written)} files to {Path(args.out).resolve()}")
+    if missing:
+        print("Not there yet: " + ", ".join(missing))
+    return 0
+
+
 COMMANDS = {
     "size": run_size,
     "sweep": run_sweep,
@@ -786,4 +821,5 @@ COMMANDS = {
     "flight-sim": run_flight_sim,
     "tunnel": run_tunnel,
     "ground": run_ground,
+    "site": run_site,
 }

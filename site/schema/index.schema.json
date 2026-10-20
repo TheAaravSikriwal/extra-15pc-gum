@@ -1,0 +1,93 @@
+{
+ "$defs": {
+  "ReportFound": {
+   "additionalProperties": false,
+   "properties": {
+    "file": {
+     "title": "File",
+     "type": "string"
+    },
+    "found": {
+     "title": "Found",
+     "type": "boolean"
+    },
+    "generated": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Generated"
+    },
+    "verdict": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Verdict"
+    }
+   },
+   "required": [
+    "file",
+    "found"
+   ],
+   "title": "ReportFound",
+   "type": "object"
+  }
+ },
+ "additionalProperties": false,
+ "description": "index.json: what was made, from which commit and which reports.",
+ "properties": {
+  "schema_version": {
+   "title": "Schema Version",
+   "type": "integer"
+  },
+  "generated": {
+   "title": "Generated",
+   "type": "string"
+  },
+  "commit": {
+   "anyOf": [
+    {
+     "type": "string"
+    },
+    {
+     "type": "null"
+    }
+   ],
+   "title": "Commit"
+  },
+  "reports": {
+   "additionalProperties": {
+    "$ref": "#/$defs/ReportFound"
+   },
+   "title": "Reports",
+   "type": "object"
+  },
+  "files": {
+   "items": {
+    "type": "string"
+   },
+   "title": "Files",
+   "type": "array"
+  }
+ },
+ "required": [
+  "schema_version",
+  "generated",
+  "commit",
+  "reports",
+  "files"
+ ],
+ "title": "Index",
+ "type": "object"
+}

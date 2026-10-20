@@ -21,7 +21,7 @@ The data side is Python because the data is: the reports, the CAD's exports and 
 - **The meshes get thinned on the site's side, with gltfpack** (meshoptimizer's, MIT), in the site's build. It's a JavaScript-world tool for a JavaScript-world file, and the CAD's GLB stays as the CAD makes it. The size budget is set after measuring what gltfpack does to the 28 MB GLB (task 4).
 - **The scene is tested through @react-three/test-renderer** (MIT): it builds the three.js scene graph without a GPU, so the tests can check that a click on a part opens its card and that switching a module off hides its parts. The picture itself gets checked by eye, with screenshots in the log.
 - **Both firmwares on one playback page.** Decisions say my firmware's plots are laid over PX4's on the same test, so a flight's page plays both runs on the same clock, two drones, two sets of lines.
-- **The data files carry a schema version,** and the site refuses a file with the wrong one, saying which command makes the right one. pytest checks the files against the same shapes the site's TypeScript types describe (one JSON Schema file, `site/schema/`, read by both).
+- **The data files carry a schema version,** and the site refuses a file with the wrong one, saying which command makes the right one. The shapes are pydantic models (`pcs14.site.schema`; pydantic is already a dependency, so no JSON Schema validator joins it): `pcs14 site` builds the files through them, pytest reads them back through them, and `pcs14 site --schema` exports them as JSON Schema into `site/schema/` for the site's TypeScript. A test fails when the exported copy goes stale.
 - **The laptop can do most of this.** Nothing here needs the GPU. The one exception is the flights' data: the logs aren't in the repo (`*.ulg` is gitignored), so the playback files get made on the PC, which has them.
 
 ## The tasks
@@ -48,4 +48,5 @@ The data side is Python because the data is: the reports, the CAD's exports and 
 
 | Date | Tasks | Notes |
 |---|---|---|
+| 2026-10-20 | 1 and 2 done, 3's code in | `pcs14 site` writes `index.json` (each report found or not, from which commit) and `spec.json` (every combination's weights, checks and speeds, and the parts list with counts), through pydantic models exported to `site/schema/`. For task 3 the CAD report now lists its pieces, named as the GLB names its nodes, and the electrical report lists the wires along each CAD route; `parts.json` and `wires.json` get written once both reports are rerun. Task 4 needs `npm install`, which downloads the site's packages, so it waits for my yes |
 | 2026-10-20 | none yet | Plan written |

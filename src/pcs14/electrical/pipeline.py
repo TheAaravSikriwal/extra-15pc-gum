@@ -13,7 +13,7 @@ from pcs14.electrical import report, thermal, tools
 from pcs14.electrical.checks import check_design, design_context
 from pcs14.electrical.diagrams import Sources, pin_map_markdown, power_tree_markdown
 from pcs14.electrical.loads import solve_all
-from pcs14.electrical.routes import route_shares
+from pcs14.electrical.routes import route_shares, route_wires
 
 EVERYTHING = frozenset({"V", "P", "C"})
 
@@ -143,6 +143,7 @@ def to_run(a: Analysis) -> report.ElectricalRun:
         heat=heat,
         switch=switch,
         route_shares=route_shares(design, a.working),
+        routes=route_wires(design),
         wire_amps={key: dict(s.wires) for key, s in a.solutions.items()},
         power_tree=tree,
         pin_maps=pin_maps,

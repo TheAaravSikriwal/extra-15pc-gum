@@ -15,7 +15,7 @@ def made_up_run():
     from pcs14.cad.checks import CombinationResult, Finding
     from pcs14.cad.mass import MassProperties
     from pcs14.cad.printed import PrintedPart
-    from pcs14.cad.report import CadRun, Estimate, ExistingRow, HardwareRow
+    from pcs14.cad.report import CadRun, Estimate, ExistingRow, HardwareRow, PieceRow
 
     inertia = ((0.016, 0.0, 0.0), (0.0, 0.019, 0.0), (0.0, 0.0, 0.026))
     passing = CombinationResult(
@@ -91,6 +91,10 @@ def made_up_run():
         ),
         exports=("outputs/cad/drone.step", "outputs/cad/drone.glb"),
         hardware=(HardwareRow("landing-legs", "M3 x 12 screw", 8, "steel", 1.034),),
+        pieces=(
+            PieceRow("frame", "frame", "base", 343.0, "testco-frame", False),
+            PieceRow("prop front left", "prop", "base", 16.8, "testco-prop", True),
+        ),
     )
 
 
@@ -121,6 +125,10 @@ def test_the_data_file_matches_the_results(run):
     }
     assert data["printed_parts"][0]["mass_g"] == pytest.approx(13.4)
     assert data["wire_lengths_mm"]["battery leads"] == pytest.approx(123.4)
+    # every piece, named as the GLB names its node, for the project site's explorer
+    prop = {"name": "prop front left", "kind": "prop", "module": "base", "mass_g": 16.8,
+            "part_id": "testco-prop", "moving": True}  # fmt: skip
+    assert data["pieces"][1] == prop
     json.dumps(data)  # it has to be plain JSON
 
 

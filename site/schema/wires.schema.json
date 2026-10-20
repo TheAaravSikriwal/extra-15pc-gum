@@ -1,0 +1,85 @@
+{
+ "$defs": {
+  "Route": {
+   "additionalProperties": false,
+   "properties": {
+    "name": {
+     "title": "Name",
+     "type": "string"
+    },
+    "node": {
+     "title": "Node",
+     "type": "string"
+    },
+    "wires": {
+     "items": {
+      "$ref": "#/$defs/Wire"
+     },
+     "title": "Wires",
+     "type": "array"
+    },
+    "heating_share": {
+     "additionalProperties": {
+      "additionalProperties": {
+       "type": "number"
+      },
+      "type": "object"
+     },
+     "title": "Heating Share",
+     "type": "object"
+    }
+   },
+   "required": [
+    "name",
+    "node",
+    "wires",
+    "heating_share"
+   ],
+   "title": "Route",
+   "type": "object"
+  },
+  "Wire": {
+   "additionalProperties": false,
+   "properties": {
+    "label": {
+     "title": "Label",
+     "type": "string"
+    },
+    "ends": {
+     "items": {
+      "type": "string"
+     },
+     "title": "Ends",
+     "type": "array"
+    }
+   },
+   "required": [
+    "label",
+    "ends"
+   ],
+   "title": "Wire",
+   "type": "object"
+  }
+ },
+ "additionalProperties": false,
+ "description": "wires.json: the CAD's wire routes, what runs along each and how hard it works.",
+ "properties": {
+  "schema_version": {
+   "title": "Schema Version",
+   "type": "integer"
+  },
+  "routes": {
+   "items": {
+    "$ref": "#/$defs/Route"
+   },
+   "title": "Routes",
+   "type": "array"
+  }
+ },
+ "required": [
+  "schema_version",
+  "routes"
+ ],
+ "title": "Wires",
+ "type": "object"
+}

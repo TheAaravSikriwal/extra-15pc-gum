@@ -43,3 +43,7 @@ desktop.ini
 .idea/
 .claude/launch.json
 cad/cache/
+
+# The project site: its data is generated (pcs14 site) and its build is an output
+site/public/data/
+site/node_modules/

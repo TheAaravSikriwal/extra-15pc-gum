@@ -46,6 +46,19 @@ class HardwareRow:
 
 
 @dataclass(frozen=True)
+class PieceRow:
+    """One piece of the full drone, named as the GLB names its node (the project site's
+    explorer matches them up)."""
+
+    name: str
+    kind: str  # frame, motor, prop, pack, bought, printed or wire
+    module: str  # base, V, P or C
+    mass_g: float
+    part_id: str | None
+    moving: bool
+
+
+@dataclass(frozen=True)
 class CadRun:
     build_label: str
     results: tuple[CombinationResult, ...]
@@ -56,6 +69,7 @@ class CadRun:
     existing: tuple[ExistingRow, ...]
     exports: tuple[str, ...]
     hardware: tuple[HardwareRow, ...] = ()
+    pieces: tuple[PieceRow, ...] = ()  # the full drone's, as the GLB has them
 
     @property
     def passed(self) -> bool:
@@ -132,6 +146,10 @@ def run_cad(drone: Drone, setups, cache: Path = existing_cad.CACHE, recorder=Non
         existing=tuple(rows),
         exports=(),
         hardware=hardware,
+        pieces=tuple(
+            PieceRow(p.name, p.kind, p.module, round(p.mass * 1000, 3), p.part_id, p.moving)
+            for p in full.pieces
+        ),
     )
     if recorder is not None:
         _record(drone, setups, results, recorder)
@@ -397,6 +415,7 @@ def to_data(run: CadRun, generated: str | None = None) -> dict:
             }
             for r in run.results
         ],
+        "pieces": [vars(p) for p in run.pieces],
         "printed_parts": [
             {
                 "name": p.name,
