@@ -51,6 +51,7 @@ CONNECT_S = 90.0  # wall seconds for PX4 to boot, spawn the model and talk
 # the relay). PX4's own default, scaled by the sim speed, is 1 s of real time
 OFFBOARD_LOSS_S = 3.0
 STALL_S = 30.0  # wall seconds PX4's clock may stand still before the run counts as hung
+FIRMWARES = ("px4", "mine")  # what flies: PX4 v1.17.0, or my own (firmware/, step 5)
 GZ_SYSTEM_PYTHON = "/usr/lib/python3/dist-packages"  # where Ubuntu's python3-gz-* packages go
 GZ_MSGS = "gz.msgs10"  # Harmonic's message package
 CONNECT_TOPIC_S = 2.0  # wall seconds a new publisher waits for Gazebo to hear about it
@@ -170,6 +171,25 @@ def px4_environment(model_name: str, params: dict, models, speed: float = 1.0, b
     for name, value in {**params, **RUN_PARAMS}.items():
         environ[f"PX4_PARAM_{name}"] = _number(value)
     return environ
+
+
+def params_text(params: dict) -> str:
+    """The parameters for my firmware's sim layer: "NAME value" lines, an int32 written
+    without a decimal point and a float with one, the way pcs14_sitl tells them apart."""
+    lines = []
+    for name, value in sorted(params.items()):
+        text = str(int(value)) if isinstance(value, (bool, int)) else repr(float(value))
+        lines.append(f"{name} {text}")
+    return "\n".join(lines) + "\n"
+
+
+def sitl_command(binary, entity: str, airframe, instance: int, params) -> list[str]:
+    """My firmware's sim layer, flying Gazebo's `entity`, on PX4's ports for `instance`."""
+    return [
+        Path(binary).as_posix(), "--world", WORLD, "--model", entity,
+        "--airframe", Path(airframe).as_posix(), "--instance", str(instance),
+        "--params", Path(params).as_posix(), "--log", "log/sitl.ulg",
+    ]  # fmt: skip
 
 
 def gz_command(world, verbose: int = 2) -> list[str]:
@@ -440,7 +460,11 @@ class Session:
         instance: int = 0,
         speed: float = 1.0,
         work: Path | None = None,
+        firmware: str = "px4",
     ):
+        if firmware not in FIRMWARES:
+            raise ValueError(f"no firmware called {firmware}: there's {', '.join(FIRMWARES)}")
+        self.firmware = firmware
         self.tools, self.model, self.params = tools, model, params
         self.exports, self.scenario = Path(exports), scenario
         self.instance, self.speed = instance, speed
@@ -563,11 +587,14 @@ class Session:
         if before_px4 is not None:
             await self.wait_for_world()
             await before_px4(self)
-        environ = px4_environment(self.model, self.params, models, self.speed, base=self.gz_env)
-        await self._spawn(
-            px4_command(self.tools, self.folder, self.instance), "px4", env=environ,
-            cwd=self.folder,
-        )  # fmt: skip
+        if self.firmware == "mine":
+            await self._start_mine(models, world_ready=before_px4 is not None)
+        else:
+            environ = px4_environment(self.model, self.params, models, self.speed, self.gz_env)
+            await self._spawn(
+                px4_command(self.tools, self.folder, self.instance), "px4", env=environ,
+                cwd=self.folder,
+            )  # fmt: skip
         await self.relay.start()
         self.drone = System(port=GRPC_PORT + self.instance)
         await self.drone.connect(system_address=f"udpin://127.0.0.1:{SDK_PORT + self.instance}")
@@ -598,6 +625,35 @@ class Session:
         # it's set here, once it's up
         await self.drone.param.set_param_float("COM_OF_LOSS_T", OFFBOARD_LOSS_S * self.speed)
         return self
+
+    async def _start_mine(self, models: Path, world_ready: bool):
+        """My firmware in PX4's place (step 5): the runner spawns the model the way PX4's
+        startup does, sets Gazebo's speed the same way, and hands the parameters over in a
+        file, PX4's names and all. pcs14_sitl then speaks MAVLink on PX4's ports for the same
+        instance, so the relay and MAVSDK can't tell the difference."""
+        import json
+
+        from pcs14.flight.firmware import sitl_binary
+
+        binary = sitl_binary()
+        if not binary.exists():
+            raise SimError(f"no pcs14_sitl at {binary}; run scripts/build-firmware.sh")
+        home = models / self.model
+        info = json.loads((home / "model.json").read_text())
+        if not world_ready:
+            await self.wait_for_world()
+        await self.spawn(home / "model.sdf", self.entity, (0.0, 0.0, info["lift_off_m"]))
+        if self.speed != 1:
+            await self.gz_service(
+                f"/world/{WORLD}/set_physics", "gz.msgs.Physics", "gz.msgs.Boolean",
+                f"real_time_factor: {_number(float(self.speed))}",
+            )  # fmt: skip
+        params = self.folder / "params.txt"
+        params.write_text(params_text({**self.params, **RUN_PARAMS}), encoding="utf-8")
+        await self._spawn(
+            sitl_command(binary, self.entity, home / "firmware.txt", self.instance, params),
+            "sitl", env=self.gz_env, cwd=self.folder,
+        )  # fmt: skip
 
     async def within(self, awaitable, sim_seconds: float) -> asyncio.Task:
         """Runs `awaitable` for up to `sim_seconds` on PX4's clock, and returns its task:

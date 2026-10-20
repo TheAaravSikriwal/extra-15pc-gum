@@ -48,3 +48,26 @@ def test_its_log_reads_like_px4s():
     assert flight.position[:, 2].max() > 1.0  # it climbed, by Gazebo's own account
     assert flight.rotor_speed.max() > 400
     assert ulog.tilt_of(flight.attitude).max() < 0.1  # rad
+
+
+def test_mavsdk_connects_reads_health_and_arms():
+    """The flight sim's own runner, with my firmware in PX4's place: MAVSDK connects through the
+    relay, sees a healthy vehicle with a home, sets its rates and a parameter, and arms it
+    (step 5, task 6)."""
+
+    async def fly():
+        s = run.Session(TOOLS, "pcs14_base", {"MC_ROLL_P": 9.0}, EXPORTS, "mavlink-check",
+                        instance=6, firmware="mine")  # fmt: skip
+        try:
+            await s.start()  # waits for the health and the home position, as with PX4
+            await s.drone.action.arm()
+            armed = await s.clock.until(lambda: s.state.armed, 5.0)
+            mode = s.state.mode
+            await s.drone.action.disarm()
+            return armed, mode
+        finally:
+            await s.stop()
+
+    armed, mode = asyncio.run(fly())
+    assert armed
+    assert mode == "ACRO"

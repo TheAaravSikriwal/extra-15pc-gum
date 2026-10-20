@@ -126,7 +126,8 @@ async def rate_check(tools, exports, model: str, climb_s=3.0, hold_s=10.0, insta
         await session.spawn(home / "model.sdf", session.entity, (0.0, 0.0, info["lift_off_m"]))
         truth = GroundTruth(transport, session.partition, session.entity)
         command = [str(binary), "--world", WORLD, "--model", session.entity,
-                   "--airframe", str(home / "firmware.txt")]  # fmt: skip
+                   "--airframe", str(home / "firmware.txt"), "--instance", str(instance),
+                   "--stdin"]  # fmt: skip
         # it runs in the run's folder and logs under log/, where the runner collects PX4's
         process = await session._spawn(
             command, "sitl", env=session.gz_env, cwd=session.folder,

@@ -85,7 +85,7 @@ This is the live version. When a step finishes, its outcome goes here, with a li
 |---|---|---|---|
 | 5a. Talk | The language, the shape of the code, how it talks to the flight sim, the estimator, the safety monitor | Done, 2026-10-20 | C++17, a hardware-free core, PX4's MAVLink dialect and ULog, Mahony's filter first ([spec](docs/specs/2026-10-20-firmware.md)) |
 | 5b. Plan | The implementation plan | Done, 2026-10-20 | 13 test-first tasks, from the build to a ground station ([plan](docs/plans/2026-10-20-firmware.md)) |
-| 5c. Build | Test-first, task by task | In progress | Tasks 1 to 3 done: the CMake tree with doctest and a CI job under the sanitizers, the math, Mahony's attitude filter, a PID per axis, and the quad X mixer that gives up yaw before roll and pitch. Tasks 4 and 5 done: the sim layer flies rate mode in Gazebo (level within 0.02 degrees for 13 s), and the ULog writer's logs read through the graders' own reader. Up next: MAVLink, PX4's dialect (task 6) |
+| 5c. Build | Test-first, task by task | In progress | Tasks 1 to 3 done: the CMake tree with doctest and a CI job under the sanitizers, the math, Mahony's attitude filter, a PID per axis, and the quad X mixer that gives up yaw before roll and pitch. Tasks 4 and 5 done: the sim layer flies rate mode in Gazebo (level within 0.02 degrees for 13 s), and the ULog writer's logs read through the graders' own reader. Task 6 done: it speaks PX4's MAVLink, and the flight sim's runner flies it in PX4's place, so MAVSDK connects, reads it as healthy and arms it. Up next: self-level and altitude hold (task 7) |
 
 ## Modules
 

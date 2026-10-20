@@ -3,6 +3,7 @@
 
 #include <common/mavlink.h>
 
+#include <algorithm>
 #include <cmath>
 #include <cstring>
 #include <map>
@@ -85,7 +86,8 @@ struct Link::Impl {
   void param_value(size_t index) {
     const Params::Param& p = params.at(index);
     mavlink_param_value_t v{};
-    std::strncpy(v.param_id, p.name.c_str(), sizeof(v.param_id));
+    // MAVLink's names fill all 16 bytes without a terminator when they're that long
+    std::memcpy(v.param_id, p.name.data(), std::min(p.name.size(), sizeof(v.param_id)));
     if (p.type == Params::Type::Float) {
       v.param_type = MAV_PARAM_TYPE_REAL32;
       v.param_value = p.f;
@@ -435,7 +437,7 @@ void Link::update(const Telemetry& t) {
 void Link::status_text(uint8_t severity, const char* text) {
   mavlink_statustext_t s{};
   s.severity = severity;
-  std::strncpy(s.text, text, sizeof(s.text));
+  std::memcpy(s.text, text, std::min(std::strlen(text), sizeof(s.text)));
   mavlink_message_t msg;
   mavlink_msg_statustext_encode(impl_->system, impl_->component, &msg, &s);
   impl_->out(msg);

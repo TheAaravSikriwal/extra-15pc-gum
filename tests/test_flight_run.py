@@ -242,3 +242,21 @@ def test_topics_publish_in_our_partition_and_reuse_each_publisher():
     assert topics.node.options.partition == "pcs14_1_0"
     assert topics.node.advertised == [("/pcs14/wind", "Vector3d")]
     assert [m.text for m in sent] == ["x: 2", "x: 4"]
+
+
+def test_my_firmware_gets_its_parameters_with_their_types():
+    text = run.params_text({"MC_ROLL_P": 9.0, "CA_ROTOR_COUNT": 4, "SDLOG_MODE": 2})
+    assert text.splitlines() == ["CA_ROTOR_COUNT 4", "MC_ROLL_P 9.0", "SDLOG_MODE 2"]
+
+
+def test_my_firmware_runs_on_px4s_ports_for_its_instance():
+    command = run.sitl_command("/b/pcs14_sitl", "pcs14_base_3", "/m/firmware.txt", 3, "/r/p.txt")
+    assert command[0] == "/b/pcs14_sitl"
+    assert command[command.index("--instance") + 1] == "3"
+    assert command[command.index("--model") + 1] == "pcs14_base_3"
+    assert "--stdin" not in command
+
+
+def test_only_known_firmware_flies():
+    with pytest.raises(ValueError, match="no firmware called betaflight"):
+        run.Session(run.toolchain(), "pcs14_base", {}, "out", "smoke", firmware="betaflight")
