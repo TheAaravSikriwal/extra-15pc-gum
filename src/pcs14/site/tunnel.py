@@ -53,7 +53,10 @@ def tunnel_data(source, out) -> schema.Tunnel:
         stills.append(schema.TunnelStill(file=file, **{k: s[k] for k in (
             "case", "view", "title", "subtitle", "number", "caption")}))  # fmt: skip
     cases = []
-    for folder in sorted(p for p in source.iterdir() if p.is_dir()) if source.is_dir() else []:
+    found = sorted(p for p in source.iterdir() if p.is_dir()) if source.is_dir() else []
+    # the cruise first, then the crosswind and the hover, the way the stills go
+    order = {"cruise": 0, "crosswind": 1, "hover": 2}
+    for folder in sorted(found, key=lambda p: order.get(p.name.rsplit("-", 1)[-1], 9)):
         frames = []
         for f in tunnel.playback(folder):
             files = {}

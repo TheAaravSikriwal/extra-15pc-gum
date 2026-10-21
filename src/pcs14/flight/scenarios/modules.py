@@ -9,9 +9,14 @@ loop is mine. None of them is in step 4's matrix: each runs when it's named.
 - drop from N m (Max, the heaviest): flight termination at 10, 15, 20 and 30 m, to find how
   low the chute still saves it (40 m is step 4's parachute drop)
 - chute rule (no P): a take-off asked for 40 m; my firmware's parachute rule holds it at 30 m
+- halow range (V): 10 m up, out 7 km north at 15 m/s and back, with the ground station's link
+  through the HaLow model (pcs14.flight.run.HalowLink): what reaches the laptop fades with
+  distance as the model says, and the drone flies on regardless, because its pilot's link and
+  its companion computer's aren't HaLow
 """
 
 import asyncio
+import math
 import os
 import signal
 
@@ -25,6 +30,11 @@ SAMPLE_S = 0.02  # wall time between ground-truth samples while the flight contr
 DROP_HEIGHTS = (10.0, 15.0, 20.0, 30.0)
 RULE_ASKED_M = 40.0
 RULE_CEILING_M = 30.0
+# low enough that the link's edge comes inside a battery's flight: 10 m up, the model's slowest
+# rate gives out about 5.5 km away over flat ground
+HALOW_HEIGHT_M = 10.0
+HALOW_OUT_M = 7000.0
+HALOW_SPEED_MS = 15.0
 
 
 # --- hung flight controller --------------------------------------------------------------
@@ -190,6 +200,84 @@ def grade_chute_rule(log, imu, c) -> list:
     return [grade.Finding("chute rule ceiling", ok, peak, RULE_CEILING_M + 1.0, "m", words)]
 
 
+# --- HaLow's range ------------------------------------------------------------------------
+
+
+async def halow_range(s):
+    from mavsdk.offboard import PositionNedYaw, VelocityNedYaw
+
+    from pcs14.flight.run import GCS_PORT, HalowLink
+    from pcs14.flight.scenarios.basic import leave_offboard, offboard_here
+    from pcs14.modules.halow import Link
+
+    model = Link()
+
+    def distance() -> float:
+        return math.hypot(s.state.north, s.state.east)
+
+    def loss() -> float:
+        return model.packet_loss(max(distance(), 1.0), max(s.state.height, 1.0))
+
+    link = HalowLink(GCS_PORT + s.instance, loss=loss, now=lambda: s.clock.now, distance=distance)
+    await link.start()
+    try:
+        await take_off(s, HALOW_HEIGHT_M)
+        await offboard_here(s)
+        heading = s.state.heading
+        s.mark("out")
+        await s.drone.offboard.set_velocity_ned(VelocityNedYaw(HALOW_SPEED_MS, 0, 0, heading))
+        await s.clock.until(lambda: s.state.north >= HALOW_OUT_M, 2 * HALOW_OUT_M / HALOW_SPEED_MS)
+        s.mark("back")
+        await s.drone.offboard.set_velocity_ned(VelocityNedYaw(-HALOW_SPEED_MS, 0, 0, heading))
+        await s.clock.until(lambda: s.state.north <= 30.0, 2 * HALOW_OUT_M / HALOW_SPEED_MS)
+        await s.drone.offboard.set_position_ned(PositionNedYaw(0, 0, -HALOW_HEIGHT_M, heading))
+        await s.clock.until(lambda: distance() < 2.0 and s.state.speed < 0.5, 60.0)
+        await leave_offboard(s)
+        await s.drone.action.land()
+        await s.clock.until(lambda: not s.state.in_air, 90.0)
+    finally:
+        link.close()
+        s.result.notes["link"] = [(b.t, b.distance_m, b.sent, b.delivered) for b in link.seconds]
+
+
+def half_lost_m(height_m: float) -> float:
+    """Where the model loses half the packets on its slowest rate: 2 log10(5), 1.4 dB, under
+    its rated sensitivity (where it loses a tenth)."""
+    from pcs14.modules.halow import Link
+
+    return Link().reach_m(0, height_m, margin_db=-2 * math.log10(5))
+
+
+def grade_link(seconds, height_m: float = HALOW_HEIGHT_M) -> list:
+    """Where the share of the drone's datagrams reaching the laptop first falls under half,
+    against where the model loses half of them."""
+    edge = half_lost_m(height_m)
+    out = [(d, got / sent) for _, d, sent, got in seconds if sent >= 5]
+    faded = next((d for d, share in out if share < 0.5), None)
+    if faded is None:
+        return [grade.Finding("link fades where the model says", False, None, edge, "m",
+                              "the link never faded")]  # fmt: skip
+    ok = abs(faded - edge) / edge < 0.1
+    return [grade.Finding("link fades where the model says", ok, faded, edge, "m",
+                          f"under half got through from {faded:.0f} m, against the model's "
+                          f"{edge:.0f} m")]  # fmt: skip
+
+
+def grade_halow_range(log, imu, c) -> list:
+    import numpy as np
+
+    # the height it actually flew out at, for the model
+    out_at, back_at = log.when("out"), log.when("back")
+    height = HALOW_HEIGHT_M
+    if out_at is not None and back_at is not None:
+        leg = (log.t > out_at) & (log.t < back_at)
+        if leg.any():
+            height = float(np.median(log.position[leg, 2]))
+    out = grade_link(c.notes.get("link", []), height)
+    out.append(grade.ends_safely(log, 5.0))
+    return out
+
+
 SCENARIOS = (
     # no `failure` mark: the batch's trigger check reads the flight controller's IMU, which is
     # frozen here; grade_hung reads the monitor's own triggers instead
@@ -199,4 +287,6 @@ SCENARIOS = (
                healthy=False, failure="terminate") for h in DROP_HEIGHTS),
     Scenario("chute rule", chute_rule, grade_chute_rule, budget_s=240.0,
              params=chute_rule_params),
+    Scenario("halow range", halow_range, grade_halow_range,
+             budget_s=2 * HALOW_OUT_M / HALOW_SPEED_MS + 300.0),
 )  # fmt: skip

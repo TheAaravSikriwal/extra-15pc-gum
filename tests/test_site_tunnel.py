@@ -31,6 +31,10 @@ def made_up_tunnel(folder):
             Image.fromarray((rng.random((1080, 1920, 3)) * 255).astype("uint8")).save(
                 run / f"play-{view}-{step:09d}.png")  # fmt: skip
     (folder / "Max-hover").mkdir()  # a case run before the frames: stills only
+    (folder / "Max-crosswind").mkdir()
+    (folder / "Max-crosswind" / "frames.txt").write_text("100 0.01\n", encoding="utf-8")
+    Image.fromarray((rng.random((108, 192, 3)) * 255).astype("uint8")).save(
+        folder / "Max-crosswind" / "play-side-speed-000000100.png")  # fmt: skip
 
 
 def test_the_tunnel_page_gets_its_stills_and_its_frames_in_order(tmp_path):
@@ -41,8 +45,9 @@ def test_the_tunnel_page_gets_its_stills_and_its_frames_in_order(tmp_path):
     assert still.title == "The drag lines" and still.case == "Max-cruise"
     assert still.file == "tunnel/Max-cruise-side-streamlines.jpg"  # the wide one
     assert (out / still.file).is_file()
-    (case,) = found.cases  # the hover has no frames yet
+    case, crosswind = found.cases  # the hover has no frames yet
     assert case.name == "Max-cruise" and case.label == "Cruise"
+    assert crosswind.label == "Crosswind"  # after the cruise, not before it
     assert [f.step for f in case.frames] == [100, 200, 300]
     assert [f.t_s for f in case.frames] == [0.01, 0.02, 0.03]
     first = out / case.frames[0].files["side-speed"]

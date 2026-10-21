@@ -17,6 +17,7 @@ from dataclasses import dataclass
 import numpy as np
 
 from pcs14.flight.drag import G
+from pcs14.flight.grade import STEADY_BAND
 from pcs14.sizing.drag import AIR_DENSITY
 
 OPENING_FORCE_COEFFICIENT = 1.7  # Cx: a solid flat canopy at infinite mass (Knacke)
@@ -46,3 +47,36 @@ def peak_pull(t, vz, mass_kg: float, since: float, until: float) -> Pull:
     k = int(np.flatnonzero(inside)[np.argmax(pull[inside])])
     return Pull(force_n=float(pull[k]), g=float(pull[k] / (mass_kg * G)), at=float(t[k]),
                 speed_ms=float(-vz[inside][0]))  # fmt: skip
+
+
+@dataclass(frozen=True)
+class Drop:
+    height_lost_m: float  # from the firing to the steady descent
+    descent_ms: float  # the steady descent under the open canopy
+    speed_at_open_ms: float  # how fast it fell as the canopy finished filling
+
+
+def drop(chute, mass_kg: float, rho: float = AIR_DENSITY, dt: float = 0.001,
+         band: float = STEADY_BAND) -> Drop:  # fmt: skip
+    """A drop from still air in one dimension, the flight sim's canopy model (pcs14.flight.drag):
+    nothing during the ejection, then the drag area growing in a straight line over the
+    opening. The height lost runs from the firing to where the fall steadies within `band` of
+    its final speed, the flight sim's graders' band. The drone's own drag is left out, which errs
+    on losing more height."""
+    import math
+
+    steady = math.sqrt(2 * mass_kg * G / (rho * chute.canopy_area))
+    t = v = z = 0.0  # v down, positive
+    at_open = None
+    while True:
+        area = chute.area(t)
+        a = G - 0.5 * rho * area * v * v / mass_kg
+        v += a * dt
+        z += v * dt
+        t += dt
+        if at_open is None and t >= chute.ejection_s + chute.opening_s:
+            at_open = v
+        if at_open is not None and abs(v - steady) <= band * steady:
+            return Drop(height_lost_m=z, descent_ms=steady, speed_at_open_ms=at_open)
+        if t > 60:
+            raise ValueError("the fall never steadied")

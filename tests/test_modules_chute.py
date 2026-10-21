@@ -25,3 +25,19 @@ def test_the_peak_from_a_flight_is_the_canopys_pull_on_the_drone():
     assert peak.g == pytest.approx(peak.force_n / (2.6 * G))
     assert 1.0 <= peak.at <= 1.5
     assert peak.speed_ms == pytest.approx(12.0, abs=0.2)  # how fast it fell into the opening
+
+
+def test_a_drop_in_one_dimension_matches_the_flight_sim():
+    from pcs14.flight.drag import Chute
+
+    # Max, 2.37 kg, under the Harrier's canopy with the catalog's 0.2 s and 1.0 s: the flight sim
+    # lost 4.4 to 5.2 m before settling at about 4.4 m/s from every height
+    harrier = Chute(canopy_area=2 * 2.5 * G / (1.225 * 4.6**2), ejection_s=0.2, opening_s=1.0)
+    drop = chute.drop(harrier, mass_kg=2.37)
+    assert 4.0 < drop.height_lost_m < 5.5
+    assert drop.descent_ms == pytest.approx(4.4, abs=0.2)
+    # a canopy that fills more slowly costs height, never saves it
+    slower = [chute.drop(Chute(harrier.canopy_area, 0.2, s), 2.37).height_lost_m
+              for s in (1.0, 1.5, 2.0, 3.0)]  # fmt: skip
+    assert slower == sorted(slower)
+    assert slower[-1] > 2 * slower[0]

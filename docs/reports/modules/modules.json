@@ -1,0 +1,584 @@
+{
+ "generated": "2026-10-20",
+ "verdict": "pass",
+ "runs": [
+  {
+   "scenario": "chute rule",
+   "setup": "base",
+   "passed": true,
+   "findings": [
+    {
+     "check": "chute rule ceiling",
+     "passed": true,
+     "value": 30.313481777906418,
+     "limit": 31.0,
+     "unit": "m",
+     "detail": "asked for 40 m without P, it went to 30.3 m",
+     "extra": null
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "chute rule",
+   "setup": "V",
+   "passed": true,
+   "findings": [
+    {
+     "check": "chute rule ceiling",
+     "passed": true,
+     "value": 30.307588040828705,
+     "limit": 31.0,
+     "unit": "m",
+     "detail": "asked for 40 m without P, it went to 30.3 m",
+     "extra": null
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "chute rule",
+   "setup": "C",
+   "passed": true,
+   "findings": [
+    {
+     "check": "chute rule ceiling",
+     "passed": true,
+     "value": 30.38449425250292,
+     "limit": 31.0,
+     "unit": "m",
+     "detail": "asked for 40 m without P, it went to 30.4 m",
+     "extra": null
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "chute rule",
+   "setup": "V+C",
+   "passed": true,
+   "findings": [
+    {
+     "check": "chute rule ceiling",
+     "passed": true,
+     "value": 30.287387296557426,
+     "limit": 31.0,
+     "unit": "m",
+     "detail": "asked for 40 m without P, it went to 30.3 m",
+     "extra": null
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "drop from 10 m",
+   "setup": "max",
+   "passed": true,
+   "findings": [
+    {
+     "check": "chute order",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "unit": "",
+     "detail": "the motors stopped 0.19 s before the canopy left",
+     "extra": null
+    },
+    {
+     "check": "chute height lost",
+     "passed": true,
+     "value": 4.983119964599609,
+     "limit": null,
+     "unit": "m",
+     "detail": "lost 5.0 m before settling at 4.5 m/s",
+     "extra": null
+    },
+    {
+     "check": "no fly-away",
+     "passed": true,
+     "value": 0.0018309581956194889,
+     "limit": 30.0,
+     "unit": "m",
+     "detail": "ended on the ground, 0 m from where it was then",
+     "extra": null
+    },
+    {
+     "check": "settled under the canopy",
+     "passed": true,
+     "value": 4.444629192352295,
+     "limit": null,
+     "unit": "m",
+     "detail": "lost 4.4 m, then came down at 4.5 m/s with 5.7 m to spare",
+     "extra": null
+    },
+    {
+     "check": "safety monitor",
+     "passed": true,
+     "value": 0.34399999999999764,
+     "limit": null,
+     "unit": "s",
+     "detail": "its free fall trigger would fire 0.34 s after the failure",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "drop from 15 m",
+   "setup": "max",
+   "passed": true,
+   "findings": [
+    {
+     "check": "chute order",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "unit": "",
+     "detail": "the motors stopped 0.19 s before the canopy left",
+     "extra": null
+    },
+    {
+     "check": "chute height lost",
+     "passed": true,
+     "value": 5.119338035583496,
+     "limit": null,
+     "unit": "m",
+     "detail": "lost 5.1 m before settling at 4.4 m/s",
+     "extra": null
+    },
+    {
+     "check": "no fly-away",
+     "passed": true,
+     "value": 0.005675075778515884,
+     "limit": 30.0,
+     "unit": "m",
+     "detail": "ended on the ground, 0 m from where it was then",
+     "extra": null
+    },
+    {
+     "check": "settled under the canopy",
+     "passed": true,
+     "value": 4.588627815246582,
+     "limit": null,
+     "unit": "m",
+     "detail": "lost 4.6 m, then came down at 4.4 m/s with 10.3 m to spare",
+     "extra": null
+    },
+    {
+     "check": "safety monitor",
+     "passed": true,
+     "value": 0.3440000000000012,
+     "limit": null,
+     "unit": "s",
+     "detail": "its free fall trigger would fire 0.34 s after the failure",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "drop from 20 m",
+   "setup": "max",
+   "passed": true,
+   "findings": [
+    {
+     "check": "chute order",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "unit": "",
+     "detail": "the motors stopped 0.19 s before the canopy left",
+     "extra": null
+    },
+    {
+     "check": "chute height lost",
+     "passed": true,
+     "value": 5.148618698120117,
+     "limit": null,
+     "unit": "m",
+     "detail": "lost 5.1 m before settling at 4.4 m/s",
+     "extra": null
+    },
+    {
+     "check": "no fly-away",
+     "passed": true,
+     "value": 0.02444842005686411,
+     "limit": 30.0,
+     "unit": "m",
+     "detail": "ended on the ground, 0 m from where it was then",
+     "extra": null
+    },
+    {
+     "check": "settled under the canopy",
+     "passed": true,
+     "value": 4.617613792419434,
+     "limit": null,
+     "unit": "m",
+     "detail": "lost 4.6 m, then came down at 4.4 m/s with 15.3 m to spare",
+     "extra": null
+    },
+    {
+     "check": "safety monitor",
+     "passed": true,
+     "value": 0.33999999999999986,
+     "limit": null,
+     "unit": "s",
+     "detail": "its free fall trigger would fire 0.34 s after the failure",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "drop from 30 m",
+   "setup": "max",
+   "passed": true,
+   "findings": [
+    {
+     "check": "chute order",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "unit": "",
+     "detail": "the motors stopped 0.19 s before the canopy left",
+     "extra": null
+    },
+    {
+     "check": "chute height lost",
+     "passed": true,
+     "value": 5.183544158935547,
+     "limit": null,
+     "unit": "m",
+     "detail": "lost 5.2 m before settling at 4.4 m/s",
+     "extra": null
+    },
+    {
+     "check": "no fly-away",
+     "passed": true,
+     "value": 0.030615022943411285,
+     "limit": 30.0,
+     "unit": "m",
+     "detail": "ended on the ground, 0 m from where it was then",
+     "extra": null
+    },
+    {
+     "check": "settled under the canopy",
+     "passed": true,
+     "value": 4.470670700073242,
+     "limit": null,
+     "unit": "m",
+     "detail": "lost 4.5 m, then came down at 4.4 m/s with 25.6 m to spare",
+     "extra": null
+    },
+    {
+     "check": "safety monitor",
+     "passed": true,
+     "value": 0.3440000000000012,
+     "limit": null,
+     "unit": "s",
+     "detail": "its free fall trigger would fire 0.34 s after the failure",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "hung flight controller",
+   "setup": "P",
+   "passed": true,
+   "findings": [
+    {
+     "check": "monitor cut",
+     "passed": true,
+     "value": 0.2880000000000038,
+     "limit": 0.3,
+     "unit": "s",
+     "detail": "cut 0.29 s after the hang",
+     "extra": null
+    },
+    {
+     "check": "chute order",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "unit": "",
+     "detail": "the motors stopped 0.98 s before the canopy left",
+     "extra": null
+    },
+    {
+     "check": "settled under the canopy",
+     "passed": true,
+     "value": 9.669910974434845,
+     "limit": null,
+     "unit": "m",
+     "detail": "lost 9.7 m, then came down at 4.1 m/s with 27.2 m to spare",
+     "extra": null
+    },
+    {
+     "check": "monitor's own trigger",
+     "passed": true,
+     "value": 0.6080000000000041,
+     "limit": null,
+     "unit": "s",
+     "detail": "its free-fall trigger fired 0.61 s after the hang (shadow mode: logged only)",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "hung flight controller",
+   "setup": "mission",
+   "passed": true,
+   "findings": [
+    {
+     "check": "monitor cut",
+     "passed": true,
+     "value": 0.2839999999999989,
+     "limit": 0.35,
+     "unit": "s",
+     "detail": "cut 0.28 s after the hang",
+     "extra": null
+    },
+    {
+     "check": "chute order",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "unit": "",
+     "detail": "the motors stopped 1.21 s before the canopy left",
+     "extra": null
+    },
+    {
+     "check": "settled under the canopy",
+     "passed": true,
+     "value": 11.120245736847227,
+     "limit": null,
+     "unit": "m",
+     "detail": "lost 11.1 m, then came down at 4.3 m/s with 24.0 m to spare",
+     "extra": null
+    },
+    {
+     "check": "monitor's own trigger",
+     "passed": true,
+     "value": 0.6039999999999992,
+     "limit": null,
+     "unit": "s",
+     "detail": "its free-fall trigger fired 0.60 s after the hang (shadow mode: logged only)",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "hung flight controller",
+   "setup": "P+C",
+   "passed": true,
+   "findings": [
+    {
+     "check": "monitor cut",
+     "passed": true,
+     "value": 0.27600000000000335,
+     "limit": 0.35,
+     "unit": "s",
+     "detail": "cut 0.28 s after the hang",
+     "extra": null
+    },
+    {
+     "check": "chute order",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "unit": "",
+     "detail": "the motors stopped 1.01 s before the canopy left",
+     "extra": null
+    },
+    {
+     "check": "settled under the canopy",
+     "passed": true,
+     "value": 9.686068774404777,
+     "limit": null,
+     "unit": "m",
+     "detail": "lost 9.7 m, then came down at 4.3 m/s with 27.1 m to spare",
+     "extra": null
+    },
+    {
+     "check": "monitor's own trigger",
+     "passed": true,
+     "value": 0.5960000000000036,
+     "limit": null,
+     "unit": "s",
+     "detail": "its free-fall trigger fired 0.60 s after the hang (shadow mode: logged only)",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "hung flight controller",
+   "setup": "max",
+   "passed": true,
+   "findings": [
+    {
+     "check": "monitor cut",
+     "passed": true,
+     "value": 0.28000000000000114,
+     "limit": 0.35,
+     "unit": "s",
+     "detail": "cut 0.28 s after the hang",
+     "extra": null
+    },
+    {
+     "check": "chute order",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "unit": "",
+     "detail": "the motors stopped 1.02 s before the canopy left",
+     "extra": null
+    },
+    {
+     "check": "settled under the canopy",
+     "passed": true,
+     "value": 10.302902432575454,
+     "limit": null,
+     "unit": "m",
+     "detail": "lost 10.3 m, then came down at 4.4 m/s with 26.2 m to spare",
+     "extra": null
+    },
+    {
+     "check": "monitor's own trigger",
+     "passed": true,
+     "value": 0.6000000000000014,
+     "limit": null,
+     "unit": "s",
+     "detail": "its free-fall trigger fired 0.60 s after the hang (shadow mode: logged only)",
+     "extra": null
+    }
+   ]
+  }
+ ],
+ "jolts": [
+  {
+   "setup": "P",
+   "speed_ms": 9.511037796085988,
+   "sim_n": 38.13814848247211,
+   "sim_g": 1.9097315512037571,
+   "bound_n": 178.176226630507,
+   "bound_g": 8.922005267956157
+  },
+  {
+   "setup": "mission",
+   "speed_ms": 11.36154512516802,
+   "sim_n": 46.25786172302299,
+   "sim_g": 2.1361253210757245,
+   "bound_n": 254.2545524286447,
+   "bound_g": 11.741130420027336
+  },
+  {
+   "setup": "P+C",
+   "speed_ms": 9.322124996189801,
+   "sim_n": 39.77543454860694,
+   "sim_g": 1.8449552245245937,
+   "bound_n": 171.16847683366143,
+   "bound_g": 7.939527982334534
+  },
+  {
+   "setup": "max",
+   "speed_ms": 9.709753210654839,
+   "sim_n": 43.36488241477484,
+   "sim_g": 1.865667203505797,
+   "bound_n": 185.69932526597876,
+   "bound_g": 7.989255857957821
+  }
+ ],
+ "opening": [
+  {
+   "opening_s": 0.5,
+   "height_lost_m": 2.0900988844428094,
+   "speed_at_open_ms": 4.633854989857964
+  },
+  {
+   "opening_s": 1.0,
+   "height_lost_m": 5.142315439381776,
+   "speed_at_open_ms": 5.00875843842015
+  },
+  {
+   "opening_s": 1.5,
+   "height_lost_m": 8.133624607219911,
+   "speed_at_open_ms": 4.912440765031684
+  },
+  {
+   "opening_s": 2.0,
+   "height_lost_m": 11.440578103471537,
+   "speed_at_open_ms": 4.802669032700239
+  },
+  {
+   "opening_s": 3.0,
+   "height_lost_m": 18.276430397889417,
+   "speed_at_open_ms": 4.678970295229108
+  }
+ ],
+ "halow": {
+  "10": {
+   "100": 7.2,
+   "500": 7.2,
+   "1000": 5.8,
+   "2000": 2.2,
+   "3000": 0.72,
+   "5000": 0.0,
+   "8000": 0.0
+  },
+  "30": {
+   "100": 7.2,
+   "500": 7.2,
+   "1000": 7.2,
+   "2000": 4.3,
+   "3000": 2.2,
+   "5000": 0.72,
+   "8000": 0.0
+  },
+  "120": {
+   "100": 7.2,
+   "500": 7.2,
+   "1000": 7.2,
+   "2000": 4.3,
+   "3000": 2.9,
+   "5000": 2.2,
+   "8000": 1.4
+  }
+ },
+ "companion": "Raspberry Pi 5 (4 GB)",
+ "unproven": [
+  "The canopy's timing. Fruity Chutes publishes no ejection or opening time, so the 0.2 s and 1.0 s the sim uses are my guesses, and the lowest height the chute saves the drone from rests on them (the table under the drop heights).",
+  "The opening jolt. The sim's canopy grows in a straight line and never overshoots, which real canopies do as they fill, so its number is low. The bound uses Knacke's infinite-mass opening coefficient, which is high for a drone this light under a canopy this big. The real number is between them.",
+  "A hung flight controller here is a frozen process. A real one could hang with its DShot outputs in any state, which the safety monitor's takeover of the lines has to win against; that's tested on the host, not on a board.",
+  "HaLow's range: line of sight over flat ground, with a 10 dB margin standing in for the drone's body, multipath and a laptop held low. No trees, hills or buildings. And the radio's numbers are Morse Micro's for its own module, not Heltec's for its card.",
+  "The companion computer's comparison is from published numbers, not measured on a board."
+ ]
+}

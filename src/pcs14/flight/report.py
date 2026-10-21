@@ -80,6 +80,8 @@ def applies(scenario: str, setup) -> bool:
         return setup.name == "max"
     if scenario == "chute rule":
         return "P" not in setup.modules
+    if scenario == "halow range":
+        return "V" in setup.modules
     return True
 
 

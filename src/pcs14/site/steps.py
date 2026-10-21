@@ -22,7 +22,7 @@ STEPS = (
     ("electrical", r"Electrical", "electrical/electrical.json", "electrical/stills"),
     ("flight-sim", r"Flight sim", "flight-sim/flight-sim.json", "flight-sim/stills"),
     ("firmware", r"firmware", None, None),
-    ("modules", r"Modules in sim", None, None),
+    ("modules", r"Modules in sim", "modules/modules.json", "modules/stills"),
     ("smart", r"Smart features", None, None),
     ("build", r"Build package", None, None),
     ("structure", r"Structure", None, None),
@@ -37,6 +37,7 @@ LOG_WORDS = (
     ("electrical", ("electrical",)),
     ("flight-sim", ("flight-sim", "first-flight")),
     ("firmware", ("firmware",)),
+    ("modules", ("modules",)),
     ("aero", ("wind-tunnel",)),
     ("site", ("project-site",)),
 )

@@ -18,6 +18,7 @@ REPORTS = {  # each report the site reads, by name, and its data file under the 
     "cad": "cad/cad.json",
     "electrical": "electrical/electrical.json",
     "flight-sim": "flight-sim/flight-sim.json",
+    "modules": "modules/modules.json",
 }
 
 

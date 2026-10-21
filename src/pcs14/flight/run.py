@@ -387,6 +387,58 @@ class Relay:
                 transport.close()
 
 
+GCS_PORT = 14550  # where my firmware sends its ground station MAVLink, plus the instance
+
+
+@dataclass
+class LinkSecond:
+    t: int  # s of the sim's clock
+    distance_m: float  # the drone's, from home, as the second began
+    sent: int = 0
+    delivered: int = 0
+
+
+class HalowLink:
+    """The ground station's end of the drone's HaLow link, in the sim. It listens where my
+    firmware sends its ground station MAVLink (14550 + instance), drops each datagram with the
+    HaLow model's packet loss at the drone's distance (`loss`), and counts what was sent and what
+    got through, a second of the sim's clock at a time. Nothing goes back up: the laptop's end
+    is only listening."""
+
+    def __init__(self, port: int, loss, now, distance, seed: int = 1, host: str = "127.0.0.1"):
+        import random
+
+        self.port, self.host = port, host
+        self.loss, self.now, self.distance = loss, now, distance
+        self.seconds: list[LinkSecond] = []
+        self._random = random.Random(seed)
+        self._transport = None
+
+    async def start(self):
+        link = self
+
+        class Listen(asyncio.DatagramProtocol):
+            def datagram_received(self, data, addr):
+                link._count(link._random.random() >= link.loss())
+
+        loop = asyncio.get_running_loop()
+        self._transport, _ = await loop.create_datagram_endpoint(
+            Listen, local_addr=(self.host, self.port))  # fmt: skip
+        self.port = self._transport.get_extra_info("sockname")[1]
+        return self
+
+    def _count(self, delivered: bool):
+        t = int(self.now() or 0)
+        if not self.seconds or self.seconds[-1].t != t:
+            self.seconds.append(LinkSecond(t, float(self.distance())))
+        self.seconds[-1].sent += 1
+        self.seconds[-1].delivered += int(delivered)
+
+    def close(self):
+        if self._transport is not None:
+            self._transport.close()
+
+
 class Clock:
     """PX4's clock, s since it booted, from the IMU timestamps MAVSDK passes on. In the sim
     that's Gazebo's time, so the scripts keep time at any speed. If it stands still for

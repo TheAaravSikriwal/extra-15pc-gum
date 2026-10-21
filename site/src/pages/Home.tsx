@@ -13,6 +13,7 @@ const REPORT_NAMES: Record<string, string> = {
   cad: "The virtual drone (CAD)",
   electrical: "Electrical design",
   "flight-sim": "Flight sim",
+  modules: "Modules in sim",
 };
 
 function Reports({ index }: { index: Index }) {

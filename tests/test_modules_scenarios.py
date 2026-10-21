@@ -24,6 +24,8 @@ def test_each_new_scenario_flies_where_it_means_something():
     assert report.applies("drop from 10 m", setup("max", ("V", "P", "C")))
     assert not report.applies("drop from 10 m", setup("P", ("P",)))  # the heaviest only
     assert report.applies("chute rule", setup("V", ("V",)))
+    assert report.applies("halow range", setup("V", ("V",)))
+    assert not report.applies("halow range", setup("P", ("P",)))  # no HaLow without V
     assert not report.applies("chute rule", setup("mission", ("V", "P")))
 
 
@@ -85,6 +87,26 @@ def test_the_hang_waits_for_gazebos_first_pose():
             return (-1.0, 0.0, 0.0) if self.calls < 4 else (41.2, 40.0, 0.0)
 
     assert asyncio.run(m.first_pose(Truth(), timeout_s=1.0)) == 41.2
+
+
+def test_the_link_fades_where_the_model_says():
+    from pcs14.modules.halow import Link
+
+    model = Link()
+    edge = m.half_lost_m(m.HALOW_HEIGHT_M)
+    assert edge > model.reach_m(0, m.HALOW_HEIGHT_M, margin_db=0.0)  # just past the rated edge
+    seconds, d = [], 0.0
+    import random
+
+    rng = random.Random(3)
+    for t in range(600):  # out at 15 m/s, 40 datagrams a second
+        loss = model.packet_loss(max(d, 1.0), m.HALOW_HEIGHT_M)
+        got = sum(rng.random() >= loss for _ in range(40))
+        seconds.append((t, d, 40, got))
+        d += 15.0
+    found = {f.check: f for f in m.grade_link(seconds)}
+    assert found["link fades where the model says"].passed
+    assert abs(found["link fades where the model says"].value - edge) / edge < 0.03
 
 
 def test_a_monitor_that_never_cut_fails():

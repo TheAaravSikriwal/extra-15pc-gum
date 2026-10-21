@@ -8,6 +8,7 @@
     pcs14 electrical  every wire, pin and connector, checked in every combination
     pcs14 flight-sim  Gazebo models of every combination for PX4, and the flight sim report
     pcs14 tunnel   the wind tunnel's visuals: FluidX3D runs of the drone and their stills
+    pcs14 modules  step 6's report: the modules in sim, from the flight sim's runs of them
 
 Every run saves a Rerun recording to outputs/rerun/ (or wherever --record says), and --live
 opens the viewer and streams into it as the run happens.
@@ -257,6 +258,14 @@ def build_parser() -> argparse.ArgumentParser:
         const=Path("site/schema"),
         help="also export the data's shapes as JSON Schema (default folder: site/schema)",
     )
+    modules = commands.add_parser(
+        "modules",
+        help="Step 6's report: the modules in sim, from the flight sim's runs of them.",
+        description="Step 6's report: the modules in sim, from the flight sim's runs of them "
+        "(fly them with pcs14 flight-sim run --firmware mine --scenario ...).",
+    )
+    modules.add_argument("--exports", type=Path, default=Path("outputs/flight-sim"))
+    modules.add_argument("--out", type=Path, default=Path("docs/reports/modules"))
     validate = commands.add_parser(
         "validate",
         help="The honesty check: the model against published builds and cell curves.",
@@ -807,6 +816,18 @@ def run_ground(args) -> int:
     return 0
 
 
+def run_modules(args) -> int:
+    from datetime import date
+
+    from pcs14.modules import report
+
+    written = report.write(args.exports, args.out, date.today().isoformat())
+    run = report.collect(args.exports)
+    print(f"Modules in sim: {len(run.runs)} runs, verdict {report.verdict(run)}")
+    print(f"Report written to {Path(args.out).resolve()} ({len(written)} files)")
+    return 0
+
+
 def run_site(args) -> int:
     import subprocess
 
@@ -846,6 +867,7 @@ COMMANDS = {
     "electrical": run_electrical,
     "flight-sim": run_flight_sim,
     "tunnel": run_tunnel,
+    "modules": run_modules,
     "ground": run_ground,
     "site": run_site,
 }
