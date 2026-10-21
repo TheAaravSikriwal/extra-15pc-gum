@@ -25,6 +25,7 @@ def test_each_log_entry_goes_to_its_step_by_its_name():
     assert steps.step_of("2026-10-19-electrical-report-and-weight.md") == "electrical"
     assert steps.step_of("2026-10-20-firmware-start.md") == "firmware"
     assert steps.step_of("2026-10-21-modules-in-sim.md") == "modules"
+    assert steps.step_of("2026-10-21-smart-features.md") == "smart"
     assert steps.step_of("2026-10-20-wind-tunnel-hover.md") == "aero"
     assert steps.step_of("2026-10-14-plan-review.md") == "planning"
 

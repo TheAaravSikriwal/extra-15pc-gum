@@ -32,8 +32,8 @@ This is the live version. When a step finishes, its outcome goes here, with a li
 | 4. Flight sim (PX4) | Prove the airframe flies, in all eight module combinations | Done, 2026-10-20 | 62 of 78 runs pass; the 16 misses are three real findings: a dead motor without the chute crashes, losing GPS means a blind descent that can drift past 30 m, and cruise endurance runs 25% under the sizing model. The hover times agree with the sizing model to 0.1 min ([report](docs/reports/flight-sim/README.md), [log](docs/log/2026-10-20-flight-sim-final.md)) |
 | 5. My firmware | My flight code and the safety monitor, passing the same tests as PX4 | Done, 2026-10-20 | C++17, one core library with thin layers for the sim, the ARK FPV and the safety monitor, speaking PX4's MAVLink and ULog so the same scenarios grade it. 66 of 78 runs pass against PX4's 62: everything PX4 passes, plus the four GPS failures PX4 drifted too far in. The other twelve miss for the same reasons as PX4's ([report](docs/reports/flight-sim/README.md#my-firmware-the-same-scenarios), [log](docs/log/2026-10-20-firmware-flies.md)) |
 | 6. Modules in sim | Parachute, vision & nav, and claws if they happen | Done, 2026-10-20, except C | The safety monitor fires the chute now, motors first, only with P. A hung flight controller at 40 m with the chute on: cut in 0.28 s, down at 4.1 to 4.4 m/s with 24 m to spare, in every P combination. Drops from 10 m up all saved, but the height it needs rests on the canopy's unpublished opening time (11 m lost at 2 s). HaLow faded in the sim within 1.5% of its model, about 6 km out 10 m up, and the drone flew on. V's camera renders in Gazebo. The companion computer stays the Pi 5. C waits on the claw conversation ([report](docs/reports/modules/README.md), [log](docs/log/2026-10-20-modules-in-sim.md)) |
-| 7. Smart features in sim | Mapping, safe spots, the LLM, object detection, soar mode, the spiral descent and more | Not started | |
-| 8. Build package | Parts list, assembly and wiring guides, test plans, and the unproven list | Not started | |
+| 7. Smart features in sim | Mapping, safe spots, the LLM, object detection, soar mode, the spiral descent and more | Done, 2026-10-21 | All twelve work in the sim, 22 of 22 runs. Self-tuning finds the inertia within 0.3% in all eight combinations from three stick doublets. The GPS-free estimate (the camera and the rangefinder) ended 0.17 m off after 103 m, at 3 m/s; at 15 m/s it lost the ground. The local model's plans fly, but it misread "60 m west" into a safe, wrong plan, so I approve plans on a map. The vision model boxed 14 of 20 things: a describer, not a detector to land by. Maps, change detection and the safe-spot landing work over flat-colored scenery ([report](docs/reports/smart/README.md), [log](docs/log/2026-10-21-smart-features.md)) |
+| 8. Build package | Parts list, assembly and wiring guides, test plans, and the unproven list | Up next | |
 
 | Side track | Starts after | Status | Outcome |
 |---|---|---|---|
@@ -94,6 +94,14 @@ This is the live version. When a step finishes, its outcome goes here, with a li
 | 6a. Spec | What steps 4 and 5 already covered, and what's left for each module | Done, 2026-10-20 | The monitor fires the chute only on the pilot's switch while its triggers stay in shadow mode; the opening jolt gets the sim's number and the textbook bound; HaLow from the chip maker's numbers ([spec](docs/specs/2026-10-20-modules-in-sim.md)) |
 | 6b. Plan | The implementation plan | Done, 2026-10-20 | 12 test-first tasks, the new scenarios on my firmware only ([plan](docs/plans/2026-10-20-modules-in-sim.md)) |
 | 6c. Build | Test-first, task by task | Done, 2026-10-20 | All 12 tasks: the monitor's chute, the hung flight controller, the drop heights, the opening jolt (the sim's 2 g, the textbook's 8 to 12 g), the parachute rule holding at 30 m, no false triggers in 72 healthy runs, HaLow's model and its relay, the camera, the video at the link's rate, the companion computer, and `pcs14 modules` writing the report ([log](docs/log/2026-10-20-modules-in-sim.md)) |
+
+### Step 7, in detail
+
+| Part | What happens | Status | Outcome |
+|---|---|---|---|
+| 7a. Spec | What each of the twelve features can be in the sim with the tools the PC has | Done, 2026-10-20 | A local model for the missions, orthomosaics from known poses, safe spots on a height map, optical flow and the rangefinder for GPS-free flight, a local vision model for detection ([spec](docs/specs/2026-10-20-smart-features.md)) |
+| 7b. Plan | The implementation plan | Done, 2026-10-20 | 13 test-first tasks, the new scenarios on my firmware only ([plan](docs/plans/2026-10-20-smart-features.md)) |
+| 7c. Build | Test-first, task by task | Done, 2026-10-21 | All 13 tasks: the landing modes, the wind and the turn-back warning, self-tuning (from doublets, after the steps failed), a plain-English mission flown, the spiral, the lift detector, the mapping run, the safe-spot landing, change detection, the GPS-free estimate, object detection, and `pcs14 smart` writing the report ([log](docs/log/2026-10-21-smart-features.md)) |
 
 ## Modules
 

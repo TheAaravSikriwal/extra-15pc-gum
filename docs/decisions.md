@@ -240,6 +240,21 @@ I asked for the open items to keep moving without stopping to ask, so these were
 - **The live video's budget is 60% of HaLow's rate on the air, less 0.1 Mbps of telemetry,** a rough figure for 802.11's overhead at these rates, encoded as H.264 in software the way the Pi 5 would.
 - **The companion computer stays the Pi 5,** with the numbers behind it: neither it nor the Jetson Orin Nano has a hardware video encoder, the jobs that want a GPU run on the laptop, and visual-inertial odometry has been run on older ARM boards than the Pi 5's.
 
+### The smart features in sim (decided 2026-10-20 and 2026-10-21)
+
+I asked for the open items to keep moving without stopping to ask, so these were my calls, written down as I made them. The reasons are in the [step 7 spec](specs/2026-10-20-smart-features.md) and the [log](log/2026-10-21-smart-features.md).
+
+- **The sim's mission planner is a local model,** Qwen2.5 7B through Ollama: no key and no network. "The LLM lives on the laptop" below still holds for the drone, and it can still be a cloud model there. The safety rule doesn't move: the model writes a plan, the checker checks it, I approve it, the flight controller flies it.
+- **Plans get approved on a map.** The model misread "60 m west of home" into a point north and east, and the checker passed it because it was safe. A checker only catches a plan that's dangerous, so the ground station has to draw the plan before I approve it.
+- **The turn-back warning never counts on forward flight being cheaper than a hover.** The sizing model's curve does, Gazebo's rotors don't, and the first prediction came out 39% short. On a real drone this is pessimistic, the side to be wrong on.
+- **Self-tuning excites the drone with doublets, not big steps:** a quarter stick each way for a quarter second, three times. Each doublet is fitted in its own window, with its own offset and trend, the motors' lags (12.5 ms up, 25 down in Gazebo; on the drone, from a bench test of the ESC and motor) and a dead time found along with the inertia. The found inertia is the combination's profile, and the gains stay as they are.
+- **Anything that needs every motor command reads them at their own rate.** The flight log keeps the commands at 250 Hz alongside the ground truth's timeline, which can be as slow as 50 Hz.
+- **Mapping needs the camera pointed straight down,** which V's bracket can't do (it tips the camera 30 degrees for the live video). The CAD needs a mapping position or a tilt servo; which one is a weight question for the build package.
+- **Safe spots read off a map get the map's own error on top:** 1 m, what the mapping run places things to within. Safe spots stay on heights, not on the vision model's boxes.
+- **GPS-free flight flies slowly:** 3 m/s at 6 m up worked, 15 m/s didn't, and the TF-Luna it needs for its height reads to 8 m at best. A GPS-free mode gets its own speed and height limits, set by the flow estimate, not the airframe.
+- **The vision model is a describer, not a detector to act on:** 14 of 20 things boxed, the big ones every time, and boxes on things that aren't there. It answers questions about the video; it doesn't pick where to land.
+- **The camera recorder writes frames on its own thread** and waits for all of them before it closes. Writing on Gazebo's callback lost the last 40 s of a run's frames.
+
 ### What the electrical build changed (2026-10-18)
 
 - **The safety monitor's IMU is ST's LSM6DSOX** on Adafruit's breakout (1.7 g, in stock). No usable ICM-42688-P breakout is sold.

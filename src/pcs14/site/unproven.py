@@ -11,7 +11,12 @@ from pcs14.site import schema
 from pcs14.site.steps import GITHUB
 
 # the reports that carry their own list, by their step's name on the site
-REPORTS = (("Electrical", "electrical"), ("Flight sim", "flight-sim"))
+REPORTS = (
+    ("Electrical", "electrical"),
+    ("Flight sim", "flight-sim"),
+    ("Modules in sim", "modules"),
+    ("Smart features", "smart"),
+)
 
 
 def project_list(decisions: str) -> list[schema.UnprovenItem]:

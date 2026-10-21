@@ -1,7 +1,7 @@
 # Status
 
-**Last updated:** 2026-10-20, on the PC (Windows and WSL2 Ubuntu)
-**Step:** steps 4 to 6 are done (step 6 except C, the claws), and so is the project site. Step 7, the smart features, is next.
+**Last updated:** 2026-10-21, on the PC (Windows and WSL2 Ubuntu)
+**Step:** steps 4 to 7 are done (step 6 except C, the claws), and so is the project site. Step 8, the build package, is next.
 **Main machine:** the PC, with WSL2 Ubuntu 24.04 for the Linux tools
 
 ## Right now
@@ -18,6 +18,7 @@ Where to look: the live plan in the [README](README.md#the-plan), the steps in t
 | 4. Flight sim (PX4) | Done 2026-10-20. 62 of 78 runs pass; the misses are three findings ([report](docs/reports/flight-sim/README.md), [log](docs/log/2026-10-20-flight-sim-final.md)) |
 | 5. My firmware | Done 2026-10-20. 66 of 78 runs pass, every one PX4 passes among them ([log](docs/log/2026-10-20-firmware-flies.md)) |
 | 6. Modules in sim | Done 2026-10-20 for P and V; C waits on the claw conversation. Every P and V scenario passes ([report](docs/reports/modules/README.md), [log](docs/log/2026-10-20-modules-in-sim.md)) |
+| 7. Smart features in sim | Done 2026-10-21. All twelve work in the sim, 22 of 22 runs ([report](docs/reports/smart/README.md), [log](docs/log/2026-10-21-smart-features.md)) |
 | Aero side track | The visual half done: FluidX3D's cruise, crosswind and hover, now with frames along each run. The numbers wait for OpenFOAM |
 | Project site | Done 2026-10-20: the drone in 3D, the spec sheet, the wiring, every flight played back, a page per step, the tunnel, what the sims can't prove ([log](docs/log/2026-10-20-project-site.md)) |
 
@@ -29,13 +30,15 @@ Where to look: the live plan in the [README](README.md#the-plan), the steps in t
 
 **Step 6.** The safety monitor fires the chute itself now, on the pilot's switch, motors cut first, and only where P is fitted. With my flight controller frozen at 40 m in P, the monitor cut 0.29 s later, the pilot's chute went a second after the hang, and the drone settled at 4.1 m/s with 27 m to spare. Drops from 10 m up all saved, but the height the chute needs rests on its unpublished opening time: 5 m lost at 1 s, 11 m at 2 s. The opening jolt: the sim's 2 g against the textbook bound's 8 to 12 g, which the structure track designs to. HaLow's link model (Morse Micro's numbers for the chip on Heltec's card) holds 7.2 Mbps out to about 1.2 km and its slowest rate to about 5 km, 30 m up over flat ground; in the sim the ground station's link faded within 1.5% of the model, and the drone flew on. V's camera renders in Gazebo inside WSL. The companion computer stays the Pi 5.
 
-**Offline?** Study from [docs/learning.md](docs/learning.md).
+**Step 7.** The landing modes each come down within 0.1 m. The turn-back warning lands within 8% of the energy home, once it stopped counting on cheaper forward flight. Self-tuning finds the roll inertia within 0.3% in all eight combinations from three stick doublets, after step 4's big steps missed by up to 62%. A plain-English mission flies, but the local model misread "60 m west" into a plan that was safe and wrong, so plans get approved on a map. The spiral holds its helix within 0.3 m; soar mode finds a 4 m/s updraft over a minute's hover. Mapping, change detection and the safe-spot landing work over the flat-colored scenery. Flying without GPS, the camera and the rangefinder ended 0.17 m off after 103 m at 3 m/s; at 15 m/s they lost the ground. The vision model boxed 14 of 20 things: a describer, not a detector to land by.
+
+**Offline?** Study from [docs/learning.md](docs/learning.md) (topic 18 is new: system identification, optical flow and vision models).
 
 ## Up next
 
-1. **Step 7, the smart features:** the spec and plan, then the features. The wind estimate and the battery warning, the Meshtastic relay's link, self-tuning's identification and the mission checker already have their math and tests; the local model (Qwen2.5 7B through Ollama) wrote a plan from plain English that the checker passed, and the checker refused one that went over 400 ft.
-2. **Step 8, the build package.**
-3. **The side tracks:** the structure (beam math first, since there's no CalculiX here), OpenFOAM for the wind tunnel's numbers.
+1. **Step 8, the build package:** the parts list with links, prices and fallbacks, the assembly and wiring guides from the CAD and the wiring diagrams, the firmware's build steps, test plans and the legal checklist.
+2. **The side tracks:** the structure (beam math first, since there's no CalculiX here), OpenFOAM for the wind tunnel's numbers.
+3. **The site's last refresh** once step 8 is in: `pcs14 site --flights --tunnel`, then the build.
 
 ## Waiting on me
 
@@ -44,7 +47,7 @@ Where to look: the live plan in the [README](README.md#the-plan), the steps in t
 - **The FluidX3D fork:** the wind tunnel stills stay off the repo until my modified FluidX3D is public, as its license asks for any results I post.
 - **Fruity Chutes:** ask for the Harrier release servo's voltage range and draw (the design runs on a stand-in, Hitec's HS-55), and how long the canopy takes to fill: the lowest height the chute saves the drone from rests on it.
 - **The claws (C):** the roadmap holds C until a unique claw on an actual arm comes up. That conversation is mine.
-- **Installs that need sudo:** OpenFOAM and CalculiX in WSL, for the aero and structure side tracks' numbers.
+- **Installs that need sudo:** OpenFOAM and CalculiX in WSL, for the aero and structure side tracks' numbers. OpenDroneMap and OpenCV would let step 7's maps get heights and its GPS-free estimate a real VIO package.
 - **The HaLow card (step 6):** Heltec's SPI card has no working Pi 5 report; its SDIO version (on Heltec's HT-HR01 carrier) was reported working once, and USB adapters work through an OpenWrt backport.
 - **The ARM compiler on the PC,** if I want to build the H743 image locally (`sudo apt install gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib` in WSL). CI builds it either way.
 
@@ -63,6 +66,9 @@ Where to look: the live plan in the [README](README.md#the-plan), the steps in t
 - Which OpenFOAM: the Foundation release or ESI's, decided when writing its setup
 - OpenGL in WSL runs on the CPU; headless flights don't care, Gazebo's window and clips will
 - MAVSDK-Python 3.17.4 warns that its name now belongs to a new native binding; pinned for now
+- V's camera needs a mapping position (straight down) or a tilt servo for mapping runs; its bracket tips it 30 degrees for the live video (step 7)
+- Self-tuning's fit runs on the ground from the log; on board, in my firmware, it isn't built yet
+- The GPS-free estimate isn't in the loop: my firmware doesn't fly on it yet, and it needs its own speed and height limits
 
 ## Machines
 

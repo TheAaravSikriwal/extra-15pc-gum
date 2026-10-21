@@ -255,6 +255,19 @@ One more for topic 10: GPS-free flight runs on visual-inertial odometry, the cam
 
 - [ ] **Read:** Jeffrey Delmerico and Davide Scaramuzza, "A Benchmark Comparison of Monocular Visual-Inertial Odometry Algorithms for Flying Robots" (ICRA 2018), which ran the open-source pipelines on boards like the ones a drone can carry.
 
+## 18. System identification, optical flow and vision models
+
+*Came up in step 7, the smart features in sim (2026-10-21).*
+
+Three things step 7 leaned on. System identification: poking a system on purpose (a doublet, a quick push one way and then the other) and fitting a model to how it answers, which is how self-tuning gets the drone's inertia. The traps are all in the details: the excitation has to be short so nothing else creeps in, the motors' lag and dead time have to be in the model, and a slow trim has to be fitted away, not counted. Optical flow by phase correlation: a shift in a picture is a phase ramp in its Fourier transform, so the peak of the two frames' cross-power spectrum is how far the ground slid, and evaluating it on a fine grid finds a fraction of a pixel. And vision-language models that answer with boxes, and how to score boxes (intersection over union) against a truth.
+
+- [ ] **Read:** Mark B. Tischler and Robert K. Remple, *Aircraft and Rotorcraft System Identification: Engineering Methods with Flight Test Examples* (AIAA). The chapters on designing the excitation (doublets, sweeps) and on time-domain fits.
+- [ ] **Read:** Ravindra V. Jategaonkar, *Flight Vehicle System Identification: A Time-Domain Methodology* (AIAA). The least-squares chapter is the fit self-tuning uses.
+- [ ] **Read, later:** Lennart Ljung, *System Identification: Theory for the User* (Prentice Hall). The general theory, heavier going.
+- [ ] **Read:** Manuel Guizar-Sicairos, Samuel T. Thurman and James R. Fienup, "Efficient subpixel image registration algorithms," *Optics Letters* 33(2), 2008. The upsampled DFT the flow estimate refines its peak with.
+- [ ] **Do:** scikit-image's `phase_cross_correlation` example ([scikit-image.org](https://scikit-image.org)), the same method on pictures you can shift yourself.
+- [ ] **Read:** Dominik Honegger, Lorenz Meier, Petri Tanskanen and Marc Pollefeys, "An open source and open hardware embedded metric optical flow CMOS camera for indoor and outdoor applications" (ICRA 2013). PX4Flow: optical flow and a distance sensor turned into a speed over the ground, the idea the estimate copies.
+
 ## Coming up later
 
 These get filled in properly when I get close to them.

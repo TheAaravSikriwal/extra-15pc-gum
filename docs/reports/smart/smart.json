@@ -1,0 +1,1007 @@
+{
+ "generated": "2026-10-21",
+ "verdict": "pass",
+ "runs": [
+  {
+   "scenario": "land now",
+   "setup": "base",
+   "passed": true,
+   "findings": [
+    {
+     "check": "landed where asked",
+     "passed": true,
+     "value": 0.05608107589766168,
+     "limit": 1.5,
+     "unit": "m",
+     "detail": "down 0.1 m from where it was asked to land",
+     "extra": null
+    },
+    {
+     "check": "touchdown",
+     "passed": true,
+     "value": 0.6926335692405701,
+     "limit": 2.0,
+     "unit": "m/s",
+     "detail": "came down at 0.7 m/s at the end, a controlled landing",
+     "extra": null
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "back to start",
+   "setup": "base",
+   "passed": true,
+   "findings": [
+    {
+     "check": "landed where asked",
+     "passed": true,
+     "value": 0.0034566549493107706,
+     "limit": 1.5,
+     "unit": "m",
+     "detail": "down 0.0 m from where it was asked to land",
+     "extra": null
+    },
+    {
+     "check": "touchdown",
+     "passed": true,
+     "value": 0.7148875594139099,
+     "limit": 2.0,
+     "unit": "m/s",
+     "detail": "came down at 0.7 m/s at the end, a controlled landing",
+     "extra": null
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "land here",
+   "setup": "base",
+   "passed": true,
+   "findings": [
+    {
+     "check": "landed where asked",
+     "passed": true,
+     "value": 0.05260815394533973,
+     "limit": 1.5,
+     "unit": "m",
+     "detail": "down 0.1 m from where it was asked to land",
+     "extra": null
+    },
+    {
+     "check": "touchdown",
+     "passed": true,
+     "value": 0.7672804594039917,
+     "limit": 2.0,
+     "unit": "m/s",
+     "detail": "came down at 0.8 m/s at the end, a controlled landing",
+     "extra": null
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "turn back",
+   "setup": "V",
+   "passed": true,
+   "findings": [
+    {
+     "check": "wind sensed",
+     "passed": true,
+     "value": 5.999110671798252,
+     "limit": 6.0,
+     "unit": "m/s",
+     "detail": "6.0 m/s from 180 degrees, against the sim's 6 from 180",
+     "extra": null
+    },
+    {
+     "check": "the way home's energy",
+     "passed": true,
+     "value": -0.08285607349078372,
+     "limit": 0.25,
+     "unit": "",
+     "detail": "predicted 5.5 Wh at the turn, the flight used 5.9 Wh: -8%",
+     "extra": null
+    },
+    {
+     "check": "my firmware's gauge",
+     "passed": true,
+     "value": 6.44154122817116,
+     "limit": null,
+     "unit": "Wh",
+     "detail": "my firmware's own gauge counted 6.4 Wh on the way home",
+     "extra": null
+    },
+    {
+     "check": "no fly-away",
+     "passed": true,
+     "value": 0.04938216880703707,
+     "limit": 5.0,
+     "unit": "m",
+     "detail": "ended on the ground, 0 m from where it started",
+     "extra": null
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "turn back",
+   "setup": "mission",
+   "passed": true,
+   "findings": [
+    {
+     "check": "wind sensed",
+     "passed": true,
+     "value": 6.005610124493171,
+     "limit": 6.0,
+     "unit": "m/s",
+     "detail": "6.0 m/s from 180 degrees, against the sim's 6 from 180",
+     "extra": null
+    },
+    {
+     "check": "the way home's energy",
+     "passed": true,
+     "value": -0.08466008135236058,
+     "limit": 0.25,
+     "unit": "",
+     "detail": "predicted 6.1 Wh at the turn, the flight used 6.7 Wh: -8%",
+     "extra": null
+    },
+    {
+     "check": "my firmware's gauge",
+     "passed": true,
+     "value": 7.230115433586516,
+     "limit": null,
+     "unit": "Wh",
+     "detail": "my firmware's own gauge counted 7.2 Wh on the way home",
+     "extra": null
+    },
+    {
+     "check": "no fly-away",
+     "passed": true,
+     "value": 0.035953061207287945,
+     "limit": 5.0,
+     "unit": "m",
+     "detail": "ended on the ground, 0 m from where it started",
+     "extra": null
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "turn back",
+   "setup": "V+C",
+   "passed": true,
+   "findings": [
+    {
+     "check": "wind sensed",
+     "passed": true,
+     "value": 6.00007377902109,
+     "limit": 6.0,
+     "unit": "m/s",
+     "detail": "6.0 m/s from 180 degrees, against the sim's 6 from 180",
+     "extra": null
+    },
+    {
+     "check": "the way home's energy",
+     "passed": true,
+     "value": 0.05363895081146762,
+     "limit": 0.25,
+     "unit": "",
+     "detail": "predicted 7.0 Wh at the turn, the flight used 6.7 Wh: +5%",
+     "extra": null
+    },
+    {
+     "check": "my firmware's gauge",
+     "passed": true,
+     "value": 7.2025249896244175,
+     "limit": null,
+     "unit": "Wh",
+     "detail": "my firmware's own gauge counted 7.2 Wh on the way home",
+     "extra": null
+    },
+    {
+     "check": "no fly-away",
+     "passed": true,
+     "value": 0.06297108850391141,
+     "limit": 5.0,
+     "unit": "m",
+     "detail": "ended on the ground, 0 m from where it started",
+     "extra": null
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "turn back",
+   "setup": "max",
+   "passed": true,
+   "findings": [
+    {
+     "check": "wind sensed",
+     "passed": true,
+     "value": 6.0042033435044875,
+     "limit": 6.0,
+     "unit": "m/s",
+     "detail": "6.0 m/s from 180 degrees, against the sim's 6 from 180",
+     "extra": null
+    },
+    {
+     "check": "the way home's energy",
+     "passed": true,
+     "value": 0.03954567770305313,
+     "limit": 0.25,
+     "unit": "",
+     "detail": "predicted 7.7 Wh at the turn, the flight used 7.4 Wh: +4%",
+     "extra": null
+    },
+    {
+     "check": "my firmware's gauge",
+     "passed": true,
+     "value": 7.948558509781365,
+     "limit": null,
+     "unit": "Wh",
+     "detail": "my firmware's own gauge counted 7.9 Wh on the way home",
+     "extra": null
+    },
+    {
+     "check": "no fly-away",
+     "passed": true,
+     "value": 0.03407192918934781,
+     "limit": 5.0,
+     "unit": "m",
+     "detail": "ended on the ground, 0 m from where it started",
+     "extra": null
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "planned mission",
+   "setup": "mission",
+   "passed": true,
+   "findings": [
+    {
+     "check": "the plan",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "unit": "",
+     "detail": "\"Take off and go to the point 80 m north and 40 m east of home, 30 m up, and wait there 15 seconds. Then go to the point 0 m north and 60 m west of home, still 30 m up. Then come home.\", approved by the test script, in the sim (on the drone, the approving is mine)",
+     "extra": null
+    },
+    {
+     "check": "waypoint 1",
+     "passed": true,
+     "value": 0.04108438189498655,
+     "limit": 2.0,
+     "unit": "m",
+     "detail": "came within 0.0 m of 80 m north, 40 m east, 30 m up",
+     "extra": null
+    },
+    {
+     "check": "waypoint 2",
+     "passed": true,
+     "value": 0.04606362117663819,
+     "limit": 2.0,
+     "unit": "m",
+     "detail": "came within 0.0 m of 0 m north, -60 m east, 30 m up",
+     "extra": null
+    },
+    {
+     "check": "no fly-away",
+     "passed": true,
+     "value": 0.003485503441563965,
+     "limit": 3.0,
+     "unit": "m",
+     "detail": "ended on the ground, 0 m from where it started",
+     "extra": null
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "spiral descent",
+   "setup": "base",
+   "passed": true,
+   "findings": [
+    {
+     "check": "the helix",
+     "passed": true,
+     "value": 0.3479184166329041,
+     "limit": 1.5,
+     "unit": "m",
+     "detail": "at most 0.3 m off the circle",
+     "extra": null
+    },
+    {
+     "check": "the sink rate",
+     "passed": true,
+     "value": 1.4762770910328253,
+     "limit": 1.5,
+     "unit": "m/s",
+     "detail": "sank at 1.48 m/s, asked for 1.5",
+     "extra": null
+    },
+    {
+     "check": "touchdown",
+     "passed": true,
+     "value": 0.7070197463035583,
+     "limit": 2.0,
+     "unit": "m/s",
+     "detail": "came down at 0.7 m/s at the end, a controlled landing",
+     "extra": null
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "lift",
+   "setup": "base",
+   "passed": true,
+   "findings": [
+    {
+     "check": "lift found",
+     "passed": true,
+     "value": 0.12705966848288952,
+     "limit": null,
+     "unit": "N",
+     "detail": "0.13 N less thrust in the column, 4.7 standard errors past zero",
+     "extra": null
+    },
+    {
+     "check": "the updraft",
+     "passed": true,
+     "value": 4.157767396760333,
+     "limit": 4.0,
+     "unit": "m/s",
+     "detail": "4.2 m/s rising, by the push on the body (the sim's 4); a real rotor would save about 76 W in it",
+     "extra": null
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "roll doublet",
+   "setup": "base",
+   "passed": true,
+   "findings": [
+    {
+     "check": "roll inertia",
+     "passed": true,
+     "value": -0.0005440084956850333,
+     "limit": 0.15,
+     "unit": "",
+     "detail": "found 0.01292 kg m^2 against the model's 0.01293: -0.1% (fit 1.00, the motors 8 ms late)",
+     "extra": null
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "roll doublet",
+   "setup": "V",
+   "passed": true,
+   "findings": [
+    {
+     "check": "roll inertia",
+     "passed": true,
+     "value": -0.0009672251189764003,
+     "limit": 0.15,
+     "unit": "",
+     "detail": "found 0.01421 kg m^2 against the model's 0.01422: -0.1% (fit 1.00, the motors 8 ms late)",
+     "extra": null
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "roll doublet",
+   "setup": "P",
+   "passed": true,
+   "findings": [
+    {
+     "check": "roll inertia",
+     "passed": true,
+     "value": -0.0025472026269647285,
+     "limit": 0.15,
+     "unit": "",
+     "detail": "found 0.01559 kg m^2 against the model's 0.01563: -0.3% (fit 1.00, the motors 8 ms late)",
+     "extra": null
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "roll doublet",
+   "setup": "C",
+   "passed": true,
+   "findings": [
+    {
+     "check": "roll inertia",
+     "passed": true,
+     "value": -0.0028262826964658982,
+     "limit": 0.15,
+     "unit": "",
+     "detail": "found 0.01306 kg m^2 against the model's 0.01310: -0.3% (fit 1.00, the motors 8 ms late)",
+     "extra": null
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "roll doublet",
+   "setup": "mission",
+   "passed": true,
+   "findings": [
+    {
+     "check": "roll inertia",
+     "passed": true,
+     "value": -0.0005973812500948972,
+     "limit": 0.15,
+     "unit": "",
+     "detail": "found 0.01667 kg m^2 against the model's 0.01668: -0.1% (fit 1.00, the motors 8 ms late)",
+     "extra": null
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "roll doublet",
+   "setup": "V+C",
+   "passed": true,
+   "findings": [
+    {
+     "check": "roll inertia",
+     "passed": true,
+     "value": -0.0004504698967868759,
+     "limit": 0.15,
+     "unit": "",
+     "detail": "found 0.01444 kg m^2 against the model's 0.01445: -0.0% (fit 1.00, the motors 8 ms late)",
+     "extra": null
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "roll doublet",
+   "setup": "P+C",
+   "passed": true,
+   "findings": [
+    {
+     "check": "roll inertia",
+     "passed": true,
+     "value": -0.0026153426479662567,
+     "limit": 0.15,
+     "unit": "",
+     "detail": "found 0.01585 kg m^2 against the model's 0.01589: -0.3% (fit 1.00, the motors 8 ms late)",
+     "extra": null
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "roll doublet",
+   "setup": "max",
+   "passed": true,
+   "findings": [
+    {
+     "check": "roll inertia",
+     "passed": true,
+     "value": -0.00171270291384773,
+     "limit": 0.15,
+     "unit": "",
+     "detail": "found 0.01697 kg m^2 against the model's 0.01700: -0.2% (fit 1.00, the motors 8 ms late)",
+     "extra": null
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "mapping run, box moved",
+   "setup": "V",
+   "passed": true,
+   "findings": [
+    {
+     "check": "where it was",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "unit": "",
+     "detail": "flagged where the box was",
+     "extra": null
+    },
+    {
+     "check": "where it went",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "unit": "",
+     "detail": "flagged where the box went",
+     "extra": null
+    },
+    {
+     "check": "nothing else",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "nothing else flagged",
+     "extra": null
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "safe landing",
+   "setup": "V",
+   "passed": true,
+   "findings": [
+    {
+     "check": "landed on the spot",
+     "passed": true,
+     "value": 0.04871919038351304,
+     "limit": 1.5,
+     "unit": "m",
+     "detail": "0.0 m from the spot it chose, 6.1 m east and 19.6 m north, 5.4 m from the shed it was asked to land on",
+     "extra": null
+    },
+    {
+     "check": "clear where it landed",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "unit": "",
+     "detail": "clear of everything by the clearance",
+     "extra": null
+    },
+    {
+     "check": "touchdown",
+     "passed": true,
+     "value": 0.6794008612632751,
+     "limit": 2.0,
+     "unit": "m/s",
+     "detail": "came down at 0.7 m/s at the end, a controlled landing",
+     "extra": null
+    },
+    {
+     "check": "the map's choice",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "unit": "",
+     "detail": "the orthomosaic would have picked -0.6 m east, 25.5 m north, which is clear in truth; it calls 74% of the area safe, the true map 88%",
+     "extra": null
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "flow run",
+   "setup": "V",
+   "passed": true,
+   "findings": [
+    {
+     "check": "drift at the end",
+     "passed": true,
+     "value": 0.001661428389346557,
+     "limit": 0.05,
+     "unit": "",
+     "detail": "0.17 m off after 103 m flown (0.2%)",
+     "extra": null
+    },
+    {
+     "check": "worst drift",
+     "passed": true,
+     "value": 0.02037366255892112,
+     "limit": 0.05,
+     "unit": "",
+     "detail": "at worst 2.0% of the distance flown, past the first 10 m",
+     "extra": null
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "mapping run",
+   "setup": "V",
+   "passed": true,
+   "findings": [
+    {
+     "check": "the map",
+     "passed": true,
+     "value": 0.999976,
+     "limit": 0.9,
+     "unit": "",
+     "detail": "100% of the area seen",
+     "extra": null
+    },
+    {
+     "check": "shed on the map",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "unit": "",
+     "detail": "at 6 m east, 25 m north: (130, 118, 109)",
+     "extra": null
+    },
+    {
+     "check": "box on the map",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "unit": "",
+     "detail": "at -5 m east, 40 m north: (193, 118, 164)",
+     "extra": null
+    },
+    {
+     "check": "tree_0 on the map",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "unit": "",
+     "detail": "at -8 m east, 15 m north: (65, 97, 73)",
+     "extra": null
+    },
+    {
+     "check": "tree_1 on the map",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "unit": "",
+     "detail": "at 9 m east, 50 m north: (66, 99, 74)",
+     "extra": null
+    },
+    {
+     "check": "tree_2 on the map",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "unit": "",
+     "detail": "at -3 m east, 62 m north: (62, 94, 70)",
+     "extra": null
+    },
+    {
+     "check": "tree_3 on the map",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "unit": "",
+     "detail": "at 12 m east, 35 m north: (63, 86, 68)",
+     "extra": null
+    },
+    {
+     "check": "tree_4 on the map",
+     "passed": true,
+     "value": null,
+     "limit": null,
+     "unit": "",
+     "detail": "at -12 m east, 30 m north: (54, 83, 61)",
+     "extra": null
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none",
+     "extra": null
+    }
+   ]
+  }
+ ],
+ "tuning": [
+  {
+   "setup": "base",
+   "found_kg_m2": 0.01292,
+   "model_kg_m2": 0.01293,
+   "fit": 1.0,
+   "dead_time_s": 0.008
+  },
+  {
+   "setup": "V",
+   "found_kg_m2": 0.01421,
+   "model_kg_m2": 0.01422,
+   "fit": 1.0,
+   "dead_time_s": 0.008
+  },
+  {
+   "setup": "P",
+   "found_kg_m2": 0.01559,
+   "model_kg_m2": 0.01563,
+   "fit": 1.0,
+   "dead_time_s": 0.008
+  },
+  {
+   "setup": "C",
+   "found_kg_m2": 0.01306,
+   "model_kg_m2": 0.0131,
+   "fit": 1.0,
+   "dead_time_s": 0.008
+  },
+  {
+   "setup": "mission",
+   "found_kg_m2": 0.01667,
+   "model_kg_m2": 0.01668,
+   "fit": 1.0,
+   "dead_time_s": 0.008
+  },
+  {
+   "setup": "V+C",
+   "found_kg_m2": 0.01444,
+   "model_kg_m2": 0.01445,
+   "fit": 1.0,
+   "dead_time_s": 0.008
+  },
+  {
+   "setup": "P+C",
+   "found_kg_m2": 0.01585,
+   "model_kg_m2": 0.01589,
+   "fit": 1.0,
+   "dead_time_s": 0.008
+  },
+  {
+   "setup": "max",
+   "found_kg_m2": 0.01697,
+   "model_kg_m2": 0.017,
+   "fit": 1.0,
+   "dead_time_s": 0.008
+  }
+ ],
+ "relay": {
+  "ShortFast": {
+   "ground_m": 3170.2335597549722,
+   "drone_m": 25884.848622822683
+  },
+  "MediumFast": {
+   "ground_m": 4227.5743968966835,
+   "drone_m": 34518.00040683735
+  },
+  "LongFast": {
+   "ground_m": 5637.561064326666,
+   "drone_m": 46030.493337939944
+  }
+ },
+ "unproven": [
+  "Gazebo's rotors don't feel the air: no cheaper forward flight, no lift from rising air on the rotors, no vortex ring state. So the turn-back warning was checked against the sim's power, not a real pack's; soar mode's real saving (about 76 W in a 4 m/s column, by momentum theory) is a number, not a measurement; and the spiral descent's whole reason for being, keeping out of its own downwash, can't be shown here.",
+  "Wind sensing reads the sim's wind exactly because the estimate and Gazebo use the same drag formula. A real drone's drag area and its lean in gusts will make it worse.",
+  "Self-tuning's 0.3% is a clean sim: motors that follow a first-order lag exactly, a gyro with little noise, no blade flapping or rotor damping. A real drone will do worse, and the fit runs on the ground from the log for now, not on board.",
+  "GPS-free flight's estimate flew over a made-up textured field at 3 m/s and 6 m up, with the sim's true attitude plus noise. No motion blur, no rolling shutter, no light changing, no grass moving. At 15 m/s the frames stopped matching (12.6% drift). The TF-Luna it needs for its height reads to 8 m at best, less in sunlight. And it isn't in the loop yet: my firmware doesn't fly on it.",
+  "The maps are orthomosaics from known poses over flat ground: no heights (OpenDroneMap isn't installed), tall things lean on the map, and V's camera had to point straight down, which its bracket can't do (it's tipped 30 degrees for the live video).",
+  "Change detection and the safe spots ran on a world of flat colors. Real ground has texture, shadows that move with the sun, and grass that changes between flights.",
+  "Object detection ran on colored boxes, not real things: the model calls them cubes and green rectangular objects. It drew a box around the whole frame on an empty one. And it ran on the PC's RTX 3060; how fast the laptop's integrated graphics runs it is unknown.",
+  "The plain-English missions' local model misread \"60 m west of home\" as a point north and east. The checker passed it because it was safe. Only my approval, on a map, can catch a plan that's safe but wrong.",
+  "The Meshtastic relay is a link budget over flat ground with a 10 dB margin: no trees, no hills, no other radios. Where the node lives (V, Base or its own module) is still open."
+ ],
+ "detection": {
+  "model": "qwen2.5vl:7b",
+  "totals": {
+   "frames": 7,
+   "true": 20,
+   "near": 14,
+   "median overlap": 0.7591465050155238,
+   "false alarms": 3,
+   "labels": {
+    "shed": [
+     "brown cube",
+     "brown object",
+     "beige cube",
+     "brown and black object"
+    ],
+    "tree": [
+     "green rectangular object",
+     "green rectangular object",
+     "green rectangular object",
+     "green rectangular object",
+     "green object",
+     "green object",
+     "green and black object",
+     "green and black object",
+     "green rectangular object",
+     "green rectangular object"
+    ],
+    "box": [
+     "pink cube"
+    ]
+   }
+  },
+  "findings": [
+   {
+    "check": "found",
+    "passed": true,
+    "value": 0.7,
+    "limit": 0.5,
+    "unit": "",
+    "detail": "14 of 20 true things with a box near them (median overlap 0.76)",
+    "extra": null
+   },
+   {
+    "check": "the shed",
+    "passed": true,
+    "value": 4,
+    "limit": 4,
+    "unit": "",
+    "detail": "in 4 of the 4 frames it's in",
+    "extra": null
+   },
+   {
+    "check": "false alarms",
+    "passed": true,
+    "value": 0.42857142857142855,
+    "limit": 1.0,
+    "unit": "",
+    "detail": "3 boxes on nothing, over 7 frames",
+    "extra": null
+   }
+  ]
+ }
+}

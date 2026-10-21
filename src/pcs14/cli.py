@@ -269,12 +269,16 @@ def build_parser() -> argparse.ArgumentParser:
     modules.add_argument("--out", type=Path, default=Path("docs/reports/modules"))
     smart = commands.add_parser(
         "smart",
-        help="Step 7: a mission from plain English, through a local model, then the checker.",
-        description="Step 7: a mission from plain English. A local model (Ollama) writes the "
-        "plan, the deterministic checker checks it against the limits profile and the drone, "
-        "and the plan is saved for approval. The model never commands the motors.",
+        help="Step 7: its report, or a mission from plain English through a local model.",
+        description="Step 7. With no words: the report, docs/reports/smart/, from the flight "
+        "sim's runs of step 7's scenarios. With words: a mission from plain English. A local "
+        "model (Ollama) writes the plan, the deterministic checker checks it against the "
+        "limits profile and the drone, and the plan is saved for approval. The model never "
+        "commands the motors.",
     )
-    smart.add_argument("words", help="what to do, in plain English")
+    smart.add_argument("words", nargs="?", help="what to do, in plain English")
+    smart.add_argument("--exports", type=Path, default=Path("outputs/flight-sim"))
+    smart.add_argument("--report", type=Path, default=Path("docs/reports/smart"))
     smart.add_argument("--setup", default="mission", help="the module combination")
     smart.add_argument("--profile", default="us-recreational", choices=("max", "us-recreational"))
     smart.add_argument("--model", default="qwen2.5:7b-instruct", help="Ollama's model")
@@ -835,6 +839,19 @@ def run_ground(args) -> int:
 
 def run_smart(args) -> int:
     from pcs14.smart import missions
+
+    if args.words is None:
+        from datetime import date
+
+        from pcs14.smart import report
+
+        written = report.write(args.exports, args.report, date.today().isoformat())
+        runs = report.collect_runs(args.exports)
+        detection = report.load_detection(args.exports, run_model=False)
+        print(f"Smart features in sim: {len(runs)} runs, verdict "
+              f"{report.verdict(runs, detection)}")  # fmt: skip
+        print(f"Report written to {Path(args.report).resolve()} ({len(written)} files)")
+        return 0
 
     _, build, targets = _load(args)
     setup = _pick([args.setup], {s.name: s for s in targets.combinations()}, "combination")[0]

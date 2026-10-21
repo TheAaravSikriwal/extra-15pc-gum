@@ -148,6 +148,8 @@ Gazebo Harmonic and PX4, in WSL2.
 
 ## Step 7: Smart features in sim
 
+*Done 2026-10-21: all twelve work in the sim, and the [report](reports/smart/README.md) lists what it can't prove. Mapping is an orthomosaic from known poses, not OpenDroneMap (not installed), and object detection ran on the sim's camera, not on recorded video yet.*
+
 Each one gets proven in sim, and whatever the sim can't show goes on the unproven list.
 
 1. Landing modes: land now, back to start, land here
