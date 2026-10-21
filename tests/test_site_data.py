@@ -128,3 +128,15 @@ def test_every_piece_in_the_glb_has_a_part_and_the_other_way_round():
     electrical = json.loads((REPORTS / "electrical" / "electrical.json").read_text("utf-8"))
     if "routes" in electrical:  # and every route the wires take is drawn in it
         assert {r.node for r in data.wires(electrical).routes} <= nodes
+
+
+def test_each_file_also_comes_as_a_script_for_pages_opened_from_disk(tmp_path):
+    """Browsers won't fetch() from a page opened as file://, but they will run a script tag,
+    so every data file is also written as one that hands its data to the page."""
+    data.write_all(tmp_path, REPORTS)
+    for name in ["index.json", *data.load(tmp_path / "index.json", schema.Index).files]:
+        script = (tmp_path / name.replace(".json", ".js")).read_text(encoding="utf-8")
+        prefix = f'(window.pcs14Data = window.pcs14Data || {{}})["{name}"] = '
+        assert script.startswith(prefix) and script.rstrip().endswith(";")
+        body = script[len(prefix) :].rstrip().rstrip(";")
+        assert json.loads(body) == json.loads((tmp_path / name).read_text(encoding="utf-8"))

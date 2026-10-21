@@ -1,0 +1,44 @@
+/* The project's look (docs/style.md), as the site's variables. The colors are media/style.yaml's,
+   and tests/test_site_style.py fails if the two drift apart. */
+:root {
+  --background: #0b0b0b; /* tunnel black */
+  --text: #f4f4f2; /* chalk */
+  --accent: #3ddc97; /* spearmint, the project's color */
+  --pop: #e64fa0; /* magenta, once per page at most */
+  --muted: #b4b2a9; /* fog */
+  --lines: #2c2c2a; /* graphite */
+  --pass: #3ddc97;
+  --fail: #e64fa0;
+  --font-headline: "Space Grotesk", system-ui, sans-serif;
+  --font-body: Inter, system-ui, sans-serif;
+  --font-numbers: "JetBrains Mono", ui-monospace, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--text);
+  font: 16px/1.5 var(--font-body);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-headline);
+  font-weight: 500;
+}
+
+a {
+  color: var(--accent);
+}
+
+main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px 16px;
+}

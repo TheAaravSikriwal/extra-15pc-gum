@@ -53,3 +53,19 @@ jobs:
       - run: sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib
       - run: cmake -S firmware -B build/h743 -DCMAKE_TOOLCHAIN_FILE="$PWD/firmware/cmake/arm-none-eabi.cmake" -DCMAKE_BUILD_TYPE=Release
       - run: cmake --build build/h743 --target pcs14_h743 -j 4
+
+  site:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: site
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npm run build

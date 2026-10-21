@@ -40,7 +40,7 @@ This is the live version. When a step finishes, its outcome goes here, with a li
 | Structure | Step 2 | Not started | |
 | Aero (the wind tunnel) | Step 2 | In progress | The visual half first: FluidX3D on the RTX 3060, the drone's drag lines and wake at 10 m/s ([spec](docs/specs/2026-10-20-wind-tunnel-visuals.md), [log](docs/log/2026-10-20-first-wind-tunnel.md)). The numbers come from OpenFOAM next |
 | Design hunt (v2) | Step 4 | Not started | |
-| Project site | Step 1 | In progress | The spec: Vite, React and TypeScript as a static folder, three.js for the clickable 3D drone, and every sim played back as if live ([spec](docs/specs/2026-10-20-project-site.md)). The plan: 13 test-first tasks, from a `pcs14 site` data command to a playback page per flight with both firmwares on one clock ([plan](docs/plans/2026-10-20-project-site.md)). Up next: task 1. Stays on my machine until the project is done, then joins my portfolio site |
+| Project site | Step 1 | In progress | The spec: Vite, React and TypeScript as a static folder, three.js for the clickable 3D drone, and every sim played back as if live ([spec](docs/specs/2026-10-20-project-site.md)). The plan: 13 test-first tasks, from a `pcs14 site` data command to a playback page per flight with both firmwares on one clock ([plan](docs/plans/2026-10-20-project-site.md)). Tasks 1 to 4 done: `pcs14 site` writes the spec sheet, the parts and the wires, matched to the CAD's model, and the site's skeleton builds and tests in CI, opening from a folder on disk. Up next: the playback clock (task 5). Stays on my machine until the project is done, then joins my portfolio site |
 
 ### Step 1, in detail
 

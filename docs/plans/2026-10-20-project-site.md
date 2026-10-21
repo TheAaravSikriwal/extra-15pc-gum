@@ -16,7 +16,7 @@ The data side is Python because the data is: the reports, the CAD's exports and 
 
 ## Calls made for the plan
 
-- **Hash routing** (`#/flights/base/hover`), so every page works from `file://` and from any folder on wearechintu.com, with no server rewrites.
+- **Hash routing** (`#/flights/base/hover`), so every page works from `file://` and from any folder on wearechintu.com, with no server rewrites. (And since browsers won't `fetch()` from `file://`, each data file also comes as a script the page can load with a script tag; decided while building task 4.)
 - **The fonts ship with the site,** through the @fontsource packages (the fonts are OFL, the packaging MIT): Space Grotesk, Inter and JetBrains Mono. No Google Fonts call from a page that's meant to work offline.
 - **The meshes get thinned on the site's side, with gltfpack** (meshoptimizer's, MIT), in the site's build. It's a JavaScript-world tool for a JavaScript-world file, and the CAD's GLB stays as the CAD makes it. The size budget is set after measuring what gltfpack does to the 28 MB GLB (task 4).
 - **The scene is tested through @react-three/test-renderer** (MIT): it builds the three.js scene graph without a GPU, so the tests can check that a click on a part opens its card and that switching a module off hides its parts. The picture itself gets checked by eye, with screenshots in the log.
@@ -48,5 +48,6 @@ The data side is Python because the data is: the reports, the CAD's exports and 
 
 | Date | Tasks | Notes |
 |---|---|---|
+| 2026-10-20 | 3 and 4 done | The skeleton: Vite 5, React 18 and TypeScript, Vitest with Testing Library, pinned to exact versions with the lockfile committed, and a `site` job in CI. The style's colors and fonts as CSS variables, with a pytest check that they stay `media/style.yaml`'s; the fonts ship with the site, Latin only. Hash routing, and a home page listing what `index.json` says is there. The build fails on any absolute link or a first load over 600 kB: the skeleton is 329. One finding on the way: browsers won't `fetch()` from a page opened as `file://`, which the plan promised would work, so `pcs14 site` also writes each data file as a small script, and the loader adds that as a script tag when the page is opened from disk. The CAD's 11.9 MB GLB thins to 3.0 MB with gltfpack at half the triangles, all 86 piece names kept; the 3D page's own budget gets set with task 8. Task 3 finished with the CAD and electrical reports rerun: 86 pieces, 28 routes, every one matched to the GLB |
 | 2026-10-20 | 1 and 2 done, 3's code in | `pcs14 site` writes `index.json` (each report found or not, from which commit) and `spec.json` (every combination's weights, checks and speeds, and the parts list with counts), through pydantic models exported to `site/schema/`. For task 3 the CAD report now lists its pieces, named as the GLB names its nodes, and the electrical report lists the wires along each CAD route; `parts.json` and `wires.json` get written once both reports are rerun. Task 4 needs `npm install`, which downloads the site's packages, so it waits for my yes |
 | 2026-10-20 | none yet | Plan written |

@@ -103,7 +103,12 @@ def glb_nodes(path) -> list[str]:
 
 def _write(out: Path, name: str, model) -> Path:
     path = out / f"{name}.json"
-    path.write_bytes((model.model_dump_json(indent=1) + "\n").encode("utf-8"))  # LF anywhere
+    text = model.model_dump_json(indent=1)
+    path.write_bytes((text + "\n").encode("utf-8"))  # LF anywhere
+    # and the same as a script: a page opened from disk (file://) can't fetch(), but it can run
+    # a script tag, which hands the data over on window.pcs14Data
+    script = f'(window.pcs14Data = window.pcs14Data || {{}})["{name}.json"] = {text};\n'
+    (out / f"{name}.js").write_bytes(script.encode("utf-8"))
     return path
 
 
