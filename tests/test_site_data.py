@@ -68,7 +68,7 @@ def test_the_command_writes_every_file_and_each_one_reads_back(tmp_path):
     assert main(["site", "--reports", str(REPORTS), "--out", str(out)]) == 0
     index = data.load(out / "index.json", schema.Index)
     for name in index.files:
-        data.load(out / name, schema.FILES[Path(name).stem])
+        data.load(out / name, data.shape_of(name))
 
 
 CAD = {"pieces": [

@@ -1,0 +1,88 @@
+{
+ "$defs": {
+  "LibraryDoc": {
+   "additionalProperties": false,
+   "properties": {
+    "path": {
+     "title": "Path",
+     "type": "string"
+    },
+    "title": {
+     "title": "Title",
+     "type": "string"
+    },
+    "section": {
+     "title": "Section",
+     "type": "string"
+    },
+    "url": {
+     "title": "Url",
+     "type": "string"
+    },
+    "date": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Date"
+    }
+   },
+   "required": [
+    "path",
+    "title",
+    "section",
+    "url"
+   ],
+   "title": "LibraryDoc",
+   "type": "object"
+  },
+  "LibrarySection": {
+   "additionalProperties": false,
+   "properties": {
+    "name": {
+     "title": "Name",
+     "type": "string"
+    },
+    "docs": {
+     "items": {
+      "$ref": "#/$defs/LibraryDoc"
+     },
+     "title": "Docs",
+     "type": "array"
+    }
+   },
+   "required": [
+    "name",
+    "docs"
+   ],
+   "title": "LibrarySection",
+   "type": "object"
+  }
+ },
+ "additionalProperties": false,
+ "description": "library.json: every Markdown doc in the repo, by section.",
+ "properties": {
+  "schema_version": {
+   "title": "Schema Version",
+   "type": "integer"
+  },
+  "sections": {
+   "items": {
+    "$ref": "#/$defs/LibrarySection"
+   },
+   "title": "Sections",
+   "type": "array"
+  }
+ },
+ "required": [
+  "schema_version",
+  "sections"
+ ],
+ "title": "Library",
+ "type": "object"
+}

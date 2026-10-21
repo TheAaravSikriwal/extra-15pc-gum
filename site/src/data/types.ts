@@ -289,6 +289,94 @@ export interface Build {
   open: string[];
 }
 
+export interface LibraryDoc {
+  path: string;
+  title: string;
+  section: string;
+  url: string;
+  date?: string | null;
+}
+
+export interface LibrarySection {
+  name: string;
+  docs: LibraryDoc[];
+}
+
+export interface Library {
+  schema_version: number;
+  sections: LibrarySection[];
+}
+
+export interface LibraryPage {
+  schema_version: number;
+  path: string;
+  title: string;
+  url: string;
+  html: string;
+}
+
+export interface CatalogPart {
+  id: string;
+  type: string;
+  maker: string;
+  model: string;
+  mass_g?: number | null;
+  price_usd?: number | null;
+  link?: string | null;
+  record: Record<string, unknown>;
+}
+
+export interface Catalog {
+  schema_version: number;
+  parts: CatalogPart[];
+}
+
+export interface RawFile {
+  name: string;
+  title: string;
+  source: string;
+  url: string;
+}
+
+export interface RawIndex {
+  schema_version: number;
+  files: RawFile[];
+}
+
+export interface RawData {
+  schema_version: number;
+  name: string;
+  source: string;
+  data: unknown;
+}
+
+export interface MathItem {
+  name: string;
+  kind: string;
+  signature: string;
+  doc: string;
+  line: number;
+}
+
+export interface MathModule {
+  path: string;
+  language: string;
+  doc: string;
+  url: string;
+  items: MathItem[];
+}
+
+export interface MathPackage {
+  name: string;
+  key: string;
+  modules: MathModule[];
+}
+
+export interface MathData {
+  schema_version: number;
+  packages: MathPackage[];
+}
+
 // the fields each shape has, for the check against the schema
 export const FIELDS = {
   ReportFound: ["file", "found", "generated", "verdict"],
@@ -374,4 +462,17 @@ export const FIELDS = {
   BuildTotal: ["setup", "usd", "unpriced", "printed", "printed_g"],
   BuildGuide: ["name", "url"],
   Build: ["schema_version", "generated", "totals", "lines", "guides", "open"],
+  LibraryDoc: ["path", "title", "section", "url", "date"],
+  LibrarySection: ["name", "docs"],
+  Library: ["schema_version", "sections"],
+  LibraryPage: ["schema_version", "path", "title", "url", "html"],
+  CatalogPart: ["id", "type", "maker", "model", "mass_g", "price_usd", "link", "record"],
+  Catalog: ["schema_version", "parts"],
+  RawFile: ["name", "title", "source", "url"],
+  RawIndex: ["schema_version", "files"],
+  RawData: ["schema_version", "name", "source", "data"],
+  MathItem: ["name", "kind", "signature", "doc", "line"],
+  MathModule: ["path", "language", "doc", "url", "items"],
+  MathPackage: ["name", "key", "modules"],
+  Math: ["schema_version", "packages"],
 } as const;

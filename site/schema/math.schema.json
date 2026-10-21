@@ -1,0 +1,123 @@
+{
+ "$defs": {
+  "MathItem": {
+   "additionalProperties": false,
+   "properties": {
+    "name": {
+     "title": "Name",
+     "type": "string"
+    },
+    "kind": {
+     "title": "Kind",
+     "type": "string"
+    },
+    "signature": {
+     "title": "Signature",
+     "type": "string"
+    },
+    "doc": {
+     "title": "Doc",
+     "type": "string"
+    },
+    "line": {
+     "title": "Line",
+     "type": "integer"
+    }
+   },
+   "required": [
+    "name",
+    "kind",
+    "signature",
+    "doc",
+    "line"
+   ],
+   "title": "MathItem",
+   "type": "object"
+  },
+  "MathModule": {
+   "additionalProperties": false,
+   "properties": {
+    "path": {
+     "title": "Path",
+     "type": "string"
+    },
+    "language": {
+     "title": "Language",
+     "type": "string"
+    },
+    "doc": {
+     "title": "Doc",
+     "type": "string"
+    },
+    "url": {
+     "title": "Url",
+     "type": "string"
+    },
+    "items": {
+     "items": {
+      "$ref": "#/$defs/MathItem"
+     },
+     "title": "Items",
+     "type": "array"
+    }
+   },
+   "required": [
+    "path",
+    "language",
+    "doc",
+    "url",
+    "items"
+   ],
+   "title": "MathModule",
+   "type": "object"
+  },
+  "MathPackage": {
+   "additionalProperties": false,
+   "properties": {
+    "name": {
+     "title": "Name",
+     "type": "string"
+    },
+    "key": {
+     "title": "Key",
+     "type": "string"
+    },
+    "modules": {
+     "items": {
+      "$ref": "#/$defs/MathModule"
+     },
+     "title": "Modules",
+     "type": "array"
+    }
+   },
+   "required": [
+    "name",
+    "key",
+    "modules"
+   ],
+   "title": "MathPackage",
+   "type": "object"
+  }
+ },
+ "additionalProperties": false,
+ "description": "math.json: how each number is worked out, from the code's own explanations.",
+ "properties": {
+  "schema_version": {
+   "title": "Schema Version",
+   "type": "integer"
+  },
+  "packages": {
+   "items": {
+    "$ref": "#/$defs/MathPackage"
+   },
+   "title": "Packages",
+   "type": "array"
+  }
+ },
+ "required": [
+  "schema_version",
+  "packages"
+ ],
+ "title": "Math",
+ "type": "object"
+}

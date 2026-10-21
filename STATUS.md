@@ -22,7 +22,7 @@ Where to look: the live plan in the [README](README.md#the-plan), the steps in t
 | 8. Build package | Done 2026-10-21. Parts with links, prices and fallbacks, the guides, PX4 first, the test plans and the legal checklist ([package](docs/build/README.md), [log](docs/log/2026-10-21-build-package.md)) |
 | Structure side track | First pass 2026-10-21: beam math. The arms are strong; they ring near the hover; the chute's mount needs a hang test ([report](docs/reports/structure/README.md), [log](docs/log/2026-10-21-structure-first-pass.md)) |
 | Aero side track | The visual half done: FluidX3D's cruise, crosswind and hover, now with frames along each run. The numbers wait for OpenFOAM |
-| Project site | Done 2026-10-20: the drone in 3D, the spec sheet, the wiring, every flight played back, a page per step, the tunnel, what the sims can't prove ([log](docs/log/2026-10-20-project-site.md)) |
+| Project site | Done 2026-10-20: the drone in 3D, the spec sheet, the wiring, every flight played back, a page per step, the tunnel, what the sims can't prove ([log](docs/log/2026-10-20-project-site.md)) Since 2026-10-21 it holds everything for the reskin: Build it, the library of every doc, the full catalog, every report's data, and the math. |
 
 **The design today (2026-10-20).** Mission is 2408 g in the sizing model (with the 200 g growth margin) and 2208 g in the CAD, and hovers 25.8 min (22.2 pessimistic, against the 21 target).
 

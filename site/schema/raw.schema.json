@@ -1,0 +1,54 @@
+{
+ "$defs": {
+  "RawFile": {
+   "additionalProperties": false,
+   "properties": {
+    "name": {
+     "title": "Name",
+     "type": "string"
+    },
+    "title": {
+     "title": "Title",
+     "type": "string"
+    },
+    "source": {
+     "title": "Source",
+     "type": "string"
+    },
+    "url": {
+     "title": "Url",
+     "type": "string"
+    }
+   },
+   "required": [
+    "name",
+    "title",
+    "source",
+    "url"
+   ],
+   "title": "RawFile",
+   "type": "object"
+  }
+ },
+ "additionalProperties": false,
+ "description": "raw.json: the reports' own data files, copied whole under raw/.",
+ "properties": {
+  "schema_version": {
+   "title": "Schema Version",
+   "type": "integer"
+  },
+  "files": {
+   "items": {
+    "$ref": "#/$defs/RawFile"
+   },
+   "title": "Files",
+   "type": "array"
+  }
+ },
+ "required": [
+  "schema_version",
+  "files"
+ ],
+ "title": "RawIndex",
+ "type": "object"
+}

@@ -1,5 +1,11 @@
 // The TypeScript shapes against the JSON Schema pcs14 site --schema exports (site/schema).
 import build from "../../schema/build.schema.json";
+import catalog from "../../schema/catalog.schema.json";
+import libraryPage from "../../schema/library-page.schema.json";
+import library from "../../schema/library.schema.json";
+import math from "../../schema/math.schema.json";
+import rawData from "../../schema/raw-data.schema.json";
+import raw from "../../schema/raw.schema.json";
 import flights from "../../schema/flights.schema.json";
 import index from "../../schema/index.schema.json";
 import parts from "../../schema/parts.schema.json";
@@ -79,5 +85,22 @@ test("the build package's shapes have the schema's fields", () => {
   expect(Object.keys(build.properties).sort()).toEqual([...FIELDS.Build].sort());
   for (const name of ["BuildLine", "BuildTotal", "BuildGuide"] as const) {
     expect(Object.keys(build.$defs[name].properties).sort()).toEqual([...FIELDS[name]].sort());
+  }
+});
+
+test("the library's, the catalog's, the raw data's and the math's shapes have the schema's fields", () => {
+  expect(Object.keys(library.properties).sort()).toEqual([...FIELDS.Library].sort());
+  for (const name of ["LibraryDoc", "LibrarySection"] as const) {
+    expect(Object.keys(library.$defs[name].properties).sort()).toEqual([...FIELDS[name]].sort());
+  }
+  expect(Object.keys(libraryPage.properties).sort()).toEqual([...FIELDS.LibraryPage].sort());
+  expect(Object.keys(catalog.properties).sort()).toEqual([...FIELDS.Catalog].sort());
+  expect(Object.keys(catalog.$defs.CatalogPart.properties).sort()).toEqual([...FIELDS.CatalogPart].sort());
+  expect(Object.keys(raw.properties).sort()).toEqual([...FIELDS.RawIndex].sort());
+  expect(Object.keys(raw.$defs.RawFile.properties).sort()).toEqual([...FIELDS.RawFile].sort());
+  expect(Object.keys(rawData.properties).sort()).toEqual([...FIELDS.RawData].sort());
+  expect(Object.keys(math.properties).sort()).toEqual([...FIELDS.Math].sort());
+  for (const name of ["MathItem", "MathModule", "MathPackage"] as const) {
+    expect(Object.keys(math.$defs[name].properties).sort()).toEqual([...FIELDS[name]].sort());
   }
 });

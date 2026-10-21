@@ -2,8 +2,12 @@
 import { lazy, type ReactNode, Suspense } from "react";
 
 import { Build } from "./pages/Build";
+import { Catalog } from "./pages/Catalog";
+import { Data } from "./pages/Data";
 import { Flights } from "./pages/Flights";
 import { Home } from "./pages/Home";
+import { Library } from "./pages/Library";
+import { MathPage } from "./pages/MathPage";
 import { Spec } from "./pages/Spec";
 import { StepPage, Steps } from "./pages/Steps";
 import { Tunnel } from "./pages/Tunnel";
@@ -25,6 +29,10 @@ export const PAGES: { route: string; name: string }[] = [
   { route: "tunnel", name: "The wind tunnel" },
   { route: "unproven", name: "What it can't prove" },
   { route: "build", name: "Build it" },
+  { route: "library", name: "The library" },
+  { route: "catalog", name: "The catalog" },
+  { route: "data", name: "The data" },
+  { route: "math", name: "The math" },
 ];
 
 export function pageFor(route: string[]): ReactNode {
@@ -56,6 +64,14 @@ export function pageFor(route: string[]): ReactNode {
       return <Unproven />;
     case "build":
       return <Build />;
+    case "library":
+      return <Library path={route.slice(1)} />;
+    case "catalog":
+      return <Catalog />;
+    case "data":
+      return <Data name={route[1]} />;
+    case "math":
+      return <MathPage />;
     case "wiring":
       return <Wiring board={route[1]} />;
     default:

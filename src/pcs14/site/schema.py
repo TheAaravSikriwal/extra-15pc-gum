@@ -6,6 +6,8 @@ which the site's TypeScript types follow. A file carries the schema version it w
 with, and the site refuses one from another version.
 """
 
+from typing import Any
+
 from pydantic import BaseModel, ConfigDict
 
 SCHEMA_VERSION = 1
@@ -329,6 +331,106 @@ class Build(_Shape):
     open: list[str]
 
 
+class LibraryDoc(_Shape):
+    path: str  # the repo path without .md, which is its route: #/library/<path>
+    title: str
+    section: str
+    url: str  # on GitHub
+    date: str | None = None  # from a dated file's name
+
+
+class LibrarySection(_Shape):
+    name: str
+    docs: list[LibraryDoc]
+
+
+class Library(_Shape):
+    """library.json: every Markdown doc in the repo, by section."""
+
+    schema_version: int
+    sections: list[LibrarySection]
+
+
+class LibraryPage(_Shape):
+    """library/<path>.json: one doc, rendered."""
+
+    schema_version: int
+    path: str
+    title: str
+    url: str
+    html: str
+
+
+class CatalogPart(_Shape):
+    id: str
+    type: str
+    maker: str
+    model: str
+    mass_g: float | None = None
+    price_usd: float | None = None
+    link: str | None = None
+    record: dict[str, Any]  # every field the catalog has for it
+
+
+class Catalog(_Shape):
+    """catalog.json: every part in the catalog, every field."""
+
+    schema_version: int
+    parts: list[CatalogPart]
+
+
+class RawFile(_Shape):
+    name: str
+    title: str
+    source: str  # the repo path
+    url: str
+
+
+class RawIndex(_Shape):
+    """raw.json: the reports' own data files, copied whole under raw/."""
+
+    schema_version: int
+    files: list[RawFile]
+
+
+class RawData(_Shape):
+    """raw/<name>.json: one report's data file, whole."""
+
+    schema_version: int
+    name: str
+    source: str
+    data: Any
+
+
+class MathItem(_Shape):
+    name: str
+    kind: str  # function, class or method
+    signature: str
+    doc: str
+    line: int
+
+
+class MathModule(_Shape):
+    path: str
+    language: str
+    doc: str
+    url: str
+    items: list[MathItem]
+
+
+class MathPackage(_Shape):
+    name: str
+    key: str
+    modules: list[MathModule]
+
+
+class Math(_Shape):
+    """math.json: how each number is worked out, from the code's own explanations."""
+
+    schema_version: int
+    packages: list[MathPackage]
+
+
 # each data file's name (without .json) and its shape
 FILES: dict[str, type[_Shape]] = {
     "index": Index,
@@ -342,4 +444,10 @@ FILES: dict[str, type[_Shape]] = {
     "unproven": Unproven,
     "wiring": Wiring,
     "build": Build,
+    "library": Library,
+    "library-page": LibraryPage,
+    "catalog": Catalog,
+    "raw": RawIndex,
+    "raw-data": RawData,
+    "math": Math,
 }

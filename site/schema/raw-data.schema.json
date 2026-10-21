@@ -1,0 +1,29 @@
+{
+ "additionalProperties": false,
+ "description": "raw/<name>.json: one report's data file, whole.",
+ "properties": {
+  "schema_version": {
+   "title": "Schema Version",
+   "type": "integer"
+  },
+  "name": {
+   "title": "Name",
+   "type": "string"
+  },
+  "source": {
+   "title": "Source",
+   "type": "string"
+  },
+  "data": {
+   "title": "Data"
+  }
+ },
+ "required": [
+  "schema_version",
+  "name",
+  "source",
+  "data"
+ ],
+ "title": "RawData",
+ "type": "object"
+}

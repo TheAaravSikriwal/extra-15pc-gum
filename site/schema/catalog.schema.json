@@ -1,0 +1,96 @@
+{
+ "$defs": {
+  "CatalogPart": {
+   "additionalProperties": false,
+   "properties": {
+    "id": {
+     "title": "Id",
+     "type": "string"
+    },
+    "type": {
+     "title": "Type",
+     "type": "string"
+    },
+    "maker": {
+     "title": "Maker",
+     "type": "string"
+    },
+    "model": {
+     "title": "Model",
+     "type": "string"
+    },
+    "mass_g": {
+     "anyOf": [
+      {
+       "type": "number"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Mass G"
+    },
+    "price_usd": {
+     "anyOf": [
+      {
+       "type": "number"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Price Usd"
+    },
+    "link": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Link"
+    },
+    "record": {
+     "additionalProperties": true,
+     "title": "Record",
+     "type": "object"
+    }
+   },
+   "required": [
+    "id",
+    "type",
+    "maker",
+    "model",
+    "record"
+   ],
+   "title": "CatalogPart",
+   "type": "object"
+  }
+ },
+ "additionalProperties": false,
+ "description": "catalog.json: every part in the catalog, every field.",
+ "properties": {
+  "schema_version": {
+   "title": "Schema Version",
+   "type": "integer"
+  },
+  "parts": {
+   "items": {
+    "$ref": "#/$defs/CatalogPart"
+   },
+   "title": "Parts",
+   "type": "array"
+  }
+ },
+ "required": [
+  "schema_version",
+  "parts"
+ ],
+ "title": "Catalog",
+ "type": "object"
+}

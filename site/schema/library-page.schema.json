@@ -1,0 +1,35 @@
+{
+ "additionalProperties": false,
+ "description": "library/<path>.json: one doc, rendered.",
+ "properties": {
+  "schema_version": {
+   "title": "Schema Version",
+   "type": "integer"
+  },
+  "path": {
+   "title": "Path",
+   "type": "string"
+  },
+  "title": {
+   "title": "Title",
+   "type": "string"
+  },
+  "url": {
+   "title": "Url",
+   "type": "string"
+  },
+  "html": {
+   "title": "Html",
+   "type": "string"
+  }
+ },
+ "required": [
+  "schema_version",
+  "path",
+  "title",
+  "url",
+  "html"
+ ],
+ "title": "LibraryPage",
+ "type": "object"
+}

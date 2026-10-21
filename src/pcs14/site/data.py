@@ -107,6 +107,7 @@ def glb_nodes(path) -> list[str]:
 
 def _write(out: Path, name: str, model) -> Path:
     path = out / f"{name}.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
     text = model.model_dump_json(indent=1)
     path.write_bytes((text + "\n").encode("utf-8"))  # LF anywhere
     # and the same as a script: a page opened from disk (file://) can't fetch(), but it can run
@@ -187,6 +188,16 @@ def build_data(package: dict) -> schema.Build:
     )
 
 
+def shape_of(name: str):
+    """The shape of a data file, by its path in the data folder: library/... is one doc,
+    raw/... one report's data, and the rest by their own names."""
+    if name.startswith("library/"):
+        return schema.FILES["library-page"]
+    if name.startswith("raw/"):
+        return schema.FILES["raw-data"]
+    return schema.FILES[Path(name).stem]
+
+
 def write_all(out, reports, commit: str | None = None, today: str | None = None) -> list[Path]:
     """Writes every data file the reports allow, then index.json; returns the paths."""
     out, reports = Path(out), Path(reports)
@@ -220,6 +231,10 @@ def write_all(out, reports, commit: str | None = None, today: str | None = None)
         from pcs14.site.steps import steps_data
 
         written.append(_write(out, "steps", steps_data(readme, reports.resolve().parent, out)))
+    # everything else: every doc, every part, every report's data, and the math
+    from pcs14.site.library import write_everything
+
+    written += write_everything(docs.parent, out)
     # the build package, when pcs14 package has written it
     package = docs / "build" / "package.json"
     if package.is_file():
@@ -237,7 +252,8 @@ def write_all(out, reports, commit: str | None = None, today: str | None = None)
             )  # fmt: skip
             for name, d in found.items()
         },
-        files=[p.name for p in written if p.suffix == ".json"],  # the data, not the pictures
+        # the data, not the pictures, by their paths in the data folder
+        files=[p.relative_to(out).as_posix() for p in written if p.suffix == ".json"],
     )
     return [*written, _write(out, "index", index)]
 
