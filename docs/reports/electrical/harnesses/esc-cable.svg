@@ -80,7 +80,7 @@
 <polygon fill="none" stroke="black" points="380.97,-561.62 380.97,-585.37 474.22,-585.37 474.22,-561.62 380.97,-561.62"/>
 <text xml:space="preserve" text-anchor="start" x="401.72" y="-568.62" font-family="Arial" font-size="14.00">28 AWG</text>
 <polygon fill="none" stroke="black" points="474.22,-561.62 474.22,-585.37 565.22,-585.37 565.22,-561.62 474.22,-561.62"/>
-<text xml:space="preserve" text-anchor="start" x="494.97" y="-568.62" font-family="Arial" font-size="14.00">0.056 m</text>
+<text xml:space="preserve" text-anchor="start" x="494.97" y="-568.62" font-family="Arial" font-size="14.00">0.052 m</text>
 <text xml:space="preserve" text-anchor="start" x="367.72" y="-546.87" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="327.22" y="-527.12" font-family="Arial" font-size="14.00">fc&#45;ESC:4:CH1</text>
 <text xml:space="preserve" text-anchor="start" x="415.97" y="-527.12" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:TQ &#160;&#160;&#160;</text>
@@ -108,7 +108,7 @@
 <polygon fill="none" stroke="black" points="380.97,-424.62 380.97,-448.37 474.22,-448.37 474.22,-424.62 380.97,-424.62"/>
 <text xml:space="preserve" text-anchor="start" x="401.72" y="-431.62" font-family="Arial" font-size="14.00">28 AWG</text>
 <polygon fill="none" stroke="black" points="474.22,-424.62 474.22,-448.37 565.22,-448.37 565.22,-424.62 474.22,-424.62"/>
-<text xml:space="preserve" text-anchor="start" x="494.97" y="-431.62" font-family="Arial" font-size="14.00">0.056 m</text>
+<text xml:space="preserve" text-anchor="start" x="494.97" y="-431.62" font-family="Arial" font-size="14.00">0.052 m</text>
 <text xml:space="preserve" text-anchor="start" x="367.72" y="-409.87" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="327.22" y="-390.12" font-family="Arial" font-size="14.00">fc&#45;ESC:5:CH2</text>
 <text xml:space="preserve" text-anchor="start" x="415.97" y="-390.12" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:TQ &#160;&#160;&#160;</text>
@@ -136,7 +136,7 @@
 <polygon fill="none" stroke="black" points="379.72,-287.62 379.72,-311.37 475.47,-311.37 475.47,-287.62 379.72,-287.62"/>
 <text xml:space="preserve" text-anchor="start" x="401.72" y="-294.62" font-family="Arial" font-size="14.00">28 AWG</text>
 <polygon fill="none" stroke="black" points="475.47,-287.62 475.47,-311.37 568.97,-311.37 568.97,-287.62 475.47,-287.62"/>
-<text xml:space="preserve" text-anchor="start" x="497.47" y="-294.62" font-family="Arial" font-size="14.00">0.056 m</text>
+<text xml:space="preserve" text-anchor="start" x="497.47" y="-294.62" font-family="Arial" font-size="14.00">0.052 m</text>
 <text xml:space="preserve" text-anchor="start" x="363.97" y="-272.87" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="323.47" y="-253.12" font-family="Arial" font-size="14.00">fc&#45;ESC:6:CH3</text>
 <text xml:space="preserve" text-anchor="start" x="412.22" y="-253.12" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:TQ &#160;&#160;&#160;</text>
@@ -164,7 +164,7 @@
 <polygon fill="none" stroke="black" points="379.72,-150.62 379.72,-174.37 475.47,-174.37 475.47,-150.62 379.72,-150.62"/>
 <text xml:space="preserve" text-anchor="start" x="401.72" y="-157.62" font-family="Arial" font-size="14.00">28 AWG</text>
 <polygon fill="none" stroke="black" points="475.47,-150.62 475.47,-174.37 568.97,-174.37 568.97,-150.62 475.47,-150.62"/>
-<text xml:space="preserve" text-anchor="start" x="497.47" y="-157.62" font-family="Arial" font-size="14.00">0.056 m</text>
+<text xml:space="preserve" text-anchor="start" x="497.47" y="-157.62" font-family="Arial" font-size="14.00">0.052 m</text>
 <text xml:space="preserve" text-anchor="start" x="363.97" y="-135.87" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="323.47" y="-116.12" font-family="Arial" font-size="14.00">fc&#45;ESC:7:CH4</text>
 <text xml:space="preserve" text-anchor="start" x="412.22" y="-116.12" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:TQ &#160;&#160;&#160;</text>
@@ -313,7 +313,7 @@
 <polygon fill="none" stroke="black" points="1076.22,-561.62 1076.22,-585.37 1167.97,-585.37 1167.97,-561.62 1076.22,-561.62"/>
 <text xml:space="preserve" text-anchor="start" x="1096.22" y="-568.62" font-family="Arial" font-size="14.00">28 AWG</text>
 <polygon fill="none" stroke="black" points="1167.97,-561.62 1167.97,-585.37 1257.47,-585.37 1257.47,-561.62 1167.97,-561.62"/>
-<text xml:space="preserve" text-anchor="start" x="1187.97" y="-568.62" font-family="Arial" font-size="14.00">0.039 m</text>
+<text xml:space="preserve" text-anchor="start" x="1187.97" y="-568.62" font-family="Arial" font-size="14.00">0.046 m</text>
 <text xml:space="preserve" text-anchor="start" x="1062.6" y="-546.87" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="1023.97" y="-527.12" font-family="Arial" font-size="14.00">cut&#45;J1:5:CM1</text>
 <text xml:space="preserve" text-anchor="start" x="1108.97" y="-527.12" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:TQ &#160;&#160;&#160;</text>
@@ -341,7 +341,7 @@
 <polygon fill="none" stroke="black" points="1076.22,-424.62 1076.22,-448.37 1167.97,-448.37 1167.97,-424.62 1076.22,-424.62"/>
 <text xml:space="preserve" text-anchor="start" x="1096.22" y="-431.62" font-family="Arial" font-size="14.00">28 AWG</text>
 <polygon fill="none" stroke="black" points="1167.97,-424.62 1167.97,-448.37 1257.47,-448.37 1257.47,-424.62 1167.97,-424.62"/>
-<text xml:space="preserve" text-anchor="start" x="1187.97" y="-431.62" font-family="Arial" font-size="14.00">0.039 m</text>
+<text xml:space="preserve" text-anchor="start" x="1187.97" y="-431.62" font-family="Arial" font-size="14.00">0.046 m</text>
 <text xml:space="preserve" text-anchor="start" x="1062.6" y="-409.87" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="1023.97" y="-390.12" font-family="Arial" font-size="14.00">cut&#45;J1:8:CM2</text>
 <text xml:space="preserve" text-anchor="start" x="1108.97" y="-390.12" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:TQ &#160;&#160;&#160;</text>
@@ -369,7 +369,7 @@
 <polygon fill="none" stroke="black" points="1075.1,-287.62 1075.1,-311.37 1169.1,-311.37 1169.1,-287.62 1075.1,-287.62"/>
 <text xml:space="preserve" text-anchor="start" x="1096.22" y="-294.62" font-family="Arial" font-size="14.00">28 AWG</text>
 <polygon fill="none" stroke="black" points="1169.1,-287.62 1169.1,-311.37 1260.85,-311.37 1260.85,-287.62 1169.1,-287.62"/>
-<text xml:space="preserve" text-anchor="start" x="1190.22" y="-294.62" font-family="Arial" font-size="14.00">0.039 m</text>
+<text xml:space="preserve" text-anchor="start" x="1190.22" y="-294.62" font-family="Arial" font-size="14.00">0.046 m</text>
 <text xml:space="preserve" text-anchor="start" x="1062.6" y="-272.87" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="1020.6" y="-253.12" font-family="Arial" font-size="14.00">cut&#45;J1:11:CM3</text>
 <text xml:space="preserve" text-anchor="start" x="1112.35" y="-253.12" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:TQ &#160;&#160;&#160;</text>
@@ -397,7 +397,7 @@
 <polygon fill="none" stroke="black" points="1074.97,-150.62 1074.97,-174.37 1169.22,-174.37 1169.22,-150.62 1074.97,-150.62"/>
 <text xml:space="preserve" text-anchor="start" x="1096.22" y="-157.62" font-family="Arial" font-size="14.00">28 AWG</text>
 <polygon fill="none" stroke="black" points="1169.22,-150.62 1169.22,-174.37 1261.22,-174.37 1261.22,-150.62 1169.22,-150.62"/>
-<text xml:space="preserve" text-anchor="start" x="1190.47" y="-157.62" font-family="Arial" font-size="14.00">0.039 m</text>
+<text xml:space="preserve" text-anchor="start" x="1190.47" y="-157.62" font-family="Arial" font-size="14.00">0.046 m</text>
 <text xml:space="preserve" text-anchor="start" x="1062.6" y="-135.87" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="1020.22" y="-116.12" font-family="Arial" font-size="14.00">cut&#45;J1:14:CM4</text>
 <text xml:space="preserve" text-anchor="start" x="1112.72" y="-116.12" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:TQ &#160;&#160;&#160;</text>

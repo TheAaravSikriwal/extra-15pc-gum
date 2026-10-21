@@ -56,7 +56,7 @@
 <polygon fill="none" stroke="black" points="414.75,-1946.83 414.75,-1970.58 526.5,-1970.58 526.5,-1946.83 414.75,-1946.83"/>
 <text xml:space="preserve" text-anchor="start" x="444.75" y="-1953.83" font-family="Arial" font-size="14.00">26 AWG</text>
 <polygon fill="none" stroke="black" points="526.5,-1946.83 526.5,-1970.58 636,-1970.58 636,-1946.83 526.5,-1946.83"/>
-<text xml:space="preserve" text-anchor="start" x="556.5" y="-1953.83" font-family="Arial" font-size="14.00">0.046 m</text>
+<text xml:space="preserve" text-anchor="start" x="556.5" y="-1953.83" font-family="Arial" font-size="14.00">0.068 m</text>
 <text xml:space="preserve" text-anchor="start" x="386.75" y="-1932.08" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="342.5" y="-1912.33" font-family="Arial" font-size="14.00">fc&#45;TELEM:1:5V</text>
 <text xml:space="preserve" text-anchor="start" x="438.75" y="-1912.33" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:RD &#160;&#160;&#160;</text>
@@ -167,12 +167,12 @@
 <polygon fill="#f4f4f2" stroke="black" points="639.75,-1854.33 336.75,-1854.33 336.75,-1741.58 639.75,-1741.58 639.75,-1854.33"/>
 <polygon fill="none" stroke="black" points="336.75,-1830.58 336.75,-1854.33 639.75,-1854.33 639.75,-1830.58 336.75,-1830.58"/>
 <text xml:space="preserve" text-anchor="start" x="474" y="-1837.58" font-family="Arial" font-size="14.00">W48</text>
-<polygon fill="none" stroke="black" points="336.75,-1806.83 336.75,-1830.58 413.5,-1830.58 413.5,-1806.83 336.75,-1806.83"/>
-<text xml:space="preserve" text-anchor="start" x="368" y="-1813.83" font-family="Arial" font-size="14.00">1x</text>
-<polygon fill="none" stroke="black" points="413.5,-1806.83 413.5,-1830.58 527.75,-1830.58 527.75,-1806.83 413.5,-1806.83"/>
-<text xml:space="preserve" text-anchor="start" x="444.75" y="-1813.83" font-family="Arial" font-size="14.00">26 AWG</text>
-<polygon fill="none" stroke="black" points="527.75,-1806.83 527.75,-1830.58 639.75,-1830.58 639.75,-1806.83 527.75,-1806.83"/>
-<text xml:space="preserve" text-anchor="start" x="559" y="-1813.83" font-family="Arial" font-size="14.00">0.084 m</text>
+<polygon fill="none" stroke="black" points="336.75,-1806.83 336.75,-1830.58 414,-1830.58 414,-1806.83 336.75,-1806.83"/>
+<text xml:space="preserve" text-anchor="start" x="368.25" y="-1813.83" font-family="Arial" font-size="14.00">1x</text>
+<polygon fill="none" stroke="black" points="414,-1806.83 414,-1830.58 528.75,-1830.58 528.75,-1806.83 414,-1806.83"/>
+<text xml:space="preserve" text-anchor="start" x="445.5" y="-1813.83" font-family="Arial" font-size="14.00">26 AWG</text>
+<polygon fill="none" stroke="black" points="528.75,-1806.83 528.75,-1830.58 639.75,-1830.58 639.75,-1806.83 528.75,-1806.83"/>
+<text xml:space="preserve" text-anchor="start" x="560.25" y="-1813.83" font-family="Arial" font-size="14.00">0.111 m</text>
 <text xml:space="preserve" text-anchor="start" x="386.75" y="-1792.08" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="338.75" y="-1772.33" font-family="Arial" font-size="14.00">bec&#45;pads:4:OUT</text>
 <text xml:space="preserve" text-anchor="start" x="442.5" y="-1772.33" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:RD &#160;&#160;&#160;</text>
@@ -478,12 +478,12 @@
 <polygon fill="#f4f4f2" stroke="black" points="2257.88,-1463.33 1948.88,-1463.33 1948.88,-1350.58 2257.88,-1350.58 2257.88,-1463.33"/>
 <polygon fill="none" stroke="black" points="1948.88,-1439.58 1948.88,-1463.33 2257.88,-1463.33 2257.88,-1439.58 1948.88,-1439.58"/>
 <text xml:space="preserve" text-anchor="start" x="2089.12" y="-1446.58" font-family="Arial" font-size="14.00">W52</text>
-<polygon fill="none" stroke="black" points="1948.88,-1415.83 1948.88,-1439.58 2030.12,-1439.58 2030.12,-1415.83 1948.88,-1415.83"/>
-<text xml:space="preserve" text-anchor="start" x="1982.38" y="-1422.83" font-family="Arial" font-size="14.00">1x</text>
-<polygon fill="none" stroke="black" points="2030.12,-1415.83 2030.12,-1439.58 2148.88,-1439.58 2148.88,-1415.83 2030.12,-1415.83"/>
-<text xml:space="preserve" text-anchor="start" x="2063.62" y="-1422.83" font-family="Arial" font-size="14.00">26 AWG</text>
-<polygon fill="none" stroke="black" points="2148.88,-1415.83 2148.88,-1439.58 2257.88,-1439.58 2257.88,-1415.83 2148.88,-1415.83"/>
-<text xml:space="preserve" text-anchor="start" x="2182.38" y="-1422.83" font-family="Arial" font-size="14.00">0.02 m</text>
+<polygon fill="none" stroke="black" points="1948.88,-1415.83 1948.88,-1439.58 2027.62,-1439.58 2027.62,-1415.83 1948.88,-1415.83"/>
+<text xml:space="preserve" text-anchor="start" x="1981.12" y="-1422.83" font-family="Arial" font-size="14.00">1x</text>
+<polygon fill="none" stroke="black" points="2027.62,-1415.83 2027.62,-1439.58 2143.88,-1439.58 2143.88,-1415.83 2027.62,-1415.83"/>
+<text xml:space="preserve" text-anchor="start" x="2059.88" y="-1422.83" font-family="Arial" font-size="14.00">26 AWG</text>
+<polygon fill="none" stroke="black" points="2143.88,-1415.83 2143.88,-1439.58 2257.88,-1439.58 2257.88,-1415.83 2143.88,-1415.83"/>
+<text xml:space="preserve" text-anchor="start" x="2176.12" y="-1422.83" font-family="Arial" font-size="14.00">0.104 m</text>
 <text xml:space="preserve" text-anchor="start" x="2002.25" y="-1401.08" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="1950.88" y="-1381.33" font-family="Arial" font-size="14.00">teensy&#45;pins:18:14</text>
 <text xml:space="preserve" text-anchor="start" x="2061.38" y="-1381.33" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:BU &#160;&#160;&#160;</text>
@@ -819,7 +819,7 @@
 <polygon fill="none" stroke="black" points="2014.5,-270.83 2014.5,-294.58 2157,-294.58 2157,-270.83 2014.5,-270.83"/>
 <text xml:space="preserve" text-anchor="start" x="2059.88" y="-277.83" font-family="Arial" font-size="14.00">26 AWG</text>
 <polygon fill="none" stroke="black" points="2157,-270.83 2157,-294.58 2297.25,-294.58 2297.25,-270.83 2157,-270.83"/>
-<text xml:space="preserve" text-anchor="start" x="2202.38" y="-277.83" font-family="Arial" font-size="14.00">0.018 m</text>
+<text xml:space="preserve" text-anchor="start" x="2202.38" y="-277.83" font-family="Arial" font-size="14.00">0.021 m</text>
 <text xml:space="preserve" text-anchor="start" x="1962.88" y="-256.08" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="1911.5" y="-236.33" font-family="Arial" font-size="14.00">teensy&#45;pins:35:31</text>
 <text xml:space="preserve" text-anchor="start" x="2022" y="-236.33" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:BU &#160;&#160;&#160;</text>
@@ -847,7 +847,7 @@
 <polygon fill="none" stroke="black" points="2019,-133.83 2019,-157.58 2152.5,-157.58 2152.5,-133.83 2019,-133.83"/>
 <text xml:space="preserve" text-anchor="start" x="2059.88" y="-140.83" font-family="Arial" font-size="14.00">26 AWG</text>
 <polygon fill="none" stroke="black" points="2152.5,-133.83 2152.5,-157.58 2283.75,-157.58 2283.75,-133.83 2152.5,-133.83"/>
-<text xml:space="preserve" text-anchor="start" x="2193.38" y="-140.83" font-family="Arial" font-size="14.00">0.018 m</text>
+<text xml:space="preserve" text-anchor="start" x="2193.38" y="-140.83" font-family="Arial" font-size="14.00">0.021 m</text>
 <text xml:space="preserve" text-anchor="start" x="1976.38" y="-119.08" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="1925" y="-99.33" font-family="Arial" font-size="14.00">teensy&#45;pins:41:37</text>
 <text xml:space="preserve" text-anchor="start" x="2035.5" y="-99.33" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:BU &#160;&#160;&#160;</text>
@@ -919,12 +919,12 @@
 <polygon fill="#f4f4f2" stroke="black" points="3077.25,-1730.33 2800.5,-1730.33 2800.5,-1617.58 3077.25,-1617.58 3077.25,-1730.33"/>
 <polygon fill="none" stroke="black" points="2800.5,-1706.58 2800.5,-1730.33 3077.25,-1730.33 3077.25,-1706.58 2800.5,-1706.58"/>
 <text xml:space="preserve" text-anchor="start" x="2924.62" y="-1713.58" font-family="Arial" font-size="14.00">W50</text>
-<polygon fill="none" stroke="black" points="2800.5,-1682.83 2800.5,-1706.58 2871,-1706.58 2871,-1682.83 2800.5,-1682.83"/>
-<text xml:space="preserve" text-anchor="start" x="2828.62" y="-1689.83" font-family="Arial" font-size="14.00">1x</text>
-<polygon fill="none" stroke="black" points="2871,-1682.83 2871,-1706.58 2979,-1706.58 2979,-1682.83 2871,-1682.83"/>
-<text xml:space="preserve" text-anchor="start" x="2899.12" y="-1689.83" font-family="Arial" font-size="14.00">26 AWG</text>
-<polygon fill="none" stroke="black" points="2979,-1682.83 2979,-1706.58 3077.25,-1706.58 3077.25,-1682.83 2979,-1682.83"/>
-<text xml:space="preserve" text-anchor="start" x="3007.12" y="-1689.83" font-family="Arial" font-size="14.00">0.02 m</text>
+<polygon fill="none" stroke="black" points="2800.5,-1682.83 2800.5,-1706.58 2868.5,-1706.58 2868.5,-1682.83 2800.5,-1682.83"/>
+<text xml:space="preserve" text-anchor="start" x="2827.38" y="-1689.83" font-family="Arial" font-size="14.00">1x</text>
+<polygon fill="none" stroke="black" points="2868.5,-1682.83 2868.5,-1706.58 2974,-1706.58 2974,-1682.83 2868.5,-1682.83"/>
+<text xml:space="preserve" text-anchor="start" x="2895.38" y="-1689.83" font-family="Arial" font-size="14.00">26 AWG</text>
+<polygon fill="none" stroke="black" points="2974,-1682.83 2974,-1706.58 3077.25,-1706.58 3077.25,-1682.83 2974,-1682.83"/>
+<text xml:space="preserve" text-anchor="start" x="3000.88" y="-1689.83" font-family="Arial" font-size="14.00">0.104 m</text>
 <text xml:space="preserve" text-anchor="start" x="2844.12" y="-1668.08" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="2802.5" y="-1648.33" font-family="Arial" font-size="14.00">fc&#45;VTX:2:GND</text>
 <text xml:space="preserve" text-anchor="start" x="2893.5" y="-1648.33" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:BK &#160;&#160;&#160;</text>
@@ -947,12 +947,12 @@
 <polygon fill="#f4f4f2" stroke="black" points="3074.62,-1456.33 2803.12,-1456.33 2803.12,-1343.58 3074.62,-1343.58 3074.62,-1456.33"/>
 <polygon fill="none" stroke="black" points="2803.12,-1432.58 2803.12,-1456.33 3074.62,-1456.33 3074.62,-1432.58 2803.12,-1432.58"/>
 <text xml:space="preserve" text-anchor="start" x="2924.62" y="-1439.58" font-family="Arial" font-size="14.00">W51</text>
-<polygon fill="none" stroke="black" points="2803.12,-1408.83 2803.12,-1432.58 2871.88,-1432.58 2871.88,-1408.83 2803.12,-1408.83"/>
-<text xml:space="preserve" text-anchor="start" x="2830.38" y="-1415.83" font-family="Arial" font-size="14.00">1x</text>
-<polygon fill="none" stroke="black" points="2871.88,-1408.83 2871.88,-1432.58 2978.12,-1432.58 2978.12,-1408.83 2871.88,-1408.83"/>
-<text xml:space="preserve" text-anchor="start" x="2899.12" y="-1415.83" font-family="Arial" font-size="14.00">26 AWG</text>
-<polygon fill="none" stroke="black" points="2978.12,-1408.83 2978.12,-1432.58 3074.62,-1432.58 3074.62,-1408.83 2978.12,-1408.83"/>
-<text xml:space="preserve" text-anchor="start" x="3005.38" y="-1415.83" font-family="Arial" font-size="14.00">0.02 m</text>
+<polygon fill="none" stroke="black" points="2803.12,-1408.83 2803.12,-1432.58 2869.38,-1432.58 2869.38,-1408.83 2803.12,-1408.83"/>
+<text xml:space="preserve" text-anchor="start" x="2829.12" y="-1415.83" font-family="Arial" font-size="14.00">1x</text>
+<polygon fill="none" stroke="black" points="2869.38,-1408.83 2869.38,-1432.58 2973.12,-1432.58 2973.12,-1408.83 2869.38,-1408.83"/>
+<text xml:space="preserve" text-anchor="start" x="2895.38" y="-1415.83" font-family="Arial" font-size="14.00">26 AWG</text>
+<polygon fill="none" stroke="black" points="2973.12,-1408.83 2973.12,-1432.58 3074.62,-1432.58 3074.62,-1408.83 2973.12,-1408.83"/>
+<text xml:space="preserve" text-anchor="start" x="2999.12" y="-1415.83" font-family="Arial" font-size="14.00">0.104 m</text>
 <text xml:space="preserve" text-anchor="start" x="2865.88" y="-1394.08" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="2805.12" y="-1374.33" font-family="Arial" font-size="14.00">fc&#45;VTX:3:UART5_TX</text>
 <text xml:space="preserve" text-anchor="start" x="2934.38" y="-1374.33" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:BU &#160;&#160;&#160;</text>
@@ -1162,12 +1162,12 @@
 <polygon fill="#f4f4f2" stroke="black" points="604.12,-1712.33 372.38,-1712.33 372.38,-1599.58 604.12,-1599.58 604.12,-1712.33"/>
 <polygon fill="none" stroke="black" points="372.38,-1688.58 372.38,-1712.33 604.12,-1712.33 604.12,-1688.58 372.38,-1688.58"/>
 <text xml:space="preserve" text-anchor="start" x="474" y="-1695.58" font-family="Arial" font-size="14.00">W55</text>
-<polygon fill="none" stroke="black" points="372.38,-1664.83 372.38,-1688.58 427.88,-1688.58 427.88,-1664.83 372.38,-1664.83"/>
-<text xml:space="preserve" text-anchor="start" x="393" y="-1671.83" font-family="Arial" font-size="14.00">1x</text>
-<polygon fill="none" stroke="black" points="427.88,-1664.83 427.88,-1688.58 520.88,-1688.58 520.88,-1664.83 427.88,-1664.83"/>
-<text xml:space="preserve" text-anchor="start" x="448.5" y="-1671.83" font-family="Arial" font-size="14.00">28 AWG</text>
-<polygon fill="none" stroke="black" points="520.88,-1664.83 520.88,-1688.58 604.12,-1688.58 604.12,-1664.83 520.88,-1664.83"/>
-<text xml:space="preserve" text-anchor="start" x="541.5" y="-1671.83" font-family="Arial" font-size="14.00">0.08 m</text>
+<polygon fill="none" stroke="black" points="372.38,-1664.83 372.38,-1688.58 425.38,-1688.58 425.38,-1664.83 372.38,-1664.83"/>
+<text xml:space="preserve" text-anchor="start" x="391.75" y="-1671.83" font-family="Arial" font-size="14.00">1x</text>
+<polygon fill="none" stroke="black" points="425.38,-1664.83 425.38,-1688.58 515.88,-1688.58 515.88,-1664.83 425.38,-1664.83"/>
+<text xml:space="preserve" text-anchor="start" x="444.75" y="-1671.83" font-family="Arial" font-size="14.00">28 AWG</text>
+<polygon fill="none" stroke="black" points="515.88,-1664.83 515.88,-1688.58 604.12,-1688.58 604.12,-1664.83 515.88,-1664.83"/>
+<text xml:space="preserve" text-anchor="start" x="535.25" y="-1671.83" font-family="Arial" font-size="14.00">0.077 m</text>
 <text xml:space="preserve" text-anchor="start" x="414.88" y="-1650.08" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="374.38" y="-1630.33" font-family="Arial" font-size="14.00">fc&#45;ESC:4:CH1</text>
 <text xml:space="preserve" text-anchor="start" x="463.12" y="-1630.33" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:TQ &#160;&#160;&#160;</text>
@@ -1190,12 +1190,12 @@
 <polygon fill="#f4f4f2" stroke="black" points="604.12,-1564.33 372.38,-1564.33 372.38,-1451.58 604.12,-1451.58 604.12,-1564.33"/>
 <polygon fill="none" stroke="black" points="372.38,-1540.58 372.38,-1564.33 604.12,-1564.33 604.12,-1540.58 372.38,-1540.58"/>
 <text xml:space="preserve" text-anchor="start" x="474" y="-1547.58" font-family="Arial" font-size="14.00">W56</text>
-<polygon fill="none" stroke="black" points="372.38,-1516.83 372.38,-1540.58 427.88,-1540.58 427.88,-1516.83 372.38,-1516.83"/>
-<text xml:space="preserve" text-anchor="start" x="393" y="-1523.83" font-family="Arial" font-size="14.00">1x</text>
-<polygon fill="none" stroke="black" points="427.88,-1516.83 427.88,-1540.58 520.88,-1540.58 520.88,-1516.83 427.88,-1516.83"/>
-<text xml:space="preserve" text-anchor="start" x="448.5" y="-1523.83" font-family="Arial" font-size="14.00">28 AWG</text>
-<polygon fill="none" stroke="black" points="520.88,-1516.83 520.88,-1540.58 604.12,-1540.58 604.12,-1516.83 520.88,-1516.83"/>
-<text xml:space="preserve" text-anchor="start" x="541.5" y="-1523.83" font-family="Arial" font-size="14.00">0.08 m</text>
+<polygon fill="none" stroke="black" points="372.38,-1516.83 372.38,-1540.58 425.38,-1540.58 425.38,-1516.83 372.38,-1516.83"/>
+<text xml:space="preserve" text-anchor="start" x="391.75" y="-1523.83" font-family="Arial" font-size="14.00">1x</text>
+<polygon fill="none" stroke="black" points="425.38,-1516.83 425.38,-1540.58 515.88,-1540.58 515.88,-1516.83 425.38,-1516.83"/>
+<text xml:space="preserve" text-anchor="start" x="444.75" y="-1523.83" font-family="Arial" font-size="14.00">28 AWG</text>
+<polygon fill="none" stroke="black" points="515.88,-1516.83 515.88,-1540.58 604.12,-1540.58 604.12,-1516.83 515.88,-1516.83"/>
+<text xml:space="preserve" text-anchor="start" x="535.25" y="-1523.83" font-family="Arial" font-size="14.00">0.077 m</text>
 <text xml:space="preserve" text-anchor="start" x="414.88" y="-1502.08" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="374.38" y="-1482.33" font-family="Arial" font-size="14.00">fc&#45;ESC:5:CH2</text>
 <text xml:space="preserve" text-anchor="start" x="463.12" y="-1482.33" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:TQ &#160;&#160;&#160;</text>
@@ -1218,12 +1218,12 @@
 <polygon fill="#f4f4f2" stroke="black" points="604.12,-1419.33 372.38,-1419.33 372.38,-1306.58 604.12,-1306.58 604.12,-1419.33"/>
 <polygon fill="none" stroke="black" points="372.38,-1395.58 372.38,-1419.33 604.12,-1419.33 604.12,-1395.58 372.38,-1395.58"/>
 <text xml:space="preserve" text-anchor="start" x="474" y="-1402.58" font-family="Arial" font-size="14.00">W57</text>
-<polygon fill="none" stroke="black" points="372.38,-1371.83 372.38,-1395.58 427.88,-1395.58 427.88,-1371.83 372.38,-1371.83"/>
-<text xml:space="preserve" text-anchor="start" x="393" y="-1378.83" font-family="Arial" font-size="14.00">1x</text>
-<polygon fill="none" stroke="black" points="427.88,-1371.83 427.88,-1395.58 520.88,-1395.58 520.88,-1371.83 427.88,-1371.83"/>
-<text xml:space="preserve" text-anchor="start" x="448.5" y="-1378.83" font-family="Arial" font-size="14.00">28 AWG</text>
-<polygon fill="none" stroke="black" points="520.88,-1371.83 520.88,-1395.58 604.12,-1395.58 604.12,-1371.83 520.88,-1371.83"/>
-<text xml:space="preserve" text-anchor="start" x="541.5" y="-1378.83" font-family="Arial" font-size="14.00">0.08 m</text>
+<polygon fill="none" stroke="black" points="372.38,-1371.83 372.38,-1395.58 425.38,-1395.58 425.38,-1371.83 372.38,-1371.83"/>
+<text xml:space="preserve" text-anchor="start" x="391.75" y="-1378.83" font-family="Arial" font-size="14.00">1x</text>
+<polygon fill="none" stroke="black" points="425.38,-1371.83 425.38,-1395.58 515.88,-1395.58 515.88,-1371.83 425.38,-1371.83"/>
+<text xml:space="preserve" text-anchor="start" x="444.75" y="-1378.83" font-family="Arial" font-size="14.00">28 AWG</text>
+<polygon fill="none" stroke="black" points="515.88,-1371.83 515.88,-1395.58 604.12,-1395.58 604.12,-1371.83 515.88,-1371.83"/>
+<text xml:space="preserve" text-anchor="start" x="535.25" y="-1378.83" font-family="Arial" font-size="14.00">0.077 m</text>
 <text xml:space="preserve" text-anchor="start" x="414.88" y="-1357.08" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="374.38" y="-1337.33" font-family="Arial" font-size="14.00">fc&#45;ESC:6:CH3</text>
 <text xml:space="preserve" text-anchor="start" x="463.12" y="-1337.33" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:TQ &#160;&#160;&#160;</text>
@@ -1246,12 +1246,12 @@
 <polygon fill="#f4f4f2" stroke="black" points="604.12,-1256.33 372.38,-1256.33 372.38,-1143.58 604.12,-1143.58 604.12,-1256.33"/>
 <polygon fill="none" stroke="black" points="372.38,-1232.58 372.38,-1256.33 604.12,-1256.33 604.12,-1232.58 372.38,-1232.58"/>
 <text xml:space="preserve" text-anchor="start" x="474" y="-1239.58" font-family="Arial" font-size="14.00">W58</text>
-<polygon fill="none" stroke="black" points="372.38,-1208.83 372.38,-1232.58 427.88,-1232.58 427.88,-1208.83 372.38,-1208.83"/>
-<text xml:space="preserve" text-anchor="start" x="393" y="-1215.83" font-family="Arial" font-size="14.00">1x</text>
-<polygon fill="none" stroke="black" points="427.88,-1208.83 427.88,-1232.58 520.88,-1232.58 520.88,-1208.83 427.88,-1208.83"/>
-<text xml:space="preserve" text-anchor="start" x="448.5" y="-1215.83" font-family="Arial" font-size="14.00">28 AWG</text>
-<polygon fill="none" stroke="black" points="520.88,-1208.83 520.88,-1232.58 604.12,-1232.58 604.12,-1208.83 520.88,-1208.83"/>
-<text xml:space="preserve" text-anchor="start" x="541.5" y="-1215.83" font-family="Arial" font-size="14.00">0.08 m</text>
+<polygon fill="none" stroke="black" points="372.38,-1208.83 372.38,-1232.58 425.38,-1232.58 425.38,-1208.83 372.38,-1208.83"/>
+<text xml:space="preserve" text-anchor="start" x="391.75" y="-1215.83" font-family="Arial" font-size="14.00">1x</text>
+<polygon fill="none" stroke="black" points="425.38,-1208.83 425.38,-1232.58 515.88,-1232.58 515.88,-1208.83 425.38,-1208.83"/>
+<text xml:space="preserve" text-anchor="start" x="444.75" y="-1215.83" font-family="Arial" font-size="14.00">28 AWG</text>
+<polygon fill="none" stroke="black" points="515.88,-1208.83 515.88,-1232.58 604.12,-1232.58 604.12,-1208.83 515.88,-1208.83"/>
+<text xml:space="preserve" text-anchor="start" x="535.25" y="-1215.83" font-family="Arial" font-size="14.00">0.077 m</text>
 <text xml:space="preserve" text-anchor="start" x="414.88" y="-1194.08" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="374.38" y="-1174.33" font-family="Arial" font-size="14.00">fc&#45;ESC:7:CH4</text>
 <text xml:space="preserve" text-anchor="start" x="463.12" y="-1174.33" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:TQ &#160;&#160;&#160;</text>
@@ -1693,7 +1693,7 @@
 <polygon fill="none" stroke="black" points="1228.5,-712.83 1228.5,-736.58 1324.5,-736.58 1324.5,-712.83 1228.5,-712.83"/>
 <text xml:space="preserve" text-anchor="start" x="1250.62" y="-719.83" font-family="Arial" font-size="14.00">28 AWG</text>
 <polygon fill="none" stroke="black" points="1324.5,-712.83 1324.5,-736.58 1418.25,-736.58 1418.25,-712.83 1324.5,-712.83"/>
-<text xml:space="preserve" text-anchor="start" x="1346.62" y="-719.83" font-family="Arial" font-size="14.00">0.061 m</text>
+<text xml:space="preserve" text-anchor="start" x="1346.62" y="-719.83" font-family="Arial" font-size="14.00">0.097 m</text>
 <text xml:space="preserve" text-anchor="start" x="1204.25" y="-698.08" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="1172" y="-678.33" font-family="Arial" font-size="14.00">fc&#45;SPI:1:5V</text>
 <text xml:space="preserve" text-anchor="start" x="1244.25" y="-678.33" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:RD &#160;&#160;&#160;</text>
@@ -1721,7 +1721,7 @@
 <polygon fill="none" stroke="black" points="1225,-567.83 1225,-591.58 1328,-591.58 1328,-567.83 1225,-567.83"/>
 <text xml:space="preserve" text-anchor="start" x="1250.62" y="-574.83" font-family="Arial" font-size="14.00">28 AWG</text>
 <polygon fill="none" stroke="black" points="1328,-567.83 1328,-591.58 1428.75,-591.58 1428.75,-567.83 1328,-567.83"/>
-<text xml:space="preserve" text-anchor="start" x="1353.62" y="-574.83" font-family="Arial" font-size="14.00">0.061 m</text>
+<text xml:space="preserve" text-anchor="start" x="1353.62" y="-574.83" font-family="Arial" font-size="14.00">0.097 m</text>
 <text xml:space="preserve" text-anchor="start" x="1200.88" y="-553.08" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="1161.5" y="-533.33" font-family="Arial" font-size="14.00">fc&#45;SPI:8:GND</text>
 <text xml:space="preserve" text-anchor="start" x="1248" y="-533.33" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:BK &#160;&#160;&#160;</text>

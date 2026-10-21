@@ -14,13 +14,13 @@ Built from E3 2814 850KV / 1050 3-blade / 6S2P Molicel INR-21700-P45B.
 
 | Setup | Modules | Weight | Pack at | Center of gravity (x, y, z) | Busiest motor | Verdict |
 |---|---|---|---|---|---|---|
-| base | none | 1860 g | -10 mm | 0.1, 0.0, -2.6 mm | +0.1% | pass |
-| V | V | 2032 g | -5 mm | 0.1, 0.2, 4.3 mm | +0.2% | pass |
-| P | P | 2036 g | -18 mm | -0.1, 0.0, 7.8 mm | +0.1% | pass |
-| C | C | 2022 g | 13 mm | 0.2, 0.0, -4.5 mm | +0.1% | pass |
-| mission | V+P | 2208 g | -13 mm | -0.1, 0.2, 13.2 mm | +0.2% | pass |
-| V+C | V+C | 2194 g | 18 mm | 0.2, 0.2, 2.0 mm | +0.3% | pass |
-| P+C | P+C | 2198 g | 5 mm | -0.0, 0.1, 5.2 mm | +0.1% | pass |
+| base | none | 1860 g | -10 mm | 0.1, 0.0, -2.5 mm | +0.1% | pass |
+| V | V | 2032 g | -5 mm | 0.1, 0.2, 4.3 mm | +0.3% | pass |
+| P | P | 2036 g | -18 mm | -0.1, 0.1, 7.7 mm | +0.1% | pass |
+| C | C | 2022 g | 13 mm | 0.2, 0.0, -4.4 mm | +0.2% | pass |
+| mission | V+P | 2208 g | -13 mm | -0.0, 0.3, 13.2 mm | +0.2% | pass |
+| V+C | V+C | 2194 g | 17 mm | -0.2, 0.2, 2.0 mm | +0.3% | pass |
+| P+C | P+C | 2198 g | 5 mm | -0.0, 0.1, 5.2 mm | +0.0% | pass |
 | max | V+P+C | 2370 g | 10 mm | 0.0, 0.2, 10.5 mm | +0.2% | pass |
 
 The pack's position is along x from the motors' center; it slides to balance each combination. The busiest motor column says how much harder the busiest motor works than the average in a hover (the limit is +5%).
@@ -39,59 +39,87 @@ Every check, setup by setup:
 | prop clearance | ruko-r111 is 15.0 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | module rail is 30.0 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | remote id mount is 11.9 mm from prop 1's disk (needs 10) | pass |
-| prop clearance | wire battery leads is 76.4 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire motor leads front left is 28.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire battery leads is 73.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire motor leads front left is 27.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire motor leads back left is 88.5 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire motor leads back right is 70.2 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire receiver is 63.3 mm from prop 1's disk (needs 20) | pass |
 | prop clearance | wire lidar is 30.6 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire safety monitor is 62.0 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire module power to P is 54.3 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire esc cable to switch is 43.3 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire dshot taps is 30.4 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire crsf tap is 29.5 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire chute lines is 54.2 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire module bus p to c is 63.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire safety monitor is 48.2 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire module connector is 85.1 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire module power to P is 58.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire esc cable to switch is 53.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire dshot taps is 35.4 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire crsf tap is 28.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from fc is 57.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from bec is 54.1 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire cut supply is 43.8 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire chute lines is 52.7 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire module bus v to p is 58.0 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire module bus p to c is 58.0 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire esc cable from switch is 44.0 mm from prop 1's disk (needs 20) | pass |
 | prop clearance | frame is 10.6 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | module-socket 2 is 47.8 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | ruko-r111 is 15.0 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | module rail is 30.0 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | remote id mount is 11.9 mm from prop 2's disk (needs 10) | pass |
-| prop clearance | wire battery leads is 76.4 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire motor leads front right is 28.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire battery leads is 73.9 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire motor leads front right is 27.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire motor leads back left is 70.1 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire motor leads back right is 88.5 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire receiver is 73.3 mm from prop 2's disk (needs 20) | pass |
 | prop clearance | wire lidar is 41.1 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire safety monitor is 62.0 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire teensy feed from fc is 52.5 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire teensy feed from bec is 52.5 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire cut supply is 42.6 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire safety monitor is 36.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire module connector is 81.5 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire fc battery feed is 62.5 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire module power to P is 60.1 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire esc cable to switch is 43.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire dshot taps is 35.5 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire crsf tap is 41.0 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from fc is 53.8 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from bec is 56.2 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire cut supply is 43.6 mm from prop 2's disk (needs 20) | pass |
 | prop clearance | wire chute lines is 53.3 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire module bus v to p is 53.8 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire module bus p to c is 53.8 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire esc cable from switch is 43.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire module bus v to p is 53.0 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire module bus p to c is 53.0 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire esc cable from switch is 54.9 mm from prop 2's disk (needs 20) | pass |
 | prop clearance | frame is 32.1 mm from prop 3's disk (needs 10) | pass |
 | prop clearance | module-socket 1 is 68.9 mm from prop 3's disk (needs 10) | pass |
 | prop clearance | module rail is 38.9 mm from prop 3's disk (needs 10) | pass |
 | prop clearance | wire battery leads is 45.9 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire motor leads back left is 28.3 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire receiver is 55.9 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire bec feed is 46.5 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire module connector is 78.8 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire module power to V is 54.8 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire module power to P is 55.0 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire esc cable to switch is 74.1 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire dshot taps is 74.1 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire crsf tap is 49.6 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire module bus p to c is 48.8 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire motor leads front left is 70.3 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire motor leads back left is 27.3 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire motor leads back right is 79.3 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire receiver is 56.9 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire safety monitor is 63.8 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module connector is 71.3 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module power to V is 47.9 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module power to P is 48.0 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire crsf tap is 53.6 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from fc is 67.1 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from bec is 48.6 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire cut supply is 65.8 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module bus v to p is 84.2 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module bus p to c is 52.5 mm from prop 3's disk (needs 20) | pass |
 | prop clearance | frame is 32.1 mm from prop 4's disk (needs 10) | pass |
 | prop clearance | module-socket 1 is 68.9 mm from prop 4's disk (needs 10) | pass |
 | prop clearance | module rail is 38.9 mm from prop 4's disk (needs 10) | pass |
 | prop clearance | wire battery leads is 45.9 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire motor leads back right is 28.3 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire receiver is 55.9 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire module connector is 78.8 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire battery taps is 32.5 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire fc battery feed is 30.9 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire teensy feed from fc is 74.6 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire teensy feed from bec is 56.5 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire cut supply is 74.1 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire module bus v to p is 75.5 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire motor leads front right is 70.3 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire motor leads back left is 79.2 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire motor leads back right is 27.3 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire receiver is 57.0 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire safety monitor is 73.0 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire module connector is 64.9 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire battery taps is 40.0 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire fc battery feed is 34.0 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire module power to V is 70.7 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire module power to P is 70.8 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire crsf tap is 56.6 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from fc is 98.4 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from bec is 67.2 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire cut supply is 74.3 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire module bus v to p is 79.8 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire module bus p to c is 42.3 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | props 1 and 2 are 43.0 mm apart | pass |
 | prop clearance | props 1 and 3 are 43.0 mm apart | pass |
@@ -108,7 +136,7 @@ Every check, setup by setup:
 
 | Check | Result | Verdict |
 |---|---|---|
-| balance | with the pack at x = -5 mm, the center of gravity sits +0.1 mm along x and +0.2 mm along y, so the busiest motor works 0.2% harder | pass |
+| balance | with the pack at x = -5 mm, the center of gravity sits +0.1 mm along x and +0.2 mm along y, so the busiest motor works 0.3% harder | pass |
 | collisions | nothing overlaps | pass |
 | prop clearance | frame is 10.6 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | module-socket 2 is 47.8 mm from prop 1's disk (needs 10) | pass |
@@ -119,17 +147,27 @@ Every check, setup by setup:
 | prop clearance | remote id mount is 11.9 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | camera bracket is 11.0 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | v housing is 43.7 mm from prop 1's disk (needs 10) | pass |
-| prop clearance | wire battery leads is 76.4 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire motor leads front left is 28.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire battery leads is 73.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire motor leads front left is 27.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire motor leads back left is 88.5 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire motor leads back right is 70.2 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire receiver is 63.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire gps is 84.5 mm from prop 1's disk (needs 20) | pass |
 | prop clearance | wire lidar is 30.6 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire safety monitor is 62.0 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire safety monitor is 48.2 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire module connector is 85.1 mm from prop 1's disk (needs 20) | pass |
 | prop clearance | wire camera cable is 20.5 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire module power to P is 54.3 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire esc cable to switch is 43.3 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire dshot taps is 30.4 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire crsf tap is 29.5 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire chute lines is 54.2 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire module bus p to c is 63.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire module power to P is 58.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire esc cable to switch is 53.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire dshot taps is 35.4 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire crsf tap is 28.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from fc is 57.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from bec is 54.1 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire cut supply is 43.8 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire chute lines is 52.7 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire module bus v to p is 58.0 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire module bus p to c is 58.0 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire esc cable from switch is 44.0 mm from prop 1's disk (needs 20) | pass |
 | prop clearance | frame is 10.6 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | module-socket 2 is 47.8 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | ruko-r111 is 15.0 mm from prop 2's disk (needs 10) | pass |
@@ -139,18 +177,28 @@ Every check, setup by setup:
 | prop clearance | remote id mount is 11.9 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | camera bracket is 11.0 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | v housing is 43.7 mm from prop 2's disk (needs 10) | pass |
-| prop clearance | wire battery leads is 76.4 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire motor leads front right is 28.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire battery leads is 73.9 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire motor leads front right is 27.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire motor leads back left is 70.1 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire motor leads back right is 88.5 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire receiver is 73.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire gps is 81.2 mm from prop 2's disk (needs 20) | pass |
 | prop clearance | wire lidar is 41.1 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire safety monitor is 62.0 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire safety monitor is 36.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire module connector is 81.5 mm from prop 2's disk (needs 20) | pass |
 | prop clearance | wire camera cable is 20.5 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire teensy feed from fc is 52.5 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire teensy feed from bec is 52.5 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire cut supply is 42.6 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire fc battery feed is 62.5 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire module power to P is 60.1 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire esc cable to switch is 43.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire dshot taps is 35.5 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire crsf tap is 41.0 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from fc is 53.8 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from bec is 56.2 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire cut supply is 43.6 mm from prop 2's disk (needs 20) | pass |
 | prop clearance | wire chute lines is 53.3 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire module bus v to p is 53.8 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire module bus p to c is 53.8 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire esc cable from switch is 43.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire module bus v to p is 53.0 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire module bus p to c is 53.0 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire esc cable from switch is 54.9 mm from prop 2's disk (needs 20) | pass |
 | prop clearance | frame is 32.1 mm from prop 3's disk (needs 10) | pass |
 | prop clearance | module-socket 1 is 68.9 mm from prop 3's disk (needs 10) | pass |
 | prop clearance | module-plug@V is 68.9 mm from prop 3's disk (needs 10) | pass |
@@ -159,18 +207,22 @@ Every check, setup by setup:
 | prop clearance | gps mast is 37.3 mm from prop 3's disk (needs 10) | pass |
 | prop clearance | v housing is 15.1 mm from prop 3's disk (needs 10) | pass |
 | prop clearance | wire battery leads is 45.9 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire motor leads back left is 28.3 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire receiver is 55.9 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire gps is 43.1 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire bec feed is 46.5 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire module connector is 78.8 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire motor leads front left is 70.3 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire motor leads back left is 27.3 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire motor leads back right is 79.3 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire receiver is 56.9 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire gps is 39.7 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire safety monitor is 63.8 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module connector is 71.3 mm from prop 3's disk (needs 20) | pass |
 | prop clearance | wire camera cable is 78.3 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire module power to V is 54.8 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire module power to P is 55.0 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire esc cable to switch is 74.1 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire dshot taps is 74.1 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire crsf tap is 49.6 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire module bus p to c is 48.8 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module power to V is 47.9 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module power to P is 48.0 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire crsf tap is 53.6 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from fc is 67.1 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from bec is 48.6 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire cut supply is 65.8 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module bus v to p is 84.2 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module bus p to c is 52.5 mm from prop 3's disk (needs 20) | pass |
 | prop clearance | frame is 32.1 mm from prop 4's disk (needs 10) | pass |
 | prop clearance | module-socket 1 is 68.9 mm from prop 4's disk (needs 10) | pass |
 | prop clearance | module-plug@V is 68.9 mm from prop 4's disk (needs 10) | pass |
@@ -179,16 +231,23 @@ Every check, setup by setup:
 | prop clearance | gps mast is 37.3 mm from prop 4's disk (needs 10) | pass |
 | prop clearance | v housing is 15.1 mm from prop 4's disk (needs 10) | pass |
 | prop clearance | wire battery leads is 45.9 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire motor leads back right is 28.3 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire receiver is 55.9 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire module connector is 78.8 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire motor leads front right is 70.3 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire motor leads back left is 79.2 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire motor leads back right is 27.3 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire receiver is 57.0 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire gps is 48.1 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire safety monitor is 73.0 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire module connector is 64.9 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire camera cable is 78.3 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire battery taps is 32.5 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire fc battery feed is 30.9 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire teensy feed from fc is 74.6 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire teensy feed from bec is 56.5 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire cut supply is 74.1 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire module bus v to p is 75.5 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire battery taps is 40.0 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire fc battery feed is 34.0 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire module power to V is 70.7 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire module power to P is 70.8 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire crsf tap is 56.6 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from fc is 98.4 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from bec is 67.2 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire cut supply is 74.3 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire module bus v to p is 79.8 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire module bus p to c is 42.3 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | props 1 and 2 are 43.0 mm apart | pass |
 | prop clearance | props 1 and 3 are 43.0 mm apart | pass |
@@ -208,7 +267,7 @@ Every check, setup by setup:
 
 | Check | Result | Verdict |
 |---|---|---|
-| balance | with the pack at x = -18 mm, the center of gravity sits -0.1 mm along x and +0.0 mm along y, so the busiest motor works 0.1% harder | pass |
+| balance | with the pack at x = -18 mm, the center of gravity sits -0.1 mm along x and +0.1 mm along y, so the busiest motor works 0.1% harder | pass |
 | collisions | nothing overlaps | pass |
 | prop clearance | frame is 10.6 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | module-socket 2 is 47.8 mm from prop 1's disk (needs 10) | pass |
@@ -219,16 +278,26 @@ Every check, setup by setup:
 | prop clearance | module rail is 30.0 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | remote id mount is 11.9 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | p holder is 32.0 mm from prop 1's disk (needs 10) | pass |
-| prop clearance | wire battery leads is 76.4 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire motor leads front left is 28.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire battery leads is 73.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire motor leads front left is 27.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire motor leads back left is 88.5 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire motor leads back right is 70.2 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire receiver is 63.3 mm from prop 1's disk (needs 20) | pass |
 | prop clearance | wire lidar is 30.6 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire safety monitor is 62.0 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire module power to P is 54.3 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire esc cable to switch is 43.3 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire dshot taps is 30.4 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire crsf tap is 29.5 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire chute lines is 54.2 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire module bus p to c is 63.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire safety monitor is 48.2 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire module connector is 85.1 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire chute servo is 70.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire module power to P is 58.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire esc cable to switch is 53.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire dshot taps is 35.4 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire crsf tap is 28.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from fc is 57.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from bec is 54.1 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire cut supply is 43.8 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire chute lines is 52.7 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire module bus v to p is 58.0 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire module bus p to c is 58.0 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire esc cable from switch is 44.0 mm from prop 1's disk (needs 20) | pass |
 | prop clearance | frame is 10.6 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | module-socket 2 is 47.8 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | ruko-r111 is 15.0 mm from prop 2's disk (needs 10) | pass |
@@ -240,45 +309,64 @@ Every check, setup by setup:
 | prop clearance | module rail is 30.0 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | remote id mount is 11.9 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | p holder is 32.0 mm from prop 2's disk (needs 10) | pass |
-| prop clearance | wire battery leads is 76.4 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire motor leads front right is 28.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire battery leads is 73.9 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire motor leads front right is 27.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire motor leads back left is 70.1 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire motor leads back right is 88.5 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire receiver is 73.3 mm from prop 2's disk (needs 20) | pass |
 | prop clearance | wire lidar is 41.1 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire safety monitor is 62.0 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire chute servo is 36.2 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire teensy feed from fc is 52.5 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire teensy feed from bec is 52.5 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire cut supply is 42.6 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire safety monitor is 36.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire module connector is 81.5 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire chute servo is 42.5 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire fc battery feed is 62.5 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire module power to P is 60.1 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire esc cable to switch is 43.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire dshot taps is 35.5 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire crsf tap is 41.0 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from fc is 53.8 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from bec is 56.2 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire cut supply is 43.6 mm from prop 2's disk (needs 20) | pass |
 | prop clearance | wire chute lines is 53.3 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire module bus v to p is 53.8 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire module bus p to c is 53.8 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire esc cable from switch is 43.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire module bus v to p is 53.0 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire module bus p to c is 53.0 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire esc cable from switch is 54.9 mm from prop 2's disk (needs 20) | pass |
 | prop clearance | frame is 32.1 mm from prop 3's disk (needs 10) | pass |
 | prop clearance | module-socket 1 is 68.9 mm from prop 3's disk (needs 10) | pass |
 | prop clearance | module rail is 38.9 mm from prop 3's disk (needs 10) | pass |
 | prop clearance | wire battery leads is 45.9 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire motor leads back left is 28.3 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire receiver is 55.9 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire bec feed is 46.5 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire module connector is 78.8 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire module power to V is 54.8 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire module power to P is 55.0 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire esc cable to switch is 74.1 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire dshot taps is 74.1 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire crsf tap is 49.6 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire module bus p to c is 48.8 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire motor leads front left is 70.3 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire motor leads back left is 27.3 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire motor leads back right is 79.3 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire receiver is 56.9 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire safety monitor is 63.8 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module connector is 71.3 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module power to V is 47.9 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module power to P is 48.0 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire crsf tap is 53.6 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from fc is 67.1 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from bec is 48.6 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire cut supply is 65.8 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module bus v to p is 84.2 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module bus p to c is 52.5 mm from prop 3's disk (needs 20) | pass |
 | prop clearance | frame is 32.1 mm from prop 4's disk (needs 10) | pass |
 | prop clearance | module-socket 1 is 68.9 mm from prop 4's disk (needs 10) | pass |
 | prop clearance | module rail is 38.9 mm from prop 4's disk (needs 10) | pass |
 | prop clearance | wire battery leads is 45.9 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire motor leads back right is 28.3 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire receiver is 55.9 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire module connector is 78.8 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire battery taps is 32.5 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire fc battery feed is 30.9 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire teensy feed from fc is 74.6 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire teensy feed from bec is 56.5 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire cut supply is 74.1 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire module bus v to p is 75.5 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire motor leads front right is 70.3 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire motor leads back left is 79.2 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire motor leads back right is 27.3 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire receiver is 57.0 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire safety monitor is 73.0 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire module connector is 64.9 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire battery taps is 40.0 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire fc battery feed is 34.0 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire module power to V is 70.7 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire module power to P is 70.8 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire crsf tap is 56.6 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from fc is 98.4 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from bec is 67.2 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire cut supply is 74.3 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire module bus v to p is 79.8 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire module bus p to c is 42.3 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | props 1 and 2 are 43.0 mm apart | pass |
 | prop clearance | props 1 and 3 are 43.0 mm apart | pass |
@@ -297,66 +385,94 @@ Every check, setup by setup:
 
 | Check | Result | Verdict |
 |---|---|---|
-| balance | with the pack at x = 13 mm, the center of gravity sits +0.2 mm along x and +0.0 mm along y, so the busiest motor works 0.1% harder | pass |
+| balance | with the pack at x = 13 mm, the center of gravity sits +0.2 mm along x and +0.0 mm along y, so the busiest motor works 0.2% harder | pass |
 | collisions | nothing overlaps | pass |
 | prop clearance | frame is 10.6 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | module-socket 2 is 47.8 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | ruko-r111 is 15.0 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | module rail is 30.0 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | remote id mount is 11.9 mm from prop 1's disk (needs 10) | pass |
-| prop clearance | wire battery leads is 76.4 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire motor leads front left is 28.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire battery leads is 73.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire motor leads front left is 27.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire motor leads back left is 88.5 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire motor leads back right is 70.2 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire receiver is 63.3 mm from prop 1's disk (needs 20) | pass |
 | prop clearance | wire lidar is 30.6 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire safety monitor is 62.0 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire module power to P is 54.3 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire esc cable to switch is 43.3 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire dshot taps is 30.4 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire crsf tap is 29.5 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire chute lines is 54.2 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire module bus p to c is 63.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire safety monitor is 48.2 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire module connector is 85.1 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire module power to P is 58.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire esc cable to switch is 53.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire dshot taps is 35.4 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire crsf tap is 28.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from fc is 57.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from bec is 54.1 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire cut supply is 43.8 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire chute lines is 52.7 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire module bus v to p is 58.0 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire module bus p to c is 58.0 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire esc cable from switch is 44.0 mm from prop 1's disk (needs 20) | pass |
 | prop clearance | frame is 10.6 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | module-socket 2 is 47.8 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | ruko-r111 is 15.0 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | module rail is 30.0 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | remote id mount is 11.9 mm from prop 2's disk (needs 10) | pass |
-| prop clearance | wire battery leads is 76.4 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire motor leads front right is 28.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire battery leads is 73.9 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire motor leads front right is 27.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire motor leads back left is 70.1 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire motor leads back right is 88.5 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire receiver is 73.3 mm from prop 2's disk (needs 20) | pass |
 | prop clearance | wire lidar is 41.1 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire safety monitor is 62.0 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire teensy feed from fc is 52.5 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire teensy feed from bec is 52.5 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire cut supply is 42.6 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire safety monitor is 36.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire module connector is 81.5 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire fc battery feed is 62.5 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire module power to P is 60.1 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire esc cable to switch is 43.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire dshot taps is 35.5 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire crsf tap is 41.0 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from fc is 53.8 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from bec is 56.2 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire cut supply is 43.6 mm from prop 2's disk (needs 20) | pass |
 | prop clearance | wire chute lines is 53.3 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire module bus v to p is 53.8 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire module bus p to c is 53.8 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire esc cable from switch is 43.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire module bus v to p is 53.0 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire module bus p to c is 53.0 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire esc cable from switch is 54.9 mm from prop 2's disk (needs 20) | pass |
 | prop clearance | frame is 32.1 mm from prop 3's disk (needs 10) | pass |
 | prop clearance | module-socket 1 is 68.9 mm from prop 3's disk (needs 10) | pass |
 | prop clearance | module rail is 38.9 mm from prop 3's disk (needs 10) | pass |
 | prop clearance | wire battery leads is 45.9 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire motor leads back left is 28.3 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire receiver is 55.9 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire bec feed is 46.5 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire module connector is 78.8 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire module power to V is 54.8 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire module power to P is 55.0 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire esc cable to switch is 74.1 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire dshot taps is 74.1 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire crsf tap is 49.6 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire module bus p to c is 48.8 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire motor leads front left is 70.3 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire motor leads back left is 27.3 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire motor leads back right is 79.3 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire receiver is 56.9 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire safety monitor is 63.8 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module connector is 71.3 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module power to V is 47.9 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module power to P is 48.0 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire crsf tap is 53.6 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from fc is 67.1 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from bec is 48.6 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire cut supply is 65.8 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module bus v to p is 84.2 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module bus p to c is 52.5 mm from prop 3's disk (needs 20) | pass |
 | prop clearance | frame is 32.1 mm from prop 4's disk (needs 10) | pass |
 | prop clearance | module-socket 1 is 68.9 mm from prop 4's disk (needs 10) | pass |
 | prop clearance | module rail is 38.9 mm from prop 4's disk (needs 10) | pass |
 | prop clearance | wire battery leads is 45.9 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire motor leads back right is 28.3 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire receiver is 55.9 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire module connector is 78.8 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire battery taps is 32.5 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire fc battery feed is 30.9 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire teensy feed from fc is 74.6 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire teensy feed from bec is 56.5 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire cut supply is 74.1 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire module bus v to p is 75.5 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire motor leads front right is 70.3 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire motor leads back left is 79.2 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire motor leads back right is 27.3 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire receiver is 57.0 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire safety monitor is 73.0 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire module connector is 64.9 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire battery taps is 40.0 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire fc battery feed is 34.0 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire module power to V is 70.7 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire module power to P is 70.8 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire crsf tap is 56.6 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from fc is 98.4 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from bec is 67.2 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire cut supply is 74.3 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire module bus v to p is 79.8 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire module bus p to c is 42.3 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | props 1 and 2 are 43.0 mm apart | pass |
 | prop clearance | props 1 and 3 are 43.0 mm apart | pass |
@@ -373,7 +489,7 @@ Every check, setup by setup:
 
 | Check | Result | Verdict |
 |---|---|---|
-| balance | with the pack at x = -13 mm, the center of gravity sits -0.1 mm along x and +0.2 mm along y, so the busiest motor works 0.2% harder | pass |
+| balance | with the pack at x = -13 mm, the center of gravity sits -0.0 mm along x and +0.3 mm along y, so the busiest motor works 0.2% harder | pass |
 | collisions | nothing overlaps | pass |
 | prop clearance | frame is 10.6 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | module-socket 2 is 47.8 mm from prop 1's disk (needs 10) | pass |
@@ -388,17 +504,28 @@ Every check, setup by setup:
 | prop clearance | camera bracket is 11.0 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | v housing is 43.7 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | p holder is 32.0 mm from prop 1's disk (needs 10) | pass |
-| prop clearance | wire battery leads is 76.4 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire motor leads front left is 28.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire battery leads is 73.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire motor leads front left is 27.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire motor leads back left is 88.5 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire motor leads back right is 70.2 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire receiver is 63.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire gps is 84.5 mm from prop 1's disk (needs 20) | pass |
 | prop clearance | wire lidar is 30.6 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire safety monitor is 62.0 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire safety monitor is 48.2 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire module connector is 85.1 mm from prop 1's disk (needs 20) | pass |
 | prop clearance | wire camera cable is 20.5 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire module power to P is 54.3 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire esc cable to switch is 43.3 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire dshot taps is 30.4 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire crsf tap is 29.5 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire chute lines is 54.2 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire module bus p to c is 63.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire chute servo is 70.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire module power to P is 58.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire esc cable to switch is 53.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire dshot taps is 35.4 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire crsf tap is 28.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from fc is 57.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from bec is 54.1 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire cut supply is 43.8 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire chute lines is 52.7 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire module bus v to p is 58.0 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire module bus p to c is 58.0 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire esc cable from switch is 44.0 mm from prop 1's disk (needs 20) | pass |
 | prop clearance | frame is 10.6 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | module-socket 2 is 47.8 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | ruko-r111 is 15.0 mm from prop 2's disk (needs 10) | pass |
@@ -414,19 +541,29 @@ Every check, setup by setup:
 | prop clearance | camera bracket is 11.0 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | v housing is 43.7 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | p holder is 32.0 mm from prop 2's disk (needs 10) | pass |
-| prop clearance | wire battery leads is 76.4 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire motor leads front right is 28.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire battery leads is 73.9 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire motor leads front right is 27.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire motor leads back left is 70.1 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire motor leads back right is 88.5 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire receiver is 73.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire gps is 81.2 mm from prop 2's disk (needs 20) | pass |
 | prop clearance | wire lidar is 41.1 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire safety monitor is 62.0 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire safety monitor is 36.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire module connector is 81.5 mm from prop 2's disk (needs 20) | pass |
 | prop clearance | wire camera cable is 20.5 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire chute servo is 36.2 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire teensy feed from fc is 52.5 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire teensy feed from bec is 52.5 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire cut supply is 42.6 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire chute servo is 42.5 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire fc battery feed is 62.5 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire module power to P is 60.1 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire esc cable to switch is 43.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire dshot taps is 35.5 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire crsf tap is 41.0 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from fc is 53.8 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from bec is 56.2 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire cut supply is 43.6 mm from prop 2's disk (needs 20) | pass |
 | prop clearance | wire chute lines is 53.3 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire module bus v to p is 53.8 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire module bus p to c is 53.8 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire esc cable from switch is 43.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire module bus v to p is 53.0 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire module bus p to c is 53.0 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire esc cable from switch is 54.9 mm from prop 2's disk (needs 20) | pass |
 | prop clearance | frame is 32.1 mm from prop 3's disk (needs 10) | pass |
 | prop clearance | module-socket 1 is 68.9 mm from prop 3's disk (needs 10) | pass |
 | prop clearance | module-plug@V is 68.9 mm from prop 3's disk (needs 10) | pass |
@@ -435,18 +572,22 @@ Every check, setup by setup:
 | prop clearance | gps mast is 37.3 mm from prop 3's disk (needs 10) | pass |
 | prop clearance | v housing is 15.1 mm from prop 3's disk (needs 10) | pass |
 | prop clearance | wire battery leads is 45.9 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire motor leads back left is 28.3 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire receiver is 55.9 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire gps is 43.1 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire bec feed is 46.5 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire module connector is 78.8 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire motor leads front left is 70.3 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire motor leads back left is 27.3 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire motor leads back right is 79.3 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire receiver is 56.9 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire gps is 39.7 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire safety monitor is 63.8 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module connector is 71.3 mm from prop 3's disk (needs 20) | pass |
 | prop clearance | wire camera cable is 78.3 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire module power to V is 54.8 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire module power to P is 55.0 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire esc cable to switch is 74.1 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire dshot taps is 74.1 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire crsf tap is 49.6 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire module bus p to c is 48.8 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module power to V is 47.9 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module power to P is 48.0 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire crsf tap is 53.6 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from fc is 67.1 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from bec is 48.6 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire cut supply is 65.8 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module bus v to p is 84.2 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module bus p to c is 52.5 mm from prop 3's disk (needs 20) | pass |
 | prop clearance | frame is 32.1 mm from prop 4's disk (needs 10) | pass |
 | prop clearance | module-socket 1 is 68.9 mm from prop 4's disk (needs 10) | pass |
 | prop clearance | module-plug@V is 68.9 mm from prop 4's disk (needs 10) | pass |
@@ -455,16 +596,23 @@ Every check, setup by setup:
 | prop clearance | gps mast is 37.3 mm from prop 4's disk (needs 10) | pass |
 | prop clearance | v housing is 15.1 mm from prop 4's disk (needs 10) | pass |
 | prop clearance | wire battery leads is 45.9 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire motor leads back right is 28.3 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire receiver is 55.9 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire module connector is 78.8 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire motor leads front right is 70.3 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire motor leads back left is 79.2 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire motor leads back right is 27.3 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire receiver is 57.0 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire gps is 48.1 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire safety monitor is 73.0 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire module connector is 64.9 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire camera cable is 78.3 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire battery taps is 32.5 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire fc battery feed is 30.9 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire teensy feed from fc is 74.6 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire teensy feed from bec is 56.5 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire cut supply is 74.1 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire module bus v to p is 75.5 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire battery taps is 40.0 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire fc battery feed is 34.0 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire module power to V is 70.7 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire module power to P is 70.8 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire crsf tap is 56.6 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from fc is 98.4 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from bec is 67.2 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire cut supply is 74.3 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire module bus v to p is 79.8 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire module bus p to c is 42.3 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | props 1 and 2 are 43.0 mm apart | pass |
 | prop clearance | props 1 and 3 are 43.0 mm apart | pass |
@@ -486,7 +634,7 @@ Every check, setup by setup:
 
 | Check | Result | Verdict |
 |---|---|---|
-| balance | with the pack at x = 18 mm, the center of gravity sits +0.2 mm along x and +0.2 mm along y, so the busiest motor works 0.3% harder | pass |
+| balance | with the pack at x = 17 mm, the center of gravity sits -0.2 mm along x and +0.2 mm along y, so the busiest motor works 0.3% harder | pass |
 | collisions | nothing overlaps | pass |
 | prop clearance | frame is 10.6 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | module-socket 2 is 47.8 mm from prop 1's disk (needs 10) | pass |
@@ -497,17 +645,27 @@ Every check, setup by setup:
 | prop clearance | remote id mount is 11.9 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | camera bracket is 11.0 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | v housing is 43.7 mm from prop 1's disk (needs 10) | pass |
-| prop clearance | wire battery leads is 76.4 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire motor leads front left is 28.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire battery leads is 73.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire motor leads front left is 27.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire motor leads back left is 88.5 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire motor leads back right is 70.2 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire receiver is 63.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire gps is 84.5 mm from prop 1's disk (needs 20) | pass |
 | prop clearance | wire lidar is 30.6 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire safety monitor is 62.0 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire safety monitor is 48.2 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire module connector is 85.1 mm from prop 1's disk (needs 20) | pass |
 | prop clearance | wire camera cable is 20.5 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire module power to P is 54.3 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire esc cable to switch is 43.3 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire dshot taps is 30.4 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire crsf tap is 29.5 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire chute lines is 54.2 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire module bus p to c is 63.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire module power to P is 58.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire esc cable to switch is 53.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire dshot taps is 35.4 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire crsf tap is 28.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from fc is 57.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from bec is 54.1 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire cut supply is 43.8 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire chute lines is 52.7 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire module bus v to p is 58.0 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire module bus p to c is 58.0 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire esc cable from switch is 44.0 mm from prop 1's disk (needs 20) | pass |
 | prop clearance | frame is 10.6 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | module-socket 2 is 47.8 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | ruko-r111 is 15.0 mm from prop 2's disk (needs 10) | pass |
@@ -517,18 +675,28 @@ Every check, setup by setup:
 | prop clearance | remote id mount is 11.9 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | camera bracket is 11.0 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | v housing is 43.7 mm from prop 2's disk (needs 10) | pass |
-| prop clearance | wire battery leads is 76.4 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire motor leads front right is 28.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire battery leads is 73.9 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire motor leads front right is 27.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire motor leads back left is 70.1 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire motor leads back right is 88.5 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire receiver is 73.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire gps is 81.2 mm from prop 2's disk (needs 20) | pass |
 | prop clearance | wire lidar is 41.1 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire safety monitor is 62.0 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire safety monitor is 36.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire module connector is 81.5 mm from prop 2's disk (needs 20) | pass |
 | prop clearance | wire camera cable is 20.5 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire teensy feed from fc is 52.5 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire teensy feed from bec is 52.5 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire cut supply is 42.6 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire fc battery feed is 62.5 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire module power to P is 60.1 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire esc cable to switch is 43.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire dshot taps is 35.5 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire crsf tap is 41.0 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from fc is 53.8 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from bec is 56.2 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire cut supply is 43.6 mm from prop 2's disk (needs 20) | pass |
 | prop clearance | wire chute lines is 53.3 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire module bus v to p is 53.8 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire module bus p to c is 53.8 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire esc cable from switch is 43.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire module bus v to p is 53.0 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire module bus p to c is 53.0 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire esc cable from switch is 54.9 mm from prop 2's disk (needs 20) | pass |
 | prop clearance | frame is 32.1 mm from prop 3's disk (needs 10) | pass |
 | prop clearance | module-socket 1 is 68.9 mm from prop 3's disk (needs 10) | pass |
 | prop clearance | module-plug@V is 68.9 mm from prop 3's disk (needs 10) | pass |
@@ -537,18 +705,22 @@ Every check, setup by setup:
 | prop clearance | gps mast is 37.3 mm from prop 3's disk (needs 10) | pass |
 | prop clearance | v housing is 15.1 mm from prop 3's disk (needs 10) | pass |
 | prop clearance | wire battery leads is 45.9 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire motor leads back left is 28.3 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire receiver is 55.9 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire gps is 43.1 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire bec feed is 46.5 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire module connector is 78.8 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire motor leads front left is 70.3 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire motor leads back left is 27.3 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire motor leads back right is 79.3 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire receiver is 56.9 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire gps is 39.7 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire safety monitor is 63.8 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module connector is 71.3 mm from prop 3's disk (needs 20) | pass |
 | prop clearance | wire camera cable is 78.3 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire module power to V is 54.8 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire module power to P is 55.0 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire esc cable to switch is 74.1 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire dshot taps is 74.1 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire crsf tap is 49.6 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire module bus p to c is 48.8 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module power to V is 47.9 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module power to P is 48.0 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire crsf tap is 53.6 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from fc is 67.1 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from bec is 48.6 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire cut supply is 65.8 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module bus v to p is 84.2 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module bus p to c is 52.5 mm from prop 3's disk (needs 20) | pass |
 | prop clearance | frame is 32.1 mm from prop 4's disk (needs 10) | pass |
 | prop clearance | module-socket 1 is 68.9 mm from prop 4's disk (needs 10) | pass |
 | prop clearance | module-plug@V is 68.9 mm from prop 4's disk (needs 10) | pass |
@@ -557,16 +729,23 @@ Every check, setup by setup:
 | prop clearance | gps mast is 37.3 mm from prop 4's disk (needs 10) | pass |
 | prop clearance | v housing is 15.1 mm from prop 4's disk (needs 10) | pass |
 | prop clearance | wire battery leads is 45.9 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire motor leads back right is 28.3 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire receiver is 55.9 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire module connector is 78.8 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire motor leads front right is 70.3 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire motor leads back left is 79.2 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire motor leads back right is 27.3 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire receiver is 57.0 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire gps is 48.1 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire safety monitor is 73.0 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire module connector is 64.9 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire camera cable is 78.3 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire battery taps is 32.5 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire fc battery feed is 30.9 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire teensy feed from fc is 74.6 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire teensy feed from bec is 56.5 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire cut supply is 74.1 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire module bus v to p is 75.5 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire battery taps is 40.0 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire fc battery feed is 34.0 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire module power to V is 70.7 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire module power to P is 70.8 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire crsf tap is 56.6 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from fc is 98.4 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from bec is 67.2 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire cut supply is 74.3 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire module bus v to p is 79.8 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire module bus p to c is 42.3 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | props 1 and 2 are 43.0 mm apart | pass |
 | prop clearance | props 1 and 3 are 43.0 mm apart | pass |
@@ -586,7 +765,7 @@ Every check, setup by setup:
 
 | Check | Result | Verdict |
 |---|---|---|
-| balance | with the pack at x = 5 mm, the center of gravity sits -0.0 mm along x and +0.1 mm along y, so the busiest motor works 0.1% harder | pass |
+| balance | with the pack at x = 5 mm, the center of gravity sits -0.0 mm along x and +0.1 mm along y, so the busiest motor works 0.0% harder | pass |
 | collisions | nothing overlaps | pass |
 | prop clearance | frame is 10.6 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | module-socket 2 is 47.8 mm from prop 1's disk (needs 10) | pass |
@@ -597,16 +776,26 @@ Every check, setup by setup:
 | prop clearance | module rail is 30.0 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | remote id mount is 11.9 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | p holder is 32.0 mm from prop 1's disk (needs 10) | pass |
-| prop clearance | wire battery leads is 76.4 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire motor leads front left is 28.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire battery leads is 73.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire motor leads front left is 27.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire motor leads back left is 88.5 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire motor leads back right is 70.2 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire receiver is 63.3 mm from prop 1's disk (needs 20) | pass |
 | prop clearance | wire lidar is 30.6 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire safety monitor is 62.0 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire module power to P is 54.3 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire esc cable to switch is 43.3 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire dshot taps is 30.4 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire crsf tap is 29.5 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire chute lines is 54.2 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire module bus p to c is 63.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire safety monitor is 48.2 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire module connector is 85.1 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire chute servo is 70.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire module power to P is 58.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire esc cable to switch is 53.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire dshot taps is 35.4 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire crsf tap is 28.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from fc is 57.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from bec is 54.1 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire cut supply is 43.8 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire chute lines is 52.7 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire module bus v to p is 58.0 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire module bus p to c is 58.0 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire esc cable from switch is 44.0 mm from prop 1's disk (needs 20) | pass |
 | prop clearance | frame is 10.6 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | module-socket 2 is 47.8 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | ruko-r111 is 15.0 mm from prop 2's disk (needs 10) | pass |
@@ -618,45 +807,64 @@ Every check, setup by setup:
 | prop clearance | module rail is 30.0 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | remote id mount is 11.9 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | p holder is 32.0 mm from prop 2's disk (needs 10) | pass |
-| prop clearance | wire battery leads is 76.4 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire motor leads front right is 28.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire battery leads is 73.9 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire motor leads front right is 27.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire motor leads back left is 70.1 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire motor leads back right is 88.5 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire receiver is 73.3 mm from prop 2's disk (needs 20) | pass |
 | prop clearance | wire lidar is 41.1 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire safety monitor is 62.0 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire chute servo is 36.2 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire teensy feed from fc is 52.5 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire teensy feed from bec is 52.5 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire cut supply is 42.6 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire safety monitor is 36.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire module connector is 81.5 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire chute servo is 42.5 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire fc battery feed is 62.5 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire module power to P is 60.1 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire esc cable to switch is 43.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire dshot taps is 35.5 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire crsf tap is 41.0 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from fc is 53.8 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from bec is 56.2 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire cut supply is 43.6 mm from prop 2's disk (needs 20) | pass |
 | prop clearance | wire chute lines is 53.3 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire module bus v to p is 53.8 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire module bus p to c is 53.8 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire esc cable from switch is 43.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire module bus v to p is 53.0 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire module bus p to c is 53.0 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire esc cable from switch is 54.9 mm from prop 2's disk (needs 20) | pass |
 | prop clearance | frame is 32.1 mm from prop 3's disk (needs 10) | pass |
 | prop clearance | module-socket 1 is 68.9 mm from prop 3's disk (needs 10) | pass |
 | prop clearance | module rail is 38.9 mm from prop 3's disk (needs 10) | pass |
 | prop clearance | wire battery leads is 45.9 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire motor leads back left is 28.3 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire receiver is 55.9 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire bec feed is 46.5 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire module connector is 78.8 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire module power to V is 54.8 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire module power to P is 55.0 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire esc cable to switch is 74.1 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire dshot taps is 74.1 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire crsf tap is 49.6 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire module bus p to c is 48.8 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire motor leads front left is 70.3 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire motor leads back left is 27.3 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire motor leads back right is 79.3 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire receiver is 56.9 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire safety monitor is 63.8 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module connector is 71.3 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module power to V is 47.9 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module power to P is 48.0 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire crsf tap is 53.6 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from fc is 67.1 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from bec is 48.6 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire cut supply is 65.8 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module bus v to p is 84.2 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module bus p to c is 52.5 mm from prop 3's disk (needs 20) | pass |
 | prop clearance | frame is 32.1 mm from prop 4's disk (needs 10) | pass |
 | prop clearance | module-socket 1 is 68.9 mm from prop 4's disk (needs 10) | pass |
 | prop clearance | module rail is 38.9 mm from prop 4's disk (needs 10) | pass |
 | prop clearance | wire battery leads is 45.9 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire motor leads back right is 28.3 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire receiver is 55.9 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire module connector is 78.8 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire battery taps is 32.5 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire fc battery feed is 30.9 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire teensy feed from fc is 74.6 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire teensy feed from bec is 56.5 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire cut supply is 74.1 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire module bus v to p is 75.5 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire motor leads front right is 70.3 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire motor leads back left is 79.2 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire motor leads back right is 27.3 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire receiver is 57.0 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire safety monitor is 73.0 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire module connector is 64.9 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire battery taps is 40.0 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire fc battery feed is 34.0 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire module power to V is 70.7 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire module power to P is 70.8 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire crsf tap is 56.6 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from fc is 98.4 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from bec is 67.2 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire cut supply is 74.3 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire module bus v to p is 79.8 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire module bus p to c is 42.3 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | props 1 and 2 are 43.0 mm apart | pass |
 | prop clearance | props 1 and 3 are 43.0 mm apart | pass |
@@ -690,17 +898,28 @@ Every check, setup by setup:
 | prop clearance | camera bracket is 11.0 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | v housing is 43.7 mm from prop 1's disk (needs 10) | pass |
 | prop clearance | p holder is 32.0 mm from prop 1's disk (needs 10) | pass |
-| prop clearance | wire battery leads is 76.4 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire motor leads front left is 28.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire battery leads is 73.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire motor leads front left is 27.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire motor leads back left is 88.5 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire motor leads back right is 70.2 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire receiver is 63.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire gps is 84.5 mm from prop 1's disk (needs 20) | pass |
 | prop clearance | wire lidar is 30.6 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire safety monitor is 62.0 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire safety monitor is 48.2 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire module connector is 85.1 mm from prop 1's disk (needs 20) | pass |
 | prop clearance | wire camera cable is 20.5 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire module power to P is 54.3 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire esc cable to switch is 43.3 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire dshot taps is 30.4 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire crsf tap is 29.5 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire chute lines is 54.2 mm from prop 1's disk (needs 20) | pass |
-| prop clearance | wire module bus p to c is 63.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire chute servo is 70.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire module power to P is 58.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire esc cable to switch is 53.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire dshot taps is 35.4 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire crsf tap is 28.3 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from fc is 57.9 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from bec is 54.1 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire cut supply is 43.8 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire chute lines is 52.7 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire module bus v to p is 58.0 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire module bus p to c is 58.0 mm from prop 1's disk (needs 20) | pass |
+| prop clearance | wire esc cable from switch is 44.0 mm from prop 1's disk (needs 20) | pass |
 | prop clearance | frame is 10.6 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | module-socket 2 is 47.8 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | ruko-r111 is 15.0 mm from prop 2's disk (needs 10) | pass |
@@ -716,19 +935,29 @@ Every check, setup by setup:
 | prop clearance | camera bracket is 11.0 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | v housing is 43.7 mm from prop 2's disk (needs 10) | pass |
 | prop clearance | p holder is 32.0 mm from prop 2's disk (needs 10) | pass |
-| prop clearance | wire battery leads is 76.4 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire motor leads front right is 28.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire battery leads is 73.9 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire motor leads front right is 27.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire motor leads back left is 70.1 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire motor leads back right is 88.5 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire receiver is 73.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire gps is 81.2 mm from prop 2's disk (needs 20) | pass |
 | prop clearance | wire lidar is 41.1 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire safety monitor is 62.0 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire safety monitor is 36.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire module connector is 81.5 mm from prop 2's disk (needs 20) | pass |
 | prop clearance | wire camera cable is 20.5 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire chute servo is 36.2 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire teensy feed from fc is 52.5 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire teensy feed from bec is 52.5 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire cut supply is 42.6 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire chute servo is 42.5 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire fc battery feed is 62.5 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire module power to P is 60.1 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire esc cable to switch is 43.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire dshot taps is 35.5 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire crsf tap is 41.0 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from fc is 53.8 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from bec is 56.2 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire cut supply is 43.6 mm from prop 2's disk (needs 20) | pass |
 | prop clearance | wire chute lines is 53.3 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire module bus v to p is 53.8 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire module bus p to c is 53.8 mm from prop 2's disk (needs 20) | pass |
-| prop clearance | wire esc cable from switch is 43.3 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire module bus v to p is 53.0 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire module bus p to c is 53.0 mm from prop 2's disk (needs 20) | pass |
+| prop clearance | wire esc cable from switch is 54.9 mm from prop 2's disk (needs 20) | pass |
 | prop clearance | frame is 32.1 mm from prop 3's disk (needs 10) | pass |
 | prop clearance | module-socket 1 is 68.9 mm from prop 3's disk (needs 10) | pass |
 | prop clearance | module-plug@V is 68.9 mm from prop 3's disk (needs 10) | pass |
@@ -737,18 +966,22 @@ Every check, setup by setup:
 | prop clearance | gps mast is 37.3 mm from prop 3's disk (needs 10) | pass |
 | prop clearance | v housing is 15.1 mm from prop 3's disk (needs 10) | pass |
 | prop clearance | wire battery leads is 45.9 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire motor leads back left is 28.3 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire receiver is 55.9 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire gps is 43.1 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire bec feed is 46.5 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire module connector is 78.8 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire motor leads front left is 70.3 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire motor leads back left is 27.3 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire motor leads back right is 79.3 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire receiver is 56.9 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire gps is 39.7 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire safety monitor is 63.8 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module connector is 71.3 mm from prop 3's disk (needs 20) | pass |
 | prop clearance | wire camera cable is 78.3 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire module power to V is 54.8 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire module power to P is 55.0 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire esc cable to switch is 74.1 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire dshot taps is 74.1 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire crsf tap is 49.6 mm from prop 3's disk (needs 20) | pass |
-| prop clearance | wire module bus p to c is 48.8 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module power to V is 47.9 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module power to P is 48.0 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire crsf tap is 53.6 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from fc is 67.1 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from bec is 48.6 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire cut supply is 65.8 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module bus v to p is 84.2 mm from prop 3's disk (needs 20) | pass |
+| prop clearance | wire module bus p to c is 52.5 mm from prop 3's disk (needs 20) | pass |
 | prop clearance | frame is 32.1 mm from prop 4's disk (needs 10) | pass |
 | prop clearance | module-socket 1 is 68.9 mm from prop 4's disk (needs 10) | pass |
 | prop clearance | module-plug@V is 68.9 mm from prop 4's disk (needs 10) | pass |
@@ -757,16 +990,23 @@ Every check, setup by setup:
 | prop clearance | gps mast is 37.3 mm from prop 4's disk (needs 10) | pass |
 | prop clearance | v housing is 15.1 mm from prop 4's disk (needs 10) | pass |
 | prop clearance | wire battery leads is 45.9 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire motor leads back right is 28.3 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire receiver is 55.9 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire module connector is 78.8 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire motor leads front right is 70.3 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire motor leads back left is 79.2 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire motor leads back right is 27.3 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire receiver is 57.0 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire gps is 48.1 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire safety monitor is 73.0 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire module connector is 64.9 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire camera cable is 78.3 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire battery taps is 32.5 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire fc battery feed is 30.9 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire teensy feed from fc is 74.6 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire teensy feed from bec is 56.5 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire cut supply is 74.1 mm from prop 4's disk (needs 20) | pass |
-| prop clearance | wire module bus v to p is 75.5 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire battery taps is 40.0 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire fc battery feed is 34.0 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire module power to V is 70.7 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire module power to P is 70.8 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire crsf tap is 56.6 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from fc is 98.4 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire teensy feed from bec is 67.2 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire cut supply is 74.3 mm from prop 4's disk (needs 20) | pass |
+| prop clearance | wire module bus v to p is 79.8 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | wire module bus p to c is 42.3 mm from prop 4's disk (needs 20) | pass |
 | prop clearance | props 1 and 2 are 43.0 mm apart | pass |
 | prop clearance | props 1 and 3 are 43.0 mm apart | pass |
@@ -789,14 +1029,14 @@ Each part's weight spread over its solid, with the pack at its trim. Inertia is 
 
 | Setup | Weight | Ixx | Iyy | Izz |
 |---|---|---|---|---|
-| base | 1860 g | 12.9 g m² | 15.5 g m² | 25.9 g m² |
+| base | 1860 g | 12.9 g m² | 15.4 g m² | 25.8 g m² |
 | V | 2032 g | 14.2 g m² | 17.2 g m² | 26.5 g m² |
-| P | 2036 g | 15.6 g m² | 18.6 g m² | 26.4 g m² |
-| C | 2022 g | 13.1 g m² | 18.3 g m² | 28.6 g m² |
+| P | 2036 g | 15.6 g m² | 18.6 g m² | 26.3 g m² |
+| C | 2022 g | 13.0 g m² | 18.2 g m² | 28.5 g m² |
 | mission | 2208 g | 16.6 g m² | 20.0 g m² | 26.9 g m² |
-| V+C | 2194 g | 14.4 g m² | 20.3 g m² | 29.5 g m² |
-| P+C | 2198 g | 15.9 g m² | 21.2 g m² | 28.8 g m² |
-| max | 2370 g | 17.0 g m² | 22.9 g m² | 29.6 g m² |
+| V+C | 2194 g | 14.4 g m² | 20.2 g m² | 29.4 g m² |
+| P+C | 2198 g | 15.8 g m² | 21.1 g m² | 28.7 g m² |
+| max | 2370 g | 16.9 g m² | 22.8 g m² | 29.5 g m² |
 
 ## My printed parts
 
@@ -827,35 +1067,35 @@ Each route's length. The wires in them, their gauges and their weight come from 
 
 | Wire | Length |
 |---|---|
-| battery leads | 159 mm |
-| motor leads front left | 183 mm |
-| motor leads front right | 183 mm |
-| motor leads back left | 183 mm |
-| motor leads back right | 183 mm |
-| receiver | 41 mm |
-| gps | 137 mm |
-| lidar | 146 mm |
-| safety monitor | 20 mm |
-| bec feed | 23 mm |
-| module connector | 7 mm |
+| battery leads | 168 mm |
+| motor leads front left | 206 mm |
+| motor leads front right | 205 mm |
+| motor leads back left | 228 mm |
+| motor leads back right | 228 mm |
+| receiver | 76 mm |
+| gps | 159 mm |
+| lidar | 162 mm |
+| safety monitor | 104 mm |
+| bec feed | 22 mm |
+| module connector | 26 mm |
 | camera cable | 179 mm |
-| chute servo | 77 mm |
+| chute servo | 49 mm |
 | battery taps | 65 mm |
-| fc battery feed | 93 mm |
-| module power to V | 32 mm |
-| module power to P | 70 mm |
-| module power to C | 13 mm |
-| esc cable to switch | 56 mm |
-| dshot taps | 80 mm |
-| crsf tap | 144 mm |
-| teensy feed from fc | 46 mm |
-| teensy feed from bec | 84 mm |
-| cut supply | 61 mm |
-| chute lines | 18 mm |
+| fc battery feed | 98 mm |
+| module power to V | 45 mm |
+| module power to P | 84 mm |
+| module power to C | 26 mm |
+| esc cable to switch | 52 mm |
+| dshot taps | 77 mm |
+| crsf tap | 159 mm |
+| teensy feed from fc | 68 mm |
+| teensy feed from bec | 111 mm |
+| cut supply | 97 mm |
+| chute lines | 21 mm |
 | module bus v to p | 43 mm |
-| module bus p to c | 124 mm |
-| claws | 45 mm |
-| esc cable from switch | 39 mm |
+| module bus p to c | 130 mm |
+| claws | 38 mm |
+| esc cable from switch | 46 mm |
 
 ## Hardware
 

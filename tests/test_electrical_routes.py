@@ -62,3 +62,25 @@ def test_the_real_routes_are_as_thick_as_their_wires():
     for wire in settings.wires:
         if wire.name in wanted:
             assert wire.diameter_mm == pytest.approx(wanted[wire.name], abs=0.05), wire.name
+
+
+def test_redrawing_a_route_changes_only_its_path(tmp_path):
+    cad = tmp_path / "cad.yaml"
+    cad.write_text(
+        "wires:\n"
+        "  - name: battery leads\n"
+        "    diameter_mm: 6.4 # from the electrical connection list\n"
+        "    path_mm: [[30, 0, -5], [-26, 0, 16]]\n"
+        "  - name: camera cable\n"
+        "    path_mm: [[0, 0, 0], [1, 0, 0]]\n",
+        encoding="utf-8",
+    )
+    changed = routes.update_cad_paths(
+        cad, {"battery leads": [[35.0, 0.0, -5.0], [-21.9, -0.1, 24.0]]}
+    )
+    text = cad.read_text(encoding="utf-8")
+    assert changed == ["battery leads"]
+    assert "    path_mm: [[35, 0, -5], [-21.9, -0.1, 24]] # from its plugs\n" in text
+    assert "    path_mm: [[0, 0, 0], [1, 0, 0]]\n" in text  # the others as they were
+    assert "    diameter_mm: 6.4 # from the electrical connection list\n" in text
+    assert routes.update_cad_paths(cad, {"battery leads": [[35, 0, -5], [-21.9, -0.1, 24]]}) == []

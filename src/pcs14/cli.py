@@ -90,6 +90,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     electrical.add_argument("--cad", type=Path, default=Path("design/cad.yaml"))
     electrical.add_argument(
+        "--snap-routes",
+        action="store_true",
+        help="redraw each wire route in the CAD settings from the plugs its wires leave, then stop",
+    )
+    electrical.add_argument(
         "--update-cad",
         action="store_true",
         help="write each wire route's thickness, from the wires in it, into the CAD settings",
@@ -562,6 +567,15 @@ def run_electrical(args) -> int:
         print("Outside tools:")
         for line in tools.describe():
             print(f"  {line}")
+        return 0
+    if args.snap_routes:
+        from pcs14.electrical.routes import update_cad_paths
+        from pcs14.site.wires3d import snapped_routes
+
+        changed = update_cad_paths(args.cad, snapped_routes(Path(args.cad).parent))
+        print(f"{args.cad} took {len(changed)} routes redrawn from their plugs:")
+        for name in changed:
+            print(f"  {name}")
         return 0
     catalog, build, targets = _load(args)
     design = load_connection_list(args.electrical)

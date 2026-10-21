@@ -79,3 +79,28 @@ def update_cad_routes(cad_path: Path, diameters: dict[str, float]) -> list[str]:
                 changed.append(current)
     Path(cad_path).write_text("".join(lines), encoding="utf-8")
     return changed
+
+
+def _point(p) -> str:
+    return "[" + ", ".join(f"{v:g}" for v in p) + "]"
+
+
+def update_cad_paths(cad_path: Path, paths: dict[str, list]) -> list[str]:
+    """Write redrawn routes' points into design/cad.yaml, leaving everything else as it is.
+    Returns the routes that changed."""
+    lines = Path(cad_path).read_text(encoding="utf-8").splitlines(keepends=True)
+    changed = []
+    current = None
+    for i, line in enumerate(lines):
+        name = re.match(r"^\s*- name: (.+?)\s*$", line)
+        if name:
+            current = name.group(1)
+            continue
+        found = re.match(r"^(\s*)path_mm: (\[.*\])", line)
+        if found and current in paths:
+            new = "[" + ", ".join(_point(p) for p in paths[current]) + "]"
+            if found.group(2) != new:
+                lines[i] = f"{found.group(1)}path_mm: {new} # from its plugs\n"
+                changed.append(current)
+    Path(cad_path).write_text("".join(lines), encoding="utf-8", newline="\n")
+    return changed

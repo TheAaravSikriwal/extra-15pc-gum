@@ -48,7 +48,7 @@
 <polygon fill="none" stroke="black" points="423,-750.25 423,-774 545.25,-774 545.25,-750.25 423,-750.25"/>
 <text xml:space="preserve" text-anchor="start" x="458.25" y="-757.25" font-family="Arial" font-size="14.00">18 AWG</text>
 <polygon fill="none" stroke="black" points="545.25,-750.25 545.25,-774 665.25,-774 665.25,-750.25 545.25,-750.25"/>
-<text xml:space="preserve" text-anchor="start" x="580.5" y="-757.25" font-family="Arial" font-size="14.00">0.032 m</text>
+<text xml:space="preserve" text-anchor="start" x="580.5" y="-757.25" font-family="Arial" font-size="14.00">0.045 m</text>
 <text xml:space="preserve" text-anchor="start" x="388.25" y="-735.5" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="340.25" y="-715.75" font-family="Arial" font-size="14.00">bec&#45;pads:4:OUT</text>
 <text xml:space="preserve" text-anchor="start" x="444" y="-715.75" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:RD &#160;&#160;&#160;</text>
@@ -76,7 +76,7 @@
 <polygon fill="none" stroke="black" points="422.62,-613.25 422.62,-637 545.62,-637 545.62,-613.25 422.62,-613.25"/>
 <text xml:space="preserve" text-anchor="start" x="458.25" y="-620.25" font-family="Arial" font-size="14.00">18 AWG</text>
 <polygon fill="none" stroke="black" points="545.62,-613.25 545.62,-637 666.38,-637 666.38,-613.25 545.62,-613.25"/>
-<text xml:space="preserve" text-anchor="start" x="581.25" y="-620.25" font-family="Arial" font-size="14.00">0.032 m</text>
+<text xml:space="preserve" text-anchor="start" x="581.25" y="-620.25" font-family="Arial" font-size="14.00">0.045 m</text>
 <text xml:space="preserve" text-anchor="start" x="381.88" y="-598.5" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="339.12" y="-578.75" font-family="Arial" font-size="14.00">bec&#45;pads:3:G2</text>
 <text xml:space="preserve" text-anchor="start" x="432.38" y="-578.75" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:BK &#160;&#160;&#160;</text>
@@ -99,12 +99,12 @@
 <polygon fill="#f4f4f2" stroke="black" points="665.25,-249.75 338.25,-249.75 338.25,-137 665.25,-137 665.25,-249.75"/>
 <polygon fill="none" stroke="black" points="338.25,-226 338.25,-249.75 665.25,-249.75 665.25,-226 338.25,-226"/>
 <text xml:space="preserve" text-anchor="start" x="487.5" y="-233" font-family="Arial" font-size="14.00">W23</text>
-<polygon fill="none" stroke="black" points="338.25,-202.25 338.25,-226 425.5,-226 425.5,-202.25 338.25,-202.25"/>
-<text xml:space="preserve" text-anchor="start" x="374.75" y="-209.25" font-family="Arial" font-size="14.00">1x</text>
-<polygon fill="none" stroke="black" points="425.5,-202.25 425.5,-226 550.25,-226 550.25,-202.25 425.5,-202.25"/>
-<text xml:space="preserve" text-anchor="start" x="462" y="-209.25" font-family="Arial" font-size="14.00">18 AWG</text>
-<polygon fill="none" stroke="black" points="550.25,-202.25 550.25,-226 665.25,-226 665.25,-202.25 550.25,-202.25"/>
-<text xml:space="preserve" text-anchor="start" x="586.75" y="-209.25" font-family="Arial" font-size="14.00">0.07 m</text>
+<polygon fill="none" stroke="black" points="338.25,-202.25 338.25,-226 423,-226 423,-202.25 338.25,-202.25"/>
+<text xml:space="preserve" text-anchor="start" x="373.5" y="-209.25" font-family="Arial" font-size="14.00">1x</text>
+<polygon fill="none" stroke="black" points="423,-202.25 423,-226 545.25,-226 545.25,-202.25 423,-202.25"/>
+<text xml:space="preserve" text-anchor="start" x="458.25" y="-209.25" font-family="Arial" font-size="14.00">18 AWG</text>
+<polygon fill="none" stroke="black" points="545.25,-202.25 545.25,-226 665.25,-226 665.25,-202.25 545.25,-202.25"/>
+<text xml:space="preserve" text-anchor="start" x="580.5" y="-209.25" font-family="Arial" font-size="14.00">0.084 m</text>
 <text xml:space="preserve" text-anchor="start" x="388.25" y="-187.5" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="340.25" y="-167.75" font-family="Arial" font-size="14.00">bec&#45;pads:4:OUT</text>
 <text xml:space="preserve" text-anchor="start" x="444" y="-167.75" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:RD &#160;&#160;&#160;</text>
@@ -127,12 +127,12 @@
 <polygon fill="#f4f4f2" stroke="black" points="666.38,-112.75 337.12,-112.75 337.12,0 666.38,0 666.38,-112.75"/>
 <polygon fill="none" stroke="black" points="337.12,-89 337.12,-112.75 666.38,-112.75 666.38,-89 337.12,-89"/>
 <text xml:space="preserve" text-anchor="start" x="487.5" y="-96" font-family="Arial" font-size="14.00">W24</text>
-<polygon fill="none" stroke="black" points="337.12,-65.25 337.12,-89 425.12,-89 425.12,-65.25 337.12,-65.25"/>
-<text xml:space="preserve" text-anchor="start" x="374" y="-72.25" font-family="Arial" font-size="14.00">1x</text>
-<polygon fill="none" stroke="black" points="425.12,-65.25 425.12,-89 550.62,-89 550.62,-65.25 425.12,-65.25"/>
-<text xml:space="preserve" text-anchor="start" x="462" y="-72.25" font-family="Arial" font-size="14.00">18 AWG</text>
-<polygon fill="none" stroke="black" points="550.62,-65.25 550.62,-89 666.38,-89 666.38,-65.25 550.62,-65.25"/>
-<text xml:space="preserve" text-anchor="start" x="587.5" y="-72.25" font-family="Arial" font-size="14.00">0.07 m</text>
+<polygon fill="none" stroke="black" points="337.12,-65.25 337.12,-89 422.62,-89 422.62,-65.25 337.12,-65.25"/>
+<text xml:space="preserve" text-anchor="start" x="372.75" y="-72.25" font-family="Arial" font-size="14.00">1x</text>
+<polygon fill="none" stroke="black" points="422.62,-65.25 422.62,-89 545.62,-89 545.62,-65.25 422.62,-65.25"/>
+<text xml:space="preserve" text-anchor="start" x="458.25" y="-72.25" font-family="Arial" font-size="14.00">18 AWG</text>
+<polygon fill="none" stroke="black" points="545.62,-65.25 545.62,-89 666.38,-89 666.38,-65.25 545.62,-65.25"/>
+<text xml:space="preserve" text-anchor="start" x="581.25" y="-72.25" font-family="Arial" font-size="14.00">0.084 m</text>
 <text xml:space="preserve" text-anchor="start" x="381.88" y="-50.5" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="339.12" y="-30.75" font-family="Arial" font-size="14.00">bec&#45;pads:3:G2</text>
 <text xml:space="preserve" text-anchor="start" x="432.38" y="-30.75" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:BK &#160;&#160;&#160;</text>
@@ -160,7 +160,7 @@
 <polygon fill="none" stroke="black" points="422.88,-476.25 422.88,-500 545.38,-500 545.38,-476.25 422.88,-476.25"/>
 <text xml:space="preserve" text-anchor="start" x="458.25" y="-483.25" font-family="Arial" font-size="14.00">18 AWG</text>
 <polygon fill="none" stroke="black" points="545.38,-476.25 545.38,-500 665.62,-500 665.62,-476.25 545.38,-476.25"/>
-<text xml:space="preserve" text-anchor="start" x="580.75" y="-483.25" font-family="Arial" font-size="14.00">0.013 m</text>
+<text xml:space="preserve" text-anchor="start" x="580.75" y="-483.25" font-family="Arial" font-size="14.00">0.026 m</text>
 <text xml:space="preserve" text-anchor="start" x="387.88" y="-461.5" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="339.88" y="-441.75" font-family="Arial" font-size="14.00">bec&#45;pads:4:OUT</text>
 <text xml:space="preserve" text-anchor="start" x="443.62" y="-441.75" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:RD &#160;&#160;&#160;</text>
@@ -188,7 +188,7 @@
 <polygon fill="none" stroke="black" points="422.5,-339.25 422.5,-363 545.75,-363 545.75,-339.25 422.5,-339.25"/>
 <text xml:space="preserve" text-anchor="start" x="458.25" y="-346.25" font-family="Arial" font-size="14.00">18 AWG</text>
 <polygon fill="none" stroke="black" points="545.75,-339.25 545.75,-363 666.75,-363 666.75,-339.25 545.75,-339.25"/>
-<text xml:space="preserve" text-anchor="start" x="581.5" y="-346.25" font-family="Arial" font-size="14.00">0.013 m</text>
+<text xml:space="preserve" text-anchor="start" x="581.5" y="-346.25" font-family="Arial" font-size="14.00">0.026 m</text>
 <text xml:space="preserve" text-anchor="start" x="381.5" y="-324.5" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="338.75" y="-304.75" font-family="Arial" font-size="14.00">bec&#45;pads:3:G2</text>
 <text xml:space="preserve" text-anchor="start" x="432" y="-304.75" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:BK &#160;&#160;&#160;</text>

@@ -40,7 +40,7 @@
 <polygon fill="none" stroke="black" points="453.5,-202.25 453.5,-226 569.5,-226 569.5,-202.25 453.5,-202.25"/>
 <text xml:space="preserve" text-anchor="start" x="485.62" y="-209.25" font-family="Arial" font-size="14.00">20 AWG</text>
 <polygon fill="none" stroke="black" points="569.5,-202.25 569.5,-226 683.25,-226 683.25,-202.25 569.5,-202.25"/>
-<text xml:space="preserve" text-anchor="start" x="601.62" y="-209.25" font-family="Arial" font-size="14.00">0.045 m</text>
+<text xml:space="preserve" text-anchor="start" x="601.62" y="-209.25" font-family="Arial" font-size="14.00">0.038 m</text>
 <text xml:space="preserve" text-anchor="start" x="435.5" y="-187.5" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="377" y="-167.75" font-family="Arial" font-size="14.00">cplug&#45;POWER:1:5V</text>
 <text xml:space="preserve" text-anchor="start" x="501.75" y="-167.75" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:RD &#160;&#160;&#160;</text>
@@ -68,7 +68,7 @@
 <polygon fill="none" stroke="black" points="453.5,-476.25 453.5,-500 569.5,-500 569.5,-476.25 453.5,-476.25"/>
 <text xml:space="preserve" text-anchor="start" x="485.62" y="-483.25" font-family="Arial" font-size="14.00">20 AWG</text>
 <polygon fill="none" stroke="black" points="569.5,-476.25 569.5,-500 683.25,-500 683.25,-476.25 569.5,-476.25"/>
-<text xml:space="preserve" text-anchor="start" x="601.62" y="-483.25" font-family="Arial" font-size="14.00">0.045 m</text>
+<text xml:space="preserve" text-anchor="start" x="601.62" y="-483.25" font-family="Arial" font-size="14.00">0.038 m</text>
 <text xml:space="preserve" text-anchor="start" x="435.5" y="-461.5" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="377" y="-441.75" font-family="Arial" font-size="14.00">cplug&#45;POWER:1:5V</text>
 <text xml:space="preserve" text-anchor="start" x="501.75" y="-441.75" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:RD &#160;&#160;&#160;</text>
@@ -96,7 +96,7 @@
 <polygon fill="none" stroke="black" points="449.12,-65.25 449.12,-89 573.88,-89 573.88,-65.25 449.12,-65.25"/>
 <text xml:space="preserve" text-anchor="start" x="485.62" y="-72.25" font-family="Arial" font-size="14.00">20 AWG</text>
 <polygon fill="none" stroke="black" points="573.88,-65.25 573.88,-89 696.38,-89 696.38,-65.25 573.88,-65.25"/>
-<text xml:space="preserve" text-anchor="start" x="610.38" y="-72.25" font-family="Arial" font-size="14.00">0.045 m</text>
+<text xml:space="preserve" text-anchor="start" x="610.38" y="-72.25" font-family="Arial" font-size="14.00">0.038 m</text>
 <text xml:space="preserve" text-anchor="start" x="429.5" y="-50.5" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="363.88" y="-30.75" font-family="Arial" font-size="14.00">cplug&#45;POWER:2:GND</text>
 <text xml:space="preserve" text-anchor="start" x="502.88" y="-30.75" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:BK &#160;&#160;&#160;</text>
@@ -124,7 +124,7 @@
 <polygon fill="none" stroke="black" points="449.12,-339.25 449.12,-363 573.88,-363 573.88,-339.25 449.12,-339.25"/>
 <text xml:space="preserve" text-anchor="start" x="485.62" y="-346.25" font-family="Arial" font-size="14.00">20 AWG</text>
 <polygon fill="none" stroke="black" points="573.88,-339.25 573.88,-363 696.38,-363 696.38,-339.25 573.88,-339.25"/>
-<text xml:space="preserve" text-anchor="start" x="610.38" y="-346.25" font-family="Arial" font-size="14.00">0.045 m</text>
+<text xml:space="preserve" text-anchor="start" x="610.38" y="-346.25" font-family="Arial" font-size="14.00">0.038 m</text>
 <text xml:space="preserve" text-anchor="start" x="429.5" y="-324.5" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="363.88" y="-304.75" font-family="Arial" font-size="14.00">cplug&#45;POWER:2:GND</text>
 <text xml:space="preserve" text-anchor="start" x="502.88" y="-304.75" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:BK &#160;&#160;&#160;</text>
@@ -441,7 +441,7 @@
 <polygon fill="none" stroke="black" points="449.25,-750.25 449.25,-774 573.75,-774 573.75,-750.25 449.25,-750.25"/>
 <text xml:space="preserve" text-anchor="start" x="485.62" y="-757.25" font-family="Arial" font-size="14.00">28 AWG</text>
 <polygon fill="none" stroke="black" points="573.75,-750.25 573.75,-774 696,-774 696,-750.25 573.75,-750.25"/>
-<text xml:space="preserve" text-anchor="start" x="610.12" y="-757.25" font-family="Arial" font-size="14.00">0.045 m</text>
+<text xml:space="preserve" text-anchor="start" x="610.12" y="-757.25" font-family="Arial" font-size="14.00">0.038 m</text>
 <text xml:space="preserve" text-anchor="start" x="432.5" y="-735.5" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="364.25" y="-715.75" font-family="Arial" font-size="14.00">c_node&#45;PWM:2:PWM1</text>
 <text xml:space="preserve" text-anchor="start" x="508.5" y="-715.75" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:BU &#160;&#160;&#160;</text>
@@ -469,7 +469,7 @@
 <polygon fill="none" stroke="black" points="449.25,-613.25 449.25,-637 573.75,-637 573.75,-613.25 449.25,-613.25"/>
 <text xml:space="preserve" text-anchor="start" x="485.62" y="-620.25" font-family="Arial" font-size="14.00">28 AWG</text>
 <polygon fill="none" stroke="black" points="573.75,-613.25 573.75,-637 696,-637 696,-613.25 573.75,-613.25"/>
-<text xml:space="preserve" text-anchor="start" x="610.12" y="-620.25" font-family="Arial" font-size="14.00">0.045 m</text>
+<text xml:space="preserve" text-anchor="start" x="610.12" y="-620.25" font-family="Arial" font-size="14.00">0.038 m</text>
 <text xml:space="preserve" text-anchor="start" x="432.5" y="-598.5" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="364.25" y="-578.75" font-family="Arial" font-size="14.00">c_node&#45;PWM:3:PWM2</text>
 <text xml:space="preserve" text-anchor="start" x="508.5" y="-578.75" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:BU &#160;&#160;&#160;</text>

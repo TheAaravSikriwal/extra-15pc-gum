@@ -68,7 +68,7 @@
 <polygon fill="none" stroke="black" points="384.26,-395.89 384.26,-419.64 473.51,-419.64 473.51,-395.89 384.26,-395.89"/>
 <text xml:space="preserve" text-anchor="start" x="403.01" y="-402.89" font-family="Arial" font-size="14.00">26 AWG</text>
 <polygon fill="none" stroke="black" points="473.51,-395.89 473.51,-419.64 560.51,-419.64 560.51,-395.89 473.51,-395.89"/>
-<text xml:space="preserve" text-anchor="start" x="492.26" y="-402.89" font-family="Arial" font-size="14.00">0.146 m</text>
+<text xml:space="preserve" text-anchor="start" x="492.26" y="-402.89" font-family="Arial" font-size="14.00">0.162 m</text>
 <text xml:space="preserve" text-anchor="start" x="370.51" y="-381.14" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="334.51" y="-361.39" font-family="Arial" font-size="14.00">fc&#45;GPS:1:5V</text>
 <text xml:space="preserve" text-anchor="start" x="414.26" y="-361.39" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:RD &#160;&#160;&#160;</text>
@@ -96,7 +96,7 @@
 <polygon fill="none" stroke="black" points="379.76,-121.89 379.76,-145.64 478.01,-145.64 478.01,-121.89 379.76,-121.89"/>
 <text xml:space="preserve" text-anchor="start" x="403.01" y="-128.89" font-family="Arial" font-size="14.00">26 AWG</text>
 <polygon fill="none" stroke="black" points="478.01,-121.89 478.01,-145.64 574.01,-145.64 574.01,-121.89 478.01,-121.89"/>
-<text xml:space="preserve" text-anchor="start" x="501.26" y="-128.89" font-family="Arial" font-size="14.00">0.146 m</text>
+<text xml:space="preserve" text-anchor="start" x="501.26" y="-128.89" font-family="Arial" font-size="14.00">0.162 m</text>
 <text xml:space="preserve" text-anchor="start" x="364.13" y="-107.14" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="321.01" y="-87.39" font-family="Arial" font-size="14.00">fc&#45;GPS:6:GND</text>
 <text xml:space="preserve" text-anchor="start" x="415.01" y="-87.39" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:BK &#160;&#160;&#160;</text>
@@ -124,7 +124,7 @@
 <polygon fill="none" stroke="black" points="372.13,-258.89 372.13,-282.64 485.63,-282.64 485.63,-258.89 372.13,-258.89"/>
 <text xml:space="preserve" text-anchor="start" x="403.01" y="-265.89" font-family="Arial" font-size="14.00">26 AWG</text>
 <polygon fill="none" stroke="black" points="485.63,-258.89 485.63,-282.64 596.88,-282.64 596.88,-258.89 485.63,-258.89"/>
-<text xml:space="preserve" text-anchor="start" x="516.51" y="-265.89" font-family="Arial" font-size="14.00">0.146 m</text>
+<text xml:space="preserve" text-anchor="start" x="516.51" y="-265.89" font-family="Arial" font-size="14.00">0.162 m</text>
 <text xml:space="preserve" text-anchor="start" x="364.88" y="-244.14" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="298.13" y="-224.39" font-family="Arial" font-size="14.00">fc&#45;GPS:2:USART1_TX</text>
 <text xml:space="preserve" text-anchor="start" x="439.38" y="-224.39" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:BU &#160;&#160;&#160;</text>
@@ -201,7 +201,7 @@
 <polygon fill="none" stroke="black" points="1151.38,-121.89 1151.38,-145.64 1264.88,-145.64 1264.88,-121.89 1151.38,-121.89"/>
 <text xml:space="preserve" text-anchor="start" x="1182.26" y="-128.89" font-family="Arial" font-size="14.00">26 AWG</text>
 <polygon fill="none" stroke="black" points="1264.88,-121.89 1264.88,-145.64 1376.13,-145.64 1376.13,-121.89 1264.88,-121.89"/>
-<text xml:space="preserve" text-anchor="start" x="1295.76" y="-128.89" font-family="Arial" font-size="14.00">0.146 m</text>
+<text xml:space="preserve" text-anchor="start" x="1295.76" y="-128.89" font-family="Arial" font-size="14.00">0.162 m</text>
 <text xml:space="preserve" text-anchor="start" x="1118.63" y="-107.14" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="1077.38" y="-87.39" font-family="Arial" font-size="14.00">lidar&#45;J1:3:TXD</text>
 <text xml:space="preserve" text-anchor="start" x="1167.63" y="-87.39" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:BU &#160;&#160;&#160;</text>

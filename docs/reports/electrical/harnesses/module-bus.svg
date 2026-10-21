@@ -48,7 +48,7 @@
 <polygon fill="none" stroke="black" points="436.25,-409.88 436.25,-433.62 588.25,-433.62 588.25,-409.88 436.25,-409.88"/>
 <text xml:space="preserve" text-anchor="start" x="486.38" y="-416.88" font-family="Arial" font-size="14.00">26 AWG</text>
 <polygon fill="none" stroke="black" points="588.25,-409.88 588.25,-433.62 738,-433.62 738,-409.88 588.25,-409.88"/>
-<text xml:space="preserve" text-anchor="start" x="638.38" y="-416.88" font-family="Arial" font-size="14.00">0.007 m</text>
+<text xml:space="preserve" text-anchor="start" x="638.38" y="-416.88" font-family="Arial" font-size="14.00">0.026 m</text>
 <text xml:space="preserve" text-anchor="start" x="404" y="-395.12" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="323.75" y="-375.38" font-family="Arial" font-size="14.00">sockets&#45;FC_CAN:2:CAN_P</text>
 <text xml:space="preserve" text-anchor="start" x="492" y="-375.38" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:YE &#160;&#160;&#160;</text>
@@ -76,7 +76,7 @@
 <polygon fill="none" stroke="black" points="435.5,-272.88 435.5,-296.62 589,-296.62 589,-272.88 435.5,-272.88"/>
 <text xml:space="preserve" text-anchor="start" x="486.38" y="-279.88" font-family="Arial" font-size="14.00">26 AWG</text>
 <polygon fill="none" stroke="black" points="589,-272.88 589,-296.62 740.25,-296.62 740.25,-272.88 589,-272.88"/>
-<text xml:space="preserve" text-anchor="start" x="639.88" y="-279.88" font-family="Arial" font-size="14.00">0.007 m</text>
+<text xml:space="preserve" text-anchor="start" x="639.88" y="-279.88" font-family="Arial" font-size="14.00">0.026 m</text>
 <text xml:space="preserve" text-anchor="start" x="402.12" y="-258.12" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="321.5" y="-238.38" font-family="Arial" font-size="14.00">sockets&#45;FC_CAN:3:CAN_N</text>
 <text xml:space="preserve" text-anchor="start" x="490.5" y="-238.38" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:GN &#160;&#160;&#160;</text>
@@ -104,7 +104,7 @@
 <polygon fill="none" stroke="black" points="439.5,-546.88 439.5,-570.62 585,-570.62 585,-546.88 439.5,-546.88"/>
 <text xml:space="preserve" text-anchor="start" x="486.38" y="-553.88" font-family="Arial" font-size="14.00">26 AWG</text>
 <polygon fill="none" stroke="black" points="585,-546.88 585,-570.62 728.25,-570.62 728.25,-546.88 585,-546.88"/>
-<text xml:space="preserve" text-anchor="start" x="631.88" y="-553.88" font-family="Arial" font-size="14.00">0.007 m</text>
+<text xml:space="preserve" text-anchor="start" x="631.88" y="-553.88" font-family="Arial" font-size="14.00">0.026 m</text>
 <text xml:space="preserve" text-anchor="start" x="399.5" y="-532.12" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="333.5" y="-512.38" font-family="Arial" font-size="14.00">sockets&#45;FC_CAN:1:5V</text>
 <text xml:space="preserve" text-anchor="start" x="473.25" y="-512.38" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:RD &#160;&#160;&#160;</text>
@@ -132,7 +132,7 @@
 <polygon fill="none" stroke="black" points="441,-135.88 441,-159.62 583.5,-159.62 583.5,-135.88 441,-135.88"/>
 <text xml:space="preserve" text-anchor="start" x="486.38" y="-142.88" font-family="Arial" font-size="14.00">26 AWG</text>
 <polygon fill="none" stroke="black" points="583.5,-135.88 583.5,-159.62 723.75,-159.62 723.75,-135.88 583.5,-135.88"/>
-<text xml:space="preserve" text-anchor="start" x="628.88" y="-142.88" font-family="Arial" font-size="14.00">0.007 m</text>
+<text xml:space="preserve" text-anchor="start" x="628.88" y="-142.88" font-family="Arial" font-size="14.00">0.026 m</text>
 <text xml:space="preserve" text-anchor="start" x="411.12" y="-121.12" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="338" y="-101.38" font-family="Arial" font-size="14.00">sockets&#45;FC_CAN:4:GND</text>
 <text xml:space="preserve" text-anchor="start" x="492" y="-101.38" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:BK &#160;&#160;&#160;</text>
@@ -389,12 +389,12 @@
 <polygon fill="#f4f4f2" stroke="black" points="2550.75,-513.38 2121,-513.38 2121,-400.62 2550.75,-400.62 2550.75,-513.38"/>
 <polygon fill="none" stroke="black" points="2121,-489.62 2121,-513.38 2550.75,-513.38 2550.75,-489.62 2121,-489.62"/>
 <text xml:space="preserve" text-anchor="start" x="2321.62" y="-496.62" font-family="Arial" font-size="14.00">W89</text>
-<polygon fill="none" stroke="black" points="2121,-465.88 2121,-489.62 2240,-489.62 2240,-465.88 2121,-465.88"/>
-<text xml:space="preserve" text-anchor="start" x="2173.38" y="-472.88" font-family="Arial" font-size="14.00">1x</text>
-<polygon fill="none" stroke="black" points="2240,-465.88 2240,-489.62 2396.5,-489.62 2396.5,-465.88 2240,-465.88"/>
-<text xml:space="preserve" text-anchor="start" x="2292.38" y="-472.88" font-family="Arial" font-size="14.00">26 AWG</text>
-<polygon fill="none" stroke="black" points="2396.5,-465.88 2396.5,-489.62 2550.75,-489.62 2550.75,-465.88 2396.5,-465.88"/>
-<text xml:space="preserve" text-anchor="start" x="2448.88" y="-472.88" font-family="Arial" font-size="14.00">0.124 m</text>
+<polygon fill="none" stroke="black" points="2121,-465.88 2121,-489.62 2242.5,-489.62 2242.5,-465.88 2121,-465.88"/>
+<text xml:space="preserve" text-anchor="start" x="2174.62" y="-472.88" font-family="Arial" font-size="14.00">1x</text>
+<polygon fill="none" stroke="black" points="2242.5,-465.88 2242.5,-489.62 2401.5,-489.62 2401.5,-465.88 2242.5,-465.88"/>
+<text xml:space="preserve" text-anchor="start" x="2296.12" y="-472.88" font-family="Arial" font-size="14.00">26 AWG</text>
+<polygon fill="none" stroke="black" points="2401.5,-465.88 2401.5,-489.62 2550.75,-489.62 2550.75,-465.88 2401.5,-465.88"/>
+<text xml:space="preserve" text-anchor="start" x="2455.12" y="-472.88" font-family="Arial" font-size="14.00">0.13 m</text>
 <text xml:space="preserve" text-anchor="start" x="2209.62" y="-451.12" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="2123" y="-431.38" font-family="Arial" font-size="14.00">sockets&#45;P_SIGNAL:2:CAN_P</text>
 <text xml:space="preserve" text-anchor="start" x="2304" y="-431.38" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:YE &#160;&#160;&#160;</text>
@@ -417,12 +417,12 @@
 <polygon fill="#f4f4f2" stroke="black" points="2553,-376.38 2118.75,-376.38 2118.75,-263.62 2553,-263.62 2553,-376.38"/>
 <polygon fill="none" stroke="black" points="2118.75,-352.62 2118.75,-376.38 2553,-376.38 2553,-352.62 2118.75,-352.62"/>
 <text xml:space="preserve" text-anchor="start" x="2321.62" y="-359.62" font-family="Arial" font-size="14.00">W90</text>
-<polygon fill="none" stroke="black" points="2118.75,-328.88 2118.75,-352.62 2239.25,-352.62 2239.25,-328.88 2118.75,-328.88"/>
-<text xml:space="preserve" text-anchor="start" x="2171.88" y="-335.88" font-family="Arial" font-size="14.00">1x</text>
-<polygon fill="none" stroke="black" points="2239.25,-328.88 2239.25,-352.62 2397.25,-352.62 2397.25,-328.88 2239.25,-328.88"/>
-<text xml:space="preserve" text-anchor="start" x="2292.38" y="-335.88" font-family="Arial" font-size="14.00">26 AWG</text>
-<polygon fill="none" stroke="black" points="2397.25,-328.88 2397.25,-352.62 2553,-352.62 2553,-328.88 2397.25,-328.88"/>
-<text xml:space="preserve" text-anchor="start" x="2450.38" y="-335.88" font-family="Arial" font-size="14.00">0.124 m</text>
+<polygon fill="none" stroke="black" points="2118.75,-328.88 2118.75,-352.62 2241.75,-352.62 2241.75,-328.88 2118.75,-328.88"/>
+<text xml:space="preserve" text-anchor="start" x="2173.12" y="-335.88" font-family="Arial" font-size="14.00">1x</text>
+<polygon fill="none" stroke="black" points="2241.75,-328.88 2241.75,-352.62 2402.25,-352.62 2402.25,-328.88 2241.75,-328.88"/>
+<text xml:space="preserve" text-anchor="start" x="2296.12" y="-335.88" font-family="Arial" font-size="14.00">26 AWG</text>
+<polygon fill="none" stroke="black" points="2402.25,-328.88 2402.25,-352.62 2553,-352.62 2553,-328.88 2402.25,-328.88"/>
+<text xml:space="preserve" text-anchor="start" x="2456.62" y="-335.88" font-family="Arial" font-size="14.00">0.13 m</text>
 <text xml:space="preserve" text-anchor="start" x="2207.75" y="-314.12" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="2120.75" y="-294.38" font-family="Arial" font-size="14.00">sockets&#45;P_SIGNAL:3:CAN_N</text>
 <text xml:space="preserve" text-anchor="start" x="2302.5" y="-294.38" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:GN &#160;&#160;&#160;</text>
@@ -445,12 +445,12 @@
 <polygon fill="#f4f4f2" stroke="black" points="2559,-650.38 2112.75,-650.38 2112.75,-537.62 2559,-537.62 2559,-650.38"/>
 <polygon fill="none" stroke="black" points="2112.75,-626.62 2112.75,-650.38 2559,-650.38 2559,-626.62 2112.75,-626.62"/>
 <text xml:space="preserve" text-anchor="start" x="2321.62" y="-633.62" font-family="Arial" font-size="14.00">W91</text>
-<polygon fill="none" stroke="black" points="2112.75,-602.88 2112.75,-626.62 2237.25,-626.62 2237.25,-602.88 2112.75,-602.88"/>
-<text xml:space="preserve" text-anchor="start" x="2167.88" y="-609.88" font-family="Arial" font-size="14.00">1x</text>
-<polygon fill="none" stroke="black" points="2237.25,-602.88 2237.25,-626.62 2399.25,-626.62 2399.25,-602.88 2237.25,-602.88"/>
-<text xml:space="preserve" text-anchor="start" x="2292.38" y="-609.88" font-family="Arial" font-size="14.00">26 AWG</text>
-<polygon fill="none" stroke="black" points="2399.25,-602.88 2399.25,-626.62 2559,-626.62 2559,-602.88 2399.25,-602.88"/>
-<text xml:space="preserve" text-anchor="start" x="2454.38" y="-609.88" font-family="Arial" font-size="14.00">0.124 m</text>
+<polygon fill="none" stroke="black" points="2112.75,-602.88 2112.75,-626.62 2239.75,-626.62 2239.75,-602.88 2112.75,-602.88"/>
+<text xml:space="preserve" text-anchor="start" x="2169.12" y="-609.88" font-family="Arial" font-size="14.00">1x</text>
+<polygon fill="none" stroke="black" points="2239.75,-602.88 2239.75,-626.62 2404.25,-626.62 2404.25,-602.88 2239.75,-602.88"/>
+<text xml:space="preserve" text-anchor="start" x="2296.12" y="-609.88" font-family="Arial" font-size="14.00">26 AWG</text>
+<polygon fill="none" stroke="black" points="2404.25,-602.88 2404.25,-626.62 2559,-626.62 2559,-602.88 2404.25,-602.88"/>
+<text xml:space="preserve" text-anchor="start" x="2460.62" y="-609.88" font-family="Arial" font-size="14.00">0.13 m</text>
 <text xml:space="preserve" text-anchor="start" x="2205.12" y="-588.12" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="2114.75" y="-568.38" font-family="Arial" font-size="14.00">sockets&#45;P_SIGNAL:1:CAN_5V</text>
 <text xml:space="preserve" text-anchor="start" x="2303.25" y="-568.38" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:RD &#160;&#160;&#160;</text>

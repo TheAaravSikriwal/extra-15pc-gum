@@ -256,7 +256,7 @@
 <polygon fill="none" stroke="black" points="1929.5,-498.27 1929.5,-522.02 2057.5,-522.02 2057.5,-498.27 1929.5,-498.27"/>
 <text xml:space="preserve" text-anchor="start" x="1967.62" y="-505.27" font-family="Arial" font-size="14.00">26 AWG</text>
 <polygon fill="none" stroke="black" points="2057.5,-498.27 2057.5,-522.02 2183.25,-522.02 2183.25,-498.27 2057.5,-498.27"/>
-<text xml:space="preserve" text-anchor="start" x="2095.62" y="-505.27" font-family="Arial" font-size="14.00">0.137 m</text>
+<text xml:space="preserve" text-anchor="start" x="2095.62" y="-505.27" font-family="Arial" font-size="14.00">0.159 m</text>
 <text xml:space="preserve" text-anchor="start" x="1912.62" y="-483.52" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="1841" y="-463.77" font-family="Arial" font-size="14.00">vplug&#45;SIGNAL:2:CAN_P</text>
 <text xml:space="preserve" text-anchor="start" x="1992" y="-463.77" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:YE &#160;&#160;&#160;</text>
@@ -284,7 +284,7 @@
 <polygon fill="none" stroke="black" points="1928.75,-361.27 1928.75,-385.02 2058.25,-385.02 2058.25,-361.27 1928.75,-361.27"/>
 <text xml:space="preserve" text-anchor="start" x="1967.62" y="-368.27" font-family="Arial" font-size="14.00">26 AWG</text>
 <polygon fill="none" stroke="black" points="2058.25,-361.27 2058.25,-385.02 2185.5,-385.02 2185.5,-361.27 2058.25,-361.27"/>
-<text xml:space="preserve" text-anchor="start" x="2097.12" y="-368.27" font-family="Arial" font-size="14.00">0.137 m</text>
+<text xml:space="preserve" text-anchor="start" x="2097.12" y="-368.27" font-family="Arial" font-size="14.00">0.159 m</text>
 <text xml:space="preserve" text-anchor="start" x="1910.75" y="-346.52" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="1838.75" y="-326.77" font-family="Arial" font-size="14.00">vplug&#45;SIGNAL:3:CAN_N</text>
 <text xml:space="preserve" text-anchor="start" x="1990.5" y="-326.77" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:GN &#160;&#160;&#160;</text>
@@ -312,7 +312,7 @@
 <polygon fill="none" stroke="black" points="1932.75,-635.27 1932.75,-659.02 2054.25,-659.02 2054.25,-635.27 1932.75,-635.27"/>
 <text xml:space="preserve" text-anchor="start" x="1967.62" y="-642.27" font-family="Arial" font-size="14.00">26 AWG</text>
 <polygon fill="none" stroke="black" points="2054.25,-635.27 2054.25,-659.02 2173.5,-659.02 2173.5,-635.27 2054.25,-635.27"/>
-<text xml:space="preserve" text-anchor="start" x="2089.12" y="-642.27" font-family="Arial" font-size="14.00">0.137 m</text>
+<text xml:space="preserve" text-anchor="start" x="2089.12" y="-642.27" font-family="Arial" font-size="14.00">0.159 m</text>
 <text xml:space="preserve" text-anchor="start" x="1926.12" y="-620.52" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="1850.75" y="-600.77" font-family="Arial" font-size="14.00">vplug&#45;SIGNAL:1:CAN_5V</text>
 <text xml:space="preserve" text-anchor="start" x="2009.25" y="-600.77" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:RD &#160;&#160;&#160;</text>
@@ -340,7 +340,7 @@
 <polygon fill="none" stroke="black" points="1934.25,-224.27 1934.25,-248.02 2052.75,-248.02 2052.75,-224.27 1934.25,-224.27"/>
 <text xml:space="preserve" text-anchor="start" x="1967.62" y="-231.27" font-family="Arial" font-size="14.00">26 AWG</text>
 <polygon fill="none" stroke="black" points="2052.75,-224.27 2052.75,-248.02 2169,-248.02 2169,-224.27 2052.75,-224.27"/>
-<text xml:space="preserve" text-anchor="start" x="2086.12" y="-231.27" font-family="Arial" font-size="14.00">0.137 m</text>
+<text xml:space="preserve" text-anchor="start" x="2086.12" y="-231.27" font-family="Arial" font-size="14.00">0.159 m</text>
 <text xml:space="preserve" text-anchor="start" x="1919.75" y="-209.52" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="1855.25" y="-189.77" font-family="Arial" font-size="14.00">vplug&#45;SIGNAL:4:GND</text>
 <text xml:space="preserve" text-anchor="start" x="1992" y="-189.77" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:BK &#160;&#160;&#160;</text>

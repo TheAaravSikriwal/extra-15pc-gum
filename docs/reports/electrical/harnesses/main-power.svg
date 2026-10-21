@@ -40,7 +40,7 @@
 <polygon fill="none" stroke="black" points="400.25,-202.25 400.25,-226 500.5,-226 500.5,-202.25 400.25,-202.25"/>
 <text xml:space="preserve" text-anchor="start" x="424.5" y="-209.25" font-family="Arial" font-size="14.00">12 AWG</text>
 <polygon fill="none" stroke="black" points="500.5,-202.25 500.5,-226 598.5,-226 598.5,-202.25 500.5,-202.25"/>
-<text xml:space="preserve" text-anchor="start" x="524.75" y="-209.25" font-family="Arial" font-size="14.00">0.159 m</text>
+<text xml:space="preserve" text-anchor="start" x="524.75" y="-209.25" font-family="Arial" font-size="14.00">0.168 m</text>
 <text xml:space="preserve" text-anchor="start" x="380.38" y="-187.5" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="339.5" y="-167.75" font-family="Arial" font-size="14.00">lead&#45;XT60:1:+</text>
 <text xml:space="preserve" text-anchor="start" x="429" y="-167.75" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:RD &#160;&#160;&#160;</text>
@@ -68,7 +68,7 @@
 <polygon fill="none" stroke="black" points="401.75,-65.25 401.75,-89 499,-89 499,-65.25 401.75,-65.25"/>
 <text xml:space="preserve" text-anchor="start" x="424.5" y="-72.25" font-family="Arial" font-size="14.00">12 AWG</text>
 <polygon fill="none" stroke="black" points="499,-65.25 499,-89 594,-89 594,-65.25 499,-65.25"/>
-<text xml:space="preserve" text-anchor="start" x="521.75" y="-72.25" font-family="Arial" font-size="14.00">0.159 m</text>
+<text xml:space="preserve" text-anchor="start" x="521.75" y="-72.25" font-family="Arial" font-size="14.00">0.168 m</text>
 <text xml:space="preserve" text-anchor="start" x="383" y="-50.5" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="344" y="-30.75" font-family="Arial" font-size="14.00">lead&#45;XT60:2:&#45;</text>
 <text xml:space="preserve" text-anchor="start" x="429.75" y="-30.75" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:BK &#160;&#160;&#160;</text>

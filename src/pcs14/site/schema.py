@@ -136,7 +136,7 @@ class Wire3d(_Shape):
     diameter_mm: float  # over its insulation, from the wire's gauge table
     wire: str  # its type, in words
     role: str  # what its first pin carries: power, ground, signal or bus
-    length_mm: float  # along its route, or its own length: the wiring guide's cut length
+    length_mm: float  # plug to plug along its route, or a jumper's own: what to cut it to
     # how far each end's plug is from where it joins its route: the rough routes to redraw
     gaps_mm: list[float]
 

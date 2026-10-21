@@ -254,6 +254,18 @@ My calls, written down as I made them. The reasons are in the [step 8 spec](spec
 - **The arms' in-plane mode sits near the hover's once-a-turn shake** (80 to 144 Hz against 88 to 103 Hz): balance every prop, check the first tethered gyro log near 90 to 100 Hz, and notch it if it's there.
 - **The chute's mount gets a hang test before P flies:** 26 kg (the opening jolt's bound) from the riser's point for a minute, then 39 kg. Steel screws for the module rail (about 3 g more) are suggested, and waiting for my review.
 
+### The drone view (decided 2026-10-21)
+
+The site's home is one 3D drone that never leaves the screen; the design is in the [drone view spec](specs/2026-10-21-the-drone-view.md), the work in its [plan](plans/2026-10-21-the-drone-view.md). The calls I made building it:
+
+- **Every pin's place is catalog data,** in each part's `cad` block as `connectors`, with a source: the maker's drawing, PCB file, STEP model or photos where published, an estimate with its note everywhere else. A plug in a socket sits where its socket does.
+- **Detail is a look, never the envelope.** A part's look (chips, plugs, pins, the motor's bell, twisted props, slotted arms) is what the pictures and the site draw; the checks and the mass spread keep the envelope. The props' twisted blades stay out of the mass spread too, since they'd move the inertia 0.07% from what every flight model was made with.
+- **Wire routes start and end at their plugs,** and a wire is cut to its whole run, plug to plug, branches included. The rough routes before this missed the plugs by up to 54 mm, and the guide cut wires to the route alone.
+- **The extra wire waits for the motor order.** The redrawn routes carry 8.7 g more wire in Base, most of it the motors' own leads crossing the board because the ESC's pads run in Betaflight's order. It goes into the catalog when I decide that, not before, so the sizing reruns once.
+- **The animations are the real runs,** liftoff to touchdown, eased to a calm hover at both ends, sped up on a log scale into a 15 to 30 s loop, real time at each kind of event's first appearance. A run that comes down hard (a crash, or under the chute) fades out where it fell instead.
+- **The world moves, not the drone.** In Fly it the drone stays in the middle and turns with its attitude; the grid, its trail and the story's props move past it.
+- **Nothing is fetched at runtime.** The textures are drawn in code and the reflections come from three.js's own room scene.
+
 ### The smart features in sim (decided 2026-10-20 and 2026-10-21)
 
 I asked for the open items to keep moving without stopping to ask, so these were my calls, written down as I made them. The reasons are in the [step 7 spec](specs/2026-10-20-smart-features.md) and the [log](log/2026-10-21-smart-features.md).

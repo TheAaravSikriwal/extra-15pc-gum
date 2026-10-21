@@ -80,7 +80,7 @@
 <polygon fill="none" stroke="black" points="449.5,-1572.25 449.5,-1596 558.5,-1596 558.5,-1572.25 449.5,-1572.25"/>
 <text xml:space="preserve" text-anchor="start" x="478.12" y="-1579.25" font-family="Arial" font-size="14.00">18 AWG</text>
 <polygon fill="none" stroke="black" points="558.5,-1572.25 558.5,-1596 665.25,-1596 665.25,-1572.25 558.5,-1572.25"/>
-<text xml:space="preserve" text-anchor="start" x="587.12" y="-1579.25" font-family="Arial" font-size="14.00">0.183 m</text>
+<text xml:space="preserve" text-anchor="start" x="587.12" y="-1579.25" font-family="Arial" font-size="14.00">0.205 m</text>
 <text xml:space="preserve" text-anchor="start" x="443.38" y="-1557.5" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="380" y="-1537.75" font-family="Arial" font-size="14.00">esc&#45;MOTORS:1:M1A</text>
 <text xml:space="preserve" text-anchor="start" x="514.5" y="-1537.75" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:RD &#160;&#160;&#160;</text>
@@ -108,7 +108,7 @@
 <polygon fill="none" stroke="black" points="449.5,-1435.25 449.5,-1459 558.5,-1459 558.5,-1435.25 449.5,-1435.25"/>
 <text xml:space="preserve" text-anchor="start" x="478.12" y="-1442.25" font-family="Arial" font-size="14.00">18 AWG</text>
 <polygon fill="none" stroke="black" points="558.5,-1435.25 558.5,-1459 665.25,-1459 665.25,-1435.25 558.5,-1435.25"/>
-<text xml:space="preserve" text-anchor="start" x="587.12" y="-1442.25" font-family="Arial" font-size="14.00">0.183 m</text>
+<text xml:space="preserve" text-anchor="start" x="587.12" y="-1442.25" font-family="Arial" font-size="14.00">0.205 m</text>
 <text xml:space="preserve" text-anchor="start" x="443.38" y="-1420.5" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="380" y="-1400.75" font-family="Arial" font-size="14.00">esc&#45;MOTORS:2:M1B</text>
 <text xml:space="preserve" text-anchor="start" x="514.5" y="-1400.75" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:RD &#160;&#160;&#160;</text>
@@ -136,7 +136,7 @@
 <polygon fill="none" stroke="black" points="449.25,-1298.25 449.25,-1322 558.75,-1322 558.75,-1298.25 449.25,-1298.25"/>
 <text xml:space="preserve" text-anchor="start" x="478.12" y="-1305.25" font-family="Arial" font-size="14.00">18 AWG</text>
 <polygon fill="none" stroke="black" points="558.75,-1298.25 558.75,-1322 666,-1322 666,-1298.25 558.75,-1298.25"/>
-<text xml:space="preserve" text-anchor="start" x="587.62" y="-1305.25" font-family="Arial" font-size="14.00">0.183 m</text>
+<text xml:space="preserve" text-anchor="start" x="587.62" y="-1305.25" font-family="Arial" font-size="14.00">0.205 m</text>
 <text xml:space="preserve" text-anchor="start" x="443" y="-1283.5" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="379.25" y="-1263.75" font-family="Arial" font-size="14.00">esc&#45;MOTORS:3:M1C</text>
 <text xml:space="preserve" text-anchor="start" x="514.5" y="-1263.75" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:RD &#160;&#160;&#160;</text>
@@ -164,7 +164,7 @@
 <polygon fill="none" stroke="black" points="449.5,-1161.25 449.5,-1185 558.5,-1185 558.5,-1161.25 449.5,-1161.25"/>
 <text xml:space="preserve" text-anchor="start" x="478.12" y="-1168.25" font-family="Arial" font-size="14.00">18 AWG</text>
 <polygon fill="none" stroke="black" points="558.5,-1161.25 558.5,-1185 665.25,-1185 665.25,-1161.25 558.5,-1161.25"/>
-<text xml:space="preserve" text-anchor="start" x="587.12" y="-1168.25" font-family="Arial" font-size="14.00">0.183 m</text>
+<text xml:space="preserve" text-anchor="start" x="587.12" y="-1168.25" font-family="Arial" font-size="14.00">0.228 m</text>
 <text xml:space="preserve" text-anchor="start" x="443.38" y="-1146.5" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="380" y="-1126.75" font-family="Arial" font-size="14.00">esc&#45;MOTORS:4:M2A</text>
 <text xml:space="preserve" text-anchor="start" x="514.5" y="-1126.75" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:RD &#160;&#160;&#160;</text>
@@ -192,7 +192,7 @@
 <polygon fill="none" stroke="black" points="449.5,-1024.25 449.5,-1048 558.5,-1048 558.5,-1024.25 449.5,-1024.25"/>
 <text xml:space="preserve" text-anchor="start" x="478.12" y="-1031.25" font-family="Arial" font-size="14.00">18 AWG</text>
 <polygon fill="none" stroke="black" points="558.5,-1024.25 558.5,-1048 665.25,-1048 665.25,-1024.25 558.5,-1024.25"/>
-<text xml:space="preserve" text-anchor="start" x="587.12" y="-1031.25" font-family="Arial" font-size="14.00">0.183 m</text>
+<text xml:space="preserve" text-anchor="start" x="587.12" y="-1031.25" font-family="Arial" font-size="14.00">0.228 m</text>
 <text xml:space="preserve" text-anchor="start" x="443.38" y="-1009.5" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="380" y="-989.75" font-family="Arial" font-size="14.00">esc&#45;MOTORS:5:M2B</text>
 <text xml:space="preserve" text-anchor="start" x="514.5" y="-989.75" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:RD &#160;&#160;&#160;</text>
@@ -220,7 +220,7 @@
 <polygon fill="none" stroke="black" points="449.25,-887.25 449.25,-911 558.75,-911 558.75,-887.25 449.25,-887.25"/>
 <text xml:space="preserve" text-anchor="start" x="478.12" y="-894.25" font-family="Arial" font-size="14.00">18 AWG</text>
 <polygon fill="none" stroke="black" points="558.75,-887.25 558.75,-911 666,-911 666,-887.25 558.75,-887.25"/>
-<text xml:space="preserve" text-anchor="start" x="587.62" y="-894.25" font-family="Arial" font-size="14.00">0.183 m</text>
+<text xml:space="preserve" text-anchor="start" x="587.62" y="-894.25" font-family="Arial" font-size="14.00">0.228 m</text>
 <text xml:space="preserve" text-anchor="start" x="443" y="-872.5" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="379.25" y="-852.75" font-family="Arial" font-size="14.00">esc&#45;MOTORS:6:M2C</text>
 <text xml:space="preserve" text-anchor="start" x="514.5" y="-852.75" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:RD &#160;&#160;&#160;</text>
@@ -248,7 +248,7 @@
 <polygon fill="none" stroke="black" points="449.5,-750.25 449.5,-774 558.5,-774 558.5,-750.25 449.5,-750.25"/>
 <text xml:space="preserve" text-anchor="start" x="478.12" y="-757.25" font-family="Arial" font-size="14.00">18 AWG</text>
 <polygon fill="none" stroke="black" points="558.5,-750.25 558.5,-774 665.25,-774 665.25,-750.25 558.5,-750.25"/>
-<text xml:space="preserve" text-anchor="start" x="587.12" y="-757.25" font-family="Arial" font-size="14.00">0.183 m</text>
+<text xml:space="preserve" text-anchor="start" x="587.12" y="-757.25" font-family="Arial" font-size="14.00">0.206 m</text>
 <text xml:space="preserve" text-anchor="start" x="443.38" y="-735.5" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="380" y="-715.75" font-family="Arial" font-size="14.00">esc&#45;MOTORS:7:M3A</text>
 <text xml:space="preserve" text-anchor="start" x="514.5" y="-715.75" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:RD &#160;&#160;&#160;</text>
@@ -276,7 +276,7 @@
 <polygon fill="none" stroke="black" points="449.5,-613.25 449.5,-637 558.5,-637 558.5,-613.25 449.5,-613.25"/>
 <text xml:space="preserve" text-anchor="start" x="478.12" y="-620.25" font-family="Arial" font-size="14.00">18 AWG</text>
 <polygon fill="none" stroke="black" points="558.5,-613.25 558.5,-637 665.25,-637 665.25,-613.25 558.5,-613.25"/>
-<text xml:space="preserve" text-anchor="start" x="587.12" y="-620.25" font-family="Arial" font-size="14.00">0.183 m</text>
+<text xml:space="preserve" text-anchor="start" x="587.12" y="-620.25" font-family="Arial" font-size="14.00">0.206 m</text>
 <text xml:space="preserve" text-anchor="start" x="443.38" y="-598.5" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="380" y="-578.75" font-family="Arial" font-size="14.00">esc&#45;MOTORS:8:M3B</text>
 <text xml:space="preserve" text-anchor="start" x="514.5" y="-578.75" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:RD &#160;&#160;&#160;</text>
@@ -304,7 +304,7 @@
 <polygon fill="none" stroke="black" points="449.25,-476.25 449.25,-500 558.75,-500 558.75,-476.25 449.25,-476.25"/>
 <text xml:space="preserve" text-anchor="start" x="478.12" y="-483.25" font-family="Arial" font-size="14.00">18 AWG</text>
 <polygon fill="none" stroke="black" points="558.75,-476.25 558.75,-500 666,-500 666,-476.25 558.75,-476.25"/>
-<text xml:space="preserve" text-anchor="start" x="587.62" y="-483.25" font-family="Arial" font-size="14.00">0.183 m</text>
+<text xml:space="preserve" text-anchor="start" x="587.62" y="-483.25" font-family="Arial" font-size="14.00">0.206 m</text>
 <text xml:space="preserve" text-anchor="start" x="443" y="-461.5" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="379.25" y="-441.75" font-family="Arial" font-size="14.00">esc&#45;MOTORS:9:M3C</text>
 <text xml:space="preserve" text-anchor="start" x="514.5" y="-441.75" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:RD &#160;&#160;&#160;</text>
@@ -332,7 +332,7 @@
 <polygon fill="none" stroke="black" points="448.25,-339.25 448.25,-363 559.75,-363 559.75,-339.25 448.25,-339.25"/>
 <text xml:space="preserve" text-anchor="start" x="478.12" y="-346.25" font-family="Arial" font-size="14.00">18 AWG</text>
 <polygon fill="none" stroke="black" points="559.75,-339.25 559.75,-363 669,-363 669,-339.25 559.75,-339.25"/>
-<text xml:space="preserve" text-anchor="start" x="589.62" y="-346.25" font-family="Arial" font-size="14.00">0.183 m</text>
+<text xml:space="preserve" text-anchor="start" x="589.62" y="-346.25" font-family="Arial" font-size="14.00">0.228 m</text>
 <text xml:space="preserve" text-anchor="start" x="443.38" y="-324.5" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="376.25" y="-304.75" font-family="Arial" font-size="14.00">esc&#45;MOTORS:10:M4A</text>
 <text xml:space="preserve" text-anchor="start" x="518.25" y="-304.75" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:RD &#160;&#160;&#160;</text>
@@ -360,7 +360,7 @@
 <polygon fill="none" stroke="black" points="448.38,-202.25 448.38,-226 559.62,-226 559.62,-202.25 448.38,-202.25"/>
 <text xml:space="preserve" text-anchor="start" x="478.12" y="-209.25" font-family="Arial" font-size="14.00">18 AWG</text>
 <polygon fill="none" stroke="black" points="559.62,-202.25 559.62,-226 668.62,-226 668.62,-202.25 559.62,-202.25"/>
-<text xml:space="preserve" text-anchor="start" x="589.38" y="-209.25" font-family="Arial" font-size="14.00">0.183 m</text>
+<text xml:space="preserve" text-anchor="start" x="589.38" y="-209.25" font-family="Arial" font-size="14.00">0.228 m</text>
 <text xml:space="preserve" text-anchor="start" x="443.38" y="-187.5" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="376.62" y="-167.75" font-family="Arial" font-size="14.00">esc&#45;MOTORS:11:M4B</text>
 <text xml:space="preserve" text-anchor="start" x="517.88" y="-167.75" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:RD &#160;&#160;&#160;</text>
@@ -388,7 +388,7 @@
 <polygon fill="none" stroke="black" points="448,-65.25 448,-89 560,-89 560,-65.25 448,-65.25"/>
 <text xml:space="preserve" text-anchor="start" x="478.12" y="-72.25" font-family="Arial" font-size="14.00">18 AWG</text>
 <polygon fill="none" stroke="black" points="560,-65.25 560,-89 669.75,-89 669.75,-65.25 560,-65.25"/>
-<text xml:space="preserve" text-anchor="start" x="590.12" y="-72.25" font-family="Arial" font-size="14.00">0.183 m</text>
+<text xml:space="preserve" text-anchor="start" x="590.12" y="-72.25" font-family="Arial" font-size="14.00">0.228 m</text>
 <text xml:space="preserve" text-anchor="start" x="443" y="-50.5" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="375.5" y="-30.75" font-family="Arial" font-size="14.00">esc&#45;MOTORS:12:M4C</text>
 <text xml:space="preserve" text-anchor="start" x="518.25" y="-30.75" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:RD &#160;&#160;&#160;</text>

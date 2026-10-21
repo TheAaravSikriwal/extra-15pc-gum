@@ -85,9 +85,11 @@ class Row:
     name: str
 
 
-def rows(design, routes, parts) -> list[Row]:
+def rows(design, routes, parts, runs: dict | None = None) -> list[Row]:
     """Every wire, in the connection list's order. `routes` maps each CAD route to (its
-    module, its length in m); `parts` is the catalog by id."""
+    module, its length in m); `parts` is the catalog by id. `runs`, by each wire's label, is its
+    whole run in m from one plug to the other (pcs14.site.wires3d): a routed wire is cut to that
+    where it's given, since the run from the route to each plug needs wire too."""
 
     def end(ref: str) -> str:
         board = ref.split(".")[0]
@@ -100,6 +102,7 @@ def rows(design, routes, parts) -> list[Row]:
     for run in design.wires:
         if run.route is not None:
             module, meters = routes[run.route]
+            meters = (runs or {}).get(run.label, meters)
         else:
             module, meters = "base", run.length
         out.append(Row(

@@ -14,7 +14,7 @@ Where to look: the live plan in the [README](README.md#the-plan), the steps in t
 |---|---|
 | 1. Sizing and parts | Done 2026-10-17. Emax 2814 850KV, Gemfan 1050 tri-blades, a 6S2P Molicel P45B pack, the Nazgul XL10 frame, the current capped at 90 A ([report](docs/reports/sizing/README.md)) |
 | 2. CAD | Done 2026-10-18. Every part modeled, every combination passing its checks ([report](docs/reports/cad/README.md)) |
-| 3. Electrical | Done 2026-10-19. 438 checks pass in all eight combinations ([report](docs/reports/electrical/README.md)) |
+| 3. Electrical | Done 2026-10-19. 437 checks pass in all eight combinations (438 before the routes were redrawn) ([report](docs/reports/electrical/README.md)) |
 | 4. Flight sim (PX4) | Done 2026-10-20. 62 of 78 runs pass; the misses are three findings ([report](docs/reports/flight-sim/README.md), [log](docs/log/2026-10-20-flight-sim-final.md)) |
 | 5. My firmware | Done 2026-10-20. 66 of 78 runs pass, every one PX4 passes among them ([log](docs/log/2026-10-20-firmware-flies.md)) |
 | 6. Modules in sim | Done 2026-10-20 for P and V; C waits on the claw conversation. Every P and V scenario passes ([report](docs/reports/modules/README.md), [log](docs/log/2026-10-20-modules-in-sim.md)) |
@@ -22,7 +22,7 @@ Where to look: the live plan in the [README](README.md#the-plan), the steps in t
 | 8. Build package | Done 2026-10-21. Parts with links, prices and fallbacks, the guides, PX4 first, the test plans and the legal checklist ([package](docs/build/README.md), [log](docs/log/2026-10-21-build-package.md)) |
 | Structure side track | First pass 2026-10-21: beam math. The arms are strong; they ring near the hover; the chute's mount needs a hang test ([report](docs/reports/structure/README.md), [log](docs/log/2026-10-21-structure-first-pass.md)) |
 | Aero side track | The visual half done: FluidX3D's cruise, crosswind and hover, now with frames along each run. The numbers wait for OpenFOAM |
-| Project site | Done 2026-10-20: the drone in 3D, the spec sheet, the wiring, every flight played back, a page per step, the tunnel, what the sims can't prove ([log](docs/log/2026-10-20-project-site.md)) Since 2026-10-21 it holds everything for the reskin: Build it, the library of every doc, the full catalog, every report's data, and the math. |
+| Project site | Done 2026-10-20: the drone in 3D, the spec sheet, the wiring, every flight played back, a page per step, the tunnel, what the sims can't prove ([log](docs/log/2026-10-20-project-site.md)) Since 2026-10-21 it holds everything for the reskin: Build it, the library of every doc, the full catalog, every report's data, and the math. Since 2026-10-21 its home is the drone view: one 3D drone always on screen, Inside it (every wire pin to pin over a blueprint) and Fly it (all 198 runs as looping animations) ([log](docs/log/2026-10-21-the-drone-view.md)). |
 
 **The design today (2026-10-20).** Mission is 2408 g in the sizing model (with the 200 g growth margin) and 2208 g in the CAD, and hovers 25.8 min (22.2 pessimistic, against the 21 target).
 
@@ -40,9 +40,10 @@ Where to look: the live plan in the [README](README.md#the-plan), the steps in t
 
 ## Up next
 
-1. **My review,** step by step, on the site (`pcs14 site --flights --tunnel`, then `npm --prefix site run build` and `npm --prefix site run preview`).
-2. **The calls below that are mine.**
-3. **The side tracks' real tools,** once installed: CalculiX for the cradle, the rail and the legs; OpenFOAM for the wind tunnel's numbers.
+1. **My review,** step by step, on the site (`pcs14 site --flights --tunnel`, then `npm --prefix site run build` and `npm --prefix site run preview`). The home page is the drone view now.
+2. **The calls below that are mine,** the ESC's motor order first, since the routes' extra 8.7 g of wire goes into the catalog with it.
+3. **The makers' models in the site's drone** (the drone view's task 15): the ARK GPS, the ARK CANnode and the Pi 5 are on my machine, and the Teensy 4.1's is a download for me to approve.
+4. **The side tracks' real tools,** once installed: CalculiX for the cradle, the rail and the legs; OpenFOAM for the wind tunnel's numbers.
 
 ## Waiting on me
 
@@ -51,7 +52,7 @@ Where to look: the live plan in the [README](README.md#the-plan), the steps in t
 - **The FluidX3D fork:** the wind tunnel stills stay off the repo until my modified FluidX3D is public, as its license asks for any results I post.
 - **Fruity Chutes:** ask for the Harrier release servo's voltage range and draw (the design runs on a stand-in, Hitec's HS-55), and how long the canopy takes to fill. Their deployment chart says 52.5 ft (16 m) at least for the IFC-42, against the 10 m step 6's sim saved it from on my guessed opening time. The Harrier 40-42 was also sold out on 2026-10-21, quote only.
 - **The chute switch's chip:** Nexperia's 74LVC1G157 is back ordered to October 2027. TI's SN74LVC1G97, wired as a mux, is in stock and fits, but selects the other way round, so its two data inputs swap in the connection list. A design change for me to approve.
-- **The ESC's motor order (found 2026-10-21, placing the pins for the drone view):** Holybro's motor pads run in Betaflight's order (M1 back right, M2 front right, M3 back left, M4 front left), and the connection list wires them in PX4's (1 front right, 2 back left, 3 front left, 4 back right). As drawn, motor 1's leads start at the back-right pads and reach forward past motor 2's, and motor 2's cross the board. My pick: solder each motor to its nearest pads and swap the order inside the ESC cable, which gets re-pinned anyway (the cut switch's channel 1 to the ESC's M2, 2 to M3, 3 to M4, 4 to M1), so the flight controller and the safety monitor keep their numbering. It touches the motor cut's wiring, so it's mine to approve.
+- **The ESC's motor order (found 2026-10-21, placing the pins for the drone view):** Holybro's motor pads run in Betaflight's order (M1 back right, M2 front right, M3 back left, M4 front left), and the connection list wires them in PX4's (1 front right, 2 back left, 3 front left, 4 back right). As drawn, motor 1's leads start at the back-right pads and reach forward past motor 2's, and motor 2's cross the board. My pick: solder each motor to its nearest pads and swap the order inside the ESC cable, which gets re-pinned anyway (the cut switch's channel 1 to the ESC's M2, 2 to M3, 3 to M4, 4 to M1), so the flight controller and the safety monitor keep their numbering. It would also take about 3.6 g of motor lead back off the redrawn routes (the back motors' leads are 46 mm longer each now, from crossing the board). It touches the motor cut's wiring, so it's mine to approve.
 - **Steel screws for the module rail:** the structure's first pass found the rail's four nylon screws thin margin for the chute's opening jolt (2.4 to 3.2 times). Steel is about 3 g more.
 - **PJRC's Teensy core:** the safety monitor's image for the Teensy needs it, a download for me to approve. Until then the monitor isn't on the drone.
 - **The claws (C):** the roadmap holds C until a unique claw on an actual arm comes up. That conversation is mine.
@@ -61,7 +62,7 @@ Where to look: the live plan in the [README](README.md#the-plan), the steps in t
 
 ## Still open
 
-- The CAD's wire routes miss the researched plugs by 6 to 54 mm (found 2026-10-21 in the drone view), and the wiring guide's cut lengths come from those routes with only 20 mm spare. Until the routes are redrawn from the plugs (the drone view plan's task 16), cut the safety monitor's, the back motors' and the receiver's wires long.
+- The wire routes now start and end at the researched plugs (redrawn 2026-10-21), and the wiring guide cuts each wire to its whole run, plug to plug. That's 1.18 m more wire in Base than the old routes said, about 8.7 g (7.6 g in Max, since P and C got a little shorter). It isn't in the catalog yet: most of it (5.5 g) is the motors' own leads, longer mainly because of the ESC's motor order (below), so it goes in with that decision, followed by `pcs14 report`. Until then the catalog's wiring is 59.9 g and the routes say 68.6 g. Spreading the same 59.9 g over the new routes already moved the CAD's inertia down about 0.2% (and the center of gravity under 0.4 mm), so the flight models, made before, are 0.2% off the CAD until they're regenerated with it.
 
 - Rotor drag in forward flight, so cruise numbers get believable (the honesty check's big miss, and now step 4's)
 - The weight: Mission passes with 1.2 min of pessimistic hover to spare; Max is 2623 g against its own 2500 g target (report-only)

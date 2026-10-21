@@ -96,7 +96,7 @@
 <polygon fill="none" stroke="black" points="2685.75,-1071.6 2685.75,-1095.35 2808,-1095.35 2808,-1071.6 2685.75,-1071.6"/>
 <text xml:space="preserve" text-anchor="start" x="2721" y="-1078.6" font-family="Arial" font-size="14.00">22 AWG</text>
 <polygon fill="none" stroke="black" points="2808,-1071.6 2808,-1095.35 2928,-1095.35 2928,-1071.6 2808,-1071.6"/>
-<text xml:space="preserve" text-anchor="start" x="2843.25" y="-1078.6" font-family="Arial" font-size="14.00">0.077 m</text>
+<text xml:space="preserve" text-anchor="start" x="2843.25" y="-1078.6" font-family="Arial" font-size="14.00">0.049 m</text>
 <text xml:space="preserve" text-anchor="start" x="2669" y="-1056.85" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="2603" y="-1037.1" font-family="Arial" font-size="14.00">pplug&#45;POWER:2:GND</text>
 <text xml:space="preserve" text-anchor="start" x="2742.75" y="-1037.1" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:BK &#160;&#160;&#160;</text>
@@ -201,7 +201,7 @@
 <polygon fill="none" stroke="black" points="3154.75,-865.6 3154.75,-889.35 3275,-889.35 3275,-865.6 3154.75,-865.6"/>
 <text xml:space="preserve" text-anchor="start" x="3189" y="-872.6" font-family="Arial" font-size="14.00">22 AWG</text>
 <polygon fill="none" stroke="black" points="3275,-865.6 3275,-889.35 3393,-889.35 3393,-865.6 3275,-865.6"/>
-<text xml:space="preserve" text-anchor="start" x="3309.25" y="-872.6" font-family="Arial" font-size="14.00">0.077 m</text>
+<text xml:space="preserve" text-anchor="start" x="3309.25" y="-872.6" font-family="Arial" font-size="14.00">0.049 m</text>
 <text xml:space="preserve" text-anchor="start" x="3143" y="-850.85" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="3074" y="-831.1" font-family="Arial" font-size="14.00">p_diodes&#45;pads:3:VOUT</text>
 <text xml:space="preserve" text-anchor="start" x="3219.75" y="-831.1" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:RD &#160;&#160;&#160;</text>
@@ -665,7 +665,7 @@
 <polygon fill="none" stroke="black" points="3161,-1051.6 3161,-1075.35 3268.75,-1075.35 3268.75,-1051.6 3161,-1051.6"/>
 <text xml:space="preserve" text-anchor="start" x="3189" y="-1058.6" font-family="Arial" font-size="14.00">28 AWG</text>
 <polygon fill="none" stroke="black" points="3268.75,-1051.6 3268.75,-1075.35 3374.25,-1075.35 3374.25,-1051.6 3268.75,-1051.6"/>
-<text xml:space="preserve" text-anchor="start" x="3296.75" y="-1058.6" font-family="Arial" font-size="14.00">0.077 m</text>
+<text xml:space="preserve" text-anchor="start" x="3296.75" y="-1058.6" font-family="Arial" font-size="14.00">0.049 m</text>
 <text xml:space="preserve" text-anchor="start" x="3140" y="-1036.85" font-family="Arial" font-size="14.00"> </text>
 <text xml:space="preserve" text-anchor="start" x="3092.75" y="-1017.1" font-family="Arial" font-size="14.00">p_switch&#45;U1:4:Y</text>
 <text xml:space="preserve" text-anchor="start" x="3195" y="-1017.1" font-family="Arial" font-size="14.00"> &#160;&#160;&#160;&#160;1:BU &#160;&#160;&#160;</text>

@@ -125,7 +125,13 @@ def write(out, generated: str, catalog, build, targets, design, settings, docs, 
     put("assembly.md", assembly.render(settings.hardware, generated, stills))
     parts_by_id = {p.id: p for p in catalog.all_parts()}
     routes = {w.name: (w.module, wire_length(w)) for w in settings.wires}
-    put("wiring.md", wiring.render(wiring.rows(design, routes, parts_by_id), generated))
+    # each routed wire cut to its whole run, plug to plug, from the design beside the docs
+    runs = None
+    if (docs.parent / "design" / "electrical.yaml").is_file():
+        from pcs14.site.wires3d import wires3d
+
+        runs = {w.label: w.length_mm / 1000 for w in wires3d(docs.parent / "design").wires}
+    put("wiring.md", wiring.render(wiring.rows(design, routes, parts_by_id, runs), generated))
     files = firmware.write_setup_files(exports, out)
     written += files
     put("firmware.md", firmware.render(build, files, generated))
