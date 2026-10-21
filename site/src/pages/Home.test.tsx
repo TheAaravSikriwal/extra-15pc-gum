@@ -13,6 +13,11 @@ const INDEX = {
   files: ["spec.json"],
 };
 
+const UNPROVEN = {
+  schema_version: 1,
+  groups: [{ name: "The whole drone", url: "u", items: [{ what: "Real thrust", measure: "A thrust stand" }] }],
+};
+
 const STEPS = {
   schema_version: 1,
   steps: [
@@ -33,13 +38,17 @@ function answering(files: Record<string, unknown>): typeof fetch {
 }
 
 test("the home page is the drone and one quiet line per step", async () => {
-  render(<Home load={{ fromDisk: false, fetcher: answering({ "index.json": INDEX, "steps.json": STEPS }) }} />);
+  const files = { "index.json": INDEX, "steps.json": STEPS, "unproven.json": UNPROVEN };
+  render(<Home load={{ fromDisk: false, fetcher: answering(files) }} />);
   const steps = await screen.findByRole("list", { name: "steps" });
   expect(steps.querySelectorAll("li")).toHaveLength(2); // the side track goes on its own line
   expect(screen.getByRole("link", { name: "5. My own firmware" })).toHaveAttribute("href", "#/steps/firmware");
   expect(screen.getByText(/Side tracks/)).toHaveTextContent("Aero (the wind tunnel)");
   expect(screen.getByRole("img", { name: /The drone in CAD/ }).closest("a")).toHaveAttribute("href", "#/drone");
   expect(screen.getByText(/Made 2026-10-20 from abc1234/)).toBeInTheDocument();
+  // what the sims can't prove, one click away
+  expect(await screen.findByRole("link", { name: "What the sims can't prove" })).toHaveAttribute("href", "#/unproven");
+  expect(screen.getByText(/1 thing, and what to measure first/)).toBeInTheDocument();
 });
 
 test("without the steps' file it lists every step's report, found or not yet", async () => {

@@ -93,6 +93,16 @@ export function StepPage({ id, load }: { id: string; load?: LoadOptions }) {
           ))}
         </section>
       )}
+      {s.learning.length > 0 && (
+        <p className="links learning">
+          To learn the ideas behind it:{" "}
+          {s.learning.map((l) => (
+            <a key={l.url} href={l.url} target="_blank" rel="noreferrer">
+              {l.text}
+            </a>
+          ))}
+        </p>
+      )}
       {s.logs.length > 0 && (
         <section aria-label="the log">
           <h2>The log</h2>

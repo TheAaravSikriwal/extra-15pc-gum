@@ -40,6 +40,22 @@ LOG_WORDS = (
     ("aero", ("wind-tunnel",)),
     ("site", ("project-site",)),
 )
+# each step's topics in docs/learning.md, by their numbers there
+LEARNING = {
+    "planning": (1,),
+    "sizing": (2, 1),
+    "cad": (6, 7),
+    "electrical": (15,),
+    "flight-sim": (8, 1),
+    "firmware": (9, 10, 11),
+    "modules": (8,),
+    "smart": (10,),
+    "build": (12, 13),
+    "structure": (16,),
+    "aero": (3, 4),
+    "design-hunt": (14,),
+    "site": (5, 7),
+}
 SIZES = ("-portrait", "-square", "-vertical", "-wide")
 LINK = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
 
@@ -155,7 +171,11 @@ def steps_data(readme_path, docs, out) -> schema.Steps:
     import json
 
     docs, out = Path(docs), Path(out)
+    from pcs14.site.unproven import learning_topics
+
     logs = _logs(docs / "log")
+    learning = docs / "learning.md"
+    topics = learning_topics(learning.read_text(encoding="utf-8")) if learning.is_file() else {}
     readme = Path(readme_path).read_text(encoding="utf-8")
     details = detail_rows(readme)
     made = []
@@ -178,5 +198,6 @@ def steps_data(readme_path, docs, out) -> schema.Steps:
             logs=logs.get(step_id, []),
             parts=[schema.StepPart(name=d.name, what=d.what, status=d.status, outcome=d.outcome)
                    for d in details if row.number and d.step == row.number],
+            learning=[topics[n] for n in LEARNING.get(step_id, ()) if n in topics],
         ))  # fmt: skip
     return schema.Steps(schema_version=schema.SCHEMA_VERSION, steps=made)

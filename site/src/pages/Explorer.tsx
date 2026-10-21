@@ -7,7 +7,7 @@ import type * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 import { loadBinary, type LoadOptions } from "../data/load";
-import type { Parts, Piece, Route, Wires } from "../data/types";
+import type { Parts, Piece, Route, SpecSheet, Wires } from "../data/types";
 import { useData } from "../data/useData";
 import { Card } from "../explorer/Card";
 import { shows } from "../explorer/logic";
@@ -19,6 +19,7 @@ const CASES = ["hover", "cruise", "burst", "worst"];
 export interface ExplorerViewProps {
   parts: Parts;
   wires: Wires;
+  spec?: SpecSheet | null; // for the numbers that follow the modules
   // the 3D part, given the state; the tests pass a stand-in, since jsdom has no WebGL
   view: (state: ViewState) => ReactNode;
 }
@@ -49,7 +50,18 @@ export function combinationFor(on: Set<string>): string {
   return names[MODULES.filter((m) => on.has(m)).join("+")];
 }
 
-export function ExplorerView({ parts, wires, view }: ExplorerViewProps) {
+// one line of what the switched-on modules make: the weight, the hover time and the verdict
+export function numbersFor(spec: SpecSheet | null | undefined, combination: string): string | null {
+  const c = spec?.combinations.find((x) => x.name === combination);
+  if (!c) return null;
+  const hover = c.checks.find((k) => k.name === "Hover time");
+  const time = hover
+    ? `, hovers ${hover.nominal.toFixed(1)} min${hover.pessimistic != null ? ` (${hover.pessimistic.toFixed(1)} pessimistic)` : ""}`
+    : "";
+  return `${c.name}: ${Math.round(c.mass_g)} g${time}, ${c.verdict}`;
+}
+
+export function ExplorerView({ parts, wires, spec, view }: ExplorerViewProps) {
   const [modulesOn, setModulesOn] = useState(() => new Set(MODULES));
   const [explode, setExplode] = useState(0);
   const [selected, select] = useState<string | null>(null);
@@ -70,6 +82,7 @@ export function ExplorerView({ parts, wires, view }: ExplorerViewProps) {
         {view({ pieces, routes, modulesOn, explode, selected, combination, kase, select })}
       </div>
       <aside>
+        {numbersFor(spec, combination) && <p className="numbers">{numbersFor(spec, combination)}</p>}
         <fieldset>
           <legend>Modules ({combination})</legend>
           {MODULES.map((m) => (
@@ -138,9 +151,15 @@ function useModel(name: string, load?: LoadOptions) {
   return { root, problem };
 }
 
+// the props turn at a few turns a second, for show (they really turn about 100)
+const PROP_SHOW_SPIN = 12;
+
 export function Explorer({ load }: { load?: LoadOptions }) {
+  // it turns slowly until someone takes hold of it
+  const [turning, setTurning] = useState(true);
   const parts = useData<Parts>("parts.json", load);
   const wires = useData<Wires>("wires.json", load);
+  const spec = useData<SpecSheet>("spec.json", load);
   const model = useModel("drone.glb", load);
   const problem = parts.problem ?? wires.problem ?? model.problem;
   if (problem) return <p role="alert">{problem}</p>;
@@ -152,6 +171,7 @@ export function Explorer({ load }: { load?: LoadOptions }) {
       <ExplorerView
         parts={parts.data}
         wires={wires.data}
+        spec={spec.data}
         view={(s) => (
           <Canvas camera={{ position: [0.55, 0.4, 0.65], fov: 35 }} dpr={[1, 2]}>
             <color attach="background" args={["#0b0b0b"]} />
@@ -169,9 +189,10 @@ export function Explorer({ load }: { load?: LoadOptions }) {
                 combination={s.combination}
                 kase={s.kase}
                 onSelect={s.select}
+                spin={PROP_SHOW_SPIN}
               />
             </Bounds>
-            <OrbitControls makeDefault />
+            <OrbitControls makeDefault autoRotate={turning} autoRotateSpeed={0.6} onStart={() => setTurning(false)} />
           </Canvas>
         )}
       />

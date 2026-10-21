@@ -199,6 +199,7 @@ class Step(_Shape):
     stills: list[str]  # under the data folder
     logs: list[LogEntry]
     parts: list[StepPart] = []  # the README's "in detail" rows: its talk, plan, build
+    learning: list[Link] = []  # its topics in docs/learning.md
 
 
 class Steps(_Shape):
@@ -240,6 +241,24 @@ class Tunnel(_Shape):
     cases: list[TunnelCase]
 
 
+class UnprovenItem(_Shape):
+    what: str
+    measure: str = ""  # the first thing to measure once it's built, where that's written
+
+
+class UnprovenGroup(_Shape):
+    name: str  # "The whole drone", or a report's step
+    url: str  # where it's written
+    items: list[UnprovenItem]
+
+
+class Unproven(_Shape):
+    """unproven.json: what the sims can't prove, front and center."""
+
+    schema_version: int
+    groups: list[UnprovenGroup]
+
+
 # each data file's name (without .json) and its shape
 FILES: dict[str, type[_Shape]] = {
     "index": Index,
@@ -250,4 +269,5 @@ FILES: dict[str, type[_Shape]] = {
     "playback": Playback,
     "steps": Steps,
     "tunnel": Tunnel,
+    "unproven": Unproven,
 }

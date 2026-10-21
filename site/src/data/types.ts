@@ -169,6 +169,7 @@ export interface Step {
   stills: string[];
   logs: LogEntry[];
   parts: StepPart[];
+  learning: Link[];
 }
 
 export interface Steps {
@@ -204,6 +205,22 @@ export interface Tunnel {
   note: string;
   stills: TunnelStill[];
   cases: TunnelCase[];
+}
+
+export interface UnprovenItem {
+  what: string;
+  measure: string;
+}
+
+export interface UnprovenGroup {
+  name: string;
+  url: string;
+  items: UnprovenItem[];
+}
+
+export interface Unproven {
+  schema_version: number;
+  groups: UnprovenGroup[];
 }
 
 // the fields each shape has, for the check against the schema
@@ -259,10 +276,14 @@ export const FIELDS = {
     "stills",
     "logs",
     "parts",
+    "learning",
   ],
   Steps: ["schema_version", "steps"],
   TunnelStill: ["case", "view", "title", "subtitle", "number", "caption", "file"],
   TunnelFrame: ["step", "t_s", "files"],
   TunnelCase: ["name", "label", "frames"],
   Tunnel: ["schema_version", "fork_public", "note", "stills", "cases"],
+  UnprovenItem: ["what", "measure"],
+  UnprovenGroup: ["name", "url", "items"],
+  Unproven: ["schema_version", "groups"],
 } as const;

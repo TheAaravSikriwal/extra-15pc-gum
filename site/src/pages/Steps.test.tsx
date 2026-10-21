@@ -19,6 +19,7 @@ const STEPS: StepsData = {
       stills: ["stills/flight-sim/matrix.png"],
       logs: [{ title: "2026-10-20: The last batch", date: "2026-10-20", url: "https://github.com/x/l" }],
       parts: [{ name: "4a. Talk", what: "the scenarios", status: "Done", outcome: "twelve of them" }],
+      learning: [{ text: "Flight simulation", url: "https://github.com/x/docs/learning.md#8-flight-simulation" }],
     },
     {
       id: "aero",
@@ -33,6 +34,7 @@ const STEPS: StepsData = {
       stills: [],
       logs: [],
       parts: [],
+      learning: [],
     },
   ],
 };
@@ -59,4 +61,8 @@ test("a step's page has its outcome, its parts, its pictures and its log", async
   expect(screen.getByRole("cell", { name: "4a. Talk" })).toBeInTheDocument();
   expect(screen.getByRole("img", { name: "matrix" })).toHaveAttribute("src", "./data/stills/flight-sim/matrix.png");
   expect(screen.getByRole("link", { name: "2026-10-20: The last batch" })).toBeInTheDocument();
+  expect(screen.getByRole("link", { name: "Flight simulation" })).toHaveAttribute(
+    "href",
+    "https://github.com/x/docs/learning.md#8-flight-simulation",
+  );
 });

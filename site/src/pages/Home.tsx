@@ -3,9 +3,10 @@
 import { useState } from "react";
 
 import type { LoadOptions } from "../data/load";
-import type { Index, Steps } from "../data/types";
+import type { Index, Steps, Unproven } from "../data/types";
 import { useData } from "../data/useData";
 import { stepLink, stepTitle } from "./Steps";
+import { countUnproven } from "./Unproven";
 
 const REPORT_NAMES: Record<string, string> = {
   sizing: "Sizing and parts",
@@ -30,6 +31,7 @@ function Reports({ index }: { index: Index }) {
 export function Home({ load }: { load?: LoadOptions }) {
   const index = useData<Index>("index.json", load);
   const steps = useData<Steps>("steps.json", load);
+  const unproven = useData<Unproven>("unproven.json", load);
   const [picture, setPicture] = useState(true);
   if (index.problem) return <p role="alert">{index.problem}</p>;
   if (!index.data) return <p>Loading</p>;
@@ -76,6 +78,12 @@ export function Home({ load }: { load?: LoadOptions }) {
         </>
       ) : (
         steps.problem && <Reports index={index.data} />
+      )}
+      {unproven.data && (
+        <p className="unproven-line">
+          <a href="#/unproven">What the sims can't prove</a>: {countUnproven(unproven.data)}{" "}
+          {countUnproven(unproven.data) === 1 ? "thing" : "things"}, and what to measure first.
+        </p>
       )}
       <p className="made">
         Made {index.data.generated}

@@ -15,6 +15,14 @@ export function exploded(at: Vec, center: Vec, amount: number): [number, number,
   return [0, 1, 2].map((k) => (at[k] - center[k]) * 2 * amount) as [number, number, number];
 }
 
+// which way a prop turns, seen from above: +1 counterclockwise, -1 clockwise, 0 not a prop.
+// PX4's quad X (pcs14.flight.generate.ORDER): front right and back left counterclockwise
+export function propSpin(name: string): number {
+  const m = /^prop (front|back) (left|right)$/.exec(name);
+  if (!m) return 0;
+  return (m[1] === "front") === (m[2] === "right") ? 1 : -1;
+}
+
 const MINT = [0x3d, 0xdc, 0x97];
 const MAGENTA = [0xe6, 0x4f, 0xa0];
 

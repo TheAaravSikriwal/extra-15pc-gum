@@ -1,0 +1,71 @@
+{
+ "$defs": {
+  "UnprovenGroup": {
+   "additionalProperties": false,
+   "properties": {
+    "name": {
+     "title": "Name",
+     "type": "string"
+    },
+    "url": {
+     "title": "Url",
+     "type": "string"
+    },
+    "items": {
+     "items": {
+      "$ref": "#/$defs/UnprovenItem"
+     },
+     "title": "Items",
+     "type": "array"
+    }
+   },
+   "required": [
+    "name",
+    "url",
+    "items"
+   ],
+   "title": "UnprovenGroup",
+   "type": "object"
+  },
+  "UnprovenItem": {
+   "additionalProperties": false,
+   "properties": {
+    "what": {
+     "title": "What",
+     "type": "string"
+    },
+    "measure": {
+     "default": "",
+     "title": "Measure",
+     "type": "string"
+    }
+   },
+   "required": [
+    "what"
+   ],
+   "title": "UnprovenItem",
+   "type": "object"
+  }
+ },
+ "additionalProperties": false,
+ "description": "unproven.json: what the sims can't prove, front and center.",
+ "properties": {
+  "schema_version": {
+   "title": "Schema Version",
+   "type": "integer"
+  },
+  "groups": {
+   "items": {
+    "$ref": "#/$defs/UnprovenGroup"
+   },
+   "title": "Groups",
+   "type": "array"
+  }
+ },
+ "required": [
+  "schema_version",
+  "groups"
+ ],
+ "title": "Unproven",
+ "type": "object"
+}

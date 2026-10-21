@@ -151,6 +151,14 @@
      },
      "title": "Parts",
      "type": "array"
+    },
+    "learning": {
+     "default": [],
+     "items": {
+      "$ref": "#/$defs/Link"
+     },
+     "title": "Learning",
+     "type": "array"
     }
    },
    "required": [

@@ -4,6 +4,7 @@ import * as THREE from "three";
 
 import type { Piece, Route } from "../data/types";
 import { Card } from "./Card";
+import { propSpin } from "./logic";
 import { DroneScene, nodeName, pieceOf } from "./Scene";
 
 function piece(name: string, module: string, kind = "bought"): Piece {
@@ -66,6 +67,55 @@ test("the exploded view moves pieces out from the middle", async () => {
   const root = await scene(["P"], 1);
   expect(root.getObjectByName("fruity-chutes-harrier")!.position.x).toBeGreaterThan(0.1);
   expect(root.getObjectByName("wire_battery_leads")!.position.x).toBeLessThan(-0.1);
+});
+
+test("the exploded view moves pieces out in the world, under a parent that turns z-up into y-up", async () => {
+  // the CAD's GLB: its pieces sit under one node that turns the CAD's z-up into glTF's y-up
+  const root = new THREE.Group();
+  const turn = new THREE.Group();
+  turn.quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2);
+  root.add(turn);
+  for (const [name, z] of [["frame", 0], ["fruity-chutes-harrier", 0.1]] as const) {
+    const node = new THREE.Group();
+    node.name = nodeName(name);
+    node.add(new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.02, 0.02)));
+    node.position.set(0, 0, z); // the chute above the frame, in the CAD's frame
+    turn.add(node);
+  }
+  await ReactThreeTestRenderer.create(
+    <DroneScene root={root} pieces={PIECES} routes={new Map()} modulesOn={new Set(["P"])} explode={1}
+      selected={null} combination="max" kase="hover" onSelect={() => {}} />,
+  );
+  const chute = root.getObjectByName("fruity-chutes-harrier")!.getWorldPosition(new THREE.Vector3());
+  expect(chute.y).toBeGreaterThan(0.1); // further up, not off to the side
+  expect(Math.abs(chute.z)).toBeLessThan(1e-6);
+});
+
+test("the props spin the way PX4's quad X turns them, each about its own hub", async () => {
+  expect([propSpin("prop front right"), propSpin("prop back left")]).toEqual([1, 1]);
+  expect([propSpin("prop front left"), propSpin("prop back right")]).toEqual([-1, -1]);
+  expect(propSpin("frame")).toBe(0);
+  const root = new THREE.Group();
+  const pieces = new Map<string, Piece>();
+  for (const name of ["prop front left", "prop front right", "frame"]) {
+    const node = new THREE.Group();
+    node.name = nodeName(name);
+    node.add(new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.01, 0.02)));
+    node.position.set(name === "frame" ? 0 : 0.15, 0, 0.04);
+    root.add(node);
+    pieces.set(name, piece(name, "base", name === "frame" ? "frame" : "prop"));
+  }
+  const renderer = await ReactThreeTestRenderer.create(
+    <DroneScene root={root} pieces={pieces} routes={new Map()} modulesOn={new Set()} explode={0}
+      selected={null} combination="max" kase="hover" onSelect={() => {}} spin={2} />,
+  );
+  await ReactThreeTestRenderer.act(async () => renderer.advanceFrames(10, 0.1));
+  const left = root.getObjectByName(nodeName("prop front left"))!;
+  const right = root.getObjectByName(nodeName("prop front right"))!;
+  expect(left.rotation.z).toBeLessThan(-0.5); // clockwise seen from above
+  expect(right.rotation.z).toBeGreaterThan(0.5);
+  expect(right.position.x).toBeCloseTo(0.15); // turning in place, on its hub
+  expect(root.getObjectByName("frame")!.rotation.z).toBe(0);
 });
 
 test("the picked piece lights up in spearmint, and a wire takes its heating color", async () => {

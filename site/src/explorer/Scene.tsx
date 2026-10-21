@@ -1,11 +1,11 @@
 // The drone in 3D: the CAD's GLB, its pieces colored by kind, the modules switched on or off,
 // pulled apart for the exploded view, and a click on a piece or a wire picking it.
-import type { ThreeEvent } from "@react-three/fiber";
-import { useLayoutEffect, useMemo } from "react";
+import { type ThreeEvent, useFrame } from "@react-three/fiber";
+import { useLayoutEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 
 import type { Piece, Route } from "../data/types";
-import { exploded, heatColor, KIND_COLORS, shows, type Vec } from "./logic";
+import { exploded, heatColor, KIND_COLORS, propSpin, shows, type Vec } from "./logic";
 
 export interface SceneProps {
   root: THREE.Object3D; // the GLB's scene
@@ -17,6 +17,7 @@ export interface SceneProps {
   combination: string; // for the wires' colors
   kase: string;
   onSelect: (name: string | null) => void;
+  spin?: number; // rad/s for the props, just for show; 0 holds them still
 }
 
 // the name three.js gives a piece's node: its GLTFLoader cleans names on the way in, so
@@ -39,7 +40,11 @@ interface Home {
   name: string; // the piece's own
   node: THREE.Object3D;
   position: THREE.Vector3; // where the CAD put it
-  middle: Vec; // its middle, in the model's frame
+  // its middle and the drone's, in the frame its position is in: the CAD's GLB puts every
+  // piece under a node that turns z-up into y-up, so the world's up is its parent's z
+  middle: Vec;
+  center: Vec;
+  turns: number; // propSpin's
 }
 
 export function DroneScene(p: SceneProps) {
@@ -48,22 +53,26 @@ export function DroneScene(p: SceneProps) {
     const byNode = new Map([...p.pieces.keys()].map((name) => [nodeName(name), name]));
     const found: Home[] = [];
     p.root.updateMatrixWorld(true);
+    const whole = new THREE.Box3().setFromObject(p.root).getCenter(new THREE.Vector3());
+    const local = (node: THREE.Object3D, v: THREE.Vector3): Vec => {
+      const l = node.parent ? node.parent.worldToLocal(v.clone()) : v.clone();
+      return [l.x, l.y, l.z];
+    };
     p.root.traverse((node) => {
       const name = byNode.get(node.name);
       if (!name) return;
-      const box = new THREE.Box3().setFromObject(node);
-      const c = box.getCenter(new THREE.Vector3());
-      found.push({ name, node, position: node.position.clone(), middle: [c.x, c.y, c.z] });
+      const c = new THREE.Box3().setFromObject(node).getCenter(new THREE.Vector3());
+      found.push({ name, node, position: node.position.clone(), middle: local(node, c),
+                   center: local(node, whole), turns: propSpin(name) });  // prettier-ignore
     });
-    const whole = new THREE.Box3().setFromObject(p.root).getCenter(new THREE.Vector3());
-    return { found, byNode, center: [whole.x, whole.y, whole.z] as Vec };
+    return { found, byNode };
   }, [p.root, p.pieces]);
 
   useLayoutEffect(() => {
-    for (const { name, node, position, middle } of homes.found) {
+    for (const { name, node, position, middle, center } of homes.found) {
       const piece = p.pieces.get(name) as Piece;
       node.visible = shows(piece, p.modulesOn);
-      const [dx, dy, dz] = exploded(middle, homes.center, p.explode);
+      const [dx, dy, dz] = exploded(middle, center, p.explode);
       node.position.set(position.x + dx, position.y + dy, position.z + dz);
       const route = p.routes.get(name);
       const share = route?.heating_share[p.combination]?.[p.kase];
@@ -85,6 +94,15 @@ export function DroneScene(p: SceneProps) {
       });
     }
   }, [homes, p.pieces, p.routes, p.modulesOn, p.explode, p.selected, p.combination, p.kase]);
+
+  // the props turning about their hubs, which is where the CAD puts each prop's node, about the
+  // CAD's up (its z)
+  const angle = useRef(0);
+  useFrame((_, delta) => {
+    if (!p.spin) return;
+    angle.current += p.spin * delta;
+    for (const h of homes.found) if (h.turns) h.node.rotation.z = h.turns * angle.current;
+  });
 
   return (
     <primitive

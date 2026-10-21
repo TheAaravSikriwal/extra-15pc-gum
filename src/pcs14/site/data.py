@@ -157,6 +157,12 @@ def write_all(out, reports, commit: str | None = None, today: str | None = None)
     view = reports / "cad" / "views" / "three-quarter.png"
     if view.is_file():
         written.append(hero(view, out))
+    # what the sims can't prove, front and center
+    docs = reports.resolve().parent
+    if (docs / "decisions.md").is_file():
+        from pcs14.site.unproven import unproven_data
+
+        written.append(_write(out, "unproven", unproven_data(docs)))
     # a page per step, from the README's plan beside the docs the reports are in
     readme = reports.resolve().parent.parent / "README.md"
     if readme.is_file():

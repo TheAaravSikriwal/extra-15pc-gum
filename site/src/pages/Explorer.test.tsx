@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 
-import type { Parts, Wires } from "../data/types";
+import type { Parts, SpecSheet, Wires } from "../data/types";
 import { combinationFor, ExplorerView, type ViewState } from "./Explorer";
 
 const PARTS: Parts = {
@@ -32,6 +32,27 @@ test("a part can be picked from the keyboard too, not only by a click in 3D", ()
   // a part whose module is switched off isn't on the list
   fireEvent.click(screen.getByLabelText("V"));
   expect(screen.queryByRole("option", { name: "ark-gps" })).toBeNull();
+});
+
+const SPEC = {
+  schema_version: 1,
+  combinations: [
+    ["max", 2620.3, 22.8, 19.7, "fail"],
+    ["V+C", 2398.4, 25.1, 21.9, "pass"],
+  ].map(([name, mass, hover, worst, verdict]) => ({
+    name,
+    verdict,
+    mass_g: mass,
+    cad_mass_g: null,
+    checks: [{ name: "Hover time", unit: "min", nominal: hover, pessimistic: worst, verdict: "pass" }],
+  })),
+} as unknown as SpecSheet;
+
+test("the weight, the hover time and the verdict follow the modules switched on", () => {
+  render(<ExplorerView parts={PARTS} wires={WIRES} spec={SPEC} view={() => null} />);
+  expect(screen.getByText(/max: 2620 g, hovers 22.8 min \(19.7 pessimistic\), fail/)).toBeInTheDocument();
+  fireEvent.click(screen.getByLabelText("P"));
+  expect(screen.getByText(/V\+C: 2398 g, hovers 25.1 min \(21.9 pessimistic\), pass/)).toBeInTheDocument();
 });
 
 test("the modules switched on name the combination", () => {
