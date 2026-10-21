@@ -138,6 +138,44 @@ export interface Flights {
   runs: Run[];
 }
 
+export interface Link {
+  text: string;
+  url: string;
+}
+
+export interface LogEntry {
+  title: string;
+  date: string;
+  url: string;
+}
+
+export interface StepPart {
+  name: string;
+  what: string;
+  status: string;
+  outcome: string;
+}
+
+export interface Step {
+  id: string;
+  number: string;
+  name: string;
+  purpose: string;
+  status: string;
+  outcome: string;
+  links: Link[];
+  side_track: boolean;
+  report?: { verdict?: string | null; generated?: string | null; url: string } | null;
+  stills: string[];
+  logs: LogEntry[];
+  parts: StepPart[];
+}
+
+export interface Steps {
+  schema_version: number;
+  steps: Step[];
+}
+
 // the fields each shape has, for the check against the schema
 export const FIELDS = {
   ReportFound: ["file", "found", "generated", "verdict"],
@@ -178,4 +216,19 @@ export const FIELDS = {
   ],
   Run: ["scenario", "setup", "firmware", "flown", "passed", "file"],
   Flights: ["schema_version", "scenarios", "setups", "runs"],
+  Step: [
+    "id",
+    "number",
+    "name",
+    "purpose",
+    "status",
+    "outcome",
+    "links",
+    "side_track",
+    "report",
+    "stills",
+    "logs",
+    "parts",
+  ],
+  Steps: ["schema_version", "steps"],
 } as const;

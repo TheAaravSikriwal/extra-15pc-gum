@@ -127,6 +127,12 @@ def write_all(out, reports, commit: str | None = None, today: str | None = None)
         written.append(_write(out, "parts", parts(found["cad"], sheet)))
     if found["electrical"] is not None and "routes" in found["electrical"]:
         written.append(_write(out, "wires", wires(found["electrical"])))
+    # a page per step, from the README's plan beside the docs the reports are in
+    readme = reports.resolve().parent.parent / "README.md"
+    if readme.is_file():
+        from pcs14.site.steps import steps_data
+
+        written.append(_write(out, "steps", steps_data(readme, reports.resolve().parent, out)))
     index = schema.Index(
         schema_version=schema.SCHEMA_VERSION,
         generated=today or date.today().isoformat(),

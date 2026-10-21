@@ -162,6 +162,52 @@ class Flights(_Shape):
     runs: list[Run]
 
 
+class Link(_Shape):
+    text: str
+    url: str
+
+
+class LogEntry(_Shape):
+    title: str
+    date: str
+    url: str
+
+
+class ReportRef(_Shape):
+    verdict: str | None = None
+    generated: str | None = None
+    url: str
+
+
+class StepPart(_Shape):
+    name: str  # "5c. Build"
+    what: str
+    status: str
+    outcome: str
+
+
+class Step(_Shape):
+    id: str
+    number: str  # "1" to "8", or "" for a side track
+    name: str
+    purpose: str
+    status: str
+    outcome: str  # the README's, with its links as plain words
+    links: list[Link]
+    side_track: bool
+    report: ReportRef | None = None
+    stills: list[str]  # under the data folder
+    logs: list[LogEntry]
+    parts: list[StepPart] = []  # the README's "in detail" rows: its talk, plan, build
+
+
+class Steps(_Shape):
+    """steps.json: a page per step, from the README's plan, the reports and the log."""
+
+    schema_version: int
+    steps: list[Step]
+
+
 # each data file's name (without .json) and its shape
 FILES: dict[str, type[_Shape]] = {
     "index": Index,
@@ -170,4 +216,5 @@ FILES: dict[str, type[_Shape]] = {
     "wires": Wires,
     "flights": Flights,
     "playback": Playback,
+    "steps": Steps,
 }

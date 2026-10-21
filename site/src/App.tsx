@@ -4,6 +4,7 @@ import { lazy, type ReactNode, Suspense } from "react";
 import { Flights } from "./pages/Flights";
 import { Home } from "./pages/Home";
 import { Spec } from "./pages/Spec";
+import { StepPage, Steps } from "./pages/Steps";
 import { useRoute } from "./route";
 
 // the 3D page brings three.js, about a megabyte, so it loads only when someone opens it
@@ -15,6 +16,7 @@ export const PAGES: { route: string; name: string }[] = [
   { route: "drone", name: "The drone in 3D" },
   { route: "spec", name: "Spec sheet" },
   { route: "flights", name: "Every flight" },
+  { route: "steps", name: "Every step" },
 ];
 
 export function pageFor(route: string[]): ReactNode {
@@ -38,6 +40,8 @@ export function pageFor(route: string[]): ReactNode {
         );
       }
       return <Flights />;
+    case "steps":
+      return route[1] ? <StepPage id={route[1]} /> : <Steps />;
     default:
       return (
         <main>

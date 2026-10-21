@@ -269,3 +269,39 @@ fieldset {
 .findings li.fail {
   color: var(--fail);
 }
+
+.status {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.purpose {
+  color: var(--muted);
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.stills {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.stills img {
+  width: 100%;
+  border: 1px solid var(--lines);
+  border-radius: 4px;
+}
+
+.steps li {
+  margin: 6px 0;
+}
+
+.parts-of-step td:nth-child(-n + 2) {
+  white-space: nowrap;
+}

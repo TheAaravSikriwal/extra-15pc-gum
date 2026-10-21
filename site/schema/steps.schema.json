@@ -1,0 +1,222 @@
+{
+ "$defs": {
+  "Link": {
+   "additionalProperties": false,
+   "properties": {
+    "text": {
+     "title": "Text",
+     "type": "string"
+    },
+    "url": {
+     "title": "Url",
+     "type": "string"
+    }
+   },
+   "required": [
+    "text",
+    "url"
+   ],
+   "title": "Link",
+   "type": "object"
+  },
+  "LogEntry": {
+   "additionalProperties": false,
+   "properties": {
+    "title": {
+     "title": "Title",
+     "type": "string"
+    },
+    "date": {
+     "title": "Date",
+     "type": "string"
+    },
+    "url": {
+     "title": "Url",
+     "type": "string"
+    }
+   },
+   "required": [
+    "title",
+    "date",
+    "url"
+   ],
+   "title": "LogEntry",
+   "type": "object"
+  },
+  "ReportRef": {
+   "additionalProperties": false,
+   "properties": {
+    "verdict": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Verdict"
+    },
+    "generated": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Generated"
+    },
+    "url": {
+     "title": "Url",
+     "type": "string"
+    }
+   },
+   "required": [
+    "url"
+   ],
+   "title": "ReportRef",
+   "type": "object"
+  },
+  "Step": {
+   "additionalProperties": false,
+   "properties": {
+    "id": {
+     "title": "Id",
+     "type": "string"
+    },
+    "number": {
+     "title": "Number",
+     "type": "string"
+    },
+    "name": {
+     "title": "Name",
+     "type": "string"
+    },
+    "purpose": {
+     "title": "Purpose",
+     "type": "string"
+    },
+    "status": {
+     "title": "Status",
+     "type": "string"
+    },
+    "outcome": {
+     "title": "Outcome",
+     "type": "string"
+    },
+    "links": {
+     "items": {
+      "$ref": "#/$defs/Link"
+     },
+     "title": "Links",
+     "type": "array"
+    },
+    "side_track": {
+     "title": "Side Track",
+     "type": "boolean"
+    },
+    "report": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/ReportRef"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    },
+    "stills": {
+     "items": {
+      "type": "string"
+     },
+     "title": "Stills",
+     "type": "array"
+    },
+    "logs": {
+     "items": {
+      "$ref": "#/$defs/LogEntry"
+     },
+     "title": "Logs",
+     "type": "array"
+    },
+    "parts": {
+     "default": [],
+     "items": {
+      "$ref": "#/$defs/StepPart"
+     },
+     "title": "Parts",
+     "type": "array"
+    }
+   },
+   "required": [
+    "id",
+    "number",
+    "name",
+    "purpose",
+    "status",
+    "outcome",
+    "links",
+    "side_track",
+    "stills",
+    "logs"
+   ],
+   "title": "Step",
+   "type": "object"
+  },
+  "StepPart": {
+   "additionalProperties": false,
+   "properties": {
+    "name": {
+     "title": "Name",
+     "type": "string"
+    },
+    "what": {
+     "title": "What",
+     "type": "string"
+    },
+    "status": {
+     "title": "Status",
+     "type": "string"
+    },
+    "outcome": {
+     "title": "Outcome",
+     "type": "string"
+    }
+   },
+   "required": [
+    "name",
+    "what",
+    "status",
+    "outcome"
+   ],
+   "title": "StepPart",
+   "type": "object"
+  }
+ },
+ "additionalProperties": false,
+ "description": "steps.json: a page per step, from the README's plan, the reports and the log.",
+ "properties": {
+  "schema_version": {
+   "title": "Schema Version",
+   "type": "integer"
+  },
+  "steps": {
+   "items": {
+    "$ref": "#/$defs/Step"
+   },
+   "title": "Steps",
+   "type": "array"
+  }
+ },
+ "required": [
+  "schema_version",
+  "steps"
+ ],
+ "title": "Steps",
+ "type": "object"
+}
