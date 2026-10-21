@@ -15,6 +15,22 @@ export function exploded(at: Vec, center: Vec, amount: number): [number, number,
   return [0, 1, 2].map((k) => (at[k] - center[k]) * 2 * amount) as [number, number, number];
 }
 
+// the modules in each combination, the flight sim's names for them
+const COMBINATIONS: Record<string, string[]> = {
+  base: [],
+  V: ["V"],
+  P: ["P"],
+  C: ["C"],
+  mission: ["V", "P"],
+  "V+C": ["V", "C"],
+  "P+C": ["P", "C"],
+  max: ["V", "P", "C"],
+};
+
+export function modulesOf(combination: string): string[] {
+  return COMBINATIONS[combination] ?? [];
+}
+
 // which way a prop turns, seen from above: +1 counterclockwise, -1 clockwise, 0 not a prop.
 // PX4's quad X (pcs14.flight.generate.ORDER): front right and back left counterclockwise
 export function propSpin(name: string): number {

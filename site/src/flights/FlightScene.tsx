@@ -1,12 +1,33 @@
 // Both runs of a scenario in one scene: each drone flying its logged path, turning with its
 // logged attitude, on the page's clock, with the path behind it. PX4's in fog, mine in
-// spearmint. The drones are a light stand-in (arms, props, a nose), not the CAD's model, so the
-// page loads fast; the 3D page has the real one.
+// spearmint. Each drone is a light stand-in (arms, props, a nose) until the CAD's model has
+// loaded, then the model itself, with only the modules its combination flies with.
 import { useMemo } from "react";
 import * as THREE from "three";
 
-import type { Playback } from "../data/types";
+import type { Piece, Playback } from "../data/types";
+import { modulesOf, shows } from "../explorer/logic";
+import { nodeName } from "../explorer/Scene";
 import { indexAt, toThree } from "./playback";
+
+export interface DroneModel {
+  root: THREE.Object3D; // the CAD's GLB
+  pieces: Map<string, Piece>;
+}
+
+// a copy of the model in one run's color, its combination's modules on and the rest off
+function modelFor(model: DroneModel, setup: string, color: string): THREE.Object3D {
+  const copy = model.root.clone(true);
+  const on = new Set(modulesOf(setup));
+  const byNode = new Map([...model.pieces.keys()].map((n) => [nodeName(n), n]));
+  const material = new THREE.MeshStandardMaterial({ color, metalness: 0.1, roughness: 0.7 });
+  copy.traverse((node) => {
+    const name = byNode.get(node.name);
+    if (name) node.visible = shows(model.pieces.get(name) as Piece, on);
+    if (node instanceof THREE.Mesh) node.material = material;
+  });
+  return copy;
+}
 
 export const COLORS: Record<string, string> = { px4: "#b4b2a9", mine: "#3ddc97" };
 
@@ -21,7 +42,7 @@ export function attitudeIn3(q: number[]): THREE.Quaternion {
 function StandIn({ color }: { color: string }) {
   const arm = 0.21; // about the drone's own half-diagonal, m
   return (
-    <group>
+    <group name="stand-in">
       {[45, 135, 225, 315].map((deg) => {
         const a = (deg * Math.PI) / 180;
         return (
@@ -45,7 +66,11 @@ function StandIn({ color }: { color: string }) {
   );
 }
 
-export function FlightScene({ runs, time }: { runs: Playback[]; time: number }) {
+export function FlightScene({ runs, time, model }: { runs: Playback[]; time: number; model?: DroneModel | null }) {
+  const drones = useMemo(
+    () => runs.map((p) => (model ? modelFor(model, p.setup, COLORS[p.firmware] ?? "#f4f4f2") : null)),
+    [runs, model],
+  );
   const paths = useMemo(
     () =>
       runs.map((p) => {
@@ -61,8 +86,9 @@ export function FlightScene({ runs, time }: { runs: Playback[]; time: number }) 
       {paths.map((line, k) => (
         <primitive key={runs[k].firmware} object={line} />
       ))}
-      {runs.map((p) => {
+      {runs.map((p, n) => {
         const k = indexAt(p, time);
+        const drone = drones[n];
         return (
           <group
             key={p.firmware}
@@ -70,7 +96,7 @@ export function FlightScene({ runs, time }: { runs: Playback[]; time: number }) 
             position={toThree(p.position[k])}
             quaternion={attitudeIn3(p.attitude[k])}
           >
-            <StandIn color={COLORS[p.firmware] ?? "#f4f4f2"} />
+            {drone ? <primitive object={drone} /> : <StandIn color={COLORS[p.firmware] ?? "#f4f4f2"} />}
           </group>
         );
       })}

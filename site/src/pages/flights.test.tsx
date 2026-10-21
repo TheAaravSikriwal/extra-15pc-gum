@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 
 import type { Flights as FlightsData, Playback } from "../data/types";
-import { FlightView } from "./FlightRun";
+import { FlightView, useRuns } from "./FlightRun";
 import { Flights, runLink } from "./Flights";
 
 const INDEX: FlightsData = {
@@ -71,4 +71,27 @@ test("a run plays both firmwares on one clock, the events appearing as they come
   fireEvent.click(screen.getByRole("button", { name: /PX4: motor failed/ }));
   expect(await within(px4).findByText(/motor failed/)).toBeInTheDocument(); // next frame
   expect(within(px4).getByText("touchdown: 24 m/s")).toBeInTheDocument();
+});
+
+function Runs({ setup, scenario, fetcher }: { setup: string; scenario: string; fetcher: typeof fetch }) {
+  const { runs, problem } = useRuns(setup, scenario, LOAD(fetcher));
+  return <p>{problem ?? (runs ? `${runs.length} runs` : "loading")}</p>;
+}
+
+const loads = new Map<typeof fetch, { fromDisk: boolean; fetcher: typeof fetch }>();
+function LOAD(fetcher: typeof fetch) {
+  // one options object per fetcher, as a page holds on to its own
+  if (!loads.has(fetcher)) loads.set(fetcher, { fromDisk: false, fetcher });
+  return loads.get(fetcher)!;
+}
+
+test("going from one run's page to another forgets the first one's problem", async () => {
+  const fetcher = (async (url: string) => ({
+    ok: true,
+    json: async () => (url.endsWith("flights.json") ? INDEX : run("px4", true)),
+  })) as unknown as typeof fetch;
+  const { rerender } = render(<Runs setup="max" scenario="hover" fetcher={fetcher} />);
+  expect(await screen.findByText("no flown runs of hover in max")).toBeInTheDocument();
+  rerender(<Runs setup="base" scenario="hover" fetcher={fetcher} />);
+  expect(await screen.findByText("2 runs")).toBeInTheDocument();
 });

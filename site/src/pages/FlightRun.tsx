@@ -8,9 +8,10 @@ import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 
 import { TimeChart } from "../charts/TimeChart";
 import { loadData, type LoadOptions } from "../data/load";
-import type { Flights, Playback } from "../data/types";
+import type { Flights, Parts, Playback } from "../data/types";
 import { useData } from "../data/useData";
-import { COLORS, FlightScene } from "../flights/FlightScene";
+import { useModel } from "../explorer/model";
+import { COLORS, type DroneModel, FlightScene } from "../flights/FlightScene";
 import { chapters, duration, eventsSoFar, indexAt, series, toThree } from "../flights/playback";
 import { Clock, useClockTime } from "../play/clock";
 import { Controls, formatTime } from "../play/Controls";
@@ -22,6 +23,9 @@ export function useRuns(setup: string, scenario: string, load?: LoadOptions) {
   const [runs, setRuns] = useState<Playback[] | null>(null);
   const [problem, setProblem] = useState<string | null>(null);
   useEffect(() => {
+    // a new run's page starts clean, without the last one's runs or its problem
+    setRuns(null);
+    setProblem(null);
     if (!index.data) return;
     const files = index.data.runs
       .filter((r) => r.setup === setup && r.scenario === scenario && r.file)
@@ -110,6 +114,14 @@ function Follow({ runs, time }: { runs: Playback[]; time: number }) {
 
 export function FlightRun({ setup, scenario, load }: { setup: string; scenario: string; load?: LoadOptions }) {
   const { runs, problem } = useRuns(setup, scenario, load);
+  // the CAD's model takes over from the stand-in once it's in; the page doesn't wait for it
+  const glb = useModel("drone.glb", load);
+  const parts = useData<Parts>("parts.json", load);
+  const model = useMemo<DroneModel | null>(
+    () =>
+      glb.root && parts.data ? { root: glb.root, pieces: new Map(parts.data.pieces.map((p) => [p.name, p])) } : null,
+    [glb.root, parts.data],
+  );
   if (problem) return <p role="alert">{problem}</p>;
   if (!runs) return <p>Loading the flight</p>;
   return (
@@ -123,11 +135,11 @@ export function FlightRun({ setup, scenario, load }: { setup: string; scenario: 
       <FlightView
         runs={runs}
         view={(time) => (
-          <Canvas camera={{ position: [6, 5, 8], fov: 40 }} dpr={[1, 2]}>
+          <Canvas camera={{ position: [2.6, 1.8, 3.4], fov: 40 }} dpr={[1, 2]}>
             <color attach="background" args={["#0b0b0b"]} />
             <hemisphereLight args={["#f4f4f2", "#2c2c2a", 1.2]} />
             <directionalLight position={[5, 10, 5]} intensity={1.5} />
-            <FlightScene runs={runs} time={time} />
+            <FlightScene runs={runs} time={time} model={model} />
             <OrbitControls makeDefault />
             <Follow runs={runs} time={time} />
           </Canvas>

@@ -2,15 +2,14 @@
 // modules on and off, the exploded view, and the wires colored by how hard they work.
 import { Bounds, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { type ReactNode, useEffect, useMemo, useState } from "react";
-import type * as THREE from "three";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { type ReactNode, useMemo, useState } from "react";
 
-import { loadBinary, type LoadOptions } from "../data/load";
+import type { LoadOptions } from "../data/load";
 import type { Parts, Piece, Route, SpecSheet, Wires } from "../data/types";
 import { useData } from "../data/useData";
 import { Card } from "../explorer/Card";
 import { shows } from "../explorer/logic";
+import { useModel } from "../explorer/model";
 import { DroneScene } from "../explorer/Scene";
 
 const MODULES = ["V", "P", "C"];
@@ -133,22 +132,6 @@ export function ExplorerView({ parts, wires, spec, view }: ExplorerViewProps) {
       </aside>
     </div>
   );
-}
-
-function useModel(name: string, load?: LoadOptions) {
-  const [root, setRoot] = useState<THREE.Object3D | null>(null);
-  const [problem, setProblem] = useState<string | null>(null);
-  useEffect(() => {
-    let live = true;
-    loadBinary(name, load)
-      .then((bytes) => new GLTFLoader().parseAsync(bytes, ""))
-      .then((gltf) => live && setRoot(gltf.scene))
-      .catch((e: Error) => live && setProblem(e.message));
-    return () => {
-      live = false;
-    };
-  }, [name, load]);
-  return { root, problem };
 }
 
 // the props turn at a few turns a second, for show (they really turn about 100)
