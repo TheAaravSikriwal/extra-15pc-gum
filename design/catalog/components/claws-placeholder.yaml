@@ -29,6 +29,17 @@ cad:
     found: none
     checked: '2026-10-17'
     note: Not designed yet, so nothing to look for
+  connectors:
+  - name: servo1
+    side: top
+    faces: 'up'
+    pins: {"SIG": [20, -2.54], "V+": [20, 0], "GND": [20, 2.54]}
+    source: {"kind": "estimate", "checked": "2026-10-21", "note": "The claws are a placeholder until they're designed: one servo plug on top of each half"}
+  - name: servo2
+    side: top
+    faces: 'up'
+    pins: {"SIG": [-20, -2.54], "V+": [-20, 0], "GND": [-20, 2.54]}
+    source: {"kind": "estimate", "checked": "2026-10-21", "note": "The claws are a placeholder until they're designed: one servo plug on top of each half"}
 electrical:
   source: {kind: estimate, checked: 2026-10-18, note: "No claw design yet. Two servos like Savox's SH-0255MG+ stand in: 180 mA running and 1200 mA stalled at 4.8 V, 240 mA and 1400 mA at 6.0 V (Lindinger's listing of Savox's figures, https://www.lindinger.at/en/RC-ELECTRONICS/Servos-Accessories/Servos-Digital-Low-Voltage/SAVOEX-SH-0255MG-6V-3-9KG-0-13s-Digital-Micro-Servo/9795255). Typical is the 2 W the sizing model counts for holding a grip, split between the two"}
   connectors:

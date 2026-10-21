@@ -56,11 +56,39 @@ class Hole(Strict):
         return units.mm_to_m(self.diameter_mm)
 
 
+class CadConnector(Strict):
+    """Where one of the part's connectors sits, pin by pin, in the part's own frame (mm from
+    its middle, the way pcs14.cad.parts builds it), so every wire can be drawn pin to pin. The
+    names are its electrical block's. A part placed more than once (one fuse per branch) says
+    which placement holds it."""
+
+    name: str
+    side: Literal["top", "bottom", "edge"]
+    faces: Literal["+x", "-x", "+y", "-y", "up", "down"] | None = None  # the way its plug comes in
+    z_mm: float | None = None  # its height, for an edge connector or to say it outright
+    instance: int = Field(default=0, ge=0)  # which of the part's placements in design/cad.yaml
+    pins: dict[str, tuple[float, float]] = Field(min_length=1)  # each pin's x_mm, y_mm
+    source: Source  # an estimate's note says how it was worked out
+
+    @model_validator(mode="after")
+    def _edges_say_how_high(self):
+        if self.side == "edge" and self.z_mm is None:
+            raise ValueError(f"connector {self.name} is on an edge, so it needs its z_mm")
+        return self
+
+    def z(self, thickness_mm: float) -> float:
+        """Its height in mm: on top of a part `thickness_mm` thick, under it, or as given."""
+        if self.z_mm is not None:
+            return self.z_mm
+        return thickness_mm if self.side == "top" else 0.0
+
+
 class CadBlock(Strict):
     source: Source
     estimates: list[str] = Field(default_factory=list)  # names of dimensions that are estimates
     estimate_note: str | None = None
     existing: ExistingCad
+    connectors: list[CadConnector] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def _estimates_are_real_and_explained(self):

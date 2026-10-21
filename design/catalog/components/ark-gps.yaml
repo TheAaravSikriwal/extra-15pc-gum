@@ -27,6 +27,17 @@ cad:
     format: STEP (Rev 3) and case STLs
     terms: BSD-3-Clause (the folder's LICENSE file)
     checked: '2026-10-18'
+  connectors:
+  - name: CAN1
+    side: bottom
+    faces: '-x'
+    pins: {"5V": [-22.08, 2.85], "CAN_P": [-21.82, 4.07], "CAN_N": [-21.56, 5.29], "GND": [-21.3, 6.52]}
+    source: {"kind": "manufacturer", "url": "https://github.com/ARK-Electronics/ark-hardware/tree/main/ARK_GPS", "checked": "2026-10-21", "note": "From ARK's Rev 3 STEP model, exact to the model. The board is a 50 mm disk, and both CAN plugs are turned 12 degrees to follow its edge. ARK's photos show Rev 2; the arrow and the pin 1 marks are read off those, assuming Rev 3 keeps them"}
+  - name: CAN2
+    side: bottom
+    faces: '-x'
+    pins: {"5V": [-21.3, -6.52], "CAN_P": [-21.56, -5.3], "CAN_N": [-21.82, -4.07], "GND": [-22.08, -2.85]}
+    source: {"kind": "manufacturer", "url": "https://github.com/ARK-Electronics/ark-hardware/tree/main/ARK_GPS", "checked": "2026-10-21", "note": "From ARK's Rev 3 STEP model, exact to the model. The board is a 50 mm disk, and both CAN plugs are turned 12 degrees to follow its edge. ARK's photos show Rev 2; the arrow and the pin 1 marks are read off those, assuming Rev 3 keeps them"}
 electrical:
   source: {kind: manufacturer, url: 'https://docs.arkelectron.com/products/gps/ark-gps/hardware.md', checked: 2026-10-18, note: "Both CAN plugs are the Pixhawk standard 4-pin JST-GH (5V, CAN_P, CAN_N, GND); the debug plug is a 6-pin JST-SH. Its terminator is built in and switched on with CANNODE_TERM=1 (https://docs.arkelectron.com/products/gps/ark-gps/firmware.md)"}
   estimates: ['draws[CAN1.5V]', 'outputs[CAN_THROUGH]']

@@ -16,6 +16,17 @@ cad:
   height_mm: 6
   source: {kind: estimate, checked: '2026-10-18', note: "The module's half, the same size as the socket it mates with: a guess from the parts"}
   existing: {found: none, checked: '2026-10-18', note: "Small enough that a box will do"}
+  connectors:
+  - name: POWER
+    side: top
+    faces: 'up'
+    pins: {"5V": [-4, -2.5], "GND": [-4, 2.5]}
+    source: {"kind": "estimate", "checked": "2026-10-21", "note": "My own part, not drawn in detail yet: the XT30 at one end, the 8-pin GH beside it, wires from the top, into the module"}
+  - name: SIGNAL
+    side: top
+    faces: 'up'
+    pins: {"CAN_5V": [4, -4.38], "CAN_P": [4, -3.12], "CAN_N": [4, -1.88], "GND": [4, -0.62], "TX": [4, 0.62], "RX": [4, 1.88], "TAKEOVER": [4, 3.12], "CHUTE": [4, 4.38]}
+    source: {"kind": "estimate", "checked": "2026-10-21", "note": "My own part, not drawn in detail yet: the XT30 at one end, the 8-pin GH beside it, wires from the top, into the module"}
 electrical:
   source: {kind: manufacturer, url: 'https://www.china-amass.com/biao/268.html', checked: 2026-10-18, note: "Amass's XT30U (20 A) and JST's GH (1 A a contact, https://www.jst-mfg.com/product/pdf/eng/eGH.pdf). The pin assignment is this design's own (the electrical spec)"}
   connectors:

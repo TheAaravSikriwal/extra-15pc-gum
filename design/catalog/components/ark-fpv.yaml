@@ -37,6 +37,47 @@ cad:
     format: STEP and 3D PDF
     terms: No license file in the folder, so all rights reserved by default. Cache only
     checked: '2026-10-18'
+  connectors:
+  - name: ESC
+    side: top
+    faces: '+x'
+    pins: {"VBAT": [16.3, -8.9], "CURR": [16.3, -7.65], "UART4_RX": [16.3, -6.4], "CH1": [16.3, -5.15], "CH2": [16.3, -3.9], "CH3": [16.3, -2.65], "CH4": [16.3, -1.4], "GND": [16.3, -0.15]}
+    source: {"kind": "manufacturer", "url": "https://docs.arkelectron.com/products/flight-controller/ark-fpv/hardware.md", "checked": "2026-10-21", "note": "Scaled from ARK's pinout renders against the 30.5 mm hole pattern, about 0.3 mm; pin 1 from the white dot ARK prints beside each plug. The renders show a REV 3.0 board"}
+  - name: GPS
+    side: top
+    faces: '+y'
+    pins: {"5V": [8.9, 16.3], "USART1_TX": [7.65, 16.3], "USART1_RX": [6.4, 16.3], "I2C1_SCL": [5.15, 16.3], "I2C1_SDA": [3.9, 16.3], "GND": [2.65, 16.3]}
+    source: {"kind": "manufacturer", "url": "https://docs.arkelectron.com/products/flight-controller/ark-fpv/hardware.md", "checked": "2026-10-21", "note": "Scaled from ARK's pinout renders against the 30.5 mm hole pattern, about 0.3 mm; pin 1 from the white dot ARK prints beside each plug. The renders show a REV 3.0 board"}
+  - name: POWER_AUX
+    side: top
+    faces: '-y'
+    pins: {"12V": [6.3, -16.2], "GND": [7.55, -16.2], "VBAT": [8.8, -16.2]}
+    source: {"kind": "manufacturer", "url": "https://docs.arkelectron.com/products/flight-controller/ark-fpv/hardware.md", "checked": "2026-10-21", "note": "Scaled from ARK's pinout renders against the 30.5 mm hole pattern, about 0.3 mm; pin 1 from the white dot ARK prints beside each plug. The renders show a REV 3.0 board"}
+  - name: RC
+    side: top
+    faces: '+x'
+    pins: {"5V": [16.3, 5], "USART6_RX": [16.3, 6.25], "USART6_TX": [16.3, 7.5], "GND": [16.3, 8.75]}
+    source: {"kind": "manufacturer", "url": "https://docs.arkelectron.com/products/flight-controller/ark-fpv/hardware.md", "checked": "2026-10-21", "note": "Scaled from ARK's pinout renders against the 30.5 mm hole pattern, about 0.3 mm; pin 1 from the white dot ARK prints beside each plug. The renders show a REV 3.0 board"}
+  - name: SPI
+    side: bottom
+    faces: '-x'
+    pins: {"5V": [-16, 2.5], "SCK": [-16, 3.5], "MISO": [-16, 4.5], "MOSI": [-16, 5.5], "nCS1": [-16, 6.5], "DRDY1": [-16, 7.5], "nRESET": [-16, 8.5], "GND": [-16, 9.5]}
+    source: {"kind": "manufacturer", "url": "https://docs.arkelectron.com/products/flight-controller/ark-fpv/hardware.md", "checked": "2026-10-21", "note": "Scaled from ARK's pinout renders against the 30.5 mm hole pattern, about 0.3 mm; pin 1 from the white dot ARK prints beside each plug. The renders show a REV 3.0 board"}
+  - name: TELEM
+    side: top
+    faces: '+y'
+    pins: {"5V": [-2.6, 16.3], "UART7_TX": [-3.85, 16.3], "UART7_RX": [-5.1, 16.3], "CTS": [-6.35, 16.3], "RTS": [-7.6, 16.3], "GND": [-8.85, 16.3]}
+    source: {"kind": "manufacturer", "url": "https://docs.arkelectron.com/products/flight-controller/ark-fpv/hardware.md", "checked": "2026-10-21", "note": "Scaled from ARK's pinout renders against the 30.5 mm hole pattern, about 0.3 mm; pin 1 from the white dot ARK prints beside each plug. The renders show a REV 3.0 board"}
+  - name: VTX
+    side: top
+    faces: '-x'
+    pins: {"12V": [-16.3, 8.9], "GND": [-16.3, 7.65], "UART5_TX": [-16.3, 6.4], "UART5_RX": [-16.3, 5.15], "USART2_RX": [-16.3, 3.9], "GND2": [-16.3, 2.65]}
+    source: {"kind": "manufacturer", "url": "https://docs.arkelectron.com/products/flight-controller/ark-fpv/hardware.md", "checked": "2026-10-21", "note": "Scaled from ARK's pinout renders against the 30.5 mm hole pattern, about 0.3 mm; pin 1 from the white dot ARK prints beside each plug. The renders show a REV 3.0 board"}
+  - name: CAN
+    side: top
+    faces: '-x'
+    pins: {"5V": [-16.3, -2.5], "CAN_P": [-16.3, -3.75], "CAN_N": [-16.3, -5], "GND": [-16.3, -6.25]}
+    source: {"kind": "manufacturer", "url": "https://docs.arkelectron.com/products/flight-controller/ark-fpv/hardware.md", "checked": "2026-10-21", "note": "Scaled from ARK's pinout renders against the 30.5 mm hole pattern, about 0.3 mm; pin 1 from the white dot ARK prints beside each plug. The renders show a REV 3.0 board"}
 electrical:
   source: {kind: manufacturer, url: 'https://docs.arkelectron.com/products/flight-controller/ark-fpv/hardware.md', checked: 2026-10-18, note: "ARK's pinouts, signals 3.3 V. 5.5 to 54 V in (3S to 12S) on the ESC plug's VBAT pin or POWER AUX; a 5 V 2 A supply (the board uses 0.5 A of it) and a 12 V 2 A supply the processor switches on and off. Battery voltage through a 21:1 divider (BAT1_V_DIV 21); current from the ESC's sensor on CURR_IN_EXT. PX4's serial ports from its board files (https://github.com/PX4/PX4-Autopilot/tree/main/boards/ark/fpv): GPS1 USART1 ttyS0, TELEM3 USART2 ttyS1 (receive only), console USART3 ttyS2, TELEM4 UART4 ttyS3, TELEM2 UART5 ttyS4, RC USART6 ttyS5, TELEM1 UART7 ttyS6"}
   estimates: ['outputs[5V].efficiency', 'outputs[12V].efficiency']

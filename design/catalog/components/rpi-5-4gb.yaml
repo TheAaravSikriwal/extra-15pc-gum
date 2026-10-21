@@ -52,6 +52,12 @@ cad:
     terms: 'MIT license, in the zip: it can be shared, with the copyright notice. It''s 77 MB unzipped,
       so it stays in the local cache'
     checked: '2026-10-17'
+  connectors:
+  - name: GPIO
+    side: top
+    faces: 'up'
+    pins: {"3V3": [-34.13, 23.23], "5V": [-34.13, 25.77], "GND": [-29.05, 25.77], "GPIO14": [-26.51, 25.77], "GPIO15": [-23.97, 25.77]}
+    source: {"kind": "manufacturer", "url": "https://datasheets.raspberrypi.com/rpi5/raspberry-pi-5-mechanical-drawing.pdf", "checked": "2026-10-21", "note": "The header's place and pin 1 from Raspberry Pi's mechanical drawing (approximate, for reference), read off its vectors; which pin is which from Raspberry Pi's header pinout: 3V3 on pin 1, 5V on 2, ground on 6, GPIO14 on 8 and GPIO15 on 10"}
 electrical:
   source: {kind: manufacturer, url: 'https://www.raspberrypi.com/documentation/computers/raspberry-pi.html', checked: 2026-10-18, note: "Raspberry Pi's docs: a 5.1 V supply; low-voltage detection below 4.63 V (plus or minus 5%); USB devices limited to 600 mA unless the supply is a 5 A one, and the fan header shares that limit. MAVLink goes on UART0, GPIO 14 and 15 (header pins 8 and 10), with dtoverlay=uart0-pi5 and the console kept off those pins"}
   estimates: ['draws[GPIO.5V]', 'outputs[CAM3V3]', 'connectors[FAN]']

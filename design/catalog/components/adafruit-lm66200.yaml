@@ -19,6 +19,12 @@ cad:
   height_mm: 2.2
   source: {kind: manufacturer, url: 'https://www.adafruit.com/product/5830', checked: '2026-10-19', note: "Adafruit's board size; it rides inline on the servo's leads, in heat shrink"}
   existing: {found: none, checked: '2026-10-19', note: "Small enough that a box will do"}
+  connectors:
+  - name: pads
+    side: top
+    faces: 'up'
+    pins: {"VIN1": [-6.35, -2.54], "VIN2": [-3.81, -2.54], "GND": [-1.27, -2.54], "VOUT": [1.27, -2.54], "ON": [3.81, -2.54], "ST": [6.35, -2.54]}
+    source: {"kind": "manufacturer", "url": "https://github.com/adafruit/Adafruit-LM66200-PCB", "checked": "2026-10-21", "note": "From Adafruit's PCB file, turned a quarter turn so the board's long side runs along x like the CAD's. The names are its nets"}
 electrical:
   source: {kind: manufacturer, url: 'https://www.ti.com/lit/ds/symlink/lm66200.pdf', checked: 2026-10-19, note: "TI's LM66200 datasheet (SLVSG04, November 2021): 1.6 to 5.5 V in, 6 V absolute; 2.5 A a channel continuous and 4 A for 1 ms; on-resistance at 5 V and 200 mA of 37 mOhm typical, 46 mOhm max at 25 C and 60 mOhm max from -40 to 105 C. It passes whichever input is higher and blocks reverse current once the output is 42 to 70 mV above an input. The forward points are the 60 mOhm worst case, a channel's drop at each current"}
   connectors:

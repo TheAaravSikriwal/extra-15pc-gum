@@ -20,6 +20,12 @@ cad:
   estimates: [height_mm]
   estimate_note: The board and the chip, without header pins
   existing: {found: none, checked: '2026-10-18', note: "No model found for the breakout"}
+  connectors:
+  - name: J1
+    side: top
+    faces: 'up'
+    pins: {"VCC": [11.43, -7.62], "GND": [8.89, -7.62], "NO1": [6.35, -7.62], "NC1": [3.81, -7.62], "NO2": [1.27, -7.62], "NC2": [-1.27, -7.62], "NO3": [-3.81, -7.62], "NC3": [-6.35, -7.62], "NO4": [-8.89, -7.62], "NC4": [-11.43, -7.62], "VCC2": [8.89, 7.62], "GND2": [6.35, 7.62], "IN": [3.81, 7.62], "EN": [1.27, 7.62], "CM1": [-1.27, 7.62], "CM2": [-3.81, 7.62], "CM3": [-6.35, 7.62], "CM4": [-8.89, 7.62]}
+    source: {"kind": "estimate", "url": "https://store.siqma.com/ts3a5018-4channel-switch-module.html", "checked": "2026-10-21", "note": "Only a seller's top-view photo to go on: the pins snapped to a 2.54 mm grid and centered, with 15.24 mm between the rows assumed (the photo reads 15.1 to 15.3). Expect 0.3 mm or more off. VCC and GND are the NO and NC row's, VCC2 and GND2 the CM row's"}
 electrical:
   source: {kind: manufacturer, url: 'https://www.ti.com/lit/ds/symlink/ts3a5018.pdf', checked: 2026-10-18, note: "TI's TS3A5018: 1.65 to 3.6 V; with EN and IN low each common connects to its NC pin, IN high moves them to NO, EN high opens everything (TI's own example wires EN and IN pulled low). At 3 V: on-resistance 7 Ohm typical, 10 most; 16 pF on; on and off in 8 and 6.5 ns at most; inputs 2.0 V high, 0.8 V low. The switch pins take -0.5 to 4.6 V whatever the supply, and leak 2 uA at 25 °C (10 uA over -40 to 85 °C) with the supply at 0 V. TI publishes an IBIS model, not a SPICE one"}
   estimates: ['connectors[J1]', 'draws[J1.VCC]']

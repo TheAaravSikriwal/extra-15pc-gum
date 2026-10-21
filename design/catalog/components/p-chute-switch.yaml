@@ -18,6 +18,12 @@ cad:
   height_mm: 3
   source: {kind: estimate, checked: '2026-10-18', note: "Artekit's SOT23-6 adapter is 12 x 9 x 1 mm (https://www.artekit.eu/products/breakout-boards/bbadapters/sot-to-dip/sot23-6-to-dip-adapter-pack-of-4/), plus the chip"}
   existing: {found: none, checked: '2026-10-18', note: "A plain adapter board"}
+  connectors:
+  - name: U1
+    side: top
+    faces: 'up'
+    pins: {"I1": [3.81, -2.54], "GND": [3.81, 0], "I0": [3.81, 2.54], "Y": [-3.81, 2.54], "VCC": [-3.81, 0], "S": [-3.81, -2.54]}
+    source: {"kind": "manufacturer", "url": "https://github.com/sparkfun/SOT23_DIP_Adapter", "checked": "2026-10-21", "note": "The adapter's header pins from SparkFun's PCB file. The chip's pins land by position, with its pin 1 on pad 3, since SparkFun numbers the pads clockwise: that's how I'd solder it, not something SparkFun says"}
 electrical:
   source: {kind: manufacturer, url: 'https://cdn.components.ru/media/PDF/1726248.pdf', checked: 2026-10-18, note: "Nexperia's 74LVC1G157 datasheet (a mirror; nexperia.com refuses scripts): 1.65 to 5.5 V, Schmitt-trigger inputs, IOFF of 2 uA at most with the supply off, 4 uA supply current at most. Pins (SOT457, SC-74): 1 I1, 2 GND, 3 I0, 4 Y, 5 VCC, 6 S. S low picks I0, S high picks I1"}
   connectors:

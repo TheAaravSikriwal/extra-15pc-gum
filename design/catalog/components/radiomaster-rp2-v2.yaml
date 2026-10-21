@@ -27,6 +27,12 @@ cad:
     found: none
     checked: '2026-10-17'
     note: No CAD on RadioMaster's site; a 13 mm board is fine as a box
+  connectors:
+  - name: pads
+    side: top
+    faces: 'up'
+    pins: {"RX": [5.4, -3.81], "TX": [5.4, -1.27], "5V": [5.4, 1.27], "GND": [5.4, 3.81]}
+    source: {"kind": "manufacturer", "url": "https://radiomasterrc.com/products/rp2-expresslrs-2-4ghz-nano-receiver", "checked": "2026-10-21", "note": "Scaled from RadioMaster's photos, about 0.3 mm. The pitch isn't stated; 2.54 mm is read off the photo. The order comes from the bottom silkscreen and the manual. The pads are castellated, so they reach both sides"}
 electrical:
   source: {kind: manufacturer, url: 'https://www.radiomasterrc.com/products/rp2-expresslrs-2-4ghz-nano-receiver', checked: 2026-10-18, note: "'Working voltage: 5v'. Pads 5V, GND, TX and RX, with the receiver's TX going to the flight controller's RX (https://www.expresslrs.org/quick-start/receivers/wiring-up/). RadioMaster publishes no current draw or input range"}
   estimates: ['connectors[pads]', 'draws[pads.5V]']

@@ -17,6 +17,13 @@ cad:
     found: none
     checked: '2026-10-17'
     note: Wires, so there's nothing to look for
+  connectors:
+  - name: XT60
+    side: edge
+    faces: '+x'
+    z_mm: -5.0
+    pins: {"+": [30, 3.6], "-": [30, -3.6]}
+    source: {"kind": "estimate", "checked": "2026-10-21", "note": "Where the battery leads' route starts in design/cad.yaml, in the drone's frame (the routed wiring's own): the XT60 on the end of the leads, mated to the pack's"}
 electrical:
   source: {kind: manufacturer, url: 'https://datasheet.lcsc.com/datasheet/pdf/bf4ed80d93eda3bacf37967ce1d2662b.pdf', checked: 2026-10-18, note: "The drone's half of the battery connector, an Amass XT60, on the end of the battery leads"}
   connectors:

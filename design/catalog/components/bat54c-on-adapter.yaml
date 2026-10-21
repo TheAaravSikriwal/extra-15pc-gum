@@ -18,6 +18,12 @@ cad:
   height_mm: 3
   source: {kind: estimate, checked: '2026-10-18', note: "The size of a small SOT-23 adapter board"}
   existing: {found: none, checked: '2026-10-18', note: "A plain adapter board"}
+  connectors:
+  - name: D1
+    side: top
+    faces: 'up'
+    pins: {"A1": [3.81, -2.54], "A2": [3.81, 2.54], "K": [-3.81, 0]}
+    source: {"kind": "manufacturer", "url": "https://github.com/sparkfun/SOT23_DIP_Adapter", "checked": "2026-10-21", "note": "The adapter's header pins from SparkFun's PCB file. The three-pin BAT54C sits on the six-pad footprint with its two anodes on pads 3 and 1 and the cathode across on pad 5: that's how I'd solder it, not something SparkFun says"}
 electrical:
   source: {kind: manufacturer, url: 'https://www.diodes.com/assets/Datasheets/ds11005.pdf', checked: 2026-10-18, note: "Diodes Inc's BAT54/A/C/S datasheet: 30 V reverse, 200 mA continuous, 300 mA repetitive peak, 600 mA surge under 1 s, forward voltage 800 mV at most at 100 mA (onsemi's BAT54C lists 0.52 V typical at 100 mA, https://www.onsemi.com/download/data-sheet/pdf/bat54clt1-d.pdf). BAT54C pins: 1 and 2 the anodes, 3 the shared cathode"}
   connectors:

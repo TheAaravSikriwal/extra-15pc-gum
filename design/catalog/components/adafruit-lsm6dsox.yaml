@@ -20,6 +20,12 @@ cad:
   height_mm: 4.6
   source: {kind: manufacturer, url: 'https://www.adafruit.com/product/4438', checked: '2026-10-18', note: "25.6 x 17.8 x 4.6 mm"}
   existing: {found: none, checked: '2026-10-18', note: "Adafruit's CAD parts repo (MIT, https://github.com/adafruit/Adafruit_CAD_Parts) has its other LSM6DSOX boards (4517, 4565) but not 4438"}
+  connectors:
+  - name: J1
+    side: top
+    faces: 'up'
+    pins: {"VIN": [-10.16, -6.35], "3Vo": [-7.62, -6.35], "GND": [-5.08, -6.35], "SCK": [-2.54, -6.35], "MOSI": [0, -6.35], "MISO": [2.54, -6.35], "CS": [5.08, -6.35], "INT1": [7.62, -6.35], "INT2": [10.16, -6.35]}
+    source: {"kind": "manufacturer", "url": "https://github.com/adafruit/Adafruit-LSM6DSOX-PCB", "checked": "2026-10-21", "note": "From Adafruit's PCB file, turned a quarter turn so the board's long side runs along x like the CAD's. The pins Adafruit labels SCL, SDA and DO are SCK, MOSI and MISO in SPI"}
 electrical:
   source: {kind: manufacturer, url: 'https://www.adafruit.com/product/4438', checked: 2026-10-18, note: "Adafruit's board: VIN through its own regulator, level-shifted inputs, SPI or I2C, two interrupt pins"}
   estimates: ['connectors[J1]', 'draws[J1.VIN]']

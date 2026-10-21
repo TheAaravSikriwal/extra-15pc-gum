@@ -35,6 +35,13 @@ cad:
     found: none
     checked: '2026-10-17'
     note: Benewake publishes 3D files for other sensors, not this one
+  connectors:
+  - name: J1
+    side: edge
+    faces: '+x'
+    z_mm: 4.9
+    pins: {"5V": [10.6, -3.1], "RXD": [10.6, -1.85], "TXD": [10.6, -0.6], "GND": [10.6, 0.65], "MODE": [10.6, 1.9], "OUT": [10.6, 3.15]}
+    source: {"kind": "manufacturer", "url": "https://en.benewake.com/uploadfiles/2025/04/20250430174501874.pdf", "checked": "2026-10-21", "note": "From Benewake's dimension drawing: the plug sits in a pocket on the housing's chin, its pin row about 4.9 mm off the back face, and the pocket's depth isn't drawn. Pin 1 is on the left facing the lenses, from the manual's figure 4: check it on the real part"}
 electrical:
   source: {kind: manufacturer, url: 'https://en.benewake.com/uploadfiles/2025/04/20250430174515390.pdf', checked: 2026-10-18, note: "Benewake's TF-Luna manual: 3.7 to 5.2 V, 70 mA average, 150 mA peak, 0.35 W, LVTTL 3.3 V, and no polarity or overvoltage protection at all. Pins from Waveshare's wiki (https://www.waveshare.com/wiki/TF-Luna_LiDAR_Range_Sensor): 1 +5V, 2 RXD/SDA, 3 TXD/SCL, 4 GND, 5 mode (ground for I2C, open or 3.3 V for UART), 6 multiplexed output"}
   estimates: ['connectors[J1]']

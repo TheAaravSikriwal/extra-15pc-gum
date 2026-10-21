@@ -22,6 +22,12 @@ cad:
     format: STEP
     terms: Pololu's resources page states no license or terms, so cache only
     checked: '2026-10-18'
+  connectors:
+  - name: J1
+    side: top
+    faces: 'up'
+    pins: {"SHDN": [5.08, -3.81], "VIN": [5.08, -1.27], "GND": [5.08, 1.27], "VOUT": [5.08, 3.81]}
+    source: {"kind": "manufacturer", "url": "https://www.pololu.com/file/0J1571/step-down-voltage-regulator-d24v3x-d24v6x-d36v6x-dimensions.pdf", "checked": "2026-10-21", "note": "From Pololu's dimension drawing, which doesn't label the pins; the order is from Pololu's photos of the silkscreen, and the square GND pad agrees"}
 electrical:
   source: {kind: manufacturer, url: 'https://www.pololu.com/product/3791/specs', checked: 2026-10-18, note: "4 to 50 V in for 3.3 V out, about 600 mA most, 0.1 mA quiescent at most (under 2 uA shut down)"}
   estimates: ['outputs[3V3].efficiency']

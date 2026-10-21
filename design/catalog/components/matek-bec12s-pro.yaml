@@ -26,6 +26,12 @@ cad:
     found: none
     checked: '2026-10-17'
     note: No download on Matek's page, unlike the GPS
+  connectors:
+  - name: pads
+    side: top
+    faces: 'up'
+    pins: {"IN": [15.85, -1.35], "G": [15.85, 2.47], "G2": [15.85, 6.28], "OUT": [15.85, 10.09]}
+    source: {"kind": "manufacturer", "url": "https://www.mateksys.com/?portfolio=bec12s-pro", "checked": "2026-10-21", "note": "Scaled from Matek's photo, which marks the board's dimensions, about 0.3 mm. The 3.81 mm pitch is Matek's; the pads run IN, G, G, OUT"}
 electrical:
   source: {kind: manufacturer, url: 'https://www.mateksys.com/?portfolio=bec12s-pro', checked: 2026-10-18, note: "9 to 55 V in with TVS protection but no reverse-input protection; 5.2 V out by default; 5 A continuous, 9 A peak; 88 to 96% efficient (the low end is used); standby 5 to 10 mA; overcurrent protection that recovers by itself; pads IN, G, G, OUT on a 3.81 mm pitch"}
   connectors:

@@ -29,6 +29,22 @@ cad:
     format: STEP
     terms: BSD-3-Clause (the folder's LICENSE file)
     checked: '2026-10-18'
+  connectors:
+  - name: CAN1
+    side: top
+    faces: '-x'
+    pins: {"5V": [-12.6, -2.63], "CAN_P": [-12.6, -3.88], "CAN_N": [-12.6, -5.13], "GND": [-12.6, -6.38]}
+    source: {"kind": "manufacturer", "url": "https://github.com/ARK-Electronics/ark-hardware/tree/main/ARK_CANnode", "checked": "2026-10-21", "note": "From ARK's Rev 1 STEP model; pin 1 from the silkscreen dots in ARK's photos"}
+  - name: CAN2
+    side: top
+    faces: '-x'
+    pins: {"5V": [-12.6, 6.38], "CAN_P": [-12.6, 5.13], "CAN_N": [-12.6, 3.88], "GND": [-12.6, 2.63]}
+    source: {"kind": "manufacturer", "url": "https://github.com/ARK-Electronics/ark-hardware/tree/main/ARK_CANnode", "checked": "2026-10-21", "note": "From ARK's Rev 1 STEP model; pin 1 from the silkscreen dots in ARK's photos"}
+  - name: PWM
+    side: bottom
+    faces: '+x'
+    pins: {"PU": [12.6, 5.63], "PWM1": [12.6, 4.38], "PWM2": [12.6, 3.13], "PWM3": [12.6, 1.88], "PWM4": [12.6, 0.63], "PWM5": [12.6, -0.62], "PWM6": [12.6, -1.87], "PWM7": [12.6, -3.12], "PWM8": [12.6, -4.37], "GND": [12.6, -5.62]}
+    source: {"kind": "manufacturer", "url": "https://github.com/ARK-Electronics/ark-hardware/tree/main/ARK_CANnode", "checked": "2026-10-21", "note": "From ARK's Rev 1 STEP model; pin 1 from the silkscreen dots in ARK's photos"}
 electrical:
   source: {kind: manufacturer, url: 'https://docs.arkelectron.com/products/sensor/ark-cannode/hardware.md', checked: 2026-10-18, note: "ARK's pinouts: two 4-pin JST-GH CAN plugs; a 10-pin JST-GH PWM plug with pin 1 pulled up to 3.3 V through 1.5 kOhm, PWM1 to PWM8 at 3.3 V, and pin 10 ground (so no servo power on it, unlike the Pixhawk 4 plug ARK says it matches); I2C and UART plugs with 5 V out at 500 mA. Terminator built in, switched on with CANNODE_TERM=1 (https://docs.arkelectron.com/products/sensor/ark-cannode/firmware.md)"}
   estimates: ['draws[CAN1.5V]', 'outputs[CAN_THROUGH]']

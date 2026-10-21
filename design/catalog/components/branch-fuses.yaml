@@ -19,6 +19,18 @@ cad:
   height_mm: 5
   source: {kind: estimate, checked: '2026-10-19', note: "One MINI fuse soldered inline in its heat shrink, about 30 mm along the wire (the fuse's 16 mm with its blades, plus the two joints) and 12 by 5 across. A guess from the fuse's size; there are two"}
   existing: {found: none, checked: '2026-10-18', note: "Small enough that a box will do"}
+  connectors:
+  - name: F1
+    side: edge
+    z_mm: 2.5
+    pins: {"A": [-15, 0], "B": [15, 0]}
+    source: {"kind": "estimate", "checked": "2026-10-21", "note": "An inline MINI fuse holder: one wire in each end of its box"}
+  - name: F2
+    side: edge
+    z_mm: 2.5
+    instance: 1
+    pins: {"A": [-15, 0], "B": [15, 0]}
+    source: {"kind": "estimate", "checked": "2026-10-21", "note": "An inline MINI fuse holder: one wire in each end of its box"}
 electrical:
   source: {kind: manufacturer, url: 'https://atta.szlcsc.com/upload/public/pdf/source/20241028/EC0235DBD6F881A867CEA06A6175F69D.pdf', checked: 2026-10-18, note: "Two MINI fuses soldered inline; each fuse's rating is picked in design/electrical.yaml from littelfuse-mini-297"}
   connectors:
