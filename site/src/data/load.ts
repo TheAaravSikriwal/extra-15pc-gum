@@ -30,11 +30,16 @@ async function viaFetch(name: string, fetcher: typeof fetch): Promise<unknown> {
   return reply.json();
 }
 
+// a data file's script version: spec.json comes as spec.js, drone.glb as drone.glb.js
+export function scriptFor(name: string): string {
+  return name.endsWith(".json") ? name.replace(/\.json$/, ".js") : `${name}.js`;
+}
+
 async function viaScript(name: string, loader: ScriptLoader): Promise<unknown> {
   const held = window.pcs14Data?.[name];
   if (held !== undefined) return held;
   try {
-    await loader(`./data/${name.replace(/\.json$/, ".js")}`);
+    await loader(`./data/${scriptFor(name)}`);
   } catch {
     throw new DataError(`no ${name}: run pcs14 site`);
   }
@@ -47,6 +52,23 @@ export interface LoadOptions {
   fetcher?: typeof fetch;
   fromDisk?: boolean; // the page was opened as file://
   loader?: ScriptLoader;
+}
+
+// base64, as the binary files' script versions carry them, back into bytes
+export function fromBase64(text: string): ArrayBuffer {
+  const raw = atob(text);
+  const bytes = new Uint8Array(raw.length);
+  for (let k = 0; k < raw.length; k++) bytes[k] = raw.charCodeAt(k);
+  return bytes.buffer;
+}
+
+// a binary data file (the 3D model): fetched, or from its script version on disk
+export async function loadBinary(name: string, options: LoadOptions = {}): Promise<ArrayBuffer> {
+  const fromDisk = options.fromDisk ?? window.location.protocol === "file:";
+  if (fromDisk) return fromBase64((await viaScript(name, options.loader ?? addScript)) as string);
+  const reply = await (options.fetcher ?? fetch)(`./data/${name}`);
+  if (!reply.ok) throw new DataError(`no ${name}: run npm run glb`);
+  return reply.arrayBuffer();
 }
 
 // a data file, refused if it was written with another schema version

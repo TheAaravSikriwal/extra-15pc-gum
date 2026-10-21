@@ -127,3 +127,63 @@ svg .chart-title {
   fill: var(--text);
   font-size: 13px;
 }
+
+main.wide {
+  max-width: 1280px;
+}
+
+.explorer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 16px;
+}
+
+.explorer .view {
+  height: 70vh;
+  min-height: 360px;
+  border: 1px solid var(--lines);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.explorer aside {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+fieldset {
+  border: 1px solid var(--lines);
+  border-radius: 6px;
+}
+
+.card dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px 12px;
+}
+
+.card dt {
+  color: var(--muted);
+}
+
+.card dd {
+  margin: 0;
+  font-family: var(--font-numbers);
+}
+
+.card .wires {
+  font-family: var(--font-numbers);
+  font-size: 12px;
+  padding-left: 16px;
+}
+
+.hint {
+  color: var(--muted);
+}
+
+@media (max-width: 760px) {
+  .explorer {
+    grid-template-columns: 1fr;
+  }
+}

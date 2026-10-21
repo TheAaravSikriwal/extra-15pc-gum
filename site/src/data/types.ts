@@ -64,6 +64,39 @@ export interface SpecSheet {
   parts: Part[];
 }
 
+export interface Piece {
+  name: string; // the GLB's node for it
+  kind: string; // frame, motor, prop, pack, bought, printed or wire
+  module: string; // base, V, P or C
+  mass_g: number;
+  part_id?: string | null;
+  moving: boolean;
+  catalog?: Part | null;
+}
+
+export interface Parts {
+  schema_version: number;
+  glb: string;
+  pieces: Piece[];
+}
+
+export interface Wire {
+  label: string;
+  ends: string[];
+}
+
+export interface Route {
+  name: string;
+  node: string; // the GLB's node for it
+  wires: Wire[];
+  heating_share: Record<string, Record<string, number>>; // combination, then case
+}
+
+export interface Wires {
+  schema_version: number;
+  routes: Route[];
+}
+
 // the fields each shape has, for the check against the schema
 export const FIELDS = {
   ReportFound: ["file", "found", "generated", "verdict"],
@@ -84,4 +117,9 @@ export const FIELDS = {
   ],
   Part: ["role", "module", "id", "maker", "model", "mass_g", "price_usd", "link", "count"],
   SpecSheet: ["schema_version", "sizing_case", "verdict", "targets", "combinations", "parts"],
+  Piece: ["name", "kind", "module", "mass_g", "part_id", "moving", "catalog"],
+  Parts: ["schema_version", "glb", "pieces"],
+  Wire: ["label", "ends"],
+  Route: ["name", "node", "wires", "heating_share"],
+  Wires: ["schema_version", "routes"],
 } as const;

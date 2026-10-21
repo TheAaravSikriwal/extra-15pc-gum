@@ -1,4 +1,4 @@
-import { DataError, loadData } from "./load";
+import { DataError, fromBase64, loadBinary, loadData, scriptFor } from "./load";
 
 function answering(body: unknown, ok = true): typeof fetch {
   return (async () => ({ ok, json: async () => body })) as unknown as typeof fetch;
@@ -40,6 +40,25 @@ test("opened from disk, it loads the file's script version instead of fetching",
   });
   expect(asked).toEqual(["./data/spec.js"]);
   expect(data.verdict).toBe("pass");
+});
+
+test("each file's script version is named after it", () => {
+  expect(scriptFor("spec.json")).toBe("spec.js");
+  expect(scriptFor("drone.glb")).toBe("drone.glb.js");
+});
+
+test("a binary file comes from disk as base64, and fetched as bytes", async () => {
+  const loader = async () => {
+    window.pcs14Data = { "drone.glb": btoa("glTF") };
+  };
+  const fromDisk = new Uint8Array(await loadBinary("drone.glb", { fromDisk: true, loader }));
+  expect(Array.from(fromDisk)).toEqual([103, 108, 84, 70]);
+  const fetcher = (async () => ({
+    ok: true,
+    arrayBuffer: async () => fromBase64(btoa("glTF")),
+  })) as unknown as typeof fetch;
+  const fetched = new Uint8Array(await loadBinary("drone.glb", { fromDisk: false, fetcher }));
+  expect(Array.from(fetched)).toEqual([103, 108, 84, 70]);
 });
 
 test("from disk, a script that isn't there says how to make it", async () => {
