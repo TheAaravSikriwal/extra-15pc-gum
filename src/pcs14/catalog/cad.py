@@ -76,12 +76,6 @@ class CadConnector(Strict):
             raise ValueError(f"connector {self.name} is on an edge, so it needs its z_mm")
         return self
 
-    def z(self, thickness_mm: float) -> float:
-        """Its height in mm: on top of a part `thickness_mm` thick, under it, or as given."""
-        if self.z_mm is not None:
-            return self.z_mm
-        return thickness_mm if self.side == "top" else 0.0
-
 
 class CadBlock(Strict):
     source: Source

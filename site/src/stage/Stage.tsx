@@ -28,6 +28,10 @@ export interface DroneState {
   setExplode: (x: number) => void;
   selected: string | null;
   select: (name: string | null) => void;
+  wire: string | null; // a picked wire, by its label
+  pickWire: (label: string | null) => void;
+  harness: string | null; // one harness isolated
+  setHarness: (h: string | null) => void;
   kase: string;
   setKase: (k: string) => void;
   heat: boolean; // the wires colored by their heating in kase, or else in their insulation
@@ -51,7 +55,18 @@ export interface StageData {
 export function useDroneState(route: string[]): DroneState {
   const [modulesOn, setModulesOn] = useState(() => new Set(MODULES));
   const [explode, setExplode] = useState(0);
-  const [selected, select] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string | null>(null);
+  const [wire, setWire] = useState<string | null>(null);
+  const [harness, setHarness] = useState<string | null>(null);
+  // a piece or a wire is picked, not both
+  const select = (name: string | null) => {
+    setSelected(name);
+    setWire(null);
+  };
+  const pickWire = (label: string | null) => {
+    setWire(label);
+    if (label) setSelected(null);
+  };
   const [kase, setKase] = useState("hover");
   const [heat, setHeat] = useState(false);
   const [firmware, setFirmware] = useState("mine");
@@ -70,6 +85,10 @@ export function useDroneState(route: string[]): DroneState {
     setExplode,
     selected,
     select,
+    wire,
+    pickWire,
+    harness,
+    setHarness,
     kase,
     setKase,
     heat,

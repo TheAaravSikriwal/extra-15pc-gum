@@ -117,6 +117,13 @@
     "length_mm": {
      "title": "Length Mm",
      "type": "number"
+    },
+    "gaps_mm": {
+     "items": {
+      "type": "number"
+     },
+     "title": "Gaps Mm",
+     "type": "array"
     }
    },
    "required": [
@@ -130,7 +137,8 @@
     "diameter_mm",
     "wire",
     "role",
-    "length_mm"
+    "length_mm",
+    "gaps_mm"
    ],
    "title": "Wire3d",
    "type": "object"

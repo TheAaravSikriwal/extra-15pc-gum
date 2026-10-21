@@ -673,6 +673,38 @@ ul.tree {
   line-height: 1.45;
 }
 
+.stage-panel ul.sources {
+  margin: 4px 0 10px;
+  padding-left: 16px;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.stage-panel .card button {
+  font: inherit;
+  font-size: 13px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* a picked pin's name, floating beside it in 3D */
+.pin-label {
+  display: inline-block;
+  padding: 1px 6px;
+  font-family: var(--font-numbers);
+  font-size: 11px;
+  white-space: nowrap;
+  color: #062a1c;
+  background: rgba(61, 220, 151, 0.92);
+  border-radius: 4px;
+  pointer-events: none;
+  transform: translateY(-14px);
+}
+
 .stage-panel .scenarios h3 {
   margin: 14px 0 4px;
   font-size: 11px;

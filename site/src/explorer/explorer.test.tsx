@@ -176,6 +176,7 @@ test("given every wire, it draws each one in place of the bundled route", async 
     wire: "silicone",
     role: "power",
     length_mm: 110,
+    gaps_mm: [],
   };
   await ReactThreeTestRenderer.create(
     <DroneScene root={root} pieces={PIECES} routes={new Map()} modulesOn={new Set(["P"])} explode={0}

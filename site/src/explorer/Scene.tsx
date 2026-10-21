@@ -2,14 +2,26 @@
 // off, pulled apart for the exploded view, and a click on a piece or a wire picking it. Given
 // every wire pin to pin, it draws each one in place of the CAD's bundled routes, stretching
 // between its pieces as they pull apart.
+import { Html } from "@react-three/drei";
 import { type ThreeEvent, useFrame } from "@react-three/fiber";
-import { useLayoutEffect, useMemo, useRef } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 
 import type { Piece, Route, Wire3d } from "../data/types";
 import { exploded, heatColor, propSpin, shows, type Vec } from "./logic";
-import { heatMaterial, lookFor, materialFor, planarUVs, SELECTED, TILE, wireMaterial } from "./materials";
-import { type Vec3, visibleWires, wireColor, wirePoints } from "./wires3d";
+import { focusOf, wireStates } from "./explore";
+import {
+  dimWireMaterial,
+  heatMaterial,
+  LIT_WIRE,
+  lookFor,
+  materialFor,
+  planarUVs,
+  SELECTED,
+  TILE,
+  wireMaterial,
+} from "./materials";
+import { bundleSpread, type Vec3, visibleWires, wireColor, wirePoints } from "./wires3d";
 
 export interface SceneProps {
   root: THREE.Object3D; // the GLB's scene
@@ -25,6 +37,16 @@ export interface SceneProps {
   spin?: number; // rad/s for the props, just for show; 0 holds them still
   wires?: Wire3d[]; // every wire pin to pin, drawn in place of the bundled routes
   light?: boolean; // each wire a thin line, for phones
+  pickedWire?: string | null; // a wire picked by its label: it lights up and the rest fade
+  harness?: string | null; // one harness isolated: the rest hide
+  onPickWire?: (label: string | null) => void;
+  onFocus?: (at: Vec3 | null) => void; // a picked wire's first pin in the world, for the camera
+}
+
+interface PinLabel {
+  key: string;
+  at: Vec3; // in the world
+  text: string;
 }
 
 // each wire as a tube at its own thickness, or a line when light
@@ -39,14 +61,17 @@ function wireObject(points: Vec3[], radius: number, material: THREE.Material, li
 }
 
 const LINES = new Map<string, THREE.LineBasicMaterial>();
-function lineMaterial(color: string): THREE.LineBasicMaterial {
-  let m = LINES.get(color);
+function lineMaterial(color: string, dim = false): THREE.LineBasicMaterial {
+  const key = `${color}${dim ? " dim" : ""}`;
+  let m = LINES.get(key);
   if (!m) {
-    m = new THREE.LineBasicMaterial({ color });
-    LINES.set(color, m);
+    m = new THREE.LineBasicMaterial({ color, transparent: dim, opacity: dim ? 0.15 : 1 });
+    LINES.set(key, m);
   }
   return m;
 }
+
+const MINT = "#3ddc97";
 
 // the name three.js gives a piece's node: its GLTFLoader cleans names on the way in, so
 // "wire battery leads" arrives as "wire_battery_leads"
@@ -132,8 +157,12 @@ export function DroneScene(p: SceneProps) {
     }
   }, [homes, p.pieces, p.routes, p.modulesOn, p.explode, p.selected, p.combination, p.kase, p.heat, p.wires]);
 
-  // every wire, rebuilt as the drone pulls apart, under the pieces' own parent
+  // every wire, rebuilt as the drone pulls apart, under the pieces' own parent; lit, faded or
+  // hidden for whatever's picked, with the picked pins labeled
   const wireGroup = useMemo(() => new THREE.Group(), []);
+  const [labels, setLabels] = useState<PinLabel[]>([]);
+  const focus = useRef(p.onFocus);
+  focus.current = p.onFocus;
   useLayoutEffect(() => {
     const parent = homes.found[0]?.node.parent;
     if (!parent || !p.wires) return;
@@ -145,15 +174,46 @@ export function DroneScene(p: SceneProps) {
       offsets.set(name, exploded(middle, center, p.explode) as Vec3);
       if (shows(p.pieces.get(name) as Piece, p.modulesOn)) shown.add(name);
     }
-    for (const w of visibleWires(p.wires, shown)) {
+    const offset = (piece: string) => offsets.get(piece) ?? ([0, 0, 0] as Vec3);
+    const world = (v: Vec3): Vec3 => parent.localToWorld(new THREE.Vector3(...v)).toArray() as Vec3;
+    const visible = visibleWires(p.wires, shown);
+    const states = wireStates(visible, { piece: p.selected, wire: p.pickedWire, harness: p.harness });
+    const spread = bundleSpread(p.wires);
+    const pinLabels: PinLabel[] = [];
+    for (const w of visible) {
+      const state = states.get(w.label) ?? "normal";
+      if (state === "hidden") continue;
       const share = p.heat && w.route_piece ? p.routes.get(w.route_piece)?.heating_share[p.combination]?.[p.kase] : undefined;
-      const color = share !== undefined ? heatColor(share) : wireColor(w.role, w.harness);
-      const material = p.light ? lineMaterial(color) : share !== undefined ? heatMaterial(color) : wireMaterial(color);
-      const points = wirePoints(w, (piece) => offsets.get(piece) ?? [0, 0, 0]);
-      const object = wireObject(points, (w.diameter_mm / 2) * 0.001, material, !!p.light);
+      const color = state === "lit" ? MINT : share !== undefined ? heatColor(share) : wireColor(w.role, w.harness);
+      const material = p.light
+        ? lineMaterial(color, state === "dim")
+        : state === "lit"
+          ? LIT_WIRE
+          : state === "dim"
+            ? dimWireMaterial(color)
+            : share !== undefined
+              ? heatMaterial(color)
+              : wireMaterial(color);
+      const points = wirePoints(w, offset, spread.get(w.label));
+      // a lit wire a little thicker, so it stands out of its bundle
+      const radius = (w.diameter_mm / 2) * 0.001 * (state === "lit" ? 1.8 : 1);
+      const object = wireObject(points, radius, material, !!p.light);
       object.userData.wire = w.label;
       wireGroup.add(object);
+      if (state === "lit") {
+        // the picked wire's two pins, or the picked board's own
+        [w.ends[0], w.ends[1]].forEach((e, k) => {
+          if (!p.pickedWire && e.piece !== p.selected) return;
+          const at = k === 0 ? points[0] : points[points.length - 1];
+          pinLabels.push({ key: `${w.label} ${k}`, at: world(at), text: e.pin.split(".").slice(1).join(" ") });
+        });
+      }
     }
+    // a board's pins can carry several wires: one label each
+    const seen = new Set<string>();
+    setLabels(pinLabels.filter((l) => !seen.has(l.text + l.at.join()) && seen.add(l.text + l.at.join())));
+    const picked = p.pickedWire ? p.wires.find((w) => w.label === p.pickedWire) : undefined;
+    focus.current?.(picked ? world(focusOf(picked, offset)) : null);
     return () => {
       for (const child of [...wireGroup.children]) {
         if (child instanceof THREE.Mesh || child instanceof THREE.Line) child.geometry.dispose();
@@ -161,7 +221,8 @@ export function DroneScene(p: SceneProps) {
       }
       parent.remove(wireGroup);
     };
-  }, [homes, wireGroup, p.wires, p.light, p.pieces, p.routes, p.modulesOn, p.explode, p.combination, p.kase, p.heat]);
+  }, [homes, wireGroup, p.wires, p.light, p.pieces, p.routes, p.modulesOn, p.explode, p.combination, p.kase, p.heat,
+      p.selected, p.pickedWire, p.harness]);  // prettier-ignore
 
   // the props turning about their hubs, which is where the CAD puts each prop's node, about the
   // CAD's up (its z)
@@ -173,13 +234,25 @@ export function DroneScene(p: SceneProps) {
   });
 
   return (
-    <primitive
-      object={p.root}
-      onClick={(e: ThreeEvent<MouseEvent>) => {
-        e.stopPropagation();
-        p.onSelect(pieceOf(e.object, homes.byNode));
-      }}
-      onPointerMissed={() => p.onSelect(null)}
-    />
+    <>
+      <primitive
+        object={p.root}
+        onClick={(e: ThreeEvent<MouseEvent>) => {
+          e.stopPropagation();
+          const wire = e.object.userData.wire as string | undefined;
+          if (wire && p.onPickWire) p.onPickWire(wire);
+          else p.onSelect(pieceOf(e.object, homes.byNode));
+        }}
+        onPointerMissed={() => {
+          p.onSelect(null);
+          p.onPickWire?.(null);
+        }}
+      />
+      {labels.map((l) => (
+        <Html key={l.key} position={l.at} center zIndexRange={[20, 0]}>
+          <span className="pin-label">{l.text}</span>
+        </Html>
+      ))}
+    </>
   );
 }

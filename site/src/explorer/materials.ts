@@ -179,6 +179,14 @@ export const TILE = { carbon: 0.008, board: 0.03 };
 // the selected piece, lit in spearmint whatever it's made of
 export const SELECTED = new THREE.MeshPhysicalMaterial({ color: "#3ddc97", emissive: "#123d2a", roughness: 0.4 });
 
+// a lit wire glows a little, so it reads out of its bundle and against the boards
+export const LIT_WIRE = new THREE.MeshPhysicalMaterial({
+  color: "#3ddc97",
+  emissive: "#3ddc97",
+  emissiveIntensity: 0.45,
+  roughness: 0.4,
+});
+
 const insulations = new Map<string, THREE.MeshPhysicalMaterial>();
 
 // a wire's silicone insulation in its color: soft, a little sheen
@@ -187,6 +195,18 @@ export function wireMaterial(color: string): THREE.MeshPhysicalMaterial {
   if (!m) {
     m = new THREE.MeshPhysicalMaterial({ color, roughness: 0.55, clearcoat: 0.15 });
     insulations.set(color, m);
+  }
+  return m;
+}
+
+const faded = new Map<string, THREE.MeshPhysicalMaterial>();
+
+// a wire faded back while something else is picked
+export function dimWireMaterial(color: string): THREE.MeshPhysicalMaterial {
+  let m = faded.get(color);
+  if (!m) {
+    m = new THREE.MeshPhysicalMaterial({ color, roughness: 0.6, transparent: true, opacity: 0.15, depthWrite: false });
+    faded.set(color, m);
   }
   return m;
 }

@@ -1,5 +1,5 @@
 import type { Wire3d } from "../data/types";
-import { visibleWires, wireColor, wirePoints } from "./wires3d";
+import { bundleSpread, visibleWires, wireColor, wirePoints } from "./wires3d";
 
 function wire(path: number[][]): Wire3d {
   return {
@@ -17,6 +17,7 @@ function wire(path: number[][]): Wire3d {
     wire: "silicone",
     role: "signal",
     length_mm: 100,
+    gaps_mm: [],
   };
 }
 
@@ -36,6 +37,22 @@ test("pulled apart, each end moves with its piece and the route between blends t
   expect(points[0]).toEqual([0, 0, 0]); // a stays
   expect(points[2][2]).toBeCloseTo(0.2); // b went up 0.2 m
   expect(points[1][2]).toBeCloseTo(0.1); // halfway along, halfway up
+});
+
+test("the wires on one route lie side by side in their bundle, the ends still on their pins", () => {
+  const a = { ...wire([[0, 0, 10], [100, 0, 10]]), label: "one" };
+  const b = { ...wire([[0, 0, 10], [100, 0, 10]]), label: "two" };
+  const alone = { ...wire([[0, 0, 10]]), label: "alone", route: "other" };
+  const spread = bundleSpread([a, b, alone]);
+  expect(spread.get("one")).not.toEqual(spread.get("two"));
+  expect(spread.has("alone")).toBe(false);
+  for (const s of spread.values()) {
+    expect(s[0]).toBeCloseTo(0); // square to the route, which runs along x
+    expect(Math.hypot(...s)).toBeLessThan(1.1 * Math.SQRT2); // inside the bundle
+  }
+  const points = wirePoints(a, () => [0, 0, 0], spread.get("one"));
+  expect(points[0]).toEqual([0, 0, 0]); // the pin doesn't move
+  expect(points[1]).not.toEqual([0, 0, 0.01]); // the route point does
 });
 
 test("a wire shows only when both of its ends' pieces do", () => {

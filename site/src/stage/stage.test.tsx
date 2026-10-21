@@ -65,3 +65,38 @@ test("the corner menu opens to every other page", () => {
   expect(within(pages).getAllByRole("link")).toHaveLength(10);
   expect(within(pages).getByRole("link", { name: "Build it" })).toHaveAttribute("href", "#/build");
 });
+
+const WIRES3D = {
+  schema_version: 1,
+  wires: [
+    {
+      label: "rx.pads.TX to fc.RC.USART6_RX",
+      harness: "receiver",
+      ends: [
+        { pin: "rx.pads.TX", at_mm: [-56, 0, 20], piece: "radiomaster-rp2-v2" },
+        { pin: "fc.RC.USART6_RX", at_mm: [16, 6, 22], piece: "ark-fpv" },
+      ],
+      route: null,
+      route_piece: null,
+      path_mm: [],
+      awg: 26,
+      diameter_mm: 1.1,
+      wire: "Thin silicone signal lead",
+      role: "signal",
+      length_mm: 90,
+      gaps_mm: [],
+    },
+  ],
+  connectors: [],
+};
+
+test("a harness isolates its wires, and a wire picked from it opens its card", async () => {
+  const files = { "flights.json": FLIGHTS, "wires3d.json": WIRES3D };
+  render(<Stage route={[]} load={{ fromDisk: false, fetcher: serving(files) }} scene={scene} />);
+  const harness = await screen.findByRole("combobox", { name: "harness" });
+  fireEvent.change(harness, { target: { value: "receiver" } });
+  fireEvent.change(screen.getByRole("combobox", { name: "wire" }), { target: { value: "rx.pads.TX to fc.RC.USART6_RX" } });
+  expect(screen.getByRole("region", { name: "picked wire" })).toBeInTheDocument();
+  fireEvent.click(screen.getByRole("button", { name: "Back to the whole drone" }));
+  expect(screen.queryByRole("region", { name: "picked wire" })).toBeNull();
+});

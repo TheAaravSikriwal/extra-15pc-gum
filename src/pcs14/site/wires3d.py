@@ -35,10 +35,44 @@ def placed(point, at, turn_deg) -> tuple[float, float, float]:
 
 def _height(cad) -> float:
     """How high a part's top is in its own frame: where a pin on top sits."""
-    for name in ("thickness_mm", "height_mm", "length_mm"):
+    if hasattr(cad, "thickness_mm"):
+        return cad.thickness_mm + cad.top_mm
+    for name in ("height_mm", "length_mm"):
         if hasattr(cad, name):
             return getattr(cad, name)
     return 0.0
+
+
+PLUG_MIDDLE_MM = 2.0  # a plug on top of a board: about the middle of a JST housing's height
+CLEAR_MM = 1.5  # how far past the part's outline a sideways plug's wire comes out
+
+SIDEWAYS = {"+x": (0, 1), "-x": (0, -1), "+y": (1, 1), "-y": (1, -1)}  # axis, which way
+FACING = {"+x": (1, 0, 0), "-x": (-1, 0, 0), "+y": (0, 1, 0), "-y": (0, -1, 0),
+          "up": (0, 0, 1), "down": (0, 0, -1)}  # fmt: skip
+LEAD_OUT_MM = 5.0  # a wire leaves its plug straight for this long before it bends to its route
+
+
+def _mouth(x: float, y: float, connector, cad) -> tuple[float, float, float]:
+    """Where a wire leaves its pin's plug, in the part's frame: just past the part's outline for
+    a plug facing sideways, on top of the part for pads and pins, under it for one underneath.
+    The CAD draws a board's parts as one solid block, so a wire ending on the board itself would
+    be hidden inside it."""
+    sideways = SIDEWAYS.get(connector.faces)
+    if connector.z_mm is not None:  # an edge connector, or one that says its height
+        z = connector.z_mm
+    elif connector.side == "bottom":
+        z = -getattr(cad, "bottom_mm", 0.0)
+    elif sideways and hasattr(cad, "thickness_mm"):
+        z = cad.thickness_mm + PLUG_MIDDLE_MM
+    elif sideways:
+        z = _height(cad) / 2
+    else:
+        z = _height(cad)
+    if sideways and hasattr(cad, "width_mm"):
+        axis, sign = sideways
+        edge = (cad.length_mm if axis == 0 else cad.width_mm) / 2 + CLEAR_MM
+        x, y = (sign * max(sign * x, edge), y) if axis == 0 else (x, sign * max(sign * y, edge))
+    return (x, y, z)
 
 
 def _motor_spots(build) -> dict[str, tuple[float, float, float]]:
@@ -83,7 +117,8 @@ def wires3d(design: Path) -> schema.Wires3d:
     spots = _Spots(settings, build, connections)
     sources: dict[str, schema.PinSource] = {}
 
-    def end(ref: str, route_piece: str | None) -> schema.WireEnd3d:
+    def end(ref: str, route_piece: str | None):
+        """A wire end, and the point a lead-out's length straight out of its plug (or None)."""
         where = pins.place(catalog, connections, ref)
         if where is None:
             raise ValueError(f"{ref} has no place on its part (the catalog's cad connectors)")
@@ -95,14 +130,18 @@ def wires3d(design: Path) -> schema.Wires3d:
                 connector=key, part_id=part.id, estimate=c.source.kind == "estimate",
                 url=str(c.source.url) if c.source.url else None, note=c.source.note,
             )  # fmt: skip
-        local = (where.x_mm, where.y_mm, c.z(_height(part.cad)))
+        local = _mouth(where.x_mm, where.y_mm, c, part.cad)
         spot = spots.of(where.board, part.id, c.instance)
         if spot is None:
-            at, piece = local, route_piece or part.id
+            at, piece, turn = local, route_piece or part.id, (0, 0, 0)
         else:
             piece, origin, turn = spot
             at = placed(local, origin, turn)
-        return schema.WireEnd3d(pin=ref, at_mm=[round(v, 2) for v in at], piece=piece)
+        out = None
+        if c.faces in FACING:
+            way = placed(FACING[c.faces], (0, 0, 0), turn)
+            out = [round(v + LEAD_OUT_MM * w, 2) for v, w in zip(at, way, strict=True)]
+        return schema.WireEnd3d(pin=ref, at_mm=[round(v, 2) for v in at], piece=piece), out
 
     def role(ref: str) -> str:
         board, connector, pin = ref.split(".", 2)
@@ -114,18 +153,30 @@ def wires3d(design: Path) -> schema.Wires3d:
     for run in connections.wires:
         route = routes.get(run.route) if run.route else None
         route_piece = f"wire {run.route}" if route else None
-        a, b = (end(ref, route_piece) for ref in run.ends)
+        (a, out_a), (b, out_b) = (end(ref, route_piece) for ref in run.ends)
         path = [list(p) for p in route.path_mm] if route else []
         if path and (math.dist(a.at_mm, path[-1]) + math.dist(b.at_mm, path[0])
                      < math.dist(a.at_mm, path[0]) + math.dist(b.at_mm, path[-1])):  # fmt: skip
             path.reverse()
+        # the cut length is the route's, the way the wiring guide has it
         length = sum(map(math.dist, path, path[1:])) if route else run.length_mm
+        # the rough CAD routes came before the pins were placed, so a wire joins its route at the
+        # route's point nearest each plug, and what's left over is the gap to redraw them by
+        from_a, from_b = out_a or a.at_mm, out_b or b.at_mm
+        gaps = []
+        if path:
+            first = min(range(len(path)), key=lambda k: math.dist(from_a, path[k]))
+            last = min(range(len(path)), key=lambda k: math.dist(from_b, path[k]))
+            if first <= last:
+                path = path[first : last + 1]
+            gaps = [round(math.dist(from_a, path[0]), 1), round(math.dist(from_b, path[-1]), 1)]
+        path = [p for p in (out_a, *path, out_b) if p is not None]
         gauge = next(g for g in parts[run.wire].gauges if g.awg == run.awg)
         out.append(schema.Wire3d(
             label=run.label, harness=run.harness, ends=[a, b], route=run.route,
             route_piece=route_piece, path_mm=path, awg=run.awg,
             diameter_mm=gauge.outer_diameter_mm, wire=parts[run.wire].model,
-            role=role(run.ends[0]), length_mm=round(length, 1),
+            role=role(run.ends[0]), length_mm=round(length, 1), gaps_mm=gaps,
         ))  # fmt: skip
     return schema.Wires3d(schema_version=schema.SCHEMA_VERSION, wires=out,
                           connectors=list(sources.values()))  # fmt: skip

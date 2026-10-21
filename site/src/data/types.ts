@@ -116,6 +116,7 @@ export interface Wire3d {
   wire: string;
   role: string; // power, ground, signal or bus
   length_mm: number;
+  gaps_mm: number[]; // each end's plug to where it joins its route
 }
 
 export interface PinSource {
@@ -445,7 +446,7 @@ export const FIELDS = {
   Route: ["name", "node", "wires", "heating_share"],
   Wires: ["schema_version", "routes"],
   WireEnd3d: ["pin", "at_mm", "piece"],
-  Wire3d: ["label", "harness", "ends", "route", "route_piece", "path_mm", "awg", "diameter_mm", "wire", "role", "length_mm"],
+  Wire3d: ["label", "harness", "ends", "route", "route_piece", "path_mm", "awg", "diameter_mm", "wire", "role", "length_mm", "gaps_mm"],
   PinSource: ["connector", "part_id", "estimate", "url", "note"],
   Wires3d: ["schema_version", "wires", "connectors"],
   Playback: [

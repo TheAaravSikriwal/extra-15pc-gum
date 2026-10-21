@@ -61,6 +61,8 @@ Where to look: the live plan in the [README](README.md#the-plan), the steps in t
 
 ## Still open
 
+- The CAD's wire routes miss the researched plugs by 6 to 54 mm (found 2026-10-21 in the drone view), and the wiring guide's cut lengths come from those routes with only 20 mm spare. Until the routes are redrawn from the plugs (the drone view plan's task 16), cut the safety monitor's, the back motors' and the receiver's wires long.
+
 - Rotor drag in forward flight, so cruise numbers get believable (the honesty check's big miss, and now step 4's)
 - The weight: Mission passes with 1.2 min of pessimistic hover to spare; Max is 2623 g against its own 2500 g target (report-only)
 - My firmware's height estimate lets about 6 cm of the barometer's noise through (its hovers hold within 0.12 to 0.25 m, against PX4's 0.06 to 0.20 m with Gazebo's noiseless GPS height)

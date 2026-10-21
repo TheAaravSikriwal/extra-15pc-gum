@@ -45,10 +45,12 @@ def test_each_end_sits_on_its_part_where_the_cad_put_it(data):
     # the flight controller sits on the ESC at 20.4 mm, centered: its ESC plug on its +x edge
     ch1 = next(e for w in data.wires for e in w.ends if e.pin == "fc.ESC.CH1")
     assert ch1.piece == "ark-fpv"
-    assert ch1.at_mm == pytest.approx([16.3, -5.15, 22.0], abs=0.01)
+    # the wire leaves the plug's mouth, just past the board's +x edge, at the plug's middle
+    assert ch1.at_mm == pytest.approx([19.5, -5.15, 24.0], abs=0.01)
     # the BEC is turned a quarter turn about z, so its pads' +x edge faces +y on the drone
     out = next(e for w in data.wires for e in w.ends if e.pin == "bec.pads.OUT")
     assert out.at_mm[1] == pytest.approx(15.85, abs=0.01)
+    assert out.at_mm[2] == pytest.approx(13 + 5.5, abs=0.01)  # a pad's wire on top of the board
     # a motor's leads at its corner, and the second fuse at its own spot
     lead = next(e for w in data.wires for e in w.ends if e.pin == "m3.leads.A")
     assert lead.piece == "motor front left" and lead.at_mm[0] > 100 and lead.at_mm[1] > 100
@@ -69,12 +71,10 @@ def test_a_routed_wire_follows_its_route_from_the_end_nearest_its_first_pin(data
     a, b = leads.ends[0].at_mm, leads.ends[1].at_mm
     assert math.dist(a, first) + math.dist(b, last) <= math.dist(a, last) + math.dist(b, first)
     assert leads.awg == 12 and leads.role == "power" and leads.diameter_mm > 3  # 12 AWG silicone
-    assert leads.length_mm == pytest.approx(
-        sum(map(math.dist, leads.path_mm, leads.path_mm[1:])), rel=0.01
-    )
-    # a short jumper has no route, only its own length
+    assert leads.length_mm == pytest.approx(159.1, abs=0.1)  # its CAD route's length
+    # a short jumper has no route, only its own length, and just its lead-outs between its ends
     jumper = next(w for w in data.wires if w.route is None)
-    assert jumper.path_mm == [] and jumper.length_mm > 0
+    assert len(jumper.path_mm) <= 2 and jumper.gaps_mm == [] and jumper.length_mm > 0
 
 
 def test_every_connector_says_where_its_pins_came_from(data):
@@ -90,3 +90,16 @@ def test_every_connector_says_where_its_pins_came_from(data):
 def test_it_validates_as_the_site_reads_it(data):
     again = schema.Wires3d.model_validate_json(data.model_dump_json())
     assert again.wires[0].label == data.wires[0].label
+
+
+def test_a_wire_leaves_its_plug_straight_then_joins_its_route_where_its_nearest(data):
+    # the ESC cable's CAD route starts on the flight controller's far side, before the pins were
+    # researched; the drawn wire joins it at the route's point nearest the plug instead
+    ch1 = next(w for w in data.wires if w.label == "fc.ESC.CH1 to cut.J1.NC1")
+    lead_out = ch1.path_mm[0]
+    out = [19.5 + wires3d.LEAD_OUT_MM, -5.15, 24.0]  # straight out along +x
+    assert lead_out == pytest.approx(out, abs=0.01)
+    assert [0.0, 15.0, 25.0] not in ch1.path_mm  # the route's point behind the plug is gone
+    assert ch1.length_mm == pytest.approx(55.6, abs=0.1)  # still the route's cut length
+    # how far each end is from where it joins its route, for redrawing the routes
+    assert ch1.gaps_mm[0] == pytest.approx(math.dist(lead_out, ch1.path_mm[1]), abs=0.06)
