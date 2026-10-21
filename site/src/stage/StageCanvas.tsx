@@ -16,6 +16,7 @@ import { useModel } from "../explorer/model";
 import { DroneScene } from "../explorer/Scene";
 import type { Vec3 } from "../explorer/wires3d";
 import { Flight } from "../fly/Flight";
+import { flyFraming, MODE_S } from "../fly/framing";
 import type { DroneState, FlyData, StageData } from "./Stage";
 
 const PROP_SHOW_SPIN = 12;
@@ -45,32 +46,66 @@ interface Glide {
   toTarget: THREE.Vector3;
   toPosition: THREE.Vector3;
   t: number;
+  seconds: number;
 }
 
-// the camera easing in to a point, looking at it from the way it already looks, and back out to
-// where it was once nothing's picked
-function GlideTo({ to }: { to: Vec3 | null }) {
+interface Pose {
+  target: THREE.Vector3;
+  position: THREE.Vector3;
+}
+
+// every move the camera makes on its own, one at a time: easing in to a picked pin and back out
+// once it's let go, and from inside the drone out to Fly it's floating framing and back
+function CameraMoves({ focus, flying }: { focus: Vec3 | null; flying: boolean }) {
   const controls = useThree((s) => s.controls) as unknown as Controls | null;
   const camera = useThree((s) => s.camera);
   const job = useRef<Glide | null>(null);
-  const home = useRef<{ target: THREE.Vector3; position: THREE.Vector3 } | null>(null);
+  const beforePin = useRef<Pose | null>(null);
+  const inside = useRef<Pose | null>(null);
+  const go = useCallback(
+    (target: THREE.Vector3, position: THREE.Vector3, seconds: number) => {
+      if (!controls) return;
+      job.current = {
+        fromTarget: controls.target.clone(),
+        fromPosition: camera.position.clone(),
+        toTarget: target,
+        toPosition: position,
+        t: 0,
+        seconds,
+      };
+    },
+    [controls, camera],
+  );
   useEffect(() => {
     if (!controls) return;
-    const from = { fromTarget: controls.target.clone(), fromPosition: camera.position.clone(), t: 0 };
-    if (to) {
-      home.current ??= { target: controls.target.clone(), position: camera.position.clone() };
-      const toTarget = new THREE.Vector3(...to);
+    if (focus) {
+      beforePin.current ??= { target: controls.target.clone(), position: camera.position.clone() };
+      const target = new THREE.Vector3(...focus);
       const away = camera.position.clone().sub(controls.target).normalize().multiplyScalar(CLOSE_M);
-      job.current = { ...from, toTarget, toPosition: toTarget.clone().add(away) };
-    } else if (home.current) {
-      job.current = { ...from, toTarget: home.current.target, toPosition: home.current.position };
-      home.current = null;
+      go(target, target.clone().add(away), GLIDE_S);
+    } else if (beforePin.current) {
+      go(beforePin.current.target, beforePin.current.position, GLIDE_S);
+      beforePin.current = null;
     }
-  }, [to, controls, camera]);
+  }, [focus, controls, camera, go]);
+  useEffect(() => {
+    if (!controls) return;
+    if (flying) {
+      // where it was inside the drone (before any pin), for coming back to
+      const was = beforePin.current ?? { target: controls.target.clone(), position: camera.position.clone() };
+      inside.current = { target: was.target.clone(), position: was.position.clone() };
+      beforePin.current = null;
+      const framed = flyFraming(was.position.toArray() as Vec3, [0, 0, 0]);
+      go(new THREE.Vector3(...framed.target), new THREE.Vector3(...framed.position), MODE_S);
+    } else if (inside.current) {
+      go(inside.current.target, inside.current.position, MODE_S);
+      inside.current = null;
+    }
+  }, [flying, controls, camera, go]);
   useFrame((_, delta) => {
     const j = job.current;
     if (!j || !controls) return;
-    j.t = Math.min(1, j.t + delta / GLIDE_S);
+    j.t = Math.min(1, j.t + delta / j.seconds);
     const e = easeInOut(j.t);
     controls.target.lerpVectors(j.fromTarget, j.toTarget, e);
     camera.position.lerpVectors(j.fromPosition, j.toPosition, e);
@@ -152,7 +187,7 @@ export function StageCanvas({
         />
       )}
       <OrbitControls makeDefault autoRotate={inside && turning} autoRotateSpeed={0.6} onStart={() => setTurning(false)} />
-      <GlideTo to={inside ? focus : null} />
+      <CameraMoves focus={inside ? focus : null} flying={flying} />
     </Canvas>
   );
 }

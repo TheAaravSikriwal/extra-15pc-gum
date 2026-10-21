@@ -636,7 +636,15 @@ ul.tree {
   color: #1a1a19;
 }
 
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
 .stage-panel {
+  animation: panel-in 0.6s ease 0.3s both;
   position: absolute;
   right: 24px;
   top: 72px;
