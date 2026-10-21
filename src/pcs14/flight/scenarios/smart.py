@@ -20,6 +20,9 @@ matrix: each runs when it's named.
 - mapping run (V): V's camera pointed straight down (the bracket would need a mapping position),
   a lawnmower grid 30 m up over the scenery step 6 put out, every third frame kept, and the
   orthomosaic built from the frames and the log's poses (pcs14.smart.ortho)
+- mapping run, box moved (V): the same grid with the box moved 22 m, and the two orthomosaics
+  differenced (pcs14.smart.change): it has to be flagged where it was and where it went, and
+  nowhere else
 - safe landing (V): asked to land on the shed, it picks the nearest safe spot on the world's
   height map (pcs14.smart.safespots), flies there and lands. The grade also asks what the
   mapping run's orthomosaic would have picked, and whether that spot is truly clear
@@ -411,13 +414,24 @@ MAP_AREA = ((-25.0, 25.0), (0.0, 75.0))  # east, north: the map's edges
 MAP_M_PER_PX = 0.1
 
 
-async def mapping_run(s):
+def moved_scenery():
+    """Step 6's scenery with the box moved, for the second mapping run."""
+    from pcs14.flight.scenarios.modules import SCENERY
+
+    return tuple((n, BOX_MOVED_TO if n == "box" else p, size, color)
+                 for n, p, size, color in SCENERY)  # fmt: skip
+
+
+BOX_MOVED_TO = (8.0, 58.0, 0.6)  # from (-5, 40)
+
+
+async def mapping_run(s, scenery=None, suffix: str = "mapping"):
     from pcs14.flight.scenarios.modules import CAMERA_EVERY, SCENERY, scenery_sdf
 
-    for name, position, size, color in SCENERY:
+    for name, position, size, color in scenery or SCENERY:
         await s.spawn_sdf(scenery_sdf(name, (0, 0, 0), size, color).replace("'", '"'), name,
                           position)  # fmt: skip
-    folder = s.exports / "camera" / f"{s.model}-mapping"
+    folder = s.exports / "camera" / f"{s.model}-{suffix}"
     recorder = s.record_camera(folder, CAMERA_EVERY)
     try:
         await take_off(s, MAP_HEIGHT_M)
@@ -577,6 +591,52 @@ def grade_safe_landing(log, imu, c) -> list:
     return out
 
 
+# --- change detection ---------------------------------------------------------------------
+
+CHANGE_RADIUS_M = 1.5
+
+
+async def mapping_run_moved(s):
+    await mapping_run(s, moved_scenery(), "mapping-moved")
+
+
+def grade_change(log, imu, c) -> list:
+    import numpy as np
+    from PIL import Image
+
+    from pcs14.smart import change
+    from pcs14.smart.ortho import Mosaic
+
+    folder, times = c.notes.get("frames folder"), c.notes.get("frames", [])
+    first = Path(folder).parent / Path(folder).name.replace("-mapping-moved", "-mapping.png")
+    if not folder or not times or not first.is_file():
+        words = "this needs the first mapping run's map, and frames of its own"
+        return [grade.Finding("both maps", False, None, None, "", words)]
+    after = build_map(log, folder, times, every=2)
+    Image.fromarray(after.image).save(Path(folder).parent / f"{Path(folder).name}.png")
+    before = Mosaic(np.asarray(Image.open(first).convert("RGB")), MAP_AREA[0][0],
+                    MAP_AREA[1][1], MAP_M_PER_PX, 1.0)  # fmt: skip
+    blobs = change.changes(before, after)
+
+    def near(east, north):
+        # a moved thing brings its shadow along, so everything around the spot is the one change
+        return [b for b in blobs if np.hypot(b.east - east, b.north - north) <= CHANGE_RADIUS_M]
+
+    was, went = near(-5.0, 40.0), near(*BOX_MOVED_TO[:2])
+    others = [b for b in blobs if b not in was and b not in went]
+    out = [
+        grade.Finding("where it was", bool(was), None, None, "",
+                      "flagged where the box was" if was else "missed where the box was"),
+        grade.Finding("where it went", bool(went), None, None, "",
+                      "flagged where the box went" if went else "missed where the box went"),
+        grade.Finding("nothing else", not others, len(others), 0, "",
+                      "nothing else flagged" if not others else
+                      "also flagged: " + ", ".join(f"{b.east:.0f} m east, {b.north:.0f} m north "
+                                                   f"({b.area_m2:.1f} m^2)" for b in others)),
+    ]  # fmt: skip
+    return out
+
+
 SCENARIOS = (
     Scenario("land now", land_now, grade_land_now, budget_s=180.0),
     Scenario("back to start", back_to_start, grade_back_to_start, budget_s=180.0),
@@ -585,6 +645,14 @@ SCENARIOS = (
     Scenario("planned mission", planned_mission, grade_planned_mission, budget_s=600.0),
     Scenario("spiral descent", spiral_descent, grade_spiral, budget_s=240.0),
     Scenario("lift", lift, grade_lift, budget_s=240.0),
+    Scenario(
+        "mapping run, box moved",
+        mapping_run_moved,
+        grade_change,
+        budget_s=600.0,
+        camera=True,
+        camera_pitch_deg=90.0,
+    ),
     Scenario("safe landing", safe_landing, grade_safe_landing, budget_s=240.0),
     Scenario(
         "mapping run",
