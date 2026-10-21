@@ -153,6 +153,7 @@ export function Explorer({ load }: { load?: LoadOptions }) {
                 selected={s.selected}
                 combination={s.combination}
                 kase={s.kase}
+                heat
                 onSelect={s.select}
                 spin={PROP_SHOW_SPIN}
               />

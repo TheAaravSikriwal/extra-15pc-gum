@@ -35,10 +35,20 @@ export function InsidePanel({ state, data }: { state: DroneState; data: StageDat
         />
       </label>
       <label>
-        Wires colored for{" "}
-        <select aria-label="case" value={state.kase} onChange={(e) => state.setKase(e.target.value)}>
+        Wires show{" "}
+        <select
+          aria-label="wires show"
+          value={state.heat ? state.kase : ""}
+          onChange={(e) => {
+            state.setHeat(e.target.value !== "");
+            if (e.target.value) state.setKase(e.target.value);
+          }}
+        >
+          <option value="">their insulation</option>
           {CASES.map((c) => (
-            <option key={c}>{c}</option>
+            <option key={c} value={c}>
+              heating in {c}
+            </option>
           ))}
         </select>
       </label>

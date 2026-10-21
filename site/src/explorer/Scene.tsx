@@ -1,11 +1,12 @@
-// The drone in 3D: the CAD's GLB, its pieces colored by kind, the modules switched on or off,
-// pulled apart for the exploded view, and a click on a piece or a wire picking it.
+// The drone in 3D: the CAD's GLB, each piece in what it's made of, the modules switched on or
+// off, pulled apart for the exploded view, and a click on a piece or a wire picking it.
 import { type ThreeEvent, useFrame } from "@react-three/fiber";
 import { useLayoutEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 
 import type { Piece, Route } from "../data/types";
-import { exploded, heatColor, KIND_COLORS, propSpin, shows, type Vec } from "./logic";
+import { exploded, heatColor, propSpin, shows, type Vec } from "./logic";
+import { heatMaterial, lookFor, materialFor, planarUVs, SELECTED, TILE } from "./materials";
 
 export interface SceneProps {
   root: THREE.Object3D; // the GLB's scene
@@ -14,8 +15,9 @@ export interface SceneProps {
   modulesOn: Set<string>;
   explode: number; // 0 closed to 1 open
   selected: string | null;
-  combination: string; // for the wires' colors
+  combination: string; // for the wires' heating
   kase: string;
+  heat?: boolean; // the wires colored by their heating, or else in their insulation
   onSelect: (name: string | null) => void;
   spin?: number; // rad/s for the props, just for show; 0 holds them still
 }
@@ -45,10 +47,22 @@ interface Home {
   middle: Vec;
   center: Vec;
   turns: number; // propSpin's
+  meshes: THREE.Mesh[];
+}
+
+// a textured piece's meshes get texture coordinates, once, at the texture's size in the
+// world: the GLB stores positions in its own small units under a scaled node
+function giveUVs(meshes: THREE.Mesh[], tile: number) {
+  const scale = new THREE.Vector3();
+  for (const m of meshes) {
+    if (m.geometry.getAttribute("uv")) continue;
+    m.getWorldScale(scale);
+    planarUVs(m.geometry, tile / (Math.abs(scale.x) || 1));
+  }
 }
 
 export function DroneScene(p: SceneProps) {
-  // each piece's node, where it started, and its middle, worked out once per model
+  // each piece's node, where it started, its middle and its meshes, worked out once per model
   const homes = useMemo(() => {
     const byNode = new Map([...p.pieces.keys()].map((name) => [nodeName(name), name]));
     const found: Home[] = [];
@@ -62,38 +76,33 @@ export function DroneScene(p: SceneProps) {
       const name = byNode.get(node.name);
       if (!name) return;
       const c = new THREE.Box3().setFromObject(node).getCenter(new THREE.Vector3());
+      const meshes: THREE.Mesh[] = [];
+      node.traverse((m) => {
+        if (m instanceof THREE.Mesh) {
+          m.castShadow = true;
+          meshes.push(m);
+        }
+      });
+      const look = lookFor(p.pieces.get(name) as Piece);
+      if (look.texture) giveUVs(meshes, TILE[look.texture]);
       found.push({ name, node, position: node.position.clone(), middle: local(node, c),
-                   center: local(node, whole), turns: propSpin(name) });  // prettier-ignore
+                   center: local(node, whole), turns: propSpin(name), meshes });  // prettier-ignore
     });
     return { found, byNode };
   }, [p.root, p.pieces]);
 
   useLayoutEffect(() => {
-    for (const { name, node, position, middle, center } of homes.found) {
+    for (const { name, node, position, middle, center, meshes } of homes.found) {
       const piece = p.pieces.get(name) as Piece;
       node.visible = shows(piece, p.modulesOn);
       const [dx, dy, dz] = exploded(middle, center, p.explode);
       node.position.set(position.x + dx, position.y + dy, position.z + dz);
-      const route = p.routes.get(name);
-      const share = route?.heating_share[p.combination]?.[p.kase];
-      const color =
-        name === p.selected
-          ? "#3ddc97"
-          : route && share !== undefined
-            ? heatColor(share)
-            : (KIND_COLORS[piece.kind] ?? "#8c8a83");
-      node.traverse((m) => {
-        if (m instanceof THREE.Mesh) {
-          m.material = new THREE.MeshStandardMaterial({
-            color,
-            metalness: 0.1,
-            roughness: 0.7,
-            emissive: name === p.selected ? "#123d2a" : "#000000",
-          });
-        }
-      });
+      const share = p.heat ? p.routes.get(name)?.heating_share[p.combination]?.[p.kase] : undefined;
+      const material =
+        name === p.selected ? SELECTED : share !== undefined ? heatMaterial(heatColor(share)) : materialFor(lookFor(piece));
+      for (const m of meshes) m.material = material;
     }
-  }, [homes, p.pieces, p.routes, p.modulesOn, p.explode, p.selected, p.combination, p.kase]);
+  }, [homes, p.pieces, p.routes, p.modulesOn, p.explode, p.selected, p.combination, p.kase, p.heat]);
 
   // the props turning about their hubs, which is where the CAD puts each prop's node, about the
   // CAD's up (its z)

@@ -30,6 +30,8 @@ export interface DroneState {
   select: (name: string | null) => void;
   kase: string;
   setKase: (k: string) => void;
+  heat: boolean; // the wires colored by their heating in kase, or else in their insulation
+  setHeat: (h: boolean) => void;
   combination: string;
   firmware: string;
   setFirmware: (f: string) => void;
@@ -50,6 +52,7 @@ export function useDroneState(route: string[]): DroneState {
   const [explode, setExplode] = useState(0);
   const [selected, select] = useState<string | null>(null);
   const [kase, setKase] = useState("hover");
+  const [heat, setHeat] = useState(false);
   const [firmware, setFirmware] = useState("mine");
   const toggle = (m: string) => {
     const next = new Set(modulesOn);
@@ -68,6 +71,8 @@ export function useDroneState(route: string[]): DroneState {
     select,
     kase,
     setKase,
+    heat,
+    setHeat,
     combination: combinationFor(modulesOn),
     firmware,
     setFirmware,

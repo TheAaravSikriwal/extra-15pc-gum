@@ -36,7 +36,7 @@ const ROUTE: Route = {
   heating_share: { max: { burst: 0.31 } },
 };
 
-async function scene(modulesOn: string[], explode = 0, selected: string | null = null) {
+async function scene(modulesOn: string[], explode = 0, selected: string | null = null, heat = true) {
   const root = model();
   await ReactThreeTestRenderer.create(
     <DroneScene
@@ -48,6 +48,7 @@ async function scene(modulesOn: string[], explode = 0, selected: string | null =
       selected={selected}
       combination="max"
       kase="burst"
+      heat={heat}
       onSelect={() => {}}
     />,
   );
@@ -126,6 +127,12 @@ test("the picked piece lights up in spearmint, and a wire takes its heating colo
   const color = (wire.material as THREE.MeshStandardMaterial).color.getHexString();
   expect(color).not.toBe("3ddc97"); // 31% of its limit: on the way to magenta
   expect(color).not.toBe("4a4a47");
+});
+
+test("without the heating, each piece wears what it's made of", async () => {
+  const root = await scene([], 0, null, false);
+  const wire = root.getObjectByName("wire_battery_leads")!.children[0] as THREE.Mesh;
+  expect((wire.material as THREE.MeshStandardMaterial).color.getHexString()).toBe("c0302a"); // power red
 });
 
 test("a click on a mesh picks the piece it belongs to, by the piece's own name", () => {
