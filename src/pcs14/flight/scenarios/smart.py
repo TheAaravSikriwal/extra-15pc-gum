@@ -20,6 +20,9 @@ matrix: each runs when it's named.
 - mapping run (V): V's camera pointed straight down (the bracket would need a mapping position),
   a lawnmower grid 30 m up over the scenery step 6 put out, every third frame kept, and the
   orthomosaic built from the frames and the log's poses (pcs14.smart.ortho)
+- safe landing (V): asked to land on the shed, it picks the nearest safe spot on the world's
+  height map (pcs14.smart.safespots), flies there and lands. The grade also asks what the
+  mapping run's orthomosaic would have picked, and whether that spot is truly clear
 - planned mission (mission): the plan `pcs14 smart` wrote from plain English (a local model,
   then the checker), approved here by the test script, which says so in the log, since on the
   drone the approving is mine. A plan the checker refused never gets approved, so never flies
@@ -485,6 +488,95 @@ def grade_mapping(log, imu, c) -> list:
     return out
 
 
+# --- the nearest-safe-spot landing --------------------------------------------------------
+
+SAFE_ASKED = (6.0, 25.0)  # east, north: on the shed
+SAFE_HEIGHT_M = 20.0
+SAFE_AREA = ((-25.0, 25.0), (0.0, 75.0))
+MAP_ERROR_M = 1.0  # how far off the orthomosaic can put things
+
+
+def scenery_boxes():
+    from pcs14.flight.scenarios.modules import SCENERY
+
+    return [(position, size) for _, position, size, _ in SCENERY]
+
+
+def true_safe():
+    from pcs14.smart import safespots
+
+    return safespots.safe(safespots.height_map(scenery_boxes(), SAFE_AREA, 0.25))
+
+
+async def safe_landing(s):
+    from pcs14.flight.scenarios.modules import SCENERY, scenery_sdf
+    from pcs14.smart import safespots
+
+    for name, position, size, color in SCENERY:
+        await s.spawn_sdf(scenery_sdf(name, (0, 0, 0), size, color).replace("'", '"'), name,
+                          position)  # fmt: skip
+    east, north = safespots.nearest(true_safe(), *SAFE_ASKED)
+    s.result.notes["chosen"] = [east, north]
+    await take_off(s, SAFE_HEIGHT_M)
+    await offboard_here(s)
+    s.mark("to the spot")
+    await go_to(s, north, east, SAFE_HEIGHT_M, tolerance=1.0)
+    await leave_offboard(s)
+    await s.drone.action.land()
+    await _down(s)
+
+
+def grade_safe_landing(log, imu, c) -> list:
+    import numpy as np
+
+    from pcs14.smart import safespots
+
+    chosen = c.notes.get("chosen")
+    if not chosen:
+        return [grade.Finding("the spot", False, None, None, "", "no spot was chosen")]
+    end = log.position[-1]
+    off = float(np.hypot(end[0] - chosen[0], end[1] - chosen[1]))
+    truth = true_safe()
+    out = [
+        grade.Finding("landed on the spot", off <= LANDED_RADIUS_M, off, LANDED_RADIUS_M, "m",
+                      f"{off:.1f} m from the spot it chose, {chosen[0]:.1f} m east and "
+                      f"{chosen[1]:.1f} m north, "
+                      f"{np.hypot(chosen[0] - SAFE_ASKED[0], chosen[1] - SAFE_ASKED[1]):.1f} m "
+                      "from the shed it was asked to land on"),
+        grade.Finding("clear where it landed", bool(truth.at(end[0], end[1])), None, None, "",
+                      "clear of everything by the clearance" if truth.at(end[0], end[1])
+                      else "too near something"),
+        grade.touchdown(log, c.sim.failures.max_touchdown_ms),
+    ]  # fmt: skip
+    # what the mapping run's picture would have chosen, if there's one
+    picture = Path(c.notes.get("map", "")) if c.notes.get("map") else None
+    if picture is None:
+        from pcs14.flight.scenarios.modules import SCENERY  # noqa: F401 (the same scenery)
+
+        found = sorted(Path("outputs/flight-sim/camera").glob("*-mapping.png"))
+        picture = found[0] if found else None
+    if picture is not None and picture.is_file():
+        from PIL import Image
+
+        image = np.asarray(Image.open(picture).convert("RGB"))
+        ground = image[-20:, -20:].reshape(-1, 3).mean(axis=0)  # the south-east corner: open
+        blocked = safespots.obstacles_from_picture(image, ground)
+        grid = safespots.Grid(blocked.astype(float), MAP_AREA[0][0], MAP_AREA[1][1], MAP_M_PER_PX)
+        # the map places things to within about a meter (the mapping run's grade), so safe
+        # spots read off it get that meter on top of the clearance
+        from_map = safespots.safe(grid, clearance_m=3.0 + MAP_ERROR_M, step_m=0.5)
+        spot = safespots.nearest(from_map, *SAFE_ASKED)
+        clear = bool(truth.at(*spot))
+        share = float(from_map.values.mean())
+        out.append(grade.Finding("the map's choice", clear, None, None, "",
+                                 f"the orthomosaic would have picked {spot[0]:.1f} m east, "
+                                 f"{spot[1]:.1f} m north, which is "
+                                 f"{'clear' if clear else 'not clear'} in truth; it calls "
+                                 f"{share:.0%} of the area safe, the true map "
+                                 f"{float(truth.values.mean()):.0%}"))  # fmt: skip
+    return out
+
+
 SCENARIOS = (
     Scenario("land now", land_now, grade_land_now, budget_s=180.0),
     Scenario("back to start", back_to_start, grade_back_to_start, budget_s=180.0),
@@ -493,6 +585,7 @@ SCENARIOS = (
     Scenario("planned mission", planned_mission, grade_planned_mission, budget_s=600.0),
     Scenario("spiral descent", spiral_descent, grade_spiral, budget_s=240.0),
     Scenario("lift", lift, grade_lift, budget_s=240.0),
+    Scenario("safe landing", safe_landing, grade_safe_landing, budget_s=240.0),
     Scenario(
         "mapping run",
         mapping_run,
