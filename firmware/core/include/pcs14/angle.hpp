@@ -13,9 +13,11 @@
 namespace pcs14 {
 
 struct AngleGains {
-  // 1/s. PX4's x500 default, 6.5, as it happens: on my rate loops 9 (PX4's tuned value for
-  // PX4's own loops) overshot 16% on a 15 degree step, and 6.5 settles in 0.26 s at 8%
-  float kp_roll_pitch = 6.5f;
+  // 1/s. On my rate loops 9 (PX4's tuned value for PX4's own loops) overshot 16% on a 15 degree
+  // step. 6.5 settled in 0.27 s but overshot 4 to 6%, right on the 5% band the steps scenario
+  // grades with, so a step's settling jumped between 0.2 and 0.6 s in Gazebo (P+C missed at
+  // 0.61). 5.5 overshoots 0.6% and settles in 0.33 s on the host (the sweep, 2026-10-20)
+  float kp_roll_pitch = 5.5f;
   float kp_yaw = 2.8f;         // 1/s, PX4's default
   float max_rate_roll_pitch = 220.0f * kPi / 180;  // rad/s
   float max_rate_yaw = 200.0f * kPi / 180;
