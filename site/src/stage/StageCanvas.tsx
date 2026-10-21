@@ -15,7 +15,8 @@ import { easeInOut } from "../explorer/explore";
 import { useModel } from "../explorer/model";
 import { DroneScene } from "../explorer/Scene";
 import type { Vec3 } from "../explorer/wires3d";
-import type { DroneState, StageData } from "./Stage";
+import { Flight } from "../fly/Flight";
+import type { DroneState, FlyData, StageData } from "./Stage";
 
 const PROP_SHOW_SPIN = 12;
 const GLIDE_S = 0.9;
@@ -79,8 +80,21 @@ function GlideTo({ to }: { to: Vec3 | null }) {
   return null;
 }
 
-export function StageCanvas({ state, data, load }: { state: DroneState; data: StageData; load?: LoadOptions }) {
+export function StageCanvas({
+  state,
+  data,
+  fly,
+  load,
+}: {
+  state: DroneState;
+  data: StageData;
+  fly?: FlyData;
+  load?: LoadOptions;
+}) {
   const [turning, setTurning] = useState(true);
+  const drone = useRef<THREE.Group>(null);
+  const spins = useRef<Record<string, number> | null>(null);
+  const flying = state.mode === "fly";
   const [focus, setFocus] = useState<Vec3 | null>(null);
   const { root } = useModel("drone.glb", load);
   const inside = state.mode === "inside";
@@ -100,6 +114,7 @@ export function StageCanvas({ state, data, load }: { state: DroneState; data: St
       <directionalLight position={[1, 2, 1.5]} intensity={2.4} />
       <directionalLight position={[-1, 0.5, -1]} intensity={0.7} />
       <Bounds fit clip observe margin={1.25}>
+        <group ref={drone}>
         {root && <DroneScene
           root={root}
           pieces={data.pieces}
@@ -118,9 +133,14 @@ export function StageCanvas({ state, data, load }: { state: DroneState; data: St
           onFocus={onFocus}
           onSelect={inside ? state.select : () => undefined}
           spin={PROP_SHOW_SPIN}
+          spins={flying ? spins : undefined}
         />}
+        </group>
       </Bounds>
-      {root && (
+      {flying && fly && (
+        <Flight drone={drone} spins={spins} clip={fly.clip} playback={fly.playback} story={fly.story} onNumbers={fly.onNumbers} />
+      )}
+      {root && !flying && (
         <ContactShadows
           position={[0, floor - 0.002, 0]}
           scale={0.9}

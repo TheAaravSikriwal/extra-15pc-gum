@@ -691,6 +691,80 @@ ul.tree {
   cursor: pointer;
 }
 
+/* Fly it: the playing run's numbers, a bar per motor, the firmware that flew it */
+.stage-panel .playing {
+  margin: 10px 0 4px;
+  padding: 10px 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.stage-panel .playing .numbers {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px 12px;
+  margin: 0;
+  font-size: 13px;
+}
+
+.stage-panel .playing .numbers dt {
+  opacity: 0.6;
+}
+
+.stage-panel .playing .numbers dd {
+  margin: 0;
+  font-family: var(--font-numbers);
+}
+
+.stage-panel .motor-bars {
+  display: flex;
+  gap: 6px;
+  height: 36px;
+  margin: 10px 0 6px;
+}
+
+.stage-panel .motor-bars span {
+  position: relative;
+  flex: 1;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
+}
+
+.stage-panel .motor-bars i {
+  position: absolute;
+  inset: auto 0 0 0;
+  background: #1f7a52;
+  border-radius: 3px;
+}
+
+.stage-panel .result {
+  margin: 4px 0 0;
+  font-size: 13px;
+}
+
+.stage-panel .firmware-switch {
+  display: inline-flex;
+  margin: 4px 0;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.stage-panel .firmware-switch button {
+  font: inherit;
+  font-size: 12px;
+  padding: 3px 10px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.stage-panel .firmware-switch button[aria-pressed="true"] {
+  background: #1a1a19;
+  color: #f4f4f2;
+}
+
 /* a picked pin's name, floating beside it in 3D */
 .pin-label {
   display: inline-block;

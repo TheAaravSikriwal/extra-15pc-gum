@@ -100,3 +100,12 @@ test("a harness isolates its wires, and a wire picked from it opens its card", a
   fireEvent.click(screen.getByRole("button", { name: "Back to the whole drone" }));
   expect(screen.queryByRole("region", { name: "picked wire" })).toBeNull();
 });
+
+test("a scenario only PX4 flew offers PX4, and switching to it plays that run", async () => {
+  render(<Stage route={["fly", "parachute drop"]} load={load} scene={scene} />);
+  const list = await screen.findByRole("group", { name: "scenarios" });
+  expect(within(list).queryByRole("link", { name: "parachute drop" })).toBeNull(); // not on mine
+  fireEvent.click(screen.getByRole("button", { name: "PX4" }));
+  expect(screen.getByText("max, PX4")).toBeInTheDocument();
+  expect(within(screen.getByRole("group", { name: "scenarios" })).getByRole("link", { name: "parachute drop" })).toBeInTheDocument();
+});

@@ -119,6 +119,26 @@ test("the props spin the way PX4's quad X turns them, each about its own hub", a
   expect(root.getObjectByName("frame")!.rotation.z).toBe(0);
 });
 
+test("in flight each prop turns at its own motor's speed, and a stopped one stays still", async () => {
+  const root = new THREE.Group();
+  const pieces = new Map<string, Piece>();
+  for (const name of ["prop front left", "prop front right"]) {
+    const node = new THREE.Group();
+    node.name = nodeName(name);
+    node.add(new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.01, 0.02)));
+    root.add(node);
+    pieces.set(name, piece(name, "base", "prop"));
+  }
+  const spins = { current: { "prop front left": 10, "prop front right": 0 } };
+  const renderer = await ReactThreeTestRenderer.create(
+    <DroneScene root={root} pieces={pieces} routes={new Map()} modulesOn={new Set()} explode={0}
+      selected={null} combination="max" kase="hover" onSelect={() => {}} spin={2} spins={spins} />,
+  );
+  await ReactThreeTestRenderer.act(async () => renderer.advanceFrames(10, 0.1));
+  expect(Math.abs(root.getObjectByName(nodeName("prop front left"))!.rotation.z)).toBeGreaterThan(5);
+  expect(root.getObjectByName(nodeName("prop front right"))!.rotation.z).toBe(0);
+});
+
 test("the picked piece lights up in spearmint, and a wire takes its heating color", async () => {
   const root = await scene([], 0, "frame");
   const mesh = root.getObjectByName("frame")!.children[0] as THREE.Mesh;

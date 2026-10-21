@@ -35,6 +35,8 @@ export interface SceneProps {
   heat?: boolean; // the wires colored by their heating, or else in their insulation
   onSelect: (name: string | null) => void;
   spin?: number; // rad/s for the props, just for show; 0 holds them still
+  // each prop's own rad/s by its piece's name, written every frame by a flight: overrides spin
+  spins?: { current: Record<string, number> | null };
   wires?: Wire3d[]; // every wire pin to pin, drawn in place of the bundled routes
   light?: boolean; // each wire a thin line, for phones
   pickedWire?: string | null; // a wire picked by its label: it lights up and the rest fade
@@ -227,7 +229,18 @@ export function DroneScene(p: SceneProps) {
   // the props turning about their hubs, which is where the CAD puts each prop's node, about the
   // CAD's up (its z)
   const angle = useRef(0);
+  const angles = useRef(new Map<string, number>());
   useFrame((_, delta) => {
+    const own = p.spins?.current;
+    if (own) {
+      for (const h of homes.found) {
+        if (!h.turns) continue;
+        const a = (angles.current.get(h.name) ?? 0) + (own[h.name] ?? 0) * delta;
+        angles.current.set(h.name, a);
+        h.node.rotation.z = h.turns * a;
+      }
+      return;
+    }
     if (!p.spin) return;
     angle.current += p.spin * delta;
     for (const h of homes.found) if (h.turns) h.node.rotation.z = h.turns * angle.current;

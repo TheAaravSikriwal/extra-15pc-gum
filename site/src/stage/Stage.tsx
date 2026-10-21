@@ -2,11 +2,15 @@
 // route, the background behind it (the blueprint inside the drone, white space when it flies),
 // and the interface floating over it. The drone's state (which modules are on, how far it's
 // pulled apart, what's picked) lives here, so it carries from one mode into the other.
-import { lazy, type ReactNode, Suspense, useMemo, useState } from "react";
+import { lazy, type ReactNode, Suspense, useEffect, useMemo, useState } from "react";
 
 import type { LoadOptions } from "../data/load";
-import type { Flights, Parts, Piece, Route, SpecSheet, Wires, Wires3d, Wiring } from "../data/types";
+import type { Flights, Parts, Piece, Playback, Route, SpecSheet, Wires, Wires3d, Wiring } from "../data/types";
 import { useData } from "../data/useData";
+import { clipOf } from "../fly/clip";
+import { runFor, storyProps } from "../fly/fly";
+import type { Playing } from "../fly/Flight";
+import { usePlayback } from "../fly/usePlayback";
 import { combinationFor } from "./combos";
 import { Blueprint } from "./Blueprint";
 import { FlyPanel } from "./FlyPanel";
@@ -123,6 +127,25 @@ function Intro() {
   );
 }
 
+// what Fly it plays: the run for the modules, the scenario and the firmware, as a loop
+export interface FlyData {
+  playback: Playback | null;
+  clip: ReturnType<typeof clipOf> | null;
+  story: ReturnType<typeof storyProps> | null;
+  playing: Playing | null;
+  onNumbers: (n: Playing) => void;
+}
+
+function useFly(state: DroneState, data: StageData, load?: LoadOptions): FlyData {
+  const run = state.mode === "fly" ? runFor(data.flights, state.combination, state.scenario, state.firmware) : null;
+  const playback = usePlayback(run?.file ?? null, load);
+  const clip = useMemo(() => (playback ? clipOf(playback) : null), [playback]);
+  const story = useMemo(() => (playback ? storyProps(playback) : null), [playback]);
+  const [playing, setPlaying] = useState<Playing | null>(null);
+  useEffect(() => setPlaying(null), [playback]);
+  return { playback, clip, story, playing, onNumbers: setPlaying };
+}
+
 export interface StageProps {
   route: string[];
   load?: LoadOptions;
@@ -133,6 +156,7 @@ export interface StageProps {
 export function Stage({ route, load, scene }: StageProps) {
   const state = useDroneState(route);
   const data = useStageData(load);
+  const fly = useFly(state, data, load);
   const flyTo = `#/fly/${encodeURIComponent(state.scenario)}`;
   return (
     <div className={`stage ${state.mode}`} aria-hidden={state.mode === "page"} data-testid="stage">
@@ -147,7 +171,7 @@ export function Stage({ route, load, scene }: StageProps) {
           scene(state, data)
         ) : (
           <Suspense fallback={null}>
-            <StageCanvas state={state} data={data} load={load} />
+            <StageCanvas state={state} data={data} fly={fly} load={load} />
           </Suspense>
         )}
       </div>
@@ -164,7 +188,7 @@ export function Stage({ route, load, scene }: StageProps) {
       <Menu />
       <Intro />
       {state.mode === "inside" && <InsidePanel state={state} data={data} />}
-      {state.mode === "fly" && <FlyPanel state={state} data={data} />}
+      {state.mode === "fly" && <FlyPanel state={state} data={data} fly={fly} />}
     </div>
   );
 }

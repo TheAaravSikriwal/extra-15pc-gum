@@ -1,5 +1,5 @@
 import type { Playback } from "../data/types";
-import { clipOf, tilt } from "./clip";
+import { clipOf, isMoment, tilt } from "./clip";
 
 const HOVER = 560;
 
@@ -70,6 +70,14 @@ test("a flag raised over and over is one moment, and too many moments play faste
   const clip = clipOf(busy);
   expect(clip.duration).toBeLessThanOrEqual(30.5);
   expect(clip.at(clip.timeOf(170)).speed).toBeGreaterThan(1); // a moment, but sped up to fit
+});
+
+test("a stick step is a moment; a grader's window isn't", () => {
+  expect(isMoment("step 0 start")).toBe(true);
+  expect(isMoment("wind start")).toBe(true);
+  expect(isMoment("chute fired")).toBe(true);
+  expect(isMoment("hold start")).toBe(false);
+  expect(isMoment("step 0 end")).toBe(false);
 });
 
 test("the loop starts and ends in a calm hover, so it joins up", () => {

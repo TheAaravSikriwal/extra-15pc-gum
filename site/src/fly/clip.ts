@@ -22,6 +22,7 @@ export interface Clip {
   duration: number; // s, the loop
   start: number; // the run's time where it starts and ends
   end: number;
+  ground: number; // m, the height it took off from
   fell: boolean; // came down hard (a crash, or under the chute) rather than landing
   at(s: number): Frame; // s into the loop
   timeOf(t: number): number; // where in the loop the run's time t plays
@@ -88,6 +89,13 @@ function sampleAt(p: Playback, t: number) {
   };
 }
 
+// what happened, not a grader's measuring window ("hold start"), except the starts that are
+// themselves the action: a stick step, a doublet, a dash, the wind, the carry
+const ACTIONS = /^((step|doublet) \d+|dash|wind|carry) start$/;
+export function isMoment(name: string): boolean {
+  return !isWindowMark(name) || ACTIONS.test(name);
+}
+
 export function clipOf(p: Playback): Clip {
   const n = p.t.length;
   const ground = p.position[0][2];
@@ -108,7 +116,7 @@ export function clipOf(p: Playback): Clip {
   // the run's key moments, each kind once (a flag raised over and over is one moment), and how
   // fast to play the rest
   const kinds = new Map<string, number>();
-  for (const e of p.events) if (!isWindowMark(e.name) && !kinds.has(e.name)) kinds.set(e.name, e.at);
+  for (const e of p.events) if (isMoment(e.name) && !kinds.has(e.name)) kinds.set(e.name, e.at);
   const moments = [...kinds.values()].filter((at) => at >= start && at <= end);
   // the run's time in steps, and each step's distance from the nearest moment
   const steps: number[] = [];
@@ -172,6 +180,7 @@ export function clipOf(p: Playback): Clip {
     duration,
     start,
     end,
+    ground,
     fell,
     timeOf: (t) => lookup(runT, loopT, t),
     at(s) {
