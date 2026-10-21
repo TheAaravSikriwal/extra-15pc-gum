@@ -1,6 +1,8 @@
 // The TypeScript shapes against the JSON Schema pcs14 site --schema exports (site/schema).
+import flights from "../../schema/flights.schema.json";
 import index from "../../schema/index.schema.json";
 import parts from "../../schema/parts.schema.json";
+import playback from "../../schema/playback.schema.json";
 import spec from "../../schema/spec.schema.json";
 import wires from "../../schema/wires.schema.json";
 import { FIELDS, SCHEMA_VERSION } from "./types";
@@ -31,6 +33,12 @@ test("the parts' and wires' shapes have the schema's fields", () => {
   expect(Object.keys(wires.properties).sort()).toEqual([...FIELDS.Wires].sort());
   expect(Object.keys(wires.$defs.Route.properties).sort()).toEqual([...FIELDS.Route].sort());
   expect(Object.keys(wires.$defs.Wire.properties).sort()).toEqual([...FIELDS.Wire].sort());
+});
+
+test("the flights' shapes have the schema's fields", () => {
+  expect(Object.keys(playback.properties).sort()).toEqual([...FIELDS.Playback].sort());
+  expect(Object.keys(flights.properties).sort()).toEqual([...FIELDS.Flights].sort());
+  expect(Object.keys(flights.$defs.Run.properties).sort()).toEqual([...FIELDS.Run].sort());
 });
 
 test("the version the site reads is the one pcs14 writes", () => {

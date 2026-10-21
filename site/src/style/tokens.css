@@ -187,3 +187,85 @@ fieldset {
     grid-template-columns: 1fr;
   }
 }
+
+.matrix td,
+.matrix th {
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.matrix td a {
+  color: inherit;
+}
+
+.flight {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.flight .view {
+  height: 55vh;
+  min-height: 320px;
+  border: 1px solid var(--lines);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+
+.controls input[type="range"] {
+  flex: 1 1 240px;
+}
+
+.controls .chapters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  width: 100%;
+}
+
+.controls .chapters button {
+  font-size: 12px;
+}
+
+.controls .chapters button.now {
+  border-color: var(--accent);
+}
+
+.time,
+.at {
+  font-family: var(--font-numbers);
+  color: var(--muted);
+}
+
+.legend {
+  display: flex;
+  gap: 16px;
+  font-family: var(--font-numbers);
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.events,
+.findings {
+  padding-left: 18px;
+  font-size: 14px;
+}
+
+.findings li.pass {
+  color: var(--muted);
+}
+
+.findings li.fail {
+  color: var(--fail);
+}

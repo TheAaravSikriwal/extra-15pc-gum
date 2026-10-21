@@ -97,6 +97,47 @@ export interface Wires {
   routes: Route[];
 }
 
+export interface FlightEvent {
+  at: number; // s into the run
+  name: string;
+}
+
+export interface FindingRow {
+  check: string;
+  passed: boolean;
+  detail: string;
+}
+
+export interface Playback {
+  schema_version: number;
+  scenario: string;
+  setup: string;
+  firmware: string; // px4 or mine
+  passed: boolean;
+  findings: FindingRow[];
+  t: number[];
+  position: number[][]; // m, east, north, up
+  attitude: number[][]; // quaternions x, y, z, w, the body (forward-left-up) to east-north-up
+  motors: number[][]; // rad/s
+  events: FlightEvent[];
+}
+
+export interface Run {
+  scenario: string;
+  setup: string;
+  firmware: string;
+  flown: boolean;
+  passed: boolean;
+  file?: string | null;
+}
+
+export interface Flights {
+  schema_version: number;
+  scenarios: string[];
+  setups: string[];
+  runs: Run[];
+}
+
 // the fields each shape has, for the check against the schema
 export const FIELDS = {
   ReportFound: ["file", "found", "generated", "verdict"],
@@ -122,4 +163,19 @@ export const FIELDS = {
   Wire: ["label", "ends"],
   Route: ["name", "node", "wires", "heating_share"],
   Wires: ["schema_version", "routes"],
+  Playback: [
+    "schema_version",
+    "scenario",
+    "setup",
+    "firmware",
+    "passed",
+    "findings",
+    "t",
+    "position",
+    "attitude",
+    "motors",
+    "events",
+  ],
+  Run: ["scenario", "setup", "firmware", "flown", "passed", "file"],
+  Flights: ["schema_version", "scenarios", "setups", "runs"],
 } as const;

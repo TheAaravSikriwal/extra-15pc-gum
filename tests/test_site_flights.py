@@ -32,6 +32,10 @@ def test_a_run_plays_back_at_20_hz_with_its_events_and_findings():
     assert p.position[-1][2] == pytest.approx(10.0, abs=0.01)
     assert len(p.attitude[0]) == 4 and len(p.motors[0]) == 4
     assert [e.name for e in p.events] == ["armed", "hold start", "hold", "landed"]
+    # a mark the log already has comes in once, and nothing sits before the log's start
+    again = flights.playback(made_up_log(), [(12.0, "hold"), (-1.0, "early")], RESULT, "mine")
+    assert [e.name for e in again.events].count("hold") == 1
+    assert min(e.at for e in again.events) >= 0
     assert p.findings[0].detail == "drifted 0.01 m"
 
 

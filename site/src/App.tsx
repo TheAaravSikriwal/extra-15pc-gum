@@ -1,17 +1,20 @@
 // The pages, by route, under one quiet line of links.
 import { lazy, type ReactNode, Suspense } from "react";
 
+import { Flights } from "./pages/Flights";
 import { Home } from "./pages/Home";
 import { Spec } from "./pages/Spec";
 import { useRoute } from "./route";
 
 // the 3D page brings three.js, about a megabyte, so it loads only when someone opens it
 const Explorer = lazy(() => import("./pages/Explorer").then((m) => ({ default: m.Explorer })));
+const FlightRun = lazy(() => import("./pages/FlightRun").then((m) => ({ default: m.FlightRun })));
 
 export const PAGES: { route: string; name: string }[] = [
   { route: "", name: "Extra 15pc Gum" },
   { route: "drone", name: "The drone in 3D" },
   { route: "spec", name: "Spec sheet" },
+  { route: "flights", name: "Every flight" },
 ];
 
 export function pageFor(route: string[]): ReactNode {
@@ -26,6 +29,15 @@ export function pageFor(route: string[]): ReactNode {
       );
     case "spec":
       return <Spec />;
+    case "flights":
+      if (route.length >= 3) {
+        return (
+          <Suspense fallback={<p>Loading the flight</p>}>
+            <FlightRun setup={route[1]} scenario={route[2]} />
+          </Suspense>
+        );
+      }
+      return <Flights />;
     default:
       return (
         <main>

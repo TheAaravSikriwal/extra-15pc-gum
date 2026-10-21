@@ -31,7 +31,14 @@ def playback(log, marks, result, firmware: str) -> schema.Playback:
     k = np.clip(np.searchsorted(t, times), 0, len(t) - 1)
     attitude = (log.attitude[k] if log.attitude is not None
                 else np.tile([0.0, 0.0, 0.0, 1.0], (len(k), 1)))  # fmt: skip
-    events = sorted([*log.events, *marks], key=lambda e: e[0])
+    # the log's events already carry the script's marks (pcs14.flight.ulog.flight_log); the
+    # marks come in again only for logs read without them. Each once, none before the log
+    seen, events = set(), []
+    for at, name in sorted([*log.events, *marks], key=lambda e: e[0]):
+        key = (round(float(at), 2), name)
+        if key not in seen:
+            seen.add(key)
+            events.append((max(float(at), float(t[0])), name))
     return schema.Playback(
         schema_version=schema.SCHEMA_VERSION,
         scenario=result.scenario,
