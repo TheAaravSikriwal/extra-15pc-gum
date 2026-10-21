@@ -5,6 +5,7 @@ import parts from "../../schema/parts.schema.json";
 import playback from "../../schema/playback.schema.json";
 import spec from "../../schema/spec.schema.json";
 import steps from "../../schema/steps.schema.json";
+import tunnel from "../../schema/tunnel.schema.json";
 import wires from "../../schema/wires.schema.json";
 import { FIELDS, SCHEMA_VERSION } from "./types";
 
@@ -45,6 +46,13 @@ test("the flights' shapes have the schema's fields", () => {
 test("the steps' shapes have the schema's fields", () => {
   expect(Object.keys(steps.properties).sort()).toEqual([...FIELDS.Steps].sort());
   expect(Object.keys(steps.$defs.Step.properties).sort()).toEqual([...FIELDS.Step].sort());
+});
+
+test("the wind tunnel's shapes have the schema's fields", () => {
+  expect(Object.keys(tunnel.properties).sort()).toEqual([...FIELDS.Tunnel].sort());
+  for (const name of ["TunnelStill", "TunnelFrame", "TunnelCase"] as const) {
+    expect(Object.keys(tunnel.$defs[name].properties).sort()).toEqual([...FIELDS[name]].sort());
+  }
 });
 
 test("the version the site reads is the one pcs14 writes", () => {

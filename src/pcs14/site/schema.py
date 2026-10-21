@@ -208,6 +208,38 @@ class Steps(_Shape):
     steps: list[Step]
 
 
+class TunnelStill(_Shape):
+    case: str  # "Max-cruise"
+    view: str  # FluidX3D's frame name
+    title: str
+    subtitle: str
+    number: str
+    caption: str
+    file: str  # under the data folder
+
+
+class TunnelFrame(_Shape):
+    step: int  # FluidX3D's time step
+    t_s: float  # s into the run
+    files: dict[str, str]  # {view: file under the data folder}
+
+
+class TunnelCase(_Shape):
+    name: str
+    label: str  # "Cruise"
+    frames: list[TunnelFrame]
+
+
+class Tunnel(_Shape):
+    """tunnel.json: the wind tunnel's stills and each case's frames along the way."""
+
+    schema_version: int
+    fork_public: bool  # until FluidX3D's fork is public, these stay off the public site
+    note: str
+    stills: list[TunnelStill]
+    cases: list[TunnelCase]
+
+
 # each data file's name (without .json) and its shape
 FILES: dict[str, type[_Shape]] = {
     "index": Index,
@@ -217,4 +249,5 @@ FILES: dict[str, type[_Shape]] = {
     "flights": Flights,
     "playback": Playback,
     "steps": Steps,
+    "tunnel": Tunnel,
 }

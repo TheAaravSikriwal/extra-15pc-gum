@@ -1,41 +1,85 @@
-// The home page, for now: what the data says is there. It grows into the drone and one quiet
-// line per step (task 13).
-import { useEffect, useState } from "react";
+// The home page: the drone and one quiet line per step, each line its step's page. The rest
+// is found by going in.
+import { useState } from "react";
 
-import { loadData, type LoadOptions } from "../data/load";
-import type { Index } from "../data/types";
+import type { LoadOptions } from "../data/load";
+import type { Index, Steps } from "../data/types";
+import { useData } from "../data/useData";
+import { stepLink, stepTitle } from "./Steps";
 
-const STEPS: Record<string, string> = {
+const REPORT_NAMES: Record<string, string> = {
   sizing: "Sizing and parts",
   cad: "The virtual drone (CAD)",
   electrical: "Electrical design",
   "flight-sim": "Flight sim",
 };
 
-export function Home({ load }: { load?: LoadOptions }) {
-  const [index, setIndex] = useState<Index | null>(null);
-  const [problem, setProblem] = useState<string | null>(null);
-  useEffect(() => {
-    loadData<Index>("index.json", load)
-      .then(setIndex)
-      .catch((error: Error) => setProblem(error.message));
-  }, [load]);
-  if (problem) return <p role="alert">{problem}</p>;
-  if (!index) return <p>Loading</p>;
+function Reports({ index }: { index: Index }) {
+  // before steps.json is made: what each report says
   return (
-    <main>
+    <ul aria-label="steps" className="quiet-steps">
+      {Object.entries(index.reports).map(([name, report]) => (
+        <li key={name}>
+          {REPORT_NAMES[name] ?? name}: {report.found ? (report.verdict ?? "written") : "not there yet"}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+export function Home({ load }: { load?: LoadOptions }) {
+  const index = useData<Index>("index.json", load);
+  const steps = useData<Steps>("steps.json", load);
+  const [picture, setPicture] = useState(true);
+  if (index.problem) return <p role="alert">{index.problem}</p>;
+  if (!index.data) return <p>Loading</p>;
+  const main = steps.data?.steps.filter((s) => !s.side_track) ?? [];
+  const side = steps.data?.steps.filter((s) => s.side_track) ?? [];
+  return (
+    <main className="home">
       <h1>Extra 15pc Gum</h1>
-      <ul aria-label="steps">
-        {Object.entries(index.reports).map(([name, report]) => (
-          <li key={name}>
-            {STEPS[name] ?? name}:{" "}
-            {report.found ? (report.verdict ?? "written") : "not there yet"}
-          </li>
-        ))}
-      </ul>
+      <p className="lede">
+        My long-range quadcopter, with my own flight firmware. Every real part is modeled, wired and flown in
+        simulation, in public, before anything gets bought.
+      </p>
+      {picture && (
+        <a href="#/drone" className="hero">
+          <img
+            src="./data/hero.png"
+            alt="The drone in CAD, from three quarters (open it in 3D)"
+            width={857}
+            height={444}
+            onError={() => setPicture(false)}
+          />
+        </a>
+      )}
+      {steps.data ? (
+        <>
+          <ul aria-label="steps" className="quiet-steps">
+            {main.map((s) => (
+              <li key={s.id}>
+                <a href={stepLink(s.id)}>{stepTitle(s)}</a> <span className="status">{s.status}</span>
+              </li>
+            ))}
+          </ul>
+          {side.length > 0 && (
+            <p className="side-tracks">
+              Side tracks:{" "}
+              {side.map((s, k) => (
+                <span key={s.id}>
+                  {k > 0 && ", "}
+                  <a href={stepLink(s.id)}>{s.name}</a>
+                </span>
+              ))}
+            </p>
+          )}
+        </>
+      ) : (
+        steps.problem && <Reports index={index.data} />
+      )}
       <p className="made">
-        Made {index.generated}
-        {index.commit ? ` from ${index.commit}` : ""}
+        Made {index.data.generated}
+        {index.data.commit ? ` from ${index.data.commit}` : ""}
       </p>
     </main>
   );

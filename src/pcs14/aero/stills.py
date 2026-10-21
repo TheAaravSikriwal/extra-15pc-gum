@@ -5,6 +5,7 @@ They land in outputs/tunnel/stills/, not in the repo, until the FluidX3D fork is
 license wants the altered source published with any results.
 """
 
+import json
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -107,10 +108,22 @@ def draw(case, frames: Path, out: Path, rpm: float | None = None) -> list[Path]:
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
     paths = []
+    said = _said(out)
     for still in stills_for(case, rpm):
         found = frame(frames, still.view)
         if found is None:
             continue
         for size in SIZES:
             paths.append(compose(found, still, out / f"{case.name}-{still.view}-{size}.png", size))
+        said[f"{case.name}-{still.view}"] = {
+            "case": case.name, "view": still.view, "title": still.title,
+            "subtitle": still.subtitle, "number": still.number, "caption": still.caption,
+        }  # fmt: skip
+    (out / "stills.json").write_bytes((json.dumps(said, indent=1) + "\n").encode("utf-8"))
     return paths
+
+
+def _said(out: Path) -> dict:
+    """What every still drawn so far says (stills.json): each case adds its own."""
+    path = out / "stills.json"
+    return json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}

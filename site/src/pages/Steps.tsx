@@ -8,7 +8,7 @@ export function stepLink(id: string): string {
   return `#/steps/${id}`;
 }
 
-function title(s: Step): string {
+export function stepTitle(s: Step): string {
   return s.number ? `${s.number}. ${s.name}` : s.name;
 }
 
@@ -29,7 +29,7 @@ export function Steps({ load }: { load?: LoadOptions }) {
           <ul className="steps">
             {list.map((s) => (
               <li key={s.id}>
-                <a href={stepLink(s.id)}>{title(s)}</a> <span className="status">{s.status}</span>
+                <a href={stepLink(s.id)}>{stepTitle(s)}</a> <span className="status">{s.status}</span>
               </li>
             ))}
           </ul>
@@ -50,7 +50,7 @@ export function StepPage({ id, load }: { id: string; load?: LoadOptions }) {
       <p>
         <a href="#/steps">Every step</a>
       </p>
-      <h1>{title(s)}</h1>
+      <h1>{stepTitle(s)}</h1>
       <p className="purpose">{s.purpose}</p>
       <p>
         <span className="status">{s.status}</span>

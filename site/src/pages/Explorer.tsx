@@ -10,6 +10,7 @@ import { loadBinary, type LoadOptions } from "../data/load";
 import type { Parts, Piece, Route, Wires } from "../data/types";
 import { useData } from "../data/useData";
 import { Card } from "../explorer/Card";
+import { shows } from "../explorer/logic";
 import { DroneScene } from "../explorer/Scene";
 
 const MODULES = ["V", "P", "C"];
@@ -95,6 +96,19 @@ export function ExplorerView({ parts, wires, view }: ExplorerViewProps) {
             {CASES.map((c) => (
               <option key={c}>{c}</option>
             ))}
+          </select>
+        </label>
+        <label>
+          Part{" "}
+          <select aria-label="part" value={selected ?? ""} onChange={(e) => select(e.target.value || null)}>
+            <option value="">click one, or pick it here</option>
+            {parts.pieces
+              .filter((p) => shows(p, modulesOn))
+              .map((p) => (
+                <option key={p.name} value={p.name}>
+                  {p.name}
+                </option>
+              ))}
           </select>
         </label>
         <Card

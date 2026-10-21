@@ -1,7 +1,7 @@
 // After the build: the site has to open from a folder on disk, so every link in the built page
 // is relative, and the first load (the page, the scripts and styles it names, and the fonts it
 // uses, not the data or the pages that load later) stays inside its budget. Fails otherwise.
-import { readdirSync, readFileSync, statSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -19,6 +19,15 @@ export function absoluteLinks(html) {
 // the files the page itself names: its scripts and stylesheets
 export function namedFiles(html) {
   return [...html.matchAll(/\s(?:src|href)="\.\/([^"]*\.(?:js|css))"/g)].map((m) => m[1]);
+}
+
+// FluidX3D's license wants my altered source public before any of its results are: a build
+// with the tunnel's pictures in it, before the fork is public, is for my own machine only
+export function tunnelWarning(tunnel) {
+  if (!tunnel || tunnel.fork_public) return null;
+  const pictures = tunnel.stills.length + tunnel.cases.reduce((n, c) => n + c.frames.length, 0);
+  if (pictures === 0) return null;
+  return `this build has the wind tunnel's ${pictures} pictures in it: keep it local until the FluidX3D fork is public`;
 }
 
 function main() {
@@ -43,6 +52,9 @@ function main() {
   }
   console.log(`dist: relative links only, first load ${kb.toFixed(0)} of ${FIRST_LOAD_BUDGET_KB} kB`);
   if (later.length) console.log(`loaded later: ${later.join(", ")}`);
+  const tunnelFile = join(dist, "data", "tunnel.json");
+  const warning = tunnelWarning(existsSync(tunnelFile) ? JSON.parse(readFileSync(tunnelFile, "utf8")) : null);
+  if (warning) console.warn(`warning: ${warning}`);
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main();

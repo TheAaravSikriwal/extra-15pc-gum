@@ -1,0 +1,141 @@
+{
+ "$defs": {
+  "TunnelCase": {
+   "additionalProperties": false,
+   "properties": {
+    "name": {
+     "title": "Name",
+     "type": "string"
+    },
+    "label": {
+     "title": "Label",
+     "type": "string"
+    },
+    "frames": {
+     "items": {
+      "$ref": "#/$defs/TunnelFrame"
+     },
+     "title": "Frames",
+     "type": "array"
+    }
+   },
+   "required": [
+    "name",
+    "label",
+    "frames"
+   ],
+   "title": "TunnelCase",
+   "type": "object"
+  },
+  "TunnelFrame": {
+   "additionalProperties": false,
+   "properties": {
+    "step": {
+     "title": "Step",
+     "type": "integer"
+    },
+    "t_s": {
+     "title": "T S",
+     "type": "number"
+    },
+    "files": {
+     "additionalProperties": {
+      "type": "string"
+     },
+     "title": "Files",
+     "type": "object"
+    }
+   },
+   "required": [
+    "step",
+    "t_s",
+    "files"
+   ],
+   "title": "TunnelFrame",
+   "type": "object"
+  },
+  "TunnelStill": {
+   "additionalProperties": false,
+   "properties": {
+    "case": {
+     "title": "Case",
+     "type": "string"
+    },
+    "view": {
+     "title": "View",
+     "type": "string"
+    },
+    "title": {
+     "title": "Title",
+     "type": "string"
+    },
+    "subtitle": {
+     "title": "Subtitle",
+     "type": "string"
+    },
+    "number": {
+     "title": "Number",
+     "type": "string"
+    },
+    "caption": {
+     "title": "Caption",
+     "type": "string"
+    },
+    "file": {
+     "title": "File",
+     "type": "string"
+    }
+   },
+   "required": [
+    "case",
+    "view",
+    "title",
+    "subtitle",
+    "number",
+    "caption",
+    "file"
+   ],
+   "title": "TunnelStill",
+   "type": "object"
+  }
+ },
+ "additionalProperties": false,
+ "description": "tunnel.json: the wind tunnel's stills and each case's frames along the way.",
+ "properties": {
+  "schema_version": {
+   "title": "Schema Version",
+   "type": "integer"
+  },
+  "fork_public": {
+   "title": "Fork Public",
+   "type": "boolean"
+  },
+  "note": {
+   "title": "Note",
+   "type": "string"
+  },
+  "stills": {
+   "items": {
+    "$ref": "#/$defs/TunnelStill"
+   },
+   "title": "Stills",
+   "type": "array"
+  },
+  "cases": {
+   "items": {
+    "$ref": "#/$defs/TunnelCase"
+   },
+   "title": "Cases",
+   "type": "array"
+  }
+ },
+ "required": [
+  "schema_version",
+  "fork_public",
+  "note",
+  "stills",
+  "cases"
+ ],
+ "title": "Tunnel",
+ "type": "object"
+}

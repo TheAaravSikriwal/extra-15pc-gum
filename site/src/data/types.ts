@@ -176,6 +176,36 @@ export interface Steps {
   steps: Step[];
 }
 
+export interface TunnelStill {
+  case: string;
+  view: string;
+  title: string;
+  subtitle: string;
+  number: string;
+  caption: string;
+  file: string;
+}
+
+export interface TunnelFrame {
+  step: number; // FluidX3D's time step
+  t_s: number; // s into the run
+  files: Record<string, string>; // {view: file under the data folder}
+}
+
+export interface TunnelCase {
+  name: string;
+  label: string;
+  frames: TunnelFrame[];
+}
+
+export interface Tunnel {
+  schema_version: number;
+  fork_public: boolean;
+  note: string;
+  stills: TunnelStill[];
+  cases: TunnelCase[];
+}
+
 // the fields each shape has, for the check against the schema
 export const FIELDS = {
   ReportFound: ["file", "found", "generated", "verdict"],
@@ -231,4 +261,8 @@ export const FIELDS = {
     "parts",
   ],
   Steps: ["schema_version", "steps"],
+  TunnelStill: ["case", "view", "title", "subtitle", "number", "caption", "file"],
+  TunnelFrame: ["step", "t_s", "files"],
+  TunnelCase: ["name", "label", "frames"],
+  Tunnel: ["schema_version", "fork_public", "note", "stills", "cases"],
 } as const;

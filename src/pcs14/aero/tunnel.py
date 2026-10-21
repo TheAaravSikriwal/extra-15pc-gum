@@ -31,6 +31,10 @@ from pcs14.flight.generate import ORDER
 DEFAULT_DIR = Path(r"C:\dr\fluidx3d")
 VIEWS = ("side-streamlines", "quarter-streamlines", "side-speed", "quarter-vortices",
          "side-vortices")  # fmt: skip
+# the frames along the way, for the project site to play the flow back: how many over a run,
+# and of which views (FluidX3D names them play-<view>-<time step>.png)
+PLAY_FRAMES = 40
+PLAY_VIEWS = ("side-speed", "quarter-vortices")
 G = 9.80665
 
 
@@ -67,6 +71,7 @@ class Case:
     color_max_m_s: float = 17.0
     rotor: str = "geometry"  # the props as spinning blades, or "disk": actuator disks
     thrust_n: float = 0.0  # N, each prop's push, for the disks
+    frames: int = PLAY_FRAMES  # along the way, of PLAY_VIEWS
 
     def text(self) -> str:
         """The case file FluidX3D's setup reads: one key = value per line."""
@@ -93,6 +98,7 @@ class Case:
             f"color_max_m_s = {self.color_max_m_s:g}",
             f"rotor = {self.rotor}",
             f"thrust_n = {self.thrust_n:g}",
+            f"frames = {self.frames}",
             f"props = {len(self.props)}",
         ]
         for k, p in enumerate(self.props):
@@ -204,7 +210,32 @@ def run(case: Case, home: Path, out: Path, stl_folder: Path) -> Path:
     if target.exists():
         shutil.rmtree(target)
     shutil.copytree(frames, target)
+    shutil.copy2(home / "bin" / "case.txt", target / "case.txt")  # what it was asked to run
     return target
+
+
+@dataclass(frozen=True)
+class PlayFrame:
+    step: int  # FluidX3D's time step
+    seconds: float  # into the run
+    files: dict  # {view: Path}, of the PLAY_VIEWS it wrote
+
+
+def playback(folder: Path) -> list[PlayFrame]:
+    """The frames FluidX3D wrote along the way, in order: its setup lists each one's time step
+    and time in frames.txt. Empty for a case run before the frames were."""
+    listed = Path(folder) / "frames.txt"
+    if not listed.is_file():
+        return []
+    found = []
+    for line in listed.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        step, seconds = line.split()[:2]
+        files = {view: Path(folder) / f"play-{view}-{int(step):09d}.png" for view in PLAY_VIEWS}
+        found.append(PlayFrame(int(step), float(seconds),
+                               {v: f for v, f in files.items() if f.is_file()}))  # fmt: skip
+    return sorted(found, key=lambda f: f.step)
 
 
 def frame(folder: Path, view: str) -> Path | None:

@@ -112,6 +112,32 @@ def _write(out: Path, name: str, model) -> Path:
     return path
 
 
+def hero(view, out, margin_px: int = 48) -> Path:
+    """The home page's drone: the CAD's three-quarter view without its post header and footer,
+    trimmed to the drone with a margin of the background around it."""
+    import numpy as np
+    from PIL import Image
+
+    out = Path(out)
+    out.mkdir(parents=True, exist_ok=True)
+    with Image.open(view) as image:
+        picture = np.asarray(image.convert("RGB"))
+    h, w = picture.shape[:2]
+    background = picture[h // 2, 2].astype(int)  # the left edge, halfway down
+    top, bottom = int(h * 0.18), int(h * 0.92)  # under the title, over the footer
+    different = np.abs(picture[top:bottom].astype(int) - background).sum(axis=2) > 24
+    rows, cols = np.nonzero(different)
+    if rows.size == 0:
+        y0, y1, x0, x1 = top, bottom, 0, w
+    else:
+        y0, y1 = top + rows.min() - margin_px, top + rows.max() + margin_px
+        x0, x1 = cols.min() - margin_px, cols.max() + margin_px
+    y0, y1, x0, x1 = max(y0, top), min(y1, bottom), max(x0, 0), min(x1, w)
+    path = out / "hero.png"
+    Image.fromarray(picture[y0:y1, x0:x1]).save(path, optimize=True)
+    return path
+
+
 def write_all(out, reports, commit: str | None = None, today: str | None = None) -> list[Path]:
     """Writes every data file the reports allow, then index.json; returns the paths."""
     out, reports = Path(out), Path(reports)
@@ -127,6 +153,10 @@ def write_all(out, reports, commit: str | None = None, today: str | None = None)
         written.append(_write(out, "parts", parts(found["cad"], sheet)))
     if found["electrical"] is not None and "routes" in found["electrical"]:
         written.append(_write(out, "wires", wires(found["electrical"])))
+    # the home page's drone
+    view = reports / "cad" / "views" / "three-quarter.png"
+    if view.is_file():
+        written.append(hero(view, out))
     # a page per step, from the README's plan beside the docs the reports are in
     readme = reports.resolve().parent.parent / "README.md"
     if readme.is_file():
@@ -146,7 +176,7 @@ def write_all(out, reports, commit: str | None = None, today: str | None = None)
             )  # fmt: skip
             for name, d in found.items()
         },
-        files=[p.name for p in written],
+        files=[p.name for p in written if p.suffix == ".json"],  # the data, not the pictures
     )
     return [*written, _write(out, "index", index)]
 

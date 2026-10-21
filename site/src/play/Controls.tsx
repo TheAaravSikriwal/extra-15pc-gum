@@ -6,13 +6,20 @@ import { type Clock, useClockTime } from "./clock";
 
 const SPEEDS = [0.25, 0.5, 1, 2, 4];
 
+export interface ControlsProps {
+  clock: Clock;
+  speeds?: number[]; // the wind tunnel plays its half second of air in slow motion
+  format?: (t: number) => string;
+  step?: number; // s, the scrubber's
+}
+
 export function formatTime(t: number): string {
   const minutes = Math.floor(t / 60);
   const seconds = t - minutes * 60;
   return `${minutes}:${seconds.toFixed(1).padStart(4, "0")}`;
 }
 
-export function Controls({ clock }: { clock: Clock }) {
+export function Controls({ clock, speeds = SPEEDS, format = formatTime, step = 0.05 }: ControlsProps) {
   const time = useClockTime(clock);
   const [, redraw] = useState(0);
   const refresh = () => redraw((n) => n + 1);
@@ -34,7 +41,7 @@ export function Controls({ clock }: { clock: Clock }) {
         aria-label="scrubber"
         min={0}
         max={clock.duration}
-        step={0.05}
+        step={step}
         value={time}
         onChange={(e) => {
           clock.seek(Number(e.target.value));
@@ -42,7 +49,7 @@ export function Controls({ clock }: { clock: Clock }) {
         }}
       />
       <span className="time">
-        {formatTime(time)} / {formatTime(clock.duration)}
+        {format(time)} / {format(clock.duration)}
       </span>
       <label>
         speed{" "}
@@ -54,7 +61,7 @@ export function Controls({ clock }: { clock: Clock }) {
             refresh();
           }}
         >
-          {SPEEDS.map((s) => (
+          {speeds.map((s) => (
             <option key={s} value={s}>
               {s}x
             </option>
@@ -72,7 +79,7 @@ export function Controls({ clock }: { clock: Clock }) {
               refresh();
             }}
           >
-            {c.name} <span className="at">{formatTime(c.at)}</span>
+            {c.name} <span className="at">{format(c.at)}</span>
           </button>
         ))}
       </div>

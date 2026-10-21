@@ -14,6 +14,26 @@ const PARTS: Parts = {
 };
 const WIRES: Wires = { schema_version: 1, routes: [] };
 
+test("a part can be picked from the keyboard too, not only by a click in 3D", () => {
+  let seen: ViewState | null = null;
+  render(
+    <ExplorerView
+      parts={PARTS}
+      wires={WIRES}
+      view={(s) => {
+        seen = s;
+        return null;
+      }}
+    />,
+  );
+  fireEvent.change(screen.getByLabelText("part"), { target: { value: "ark-gps" } });
+  expect(seen!.selected).toBe("ark-gps");
+  expect(screen.getByText(/ARK Electronics/)).toBeInTheDocument();
+  // a part whose module is switched off isn't on the list
+  fireEvent.click(screen.getByLabelText("V"));
+  expect(screen.queryByRole("option", { name: "ark-gps" })).toBeNull();
+});
+
 test("the modules switched on name the combination", () => {
   expect(combinationFor(new Set())).toBe("base");
   expect(combinationFor(new Set(["V", "P"]))).toBe("mission");

@@ -243,6 +243,14 @@ def build_parser() -> argparse.ArgumentParser:
         "outputs/flight-sim; the logs are only on the machine that flew them)",
     )
     site.add_argument(
+        "--tunnel",
+        type=Path,
+        nargs="?",
+        const=Path("outputs/tunnel"),
+        help="also the wind tunnel's stills and frames (default folder: outputs/tunnel; they "
+        "stay on this machine until the FluidX3D fork is public)",
+    )
+    site.add_argument(
         "--schema",
         type=Path,
         nargs="?",
@@ -817,6 +825,10 @@ def run_site(args) -> int:
 
         results, logs = flights.from_outputs(args.flights)
         written += flights.write_flights(args.out, results, logs)
+    if args.tunnel is not None:
+        from pcs14.site import tunnel
+
+        written += tunnel.write_tunnel(args.out, args.tunnel)
     index = data.load(Path(args.out) / "index.json", data.schema.Index)
     missing = [name for name, r in index.reports.items() if not r.found]
     print(f"Wrote {len(written)} files to {Path(args.out).resolve()}")

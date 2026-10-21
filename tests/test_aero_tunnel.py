@@ -40,6 +40,22 @@ def test_the_case_file_says_everything_fluidx3ds_setup_reads():
     # fling the air sideways (2026-10-20), so each disk pushes its share of the weight down
     assert "rotor = disk" in lines and "thrust_n = 5.8" in lines
     assert "rotor = disk" not in cruise.text().splitlines()
+    # and frames along the way, for the project site to play the flow back
+    assert f"frames = {tunnel.PLAY_FRAMES}" in lines
+
+
+def test_the_frames_along_the_way_come_in_order_with_their_times(tmp_path):
+    # FluidX3D's setup lists each playback frame's time step and time in frames.txt
+    (tmp_path / "frames.txt").write_text("200 0.02\n100 0.01\n", encoding="utf-8")
+    for step in (100, 200):
+        for view in tunnel.PLAY_VIEWS:
+            (tmp_path / f"play-{view}-{step:09d}.png").write_bytes(b"png")
+    found = tunnel.playback(tmp_path)
+    assert [f.step for f in found] == [100, 200]
+    assert found[0].seconds == 0.01
+    assert set(found[0].files) == set(tunnel.PLAY_VIEWS)
+    assert found[1].files["side-speed"].name == "play-side-speed-000000200.png"
+    assert tunnel.playback(tmp_path / "not-run") == []
 
 
 def test_a_crop_keeps_the_aspect_and_stays_inside():
@@ -63,3 +79,10 @@ def test_a_still_composes_in_every_post_size(tmp_path, size):
     assert len(found) == len(stills.SIZES)  # the one view there's a frame for, in every size
     assert all(p.stat().st_size > 10_000 for p in found)
     assert tunnel.frame(tmp_path, "side-streamlines") == frame
+    # and what each still says, for the project site's tunnel page
+    import json
+
+    said = json.loads((tmp_path / "out" / "stills.json").read_text(encoding="utf-8"))
+    entry = said[f"{cruise.name}-side-streamlines"]
+    assert entry["case"] == cruise.name and entry["title"] == "The drag lines"
+    assert "OpenFOAM" in entry["caption"]
