@@ -1,14 +1,43 @@
-// The pages, by route.
+// The pages, by route, under one quiet line of links.
+import type { ReactNode } from "react";
+
 import { Home } from "./pages/Home";
+import { Spec } from "./pages/Spec";
 import { useRoute } from "./route";
+
+export const PAGES: { route: string; name: string }[] = [
+  { route: "", name: "Extra 15pc Gum" },
+  { route: "spec", name: "Spec sheet" },
+];
+
+export function pageFor(route: string[]): ReactNode {
+  switch (route[0] ?? "") {
+    case "":
+      return <Home />;
+    case "spec":
+      return <Spec />;
+    default:
+      return (
+        <main>
+          <p>No page at {route.join("/")} yet.</p>
+          <a href="#/">Back to the start</a>
+        </main>
+      );
+  }
+}
 
 export function App() {
   const route = useRoute();
-  if (route.length === 0) return <Home />;
   return (
-    <main>
-      <p>No page at {route.join("/")} yet.</p>
-      <a href="#/">Back to the start</a>
-    </main>
+    <>
+      <nav aria-label="pages">
+        {PAGES.map((p) => (
+          <a key={p.route} href={`#/${p.route}`} aria-current={route[0] === p.route || (!route[0] && !p.route) ? "page" : undefined}>
+            {p.name}
+          </a>
+        ))}
+      </nav>
+      {pageFor(route)}
+    </>
   );
 }

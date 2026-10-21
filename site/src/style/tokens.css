@@ -42,3 +42,88 @@ main {
   margin: 0 auto;
   padding: 32px 16px;
 }
+
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 16px 16px 0;
+  font-size: 14px;
+}
+
+nav a {
+  color: var(--muted);
+  text-decoration: none;
+}
+
+nav a[aria-current="page"] {
+  color: var(--text);
+}
+
+button,
+select,
+input {
+  font: inherit;
+  color: var(--text);
+  background: var(--lines);
+  border: 1px solid var(--lines);
+  border-radius: 4px;
+  padding: 4px 10px;
+}
+
+[role="tab"][aria-selected="true"] {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--lines);
+}
+
+td.pass {
+  color: var(--pass);
+}
+
+td.fail {
+  color: var(--fail);
+}
+
+td.not-yet {
+  color: var(--muted);
+}
+
+.numbers {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 8px 24px;
+}
+
+.numbers dt {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.numbers dd {
+  margin: 0;
+  font-family: var(--font-numbers);
+}
+
+svg text {
+  fill: var(--muted);
+  font: 12px var(--font-body);
+}
+
+svg .chart-title {
+  fill: var(--text);
+  font-size: 13px;
+}

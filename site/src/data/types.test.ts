@@ -1,5 +1,6 @@
 // The TypeScript shapes against the JSON Schema pcs14 site --schema exports (site/schema).
 import index from "../../schema/index.schema.json";
+import spec from "../../schema/spec.schema.json";
 import { FIELDS, SCHEMA_VERSION } from "./types";
 
 test("Index has the schema's fields", () => {
@@ -13,6 +14,13 @@ test("ReportFound has the schema's fields", () => {
   expect(Object.keys(index.$defs.ReportFound.properties).sort()).toEqual(
     [...FIELDS.ReportFound].sort(),
   );
+});
+
+test("the spec sheet's shapes have the schema's fields", () => {
+  expect(Object.keys(spec.properties).sort()).toEqual([...FIELDS.SpecSheet].sort());
+  for (const name of ["Check", "Combination", "Part"] as const) {
+    expect(Object.keys(spec.$defs[name].properties).sort()).toEqual([...FIELDS[name]].sort());
+  }
 });
 
 test("the version the site reads is the one pcs14 writes", () => {
