@@ -241,6 +241,36 @@ class Tunnel(_Shape):
     cases: list[TunnelCase]
 
 
+class PinRow(_Shape):
+    pin: str  # CONNECTOR.PIN
+    role: str  # power, ground, in, out, both
+    functions: str  # what PX4 or the chip calls it
+    to: str  # the pins it joins
+    harness: str
+
+
+class BoardPins(_Shape):
+    name: str  # the connection list's
+    part: str
+    module: str
+    pins: list[PinRow]
+
+
+class Harness(_Shape):
+    name: str
+    file: str  # under the data folder
+
+
+class Wiring(_Shape):
+    """wiring.json: every board's pins, the harness diagrams and the schematic."""
+
+    schema_version: int
+    boards: list[BoardPins]
+    harnesses: list[Harness]
+    schematic: str | None = None  # under the data folder, when the electrical run drew it
+    kicad: str  # the schematic's KiCad file, on GitHub
+
+
 class UnprovenItem(_Shape):
     what: str
     measure: str = ""  # the first thing to measure once it's built, where that's written
@@ -270,4 +300,5 @@ FILES: dict[str, type[_Shape]] = {
     "steps": Steps,
     "tunnel": Tunnel,
     "unproven": Unproven,
+    "wiring": Wiring,
 }

@@ -1,0 +1,135 @@
+{
+ "$defs": {
+  "BoardPins": {
+   "additionalProperties": false,
+   "properties": {
+    "name": {
+     "title": "Name",
+     "type": "string"
+    },
+    "part": {
+     "title": "Part",
+     "type": "string"
+    },
+    "module": {
+     "title": "Module",
+     "type": "string"
+    },
+    "pins": {
+     "items": {
+      "$ref": "#/$defs/PinRow"
+     },
+     "title": "Pins",
+     "type": "array"
+    }
+   },
+   "required": [
+    "name",
+    "part",
+    "module",
+    "pins"
+   ],
+   "title": "BoardPins",
+   "type": "object"
+  },
+  "Harness": {
+   "additionalProperties": false,
+   "properties": {
+    "name": {
+     "title": "Name",
+     "type": "string"
+    },
+    "file": {
+     "title": "File",
+     "type": "string"
+    }
+   },
+   "required": [
+    "name",
+    "file"
+   ],
+   "title": "Harness",
+   "type": "object"
+  },
+  "PinRow": {
+   "additionalProperties": false,
+   "properties": {
+    "pin": {
+     "title": "Pin",
+     "type": "string"
+    },
+    "role": {
+     "title": "Role",
+     "type": "string"
+    },
+    "functions": {
+     "title": "Functions",
+     "type": "string"
+    },
+    "to": {
+     "title": "To",
+     "type": "string"
+    },
+    "harness": {
+     "title": "Harness",
+     "type": "string"
+    }
+   },
+   "required": [
+    "pin",
+    "role",
+    "functions",
+    "to",
+    "harness"
+   ],
+   "title": "PinRow",
+   "type": "object"
+  }
+ },
+ "additionalProperties": false,
+ "description": "wiring.json: every board's pins, the harness diagrams and the schematic.",
+ "properties": {
+  "schema_version": {
+   "title": "Schema Version",
+   "type": "integer"
+  },
+  "boards": {
+   "items": {
+    "$ref": "#/$defs/BoardPins"
+   },
+   "title": "Boards",
+   "type": "array"
+  },
+  "harnesses": {
+   "items": {
+    "$ref": "#/$defs/Harness"
+   },
+   "title": "Harnesses",
+   "type": "array"
+  },
+  "schematic": {
+   "anyOf": [
+    {
+     "type": "string"
+    },
+    {
+     "type": "null"
+    }
+   ],
+   "default": null,
+   "title": "Schematic"
+  },
+  "kicad": {
+   "title": "Kicad",
+   "type": "string"
+  }
+ },
+ "required": [
+  "schema_version",
+  "boards",
+  "harnesses",
+  "kicad"
+ ],
+ "title": "Wiring",
+ "type": "object"
+}

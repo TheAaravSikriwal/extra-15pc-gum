@@ -416,3 +416,19 @@ button[aria-pressed="true"] {
 .unproven-line a {
   color: var(--text);
 }
+
+/* wide tables scroll on their own at phone width, not the page */
+.scroll-x {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.pins td {
+  font-family: var(--font-numbers);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.stills img.harness {
+  background: #f4f4f2;
+}

@@ -11,7 +11,7 @@ from pathlib import Path
 
 from pcs14.electrical import report, thermal, tools
 from pcs14.electrical.checks import check_design, design_context
-from pcs14.electrical.diagrams import Sources, pin_map_markdown, power_tree_markdown
+from pcs14.electrical.diagrams import Sources, pin_map, pin_map_markdown, power_tree_markdown
 from pcs14.electrical.loads import solve_all
 from pcs14.electrical.routes import route_shares, route_wires
 
@@ -144,6 +144,7 @@ def to_run(a: Analysis) -> report.ElectricalRun:
         switch=switch,
         route_shares=route_shares(design, a.working),
         routes=route_wires(design),
+        board_pins=board_pins(a.sources),
         wire_amps={key: dict(s.wires) for key, s in a.solutions.items()},
         power_tree=tree,
         pin_maps=pin_maps,
@@ -216,3 +217,12 @@ def write(out: Path, run: report.ElectricalRun, generated: str | None = None) ->
     data = json.dumps(report.to_data(run, generated), indent=1) + "\n"
     (out / "electrical.json").write_bytes(data.encode("utf-8"))
     return out
+
+
+def board_pins(src: Sources) -> dict:
+    """Every board's used pins, for the project site's wiring page."""
+    return {
+        name: {"part": board.part, "module": board.module or "base",
+               "pins": [row for row in pin_map(src, name) if row["to"]]}
+        for name, board in src.design.boards.items()
+    }  # fmt: skip

@@ -7,6 +7,7 @@ import { Spec } from "./pages/Spec";
 import { StepPage, Steps } from "./pages/Steps";
 import { Tunnel } from "./pages/Tunnel";
 import { Unproven } from "./pages/Unproven";
+import { Wiring } from "./pages/Wiring";
 import { useRoute } from "./route";
 
 // the 3D page brings three.js, about a megabyte, so it loads only when someone opens it
@@ -17,6 +18,7 @@ export const PAGES: { route: string; name: string }[] = [
   { route: "", name: "Extra 15pc Gum" },
   { route: "drone", name: "The drone in 3D" },
   { route: "spec", name: "Spec sheet" },
+  { route: "wiring", name: "The wiring" },
   { route: "flights", name: "Every flight" },
   { route: "steps", name: "Every step" },
   { route: "tunnel", name: "The wind tunnel" },
@@ -50,6 +52,8 @@ export function pageFor(route: string[]): ReactNode {
       return <Tunnel />;
     case "unproven":
       return <Unproven />;
+    case "wiring":
+      return <Wiring board={route[1]} />;
     default:
       return (
         <main>

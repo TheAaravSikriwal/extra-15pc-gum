@@ -68,6 +68,21 @@ def made_up_run(**changes):
         wire_amps={key: {"pack.XT60.+ to reg.J.VIN": 1.234567} for key in shares},
         power_tree="- pack.XT60.+\n  - reg.5V, a switching 5 V supply rated 3 A",
         pin_maps=(("mcu", "t-mcu", "| Pin | What it is | Called | Goes to |\n|---|---|---|---|"),),
+        board_pins={
+            "reg": {
+                "part": "made-up-reg",
+                "module": "base",
+                "pins": [
+                    {
+                        "pin": "J.VIN",
+                        "role": "power",
+                        "functions": "",
+                        "to": "pack.XT60.+",
+                        "harness": "main",
+                    }
+                ],
+            }
+        },  # fmt: skip
         estimates=(
             Estimate("t-load", ("load",), ("draws[J.5V]",), "From a similar board."),
             Estimate("t-servo", ("servo",), (), "A stand-in until the real one is picked."),
@@ -114,6 +129,9 @@ def test_the_data_file_matches_the_results(run):
     assert data["kicad_rules_violations"] == 0
     # which wires run along each CAD route, so a route in 3D can name its wires' ends
     assert data["routes"] == {"main": ["pack.XT60.+ to reg.J.VIN"]}
+    # every board's pins, for the project site's wiring page
+    assert data["boards"]["reg"]["part"] == "made-up-reg"
+    assert data["boards"]["reg"]["pins"][0]["to"] == "pack.XT60.+"
     json.dumps(data)  # it has to be plain JSON
 
 

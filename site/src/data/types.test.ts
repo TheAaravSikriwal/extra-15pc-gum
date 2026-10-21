@@ -7,6 +7,7 @@ import spec from "../../schema/spec.schema.json";
 import steps from "../../schema/steps.schema.json";
 import tunnel from "../../schema/tunnel.schema.json";
 import unproven from "../../schema/unproven.schema.json";
+import wiring from "../../schema/wiring.schema.json";
 import wires from "../../schema/wires.schema.json";
 import { FIELDS, SCHEMA_VERSION } from "./types";
 
@@ -60,6 +61,13 @@ test("the unproven list's shapes have the schema's fields", () => {
   expect(Object.keys(unproven.properties).sort()).toEqual([...FIELDS.Unproven].sort());
   expect(Object.keys(unproven.$defs.UnprovenGroup.properties).sort()).toEqual([...FIELDS.UnprovenGroup].sort());
   expect(Object.keys(unproven.$defs.UnprovenItem.properties).sort()).toEqual([...FIELDS.UnprovenItem].sort());
+});
+
+test("the wiring's shapes have the schema's fields", () => {
+  expect(Object.keys(wiring.properties).sort()).toEqual([...FIELDS.Wiring].sort());
+  for (const name of ["PinRow", "BoardPins", "Harness"] as const) {
+    expect(Object.keys(wiring.$defs[name].properties).sort()).toEqual([...FIELDS[name]].sort());
+  }
 });
 
 test("the version the site reads is the one pcs14 writes", () => {

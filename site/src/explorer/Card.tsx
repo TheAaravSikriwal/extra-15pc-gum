@@ -8,11 +8,13 @@ export function Card({
   route,
   combination,
   kase,
+  boards = [],
 }: {
   piece: Piece | null;
   route: Route | null;
   combination: string;
   kase: string;
+  boards?: string[]; // the connection list's boards this piece is, for links to their pins
 }) {
   if (!piece) return <p className="card hint">Click any part of the drone.</p>;
   const c = piece.catalog;
@@ -37,6 +39,15 @@ export function Card({
         <a href={c.link} target="_blank" rel="noreferrer">
           Where it comes from
         </a>
+      )}
+      {boards.length > 0 && (
+        <p className="links">
+          {boards.map((b) => (
+            <a key={b} href={`#/wiring/${encodeURIComponent(b)}`}>
+              {boards.length > 1 ? `${b}'s pins` : "Its pins"}
+            </a>
+          ))}
+        </p>
       )}
       {route && <RouteRows route={route} combination={combination} kase={kase} />}
     </section>

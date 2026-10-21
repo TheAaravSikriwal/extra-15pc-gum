@@ -142,6 +142,11 @@ test("a wire's card names both ends of every wire in it", () => {
   expect(screen.getByText(/31% of its heating limit in max, burst/)).toBeInTheDocument();
 });
 
+test("a board's card links to its pins", () => {
+  render(<Card piece={PIECES.get("frame")!} route={null} combination="max" kase="hover" boards={["fc"]} />);
+  expect(screen.getByRole("link", { name: "Its pins" })).toHaveAttribute("href", "#/wiring/fc");
+});
+
 test("nothing picked, the card says what to do", () => {
   render(<Card piece={null} route={null} combination="max" kase="hover" />);
   expect(screen.getByText("Click any part of the drone.")).toBeInTheDocument();

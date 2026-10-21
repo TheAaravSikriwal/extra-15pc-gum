@@ -5,11 +5,12 @@ import { Canvas } from "@react-three/fiber";
 import { type ReactNode, useMemo, useState } from "react";
 
 import type { LoadOptions } from "../data/load";
-import type { Parts, Piece, Route, SpecSheet, Wires } from "../data/types";
+import type { Parts, Piece, Route, SpecSheet, Wires, Wiring } from "../data/types";
 import { useData } from "../data/useData";
 import { Card } from "../explorer/Card";
 import { shows } from "../explorer/logic";
 import { useModel } from "../explorer/model";
+import { boardsOf } from "./Wiring";
 import { DroneScene } from "../explorer/Scene";
 
 const MODULES = ["V", "P", "C"];
@@ -19,6 +20,7 @@ export interface ExplorerViewProps {
   parts: Parts;
   wires: Wires;
   spec?: SpecSheet | null; // for the numbers that follow the modules
+  wiring?: Wiring | null; // for a board's link to its pins
   // the 3D part, given the state; the tests pass a stand-in, since jsdom has no WebGL
   view: (state: ViewState) => ReactNode;
 }
@@ -60,7 +62,7 @@ export function numbersFor(spec: SpecSheet | null | undefined, combination: stri
   return `${c.name}: ${Math.round(c.mass_g)} g${time}, ${c.verdict}`;
 }
 
-export function ExplorerView({ parts, wires, spec, view }: ExplorerViewProps) {
+export function ExplorerView({ parts, wires, spec, wiring, view }: ExplorerViewProps) {
   const [modulesOn, setModulesOn] = useState(() => new Set(MODULES));
   const [explode, setExplode] = useState(0);
   const [selected, select] = useState<string | null>(null);
@@ -128,6 +130,7 @@ export function ExplorerView({ parts, wires, spec, view }: ExplorerViewProps) {
           route={selected ? (routes.get(selected) ?? null) : null}
           combination={combination}
           kase={kase}
+          boards={boardsOf(wiring, picked?.part_id ?? null)}
         />
       </aside>
     </div>
@@ -143,6 +146,7 @@ export function Explorer({ load }: { load?: LoadOptions }) {
   const parts = useData<Parts>("parts.json", load);
   const wires = useData<Wires>("wires.json", load);
   const spec = useData<SpecSheet>("spec.json", load);
+  const wiring = useData<Wiring>("wiring.json", load);
   const model = useModel("drone.glb", load);
   const problem = parts.problem ?? wires.problem ?? model.problem;
   if (problem) return <p role="alert">{problem}</p>;
@@ -155,6 +159,7 @@ export function Explorer({ load }: { load?: LoadOptions }) {
         parts={parts.data}
         wires={wires.data}
         spec={spec.data}
+        wiring={wiring.data}
         view={(s) => (
           <Canvas camera={{ position: [0.55, 0.4, 0.65], fov: 35 }} dpr={[1, 2]}>
             <color attach="background" args={["#0b0b0b"]} />

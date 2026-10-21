@@ -6,6 +6,7 @@ listed as missing in index.json and its files are skipped: the site grows as the
 """
 
 import json
+import shutil
 import struct
 from datetime import date
 from pathlib import Path
@@ -112,6 +113,32 @@ def _write(out: Path, name: str, model) -> Path:
     return path
 
 
+def wiring(electrical: dict, reports, out) -> schema.Wiring:
+    """Every board's pins from electrical.json, and its harness diagrams and schematic copied
+    under `out`/wiring."""
+    from pcs14.site.steps import GITHUB
+
+    reports, out = Path(reports), Path(out)
+    folder = reports / "electrical"
+    (out / "wiring").mkdir(parents=True, exist_ok=True)
+    harnesses = []
+    for file in electrical.get("files", []):
+        if file.startswith("harnesses/") and (folder / file).is_file():
+            target = f"wiring/{Path(file).name}"
+            shutil.copyfile(folder / file, out / target)
+            harnesses.append(schema.Harness(name=Path(file).stem.replace("-", " "), file=target))
+    schematic = None
+    for export in electrical.get("exports", []):
+        drawn = reports.resolve().parent.parent / export
+        if export.endswith(".svg") and drawn.is_file():
+            shutil.copyfile(drawn, out / "wiring" / "schematic.svg")
+            schematic = "wiring/schematic.svg"
+    boards = [schema.BoardPins(name=name, **b) for name, b in electrical["boards"].items()]
+    kicad = GITHUB + "docs/reports/electrical/kicad/electrical.kicad_sch"
+    return schema.Wiring(schema_version=schema.SCHEMA_VERSION, boards=boards,
+                         harnesses=harnesses, schematic=schematic, kicad=kicad)  # fmt: skip
+
+
 def hero(view, out, margin_px: int = 48) -> Path:
     """The home page's drone: the CAD's three-quarter view without its post header and footer,
     trimmed to the drone with a margin of the background around it."""
@@ -153,6 +180,8 @@ def write_all(out, reports, commit: str | None = None, today: str | None = None)
         written.append(_write(out, "parts", parts(found["cad"], sheet)))
     if found["electrical"] is not None and "routes" in found["electrical"]:
         written.append(_write(out, "wires", wires(found["electrical"])))
+    if found["electrical"] is not None and "boards" in found["electrical"]:
+        written.append(_write(out, "wiring", wiring(found["electrical"], reports, out)))
     # the home page's drone
     view = reports / "cad" / "views" / "three-quarter.png"
     if view.is_file():

@@ -207,6 +207,34 @@ export interface Tunnel {
   cases: TunnelCase[];
 }
 
+export interface PinRow {
+  pin: string;
+  role: string;
+  functions: string;
+  to: string;
+  harness: string;
+}
+
+export interface BoardPins {
+  name: string;
+  part: string;
+  module: string;
+  pins: PinRow[];
+}
+
+export interface Harness {
+  name: string;
+  file: string;
+}
+
+export interface Wiring {
+  schema_version: number;
+  boards: BoardPins[];
+  harnesses: Harness[];
+  schematic?: string | null;
+  kicad: string;
+}
+
 export interface UnprovenItem {
   what: string;
   measure: string;
@@ -286,4 +314,8 @@ export const FIELDS = {
   UnprovenItem: ["what", "measure"],
   UnprovenGroup: ["name", "url", "items"],
   Unproven: ["schema_version", "groups"],
+  PinRow: ["pin", "role", "functions", "to", "harness"],
+  BoardPins: ["name", "part", "module", "pins"],
+  Harness: ["name", "file"],
+  Wiring: ["schema_version", "boards", "harnesses", "schematic", "kicad"],
 } as const;

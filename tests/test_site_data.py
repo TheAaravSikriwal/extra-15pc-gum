@@ -159,3 +159,29 @@ def test_the_home_pages_drone_is_the_cads_view_without_its_post_header(tmp_path)
     assert picture.shape[0] < 600 and picture.shape[1] < 1000  # the header and footer cut off
     assert picture.shape[0] > 350 and picture.shape[1] > 760  # the drone, with room around it
     assert (picture[:20] == 11).all()  # its margin is the background
+
+
+def test_the_wiring_page_has_every_boards_pins_and_the_harness_diagrams(tmp_path):
+    reports = tmp_path / "docs" / "reports"
+    harnesses = reports / "electrical" / "harnesses"
+    harnesses.mkdir(parents=True)
+    (harnesses / "main-power.svg").write_text("<svg/>", encoding="utf-8")
+    electrical = {
+        **ELECTRICAL,
+        "files": ["harnesses/main-power.svg", "kicad/electrical.kicad_sch"],
+        "exports": ["outputs/electrical/electrical.svg"],
+        "boards": {"fc": {"part": "ark-fpv", "module": "base", "pins": [
+            {"pin": "ESC.CH1", "role": "both", "functions": "FMU_CH1", "to": "cut.J1.NC1",
+             "harness": "esc cable"}]}},
+    }  # fmt: skip
+    schematic = tmp_path / "outputs" / "electrical" / "electrical.svg"
+    schematic.parent.mkdir(parents=True)
+    schematic.write_text("<svg/>", encoding="utf-8")
+    found = data.wiring(electrical, reports, tmp_path / "out")
+    (board,) = found.boards
+    assert board.name == "fc" and board.pins[0].to == "cut.J1.NC1"
+    (harness,) = found.harnesses
+    assert harness.name == "main power" and (tmp_path / "out" / harness.file).is_file()
+    assert found.schematic == "wiring/schematic.svg"
+    assert (tmp_path / "out" / "wiring" / "schematic.svg").is_file()
+    assert found.kicad.endswith("docs/reports/electrical/kicad/electrical.kicad_sch")
