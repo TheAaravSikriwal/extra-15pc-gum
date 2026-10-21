@@ -2,7 +2,7 @@
 # The core builds and tests on any machine; the sim layer needs Gazebo Harmonic (inside WSL2).
 #   cmake -S firmware -B build/firmware && cmake --build build/firmware && ctest --test-dir build/firmware
 cmake_minimum_required(VERSION 3.22)
-project(pcs14_firmware LANGUAGES CXX)
+project(pcs14_firmware LANGUAGES C CXX)  # C for libcanard and FatFs
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
