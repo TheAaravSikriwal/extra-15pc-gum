@@ -59,7 +59,8 @@ export function Spec({ load }: { load?: LoadOptions }) {
         ))}
       </div>
       <h2>
-        {c.name} {c.modules.length ? `(${c.modules.join(", ")})` : "(no modules)"}: {c.verdict}
+        {c.name} {c.modules.length ? `(${c.modules.join(", ")})` : "(no modules)"}:{" "}
+        <span className={`verdict ${c.verdict}`}>{c.verdict}</span>
       </h2>
       <Numbers c={c} />
       <Bars
@@ -72,6 +73,8 @@ export function Spec({ load }: { load?: LoadOptions }) {
             limit: k.limit as number,
             unit: k.unit,
             higherIsBetter: k.higher_is_better,
+            pessimistic: k.pessimistic,
+            verdict: k.verdict,
           }))}
       />
       <h2>The parts</h2>

@@ -432,3 +432,12 @@ button[aria-pressed="true"] {
 .stills img.harness {
   background: #f4f4f2;
 }
+
+.verdict.pass,
+.verdict.marginal {
+  color: var(--pass);
+}
+
+.verdict.fail {
+  color: var(--fail);
+}

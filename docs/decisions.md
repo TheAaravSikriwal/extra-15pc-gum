@@ -416,6 +416,17 @@ It's built from the data files every step writes, so it grows as the steps finis
 
 **Where it lives (decided 2026-10-17):** on my machine while the research runs. It doesn't go live until the project is done, and then it joins my portfolio site, wearechintu.com, as another project. So it's built as a self-contained static site with relative links, which can drop into the portfolio wherever it ends up, with no server needed. Its code lives in this repo like everything else, but the built site isn't published anywhere until the end. What it's built with gets settled in its own spec.
 
+**What building it decided (2026-10-20).** I asked for it to be built without stopping to ask, so these were my calls, written down as I made them:
+
+- **It opens from a folder on disk, through scripts.** Browsers won't let a page opened as `file://` fetch anything, so `pcs14 site` writes every data file twice, as JSON and as a small script that hands the same data to the page. The 3D model goes the same way, as base64.
+- **The first load is held to 600 kB,** counting the page, what it names and the fonts. The fonts are Latin only, and the pages with three.js in them (the 3D drone and the flights, about 860 kB) load only when they're opened. It's 267 kB now.
+- **The model is thinned with gltfpack** at half the triangles, keeping every piece's name: the CAD's 11.9 MB GLB comes to 3.0 MB. The CAD's own GLB stays as the CAD makes it.
+- **Nothing is written twice.** A step's page comes from the README's plan, its report, the log and the learning file, matched by name. The unproven list is decisions.md's own table plus each report's "What it can't prove". The wiring page reads every board's pins from `electrical.json`, which the electrical report now writes.
+- **The flight pages fly the CAD's model,** in each run's color with only its combination's modules. A light stand-in shows until the model has loaded, so the page doesn't wait on 3 MB.
+- **The home page is quiet:** the CAD's three-quarter view without its post header, a line about what this is, one line per step with its status, and one line to what the sims can't prove.
+- **The wind tunnel plays its own frames.** My FluidX3D fork writes 40 frames along each run, of the air's speed and of the vortices, each with its time, and the page plays them in order on the clock at 0.02x. Its pictures stay on my machine until the fork is public: the page says so, and the build check warns when they're in a build.
+- **The 3D drone turns slowly with its props spinning,** each the way PX4's quad X turns it, until someone takes hold of it.
+
 
 ### Learning (decided 2026-10-13)
 
