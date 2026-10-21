@@ -7,6 +7,9 @@
 // - when the flight controller's heartbeat stops (a hung flight controller)
 // - on its automatic triggers (free fall, tumbling), but only once they're out of shadow mode;
 //   in shadow mode they're logged and nothing else, until they've shown zero false triggers
+// It can fire the chute too, as the flight controller can: on the pilot's chute switch, and on
+// its automatic triggers where P is fitted, once they're out of shadow mode. It always cuts the
+// motors first, so the props can't eat the lines.
 // A cut stays latched for the rest of the flight: it clears only on the ground, with the
 // flight controller disarmed and the kill switch off. (Proposed 2026-10-20 as the answer to
 // "can a cut be undone in the air"; it's a safety rule, so it's Aarav's to confirm.)
@@ -52,13 +55,14 @@ class TriggerWatch {
   bool holding_[3]{}, fired_[3]{};
 };
 
-enum class Cut : uint8_t { None, KillSwitch, FlightControllerSilent, Trigger };
+enum class Cut : uint8_t { None, KillSwitch, FlightControllerSilent, Trigger, Chute };
 const char* cut_name(Cut cut);
 
 struct MonitorSettings {
   TriggerLimits limits;
   float heartbeat_timeout_s = 0.25f;  // the flight controller silent this long: it's hung
   bool shadow = true;                 // the automatic triggers only log
+  bool chute_fitted = false;          // P is on: a trigger out of shadow mode fires the chute
 };
 
 class Monitor {
@@ -70,7 +74,13 @@ class Monitor {
   void update(double t, const Vec3& gyro, const Vec3& accel, bool heartbeat, bool armed,
               bool kill, float dt);
 
+  // the pilot's chute switch: the motors cut (if they aren't already), then the release goes.
+  // Only with P fitted, and while the drone is armed, as the flight controller last said
+  void fire_chute(double t);
+
   bool cutting() const { return cut_ != Cut::None; }
+  bool releasing() const { return releasing_; }  // the chute's release line, latched like the cut
+  double release_at() const { return release_at_; }
   Cut why() const { return cut_; }
   double cut_at() const { return cut_at_; }
   // every trigger that has fired, shadow or not: the log the false-trigger count comes from
@@ -79,13 +89,14 @@ class Monitor {
 
  private:
   void cut(Cut why, double t);
+  void release(double t);
   MonitorSettings s_;
   Attitude attitude_;
   TriggerWatch watch_;
   std::vector<Trigger> triggers_;
   Cut cut_ = Cut::None;
-  double cut_at_ = 0, last_heartbeat_ = -1;
-  bool fc_armed_ = false;
+  double cut_at_ = 0, last_heartbeat_ = -1, release_at_ = 0;
+  bool fc_armed_ = false, releasing_ = false;
 };
 
 // A DShot frame: an 11-bit value (0 is "stop", 48 to 2047 throttle), the telemetry bit, and a

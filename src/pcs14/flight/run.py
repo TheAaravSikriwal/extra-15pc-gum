@@ -57,6 +57,15 @@ FIRMWARES = ("px4", "mine")  # what flies: PX4 v1.17.0, or my own (firmware/, st
 # have my parachute rule (no autonomous flight above 30 m without P), so the rule is off for
 # them; it has its own test (firmware/core/tests/test_limits.cpp)
 MINE_RUN_PARAMS = {"PCS14_CHUTE_RULE": 0}
+
+
+def mine_params(params: dict) -> dict:
+    """A run's parameters for my firmware: the run's own on top, then MINE_RUN_PARAMS where the
+    scenario didn't set them itself (the chute rule scenario switches the rule back on)."""
+    return {**params, **RUN_PARAMS,
+            **{k: v for k, v in MINE_RUN_PARAMS.items() if k not in params}}  # fmt: skip
+
+
 GZ_SYSTEM_PYTHON = "/usr/lib/python3/dist-packages"  # where Ubuntu's python3-gz-* packages go
 GZ_MSGS = "gz.msgs10"  # Harmonic's message package
 CONNECT_TOPIC_S = 2.0  # wall seconds a new publisher waits for Gazebo to hear about it
@@ -198,14 +207,18 @@ def sitl_command(binary, entity: str, airframe, instance: int, params, monitor=F
     ] + (["--monitor"] if monitor else [])  # fmt: skip
 
 
-def monitor_command(binary, entity: str, live: bool = False) -> list[str]:
-    """The safety monitor in the sim, between my firmware and `entity`'s motors."""
-    return [Path(binary).as_posix(), "--world", WORLD, "--model", entity] + (
-        ["--live"] if live else []
+def monitor_command(binary, entity: str, live: bool = False, chute: bool = False) -> list[str]:
+    """The safety monitor in the sim, between my firmware and `entity`'s motors; with `chute`
+    (P is fitted) it can fire the chute on the pilot's switch."""
+    return (
+        [Path(binary).as_posix(), "--world", WORLD, "--model", entity]
+        + (["--live"] if live else [])
+        + (["--chute"] if chute else [])
     )
 
 
-MONITOR_LINES = ("cut ", "trigger ")  # what the monitor's log says that a run's record keeps
+# what the monitor's log says that a run's record keeps
+MONITOR_LINES = ("cut ", "trigger ", "chute ")
 
 
 def gz_command(world, verbose: int = 2) -> list[str]:
@@ -729,14 +742,14 @@ class Session:
                 f"real_time_factor: {_number(float(self.speed))}",
             )  # fmt: skip
         params = self.folder / "params.txt"
-        values = {**self.params, **RUN_PARAMS, **MINE_RUN_PARAMS}
+        values = mine_params(self.params)
         params.write_text(params_text(values), encoding="utf-8")
         if self.monitor:
             watcher = binary.parent / "pcs14_monitor_sitl"
             if not watcher.exists():
                 raise SimError(f"no pcs14_monitor_sitl at {watcher}; run scripts/build-firmware.sh")
-            await self._spawn(monitor_command(watcher, self.entity), "monitor", env=self.gz_env,
-                              cwd=self.folder)  # fmt: skip
+            await self._spawn(monitor_command(watcher, self.entity, chute="chute" in info),
+                              "monitor", env=self.gz_env, cwd=self.folder)  # fmt: skip
         process = await self._spawn(
             sitl_command(binary, self.entity, home / "firmware.txt", self.instance, params,
                          self.monitor),

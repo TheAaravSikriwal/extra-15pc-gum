@@ -320,7 +320,7 @@ A blank cell is a scenario that combination doesn't fly: top speed and wind only
 
 | Check | Found | Verdict |
 |---|---|---|
-| payload drift | stayed within 0.09 m after picking it up | pass |
+| payload drift | stayed within 0.06 m after picking it up | pass |
 | payload lifted | the rotors' thrust grew 11%, against 11% for 250 g | pass |
 | false triggers | the safety monitor's triggers fired: none | pass |
 
@@ -710,7 +710,7 @@ A blank cell is a scenario that combination doesn't fly: top speed and wind only
 
 | Check | Found | Verdict |
 |---|---|---|
-| payload drift | stayed within 0.10 m after picking it up | pass |
+| payload drift | stayed within 0.05 m after picking it up | pass |
 | payload lifted | the rotors' thrust grew 11%, against 11% for 250 g | pass |
 | false triggers | the safety monitor's triggers fired: none | pass |
 
@@ -940,7 +940,7 @@ A blank cell is a scenario that combination doesn't fly: top speed and wind only
 
 | Check | Found | Verdict |
 |---|---|---|
-| payload drift | stayed within 0.05 m after picking it up | pass |
+| payload drift | stayed within 0.06 m after picking it up | pass |
 | payload lifted | the rotors' thrust grew 11%, against 11% for 250 g | pass |
 | false triggers | the safety monitor's triggers fired: none | pass |
 
@@ -1016,6 +1016,42 @@ And where something really fails:
 - dead motor in V: its free fall trigger would fire 0.51 s after the failure
 - dead motor in V+C: its free fall trigger would fire 0.50 s after the failure
 
+## My firmware, the same scenarios
+
+The same models and the same scripts, flown by my own flight firmware (step 5, in `firmware/`) instead of PX4, through its Gazebo bridge, with the safety monitor's firmware in the loop. Where it and PX4 disagree, the cell says so.
+
+78 of 78 runs flown, and 12 miss.
+
+| Scenario | base | V | P | C | mission | V+C | P+C | max |
+|---|---|---|---|---|---|---|---|---|
+| hover | pass | pass | pass | pass | pass | pass | pass | pass |
+| steps | pass | pass | pass | pass | pass | pass | pass | pass |
+| top speed |  | pass | pass |  | pass |  |  |  |
+| wind |  | pass | pass |  | pass |  |  |  |
+| endurance | **fail** | **fail** | **fail** | **fail** | **fail** | **fail** | **fail** | **fail** |
+| lost link | pass | pass | pass | pass | pass | pass | pass | pass |
+| low battery | pass | pass | pass | pass | pass | pass | pass | pass |
+| parachute drop |  |  | pass |  | pass |  | pass | pass |
+| dead motor | **fail** | **fail** | pass | **fail** | pass | **fail** | pass | pass |
+| failed sensor | pass | pass | pass | pass (PX4 fails) | pass (PX4 fails) | pass (PX4 fails) | pass (PX4 fails) | pass |
+| sagging pack | pass | pass | pass | pass | pass | pass | pass | pass |
+| payload grab |  |  |  | pass |  | pass | pass | pass |
+
+Where mine misses:
+
+- endurance in base: cruise endurance: 33.9 min in the sim against the sizing model's 45.4, at 281 W (PX4 misses it too)
+- dead motor in base: touchdown: came down at 25.3 m/s at the end, too fast for a controlled landing (PX4 misses it too)
+- endurance in V: cruise endurance: 28.6 min in the sim against the sizing model's 36.8, at 332 W (PX4 misses it too)
+- dead motor in V: touchdown: came down at 25.1 m/s at the end, too fast for a controlled landing (PX4 misses it too)
+- endurance in P: cruise endurance: 29.5 min in the sim against the sizing model's 38.8, at 322 W (PX4 misses it too)
+- endurance in C: cruise endurance: 29.6 min in the sim against the sizing model's 38.7, at 321 W (PX4 misses it too)
+- dead motor in C: touchdown: came down at 25.3 m/s at the end, too fast for a controlled landing (PX4 misses it too)
+- endurance in mission: cruise endurance: 25.3 min in the sim against the sizing model's 32.2, at 373 W (PX4 misses it too)
+- endurance in V+C: cruise endurance: 25.4 min in the sim against the sizing model's 32.1, at 372 W (PX4 misses it too)
+- dead motor in V+C: touchdown: came down at 23.9 m/s at the end, too fast for a controlled landing (PX4 misses it too)
+- endurance in P+C: cruise endurance: 26.1 min in the sim against the sizing model's 33.6, at 362 W (PX4 misses it too)
+- endurance in max: cruise endurance: 22.7 min in the sim against the sizing model's 28.5, at 413 W (PX4 misses it too)
+
 ## The models
 
 Each combination's model, as generated. The weight is the CAD's, without the sizing model's growth margin; the top speed is where each motor makes the sizing model's full-throttle thrust, at the 20% reserve and the 90 A cap.
@@ -1052,6 +1088,7 @@ Each combination's model, as generated. The weight is the CAD's, without the siz
 Generated on every run, not committed (they're build outputs):
 
 - `stills/matrix.png`
+- `stills/matrix-mine.png`
 - `stills/drop-portrait.png`
 - `stills/drop-square.png`
 - `stills/drop-vertical.png`

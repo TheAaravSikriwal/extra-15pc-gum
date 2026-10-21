@@ -226,6 +226,18 @@ Calls made while building step 5, in the order they came up.
 - **The flight sim report shows my firmware's runs next to PX4's,** in their own matrix and section, with each cell saying where the two disagree. Each firmware's runs load separately, so neither can leak into the other's verdict.
 - **Proposed, waiting for me:** a safety monitor cut stays latched for the rest of the flight, clearing only on the ground, disarmed, with the kill switch off. It's built that way; it's a safety rule, so it's mine to confirm.
 
+### Modules in sim (decided 2026-10-20)
+
+I asked for the open items to keep moving without stopping to ask, so these were my calls, written down as I made them. The reasons are in the [step 6 spec](specs/2026-10-20-modules-in-sim.md).
+
+- **The safety monitor fires the chute,** as the safety rules say it can: on the pilot's chute switch, and from its own triggers once they're out of shadow mode. It cuts the motors first, every time, and it does nothing without P fitted, since cutting the motors for a chute that isn't there would drop the drone. On the drone it takes the release servo's line from P's node (Teensy pin 31) or uses its own release line (pin 37); in the sim it drives the servo the flight controller drives.
+- **Its triggers stay in shadow mode.** They've shown no false triggers in the sim, but "shown zero" is a call for real flights, not a sim's clean IMU. Until then only the pilot fires the chute from the monitor.
+- **The release latches like the cut,** clearing only on the ground with the flight controller disarmed and the kill switch off. That's the latched-cut rule I still have to confirm, so the same goes for this.
+- **Step 6's scenarios fly my firmware only:** the hung flight controller needs my monitor in the loop, and the drop heights and the jolt are about the drone and the chute. They stay out of step 4's matrix and run when they're named.
+- **The opening jolt gets two numbers:** the sim's, from Gazebo's ground truth during the opening, and the textbook bound, Cx q CdS with Knacke's 1.7 for a solid canopy at infinite mass. The structure track designs to the bound.
+- **HaLow is modeled from Morse Micro's numbers** for the MM6108 module (Heltec publishes no sensitivity for its card), line of sight over flat ground at 915 MHz with the ground's reflection, and a 10 dB fade margin for everything that leaves out.
+- **The companion computer stays the Pi 5,** with the numbers behind it: neither it nor the Jetson Orin Nano has a hardware video encoder, the jobs that want a GPU run on the laptop, and visual-inertial odometry has been run on older ARM boards than the Pi 5's.
+
 ### What the electrical build changed (2026-10-18)
 
 - **The safety monitor's IMU is ST's LSM6DSOX** on Adafruit's breakout (1.7 g, in stock). No usable ICM-42688-P breakout is sold.

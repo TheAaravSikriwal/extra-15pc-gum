@@ -11,6 +11,13 @@ namespace {
 constexpr float kDt = 0.004f;
 const Vec3 kStill{0, 0, -kG};  // a level, still IMU, forward-right-down
 
+// a monitor on a drone with P fitted
+MonitorSettings with_chute() {
+  MonitorSettings s;
+  s.chute_fitted = true;
+  return s;
+}
+
 // flies the monitor for `seconds`: the flight controller's heartbeat every 0.1 s while
 // `beating`, the IMU as given
 void run(Monitor& m, double& t, double seconds, bool beating, bool armed, bool kill,
@@ -78,6 +85,83 @@ TEST_CASE("a cut stays latched in the air and clears on the ground, disarmed, sw
   run(m, t, 1.0, true, true, false);  // switch off, but the flight controller is still armed
   CHECK(m.cutting());
   run(m, t, 1.0, true, false, false);  // disarmed, on the ground
+  CHECK_FALSE(m.cutting());
+}
+
+TEST_CASE("the pilot's chute switch cuts the motors first, then lets the chute go") {
+  Monitor m(with_chute());
+  double t = 0;
+  run(m, t, 1.0, true, true, false);
+  m.fire_chute(t);
+  CHECK(m.cutting());
+  CHECK(m.why() == Cut::Chute);
+  CHECK(m.releasing());
+  CHECK(m.release_at() >= m.cut_at());  // never the canopy before the stop frames
+}
+
+TEST_CASE("on the ground, disarmed, the chute switch does nothing") {
+  Monitor m(with_chute());
+  double t = 0;
+  run(m, t, 1.0, true, false, false);
+  m.fire_chute(t);
+  CHECK_FALSE(m.releasing());
+  CHECK_FALSE(m.cutting());
+}
+
+TEST_CASE("with the flight controller hung, the pilot's chute still goes") {
+  Monitor m(with_chute());
+  double t = 0;
+  run(m, t, 1.0, true, true, false);
+  run(m, t, 0.5, false, true, false);  // hung: the monitor has cut already
+  REQUIRE(m.why() == Cut::FlightControllerSilent);
+  m.fire_chute(t);
+  CHECK(m.releasing());
+  CHECK(m.why() == Cut::FlightControllerSilent);  // the first reason stays the reason
+}
+
+TEST_CASE("without P the chute switch does nothing: no chute to fire, so no cut either") {
+  Monitor m;
+  double t = 0;
+  run(m, t, 1.0, true, true, false);
+  m.fire_chute(t);
+  CHECK_FALSE(m.cutting());
+  CHECK_FALSE(m.releasing());
+}
+
+TEST_CASE("out of shadow mode a free fall fires the chute too, where there is one") {
+  for (const bool fitted : {true, false}) {
+    MonitorSettings s;
+    s.shadow = false;
+    s.chute_fitted = fitted;
+    Monitor m(s);
+    double t = 0;
+    run(m, t, 1.0, true, true, false);
+    run(m, t, 0.5, true, true, false, {}, {0, 0, -0.5f});
+    CHECK(m.cutting());
+    CHECK(m.releasing() == fitted);
+  }
+}
+
+TEST_CASE("in shadow mode a free fall fires nothing, chute or not") {
+  MonitorSettings s;
+  s.chute_fitted = true;
+  Monitor m(s);
+  double t = 0;
+  run(m, t, 1.0, true, true, false);
+  run(m, t, 0.5, true, true, false, {}, {0, 0, -0.5f});
+  CHECK_FALSE(m.releasing());
+  CHECK_FALSE(m.cutting());
+}
+
+TEST_CASE("the release stays latched in the air and clears with the cut, on the ground") {
+  Monitor m(with_chute());
+  double t = 0;
+  run(m, t, 1.0, true, true, false);
+  m.fire_chute(t);
+  run(m, t, 1.0, true, true, false);
+  CHECK(m.releasing());
+  run(m, t, 1.0, true, false, false);  // down, and disarmed
+  CHECK_FALSE(m.releasing());
   CHECK_FALSE(m.cutting());
 }
 

@@ -24,6 +24,8 @@ const char* cut_name(Cut cut) {
       return "flight controller silent";
     case Cut::Trigger:
       return "trigger";
+    case Cut::Chute:
+      return "chute";
     default:
       return "none";
   }
@@ -71,14 +73,35 @@ void Monitor::update(double t, const Vec3& gyro, const Vec3& accel, bool heartbe
     fc_armed_ = armed;
   }
   // the latch clears only on the ground: disarmed, and the switch off
-  if (cut_ != Cut::None && !kill && heartbeat && !armed) cut_ = Cut::None;
+  if (cut_ != Cut::None && !kill && heartbeat && !armed) {
+    cut_ = Cut::None;
+    releasing_ = false;
+  }
   if (kill) cut(Cut::KillSwitch, t);
   if (fc_armed_ && last_heartbeat_ >= 0 && t - last_heartbeat_ > s_.heartbeat_timeout_s)
     cut(Cut::FlightControllerSilent, t);
   // the IMU feels the specific force; the reference takes "about (0, 0, g) hovering", so the
   // sign doesn't matter for the free-fall test, only the size
   const int fired = watch_.update(t, accel, gyro, attitude_.q().tilt(), triggers_);
-  if (fired > 0 && !s_.shadow && fc_armed_) cut(Cut::Trigger, t);
+  if (fired > 0 && !s_.shadow && fc_armed_) {
+    cut(Cut::Trigger, t);
+    if (s_.chute_fitted) release(t);
+  }
+}
+
+void Monitor::fire_chute(double t) {
+  // without P there's no chute, and cutting the motors for one would drop the drone; on the
+  // ground there's nothing to save
+  if (!s_.chute_fitted || !fc_armed_) return;
+  cut(Cut::Chute, t);
+  release(t);
+}
+
+// the release only ever follows a cut: the stop frames are going out before the chute does
+void Monitor::release(double t) {
+  if (cut_ == Cut::None || releasing_) return;
+  releasing_ = true;
+  release_at_ = t;
 }
 
 uint16_t dshot_frame(uint16_t value, bool telemetry) {

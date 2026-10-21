@@ -10098,6 +10098,2390 @@
    "c_node.PWM.PWM2 to claws.servo2.SIG"
   ]
  },
+ "boards": {
+  "lead": {
+   "part": "base-wiring",
+   "module": "base",
+   "pins": [
+    {
+     "pin": "XT60.+",
+     "role": "power",
+     "functions": "",
+     "to": "esc.BAT.VBAT, esc.FC.VBAT, fuses.F1.A, fuses.F2.A, pack.XT60.+",
+     "harness": "main power"
+    },
+    {
+     "pin": "XT60.-",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "main power"
+    }
+   ]
+  },
+  "esc": {
+   "part": "holybro-tekko32-f4-50a",
+   "module": "base",
+   "pins": [
+    {
+     "pin": "FC.VBAT",
+     "role": "power",
+     "functions": "",
+     "to": "fuses.F1.A, fuses.F2.A, lead.XT60.+, pack.XT60.+",
+     "harness": ""
+    },
+    {
+     "pin": "FC.TLM",
+     "role": "out",
+     "functions": "ESC telemetry",
+     "to": "fc.ESC.UART4_RX",
+     "harness": "esc cable"
+    },
+    {
+     "pin": "FC.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "esc cable"
+    },
+    {
+     "pin": "FC.CURRENT",
+     "role": "out",
+     "functions": "analog current sense, 83.3 A per volt on PCB V1.9",
+     "to": "fc.ESC.CURR",
+     "harness": "esc cable"
+    },
+    {
+     "pin": "FC.M1",
+     "role": "both",
+     "functions": "bidirectional DShot",
+     "to": "cut.J1.CM1",
+     "harness": "esc cable"
+    },
+    {
+     "pin": "FC.M2",
+     "role": "both",
+     "functions": "bidirectional DShot",
+     "to": "cut.J1.CM2",
+     "harness": "esc cable"
+    },
+    {
+     "pin": "FC.M3",
+     "role": "both",
+     "functions": "bidirectional DShot",
+     "to": "cut.J1.CM3",
+     "harness": "esc cable"
+    },
+    {
+     "pin": "FC.M4",
+     "role": "both",
+     "functions": "bidirectional DShot",
+     "to": "cut.J1.CM4",
+     "harness": "esc cable"
+    },
+    {
+     "pin": "BAT.VBAT",
+     "role": "power",
+     "functions": "",
+     "to": "fuses.F1.A, fuses.F2.A, lead.XT60.+, pack.XT60.+",
+     "harness": "battery taps, main power"
+    },
+    {
+     "pin": "BAT.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "battery taps, main power"
+    },
+    {
+     "pin": "MOTORS.M1A",
+     "role": "power",
+     "functions": "",
+     "to": "m1.leads.A",
+     "harness": "motors"
+    },
+    {
+     "pin": "MOTORS.M1B",
+     "role": "power",
+     "functions": "",
+     "to": "m1.leads.B",
+     "harness": "motors"
+    },
+    {
+     "pin": "MOTORS.M1C",
+     "role": "power",
+     "functions": "",
+     "to": "m1.leads.C",
+     "harness": "motors"
+    },
+    {
+     "pin": "MOTORS.M2A",
+     "role": "power",
+     "functions": "",
+     "to": "m2.leads.A",
+     "harness": "motors"
+    },
+    {
+     "pin": "MOTORS.M2B",
+     "role": "power",
+     "functions": "",
+     "to": "m2.leads.B",
+     "harness": "motors"
+    },
+    {
+     "pin": "MOTORS.M2C",
+     "role": "power",
+     "functions": "",
+     "to": "m2.leads.C",
+     "harness": "motors"
+    },
+    {
+     "pin": "MOTORS.M3A",
+     "role": "power",
+     "functions": "",
+     "to": "m3.leads.A",
+     "harness": "motors"
+    },
+    {
+     "pin": "MOTORS.M3B",
+     "role": "power",
+     "functions": "",
+     "to": "m3.leads.B",
+     "harness": "motors"
+    },
+    {
+     "pin": "MOTORS.M3C",
+     "role": "power",
+     "functions": "",
+     "to": "m3.leads.C",
+     "harness": "motors"
+    },
+    {
+     "pin": "MOTORS.M4A",
+     "role": "power",
+     "functions": "",
+     "to": "m4.leads.A",
+     "harness": "motors"
+    },
+    {
+     "pin": "MOTORS.M4B",
+     "role": "power",
+     "functions": "",
+     "to": "m4.leads.B",
+     "harness": "motors"
+    },
+    {
+     "pin": "MOTORS.M4C",
+     "role": "power",
+     "functions": "",
+     "to": "m4.leads.C",
+     "harness": "motors"
+    }
+   ]
+  },
+  "m1": {
+   "part": "emax-e3-2814-850kv",
+   "module": "base",
+   "pins": [
+    {
+     "pin": "leads.A",
+     "role": "power",
+     "functions": "",
+     "to": "esc.MOTORS.M1A",
+     "harness": "motors"
+    },
+    {
+     "pin": "leads.B",
+     "role": "power",
+     "functions": "",
+     "to": "esc.MOTORS.M1B",
+     "harness": "motors"
+    },
+    {
+     "pin": "leads.C",
+     "role": "power",
+     "functions": "",
+     "to": "esc.MOTORS.M1C",
+     "harness": "motors"
+    }
+   ]
+  },
+  "m2": {
+   "part": "emax-e3-2814-850kv",
+   "module": "base",
+   "pins": [
+    {
+     "pin": "leads.A",
+     "role": "power",
+     "functions": "",
+     "to": "esc.MOTORS.M2A",
+     "harness": "motors"
+    },
+    {
+     "pin": "leads.B",
+     "role": "power",
+     "functions": "",
+     "to": "esc.MOTORS.M2B",
+     "harness": "motors"
+    },
+    {
+     "pin": "leads.C",
+     "role": "power",
+     "functions": "",
+     "to": "esc.MOTORS.M2C",
+     "harness": "motors"
+    }
+   ]
+  },
+  "m3": {
+   "part": "emax-e3-2814-850kv",
+   "module": "base",
+   "pins": [
+    {
+     "pin": "leads.A",
+     "role": "power",
+     "functions": "",
+     "to": "esc.MOTORS.M3A",
+     "harness": "motors"
+    },
+    {
+     "pin": "leads.B",
+     "role": "power",
+     "functions": "",
+     "to": "esc.MOTORS.M3B",
+     "harness": "motors"
+    },
+    {
+     "pin": "leads.C",
+     "role": "power",
+     "functions": "",
+     "to": "esc.MOTORS.M3C",
+     "harness": "motors"
+    }
+   ]
+  },
+  "m4": {
+   "part": "emax-e3-2814-850kv",
+   "module": "base",
+   "pins": [
+    {
+     "pin": "leads.A",
+     "role": "power",
+     "functions": "",
+     "to": "esc.MOTORS.M4A",
+     "harness": "motors"
+    },
+    {
+     "pin": "leads.B",
+     "role": "power",
+     "functions": "",
+     "to": "esc.MOTORS.M4B",
+     "harness": "motors"
+    },
+    {
+     "pin": "leads.C",
+     "role": "power",
+     "functions": "",
+     "to": "esc.MOTORS.M4C",
+     "harness": "motors"
+    }
+   ]
+  },
+  "fuses": {
+   "part": "branch-fuses",
+   "module": "base",
+   "pins": [
+    {
+     "pin": "F1.A",
+     "role": "power",
+     "functions": "",
+     "to": "esc.BAT.VBAT, esc.FC.VBAT, lead.XT60.+, pack.XT60.+",
+     "harness": "battery taps"
+    },
+    {
+     "pin": "F1.B",
+     "role": "power",
+     "functions": "",
+     "to": "bec.pads.IN",
+     "harness": "battery taps"
+    },
+    {
+     "pin": "F2.A",
+     "role": "power",
+     "functions": "",
+     "to": "esc.BAT.VBAT, esc.FC.VBAT, lead.XT60.+, pack.XT60.+",
+     "harness": "battery taps"
+    },
+    {
+     "pin": "F2.B",
+     "role": "power",
+     "functions": "",
+     "to": "fc.ESC.VBAT, fc.POWER_AUX.VBAT",
+     "harness": "battery taps"
+    }
+   ]
+  },
+  "bec": {
+   "part": "matek-bec12s-pro",
+   "module": "base",
+   "pins": [
+    {
+     "pin": "pads.IN",
+     "role": "power",
+     "functions": "",
+     "to": "fuses.F1.B",
+     "harness": "battery taps"
+    },
+    {
+     "pin": "pads.G",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "battery taps"
+    },
+    {
+     "pin": "pads.G2",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "module power"
+    },
+    {
+     "pin": "pads.OUT",
+     "role": "power",
+     "functions": "",
+     "to": "claws.servo1.V+, claws.servo2.V+, cplug.POWER.5V, fan.FAN.5V, halow.HAT.5V, and 9 more",
+     "harness": "module power, safety monitor"
+    }
+   ]
+  },
+  "fc": {
+   "part": "ark-fpv",
+   "module": "base",
+   "pins": [
+    {
+     "pin": "ESC.VBAT",
+     "role": "power",
+     "functions": "",
+     "to": "fuses.F2.B",
+     "harness": ""
+    },
+    {
+     "pin": "ESC.CURR",
+     "role": "in",
+     "functions": "CURR_IN_EXT, analog current sense",
+     "to": "esc.FC.CURRENT",
+     "harness": "esc cable"
+    },
+    {
+     "pin": "ESC.UART4_RX",
+     "role": "in",
+     "functions": "TELEM4, ttyS3, ESC telemetry",
+     "to": "esc.FC.TLM",
+     "harness": "esc cable"
+    },
+    {
+     "pin": "ESC.CH1",
+     "role": "both",
+     "functions": "FMU_CH1, bidirectional DShot",
+     "to": "cut.J1.NC1, taps.B2.A",
+     "harness": "esc cable, safety monitor"
+    },
+    {
+     "pin": "ESC.CH2",
+     "role": "both",
+     "functions": "FMU_CH2, bidirectional DShot",
+     "to": "cut.J1.NC2, taps.B3.A",
+     "harness": "esc cable, safety monitor"
+    },
+    {
+     "pin": "ESC.CH3",
+     "role": "both",
+     "functions": "FMU_CH3, bidirectional DShot",
+     "to": "cut.J1.NC3, taps.B4.A",
+     "harness": "esc cable, safety monitor"
+    },
+    {
+     "pin": "ESC.CH4",
+     "role": "both",
+     "functions": "FMU_CH4, bidirectional DShot",
+     "to": "cut.J1.NC4, taps.B5.A",
+     "harness": "esc cable, safety monitor"
+    },
+    {
+     "pin": "ESC.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "esc cable"
+    },
+    {
+     "pin": "PWM_EXTRA.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": ""
+    },
+    {
+     "pin": "RC.5V",
+     "role": "power",
+     "functions": "",
+     "to": "c_node.CAN1.5V, c_node.CAN2.5V, c_node.I2C.5V, c_node.UART.5V, cplug.SIGNAL.CAN_5V, and 17 more",
+     "harness": "receiver"
+    },
+    {
+     "pin": "RC.USART6_RX",
+     "role": "in",
+     "functions": "RC, ttyS5",
+     "to": "rx.pads.TX, taps.B1.A",
+     "harness": "receiver"
+    },
+    {
+     "pin": "RC.USART6_TX",
+     "role": "out",
+     "functions": "RC, ttyS5",
+     "to": "rx.pads.RX",
+     "harness": "receiver"
+    },
+    {
+     "pin": "RC.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "receiver"
+    },
+    {
+     "pin": "POWER_AUX.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "battery taps"
+    },
+    {
+     "pin": "POWER_AUX.VBAT",
+     "role": "power",
+     "functions": "",
+     "to": "fuses.F2.B",
+     "harness": "battery taps"
+    },
+    {
+     "pin": "CAN.5V",
+     "role": "power",
+     "functions": "",
+     "to": "c_node.CAN1.5V, c_node.CAN2.5V, c_node.I2C.5V, c_node.UART.5V, cplug.SIGNAL.CAN_5V, and 17 more",
+     "harness": ""
+    },
+    {
+     "pin": "CAN.CAN_P",
+     "role": "bus",
+     "functions": "CAN1 high",
+     "to": "c_node.CAN1.CAN_P, c_node.CAN2.CAN_P, cplug.SIGNAL.CAN_P, gps.CAN1.CAN_P, gps.CAN2.CAN_P, and 8 more",
+     "harness": ""
+    },
+    {
+     "pin": "CAN.CAN_N",
+     "role": "bus",
+     "functions": "CAN1 low",
+     "to": "c_node.CAN1.CAN_N, c_node.CAN2.CAN_N, cplug.SIGNAL.CAN_N, gps.CAN1.CAN_N, gps.CAN2.CAN_N, and 8 more",
+     "harness": ""
+    },
+    {
+     "pin": "CAN.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": ""
+    },
+    {
+     "pin": "GPS.5V",
+     "role": "power",
+     "functions": "",
+     "to": "c_node.CAN1.5V, c_node.CAN2.5V, c_node.I2C.5V, c_node.UART.5V, cplug.SIGNAL.CAN_5V, and 17 more",
+     "harness": "lidar"
+    },
+    {
+     "pin": "GPS.USART1_TX",
+     "role": "out",
+     "functions": "GPS1, ttyS0",
+     "to": "lidar.J1.RXD",
+     "harness": "lidar"
+    },
+    {
+     "pin": "GPS.USART1_RX",
+     "role": "in",
+     "functions": "GPS1, ttyS0",
+     "to": "lidar.J1.TXD",
+     "harness": "lidar"
+    },
+    {
+     "pin": "GPS.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "lidar"
+    },
+    {
+     "pin": "TELEM.5V",
+     "role": "power",
+     "functions": "",
+     "to": "c_node.CAN1.5V, c_node.CAN2.5V, c_node.I2C.5V, c_node.UART.5V, cplug.SIGNAL.CAN_5V, and 17 more",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "TELEM.UART7_TX",
+     "role": "out",
+     "functions": "TELEM1, ttyS6",
+     "to": "pi.GPIO.GPIO15, sockets.V_SIGNAL.TX, vplug.SIGNAL.TX",
+     "harness": "module bus"
+    },
+    {
+     "pin": "TELEM.UART7_RX",
+     "role": "in",
+     "functions": "TELEM1, ttyS6",
+     "to": "pi.GPIO.GPIO14, sockets.V_SIGNAL.RX, vplug.SIGNAL.RX",
+     "harness": "module bus"
+    },
+    {
+     "pin": "TELEM.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": ""
+    },
+    {
+     "pin": "VTX.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "VTX.UART5_TX",
+     "role": "out",
+     "functions": "TELEM2, ttyS4",
+     "to": "taps.B6.A",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "VTX.UART5_RX",
+     "role": "in",
+     "functions": "TELEM2, ttyS4",
+     "to": "teensy.pins.14",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "VTX.GND2",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": ""
+    },
+    {
+     "pin": "SPI.5V",
+     "role": "power",
+     "functions": "",
+     "to": "c_node.CAN1.5V, c_node.CAN2.5V, c_node.I2C.5V, c_node.UART.5V, cplug.SIGNAL.CAN_5V, and 17 more",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "SPI.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "DEBUG.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": ""
+    }
+   ]
+  },
+  "rx": {
+   "part": "radiomaster-rp2-v2",
+   "module": "base",
+   "pins": [
+    {
+     "pin": "pads.5V",
+     "role": "power",
+     "functions": "",
+     "to": "c_node.CAN1.5V, c_node.CAN2.5V, c_node.I2C.5V, c_node.UART.5V, cplug.SIGNAL.CAN_5V, and 21 more",
+     "harness": "receiver"
+    },
+    {
+     "pin": "pads.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "receiver"
+    },
+    {
+     "pin": "pads.TX",
+     "role": "out",
+     "functions": "CRSF out",
+     "to": "fc.RC.USART6_RX, taps.B1.A",
+     "harness": "receiver"
+    },
+    {
+     "pin": "pads.RX",
+     "role": "in",
+     "functions": "CRSF in",
+     "to": "fc.RC.USART6_TX",
+     "harness": "receiver"
+    }
+   ]
+  },
+  "lidar": {
+   "part": "benewake-tf-luna",
+   "module": "base",
+   "pins": [
+    {
+     "pin": "J1.5V",
+     "role": "power",
+     "functions": "",
+     "to": "c_node.CAN1.5V, c_node.CAN2.5V, c_node.I2C.5V, c_node.UART.5V, cplug.SIGNAL.CAN_5V, and 21 more",
+     "harness": "lidar"
+    },
+    {
+     "pin": "J1.RXD",
+     "role": "in",
+     "functions": "UART RX, I2C SDA",
+     "to": "fc.GPS.USART1_TX",
+     "harness": "lidar"
+    },
+    {
+     "pin": "J1.TXD",
+     "role": "out",
+     "functions": "UART TX, I2C SCL",
+     "to": "fc.GPS.USART1_RX",
+     "harness": "lidar"
+    },
+    {
+     "pin": "J1.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "lidar"
+    }
+   ]
+  },
+  "sockets": {
+   "part": "module-socket",
+   "module": "base",
+   "pins": [
+    {
+     "pin": "FC_CAN.5V",
+     "role": "power",
+     "functions": "",
+     "to": "c_node.CAN1.5V, c_node.CAN2.5V, c_node.I2C.5V, c_node.UART.5V, cplug.SIGNAL.CAN_5V, and 18 more",
+     "harness": "module bus"
+    },
+    {
+     "pin": "FC_CAN.CAN_P",
+     "role": "bus",
+     "functions": "",
+     "to": "c_node.CAN1.CAN_P, c_node.CAN2.CAN_P, cplug.SIGNAL.CAN_P, fc.CAN.CAN_P, gps.CAN1.CAN_P, and 5 more",
+     "harness": "module bus"
+    },
+    {
+     "pin": "FC_CAN.CAN_N",
+     "role": "bus",
+     "functions": "",
+     "to": "c_node.CAN1.CAN_N, c_node.CAN2.CAN_N, cplug.SIGNAL.CAN_N, fc.CAN.CAN_N, gps.CAN1.CAN_N, and 5 more",
+     "harness": "module bus"
+    },
+    {
+     "pin": "FC_CAN.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "module bus"
+    },
+    {
+     "pin": "V_POWER.5V",
+     "role": "power",
+     "functions": "",
+     "to": "bec.pads.OUT, claws.servo1.V+, claws.servo2.V+, cplug.POWER.5V, fan.FAN.5V, and 7 more",
+     "harness": "module power"
+    },
+    {
+     "pin": "V_POWER.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "module power"
+    },
+    {
+     "pin": "V_SIGNAL.CAN_5V",
+     "role": "power",
+     "functions": "",
+     "to": "c_node.CAN1.5V, c_node.CAN2.5V, c_node.I2C.5V, c_node.UART.5V, cplug.SIGNAL.CAN_5V, and 18 more",
+     "harness": "module bus"
+    },
+    {
+     "pin": "V_SIGNAL.CAN_P",
+     "role": "bus",
+     "functions": "",
+     "to": "c_node.CAN1.CAN_P, c_node.CAN2.CAN_P, cplug.SIGNAL.CAN_P, fc.CAN.CAN_P, gps.CAN1.CAN_P, and 5 more",
+     "harness": "module bus"
+    },
+    {
+     "pin": "V_SIGNAL.CAN_N",
+     "role": "bus",
+     "functions": "",
+     "to": "c_node.CAN1.CAN_N, c_node.CAN2.CAN_N, cplug.SIGNAL.CAN_N, fc.CAN.CAN_N, gps.CAN1.CAN_N, and 5 more",
+     "harness": "module bus"
+    },
+    {
+     "pin": "V_SIGNAL.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "module bus"
+    },
+    {
+     "pin": "V_SIGNAL.TX",
+     "role": "both",
+     "functions": "the flight controller's TELEM1 transmit",
+     "to": "fc.TELEM.UART7_TX, pi.GPIO.GPIO15, vplug.SIGNAL.TX",
+     "harness": "module bus"
+    },
+    {
+     "pin": "V_SIGNAL.RX",
+     "role": "both",
+     "functions": "the flight controller's TELEM1 receive",
+     "to": "fc.TELEM.UART7_RX, pi.GPIO.GPIO14, vplug.SIGNAL.RX",
+     "harness": "module bus"
+    },
+    {
+     "pin": "V_SIGNAL.TAKEOVER",
+     "role": "both",
+     "functions": "the safety monitor taking over the chute",
+     "to": "vplug.SIGNAL.TAKEOVER",
+     "harness": ""
+    },
+    {
+     "pin": "V_SIGNAL.CHUTE",
+     "role": "both",
+     "functions": "the safety monitor's release signal",
+     "to": "vplug.SIGNAL.CHUTE",
+     "harness": ""
+    },
+    {
+     "pin": "P_POWER.5V",
+     "role": "power",
+     "functions": "",
+     "to": "bec.pads.OUT, claws.servo1.V+, claws.servo2.V+, cplug.POWER.5V, fan.FAN.5V, and 7 more",
+     "harness": "module power"
+    },
+    {
+     "pin": "P_POWER.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "module power"
+    },
+    {
+     "pin": "P_SIGNAL.CAN_5V",
+     "role": "power",
+     "functions": "",
+     "to": "c_node.CAN1.5V, c_node.CAN2.5V, c_node.I2C.5V, c_node.UART.5V, cplug.SIGNAL.CAN_5V, and 18 more",
+     "harness": "module bus"
+    },
+    {
+     "pin": "P_SIGNAL.CAN_P",
+     "role": "bus",
+     "functions": "",
+     "to": "c_node.CAN1.CAN_P, c_node.CAN2.CAN_P, cplug.SIGNAL.CAN_P, fc.CAN.CAN_P, gps.CAN1.CAN_P, and 5 more",
+     "harness": "module bus"
+    },
+    {
+     "pin": "P_SIGNAL.CAN_N",
+     "role": "bus",
+     "functions": "",
+     "to": "c_node.CAN1.CAN_N, c_node.CAN2.CAN_N, cplug.SIGNAL.CAN_N, fc.CAN.CAN_N, gps.CAN1.CAN_N, and 5 more",
+     "harness": "module bus"
+    },
+    {
+     "pin": "P_SIGNAL.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": ""
+    },
+    {
+     "pin": "P_SIGNAL.TX",
+     "role": "both",
+     "functions": "the flight controller's TELEM1 transmit",
+     "to": "pplug.SIGNAL.TX",
+     "harness": ""
+    },
+    {
+     "pin": "P_SIGNAL.RX",
+     "role": "both",
+     "functions": "the flight controller's TELEM1 receive",
+     "to": "pplug.SIGNAL.RX",
+     "harness": ""
+    },
+    {
+     "pin": "P_SIGNAL.TAKEOVER",
+     "role": "both",
+     "functions": "the safety monitor taking over the chute",
+     "to": "p_switch.U1.S, pplug.SIGNAL.TAKEOVER, teensy.pins.31",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "P_SIGNAL.CHUTE",
+     "role": "both",
+     "functions": "the safety monitor's release signal",
+     "to": "p_switch.U1.I1, pplug.SIGNAL.CHUTE, teensy.pins.37",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "C_POWER.5V",
+     "role": "power",
+     "functions": "",
+     "to": "bec.pads.OUT, claws.servo1.V+, claws.servo2.V+, cplug.POWER.5V, fan.FAN.5V, and 7 more",
+     "harness": "module power"
+    },
+    {
+     "pin": "C_POWER.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "module power"
+    },
+    {
+     "pin": "C_SIGNAL.CAN_5V",
+     "role": "power",
+     "functions": "",
+     "to": "c_node.CAN1.5V, c_node.CAN2.5V, c_node.I2C.5V, c_node.UART.5V, cplug.SIGNAL.CAN_5V, and 18 more",
+     "harness": "module bus"
+    },
+    {
+     "pin": "C_SIGNAL.CAN_P",
+     "role": "bus",
+     "functions": "",
+     "to": "c_node.CAN1.CAN_P, c_node.CAN2.CAN_P, cplug.SIGNAL.CAN_P, fc.CAN.CAN_P, gps.CAN1.CAN_P, and 5 more",
+     "harness": "module bus"
+    },
+    {
+     "pin": "C_SIGNAL.CAN_N",
+     "role": "bus",
+     "functions": "",
+     "to": "c_node.CAN1.CAN_N, c_node.CAN2.CAN_N, cplug.SIGNAL.CAN_N, fc.CAN.CAN_N, gps.CAN1.CAN_N, and 5 more",
+     "harness": "module bus"
+    },
+    {
+     "pin": "C_SIGNAL.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": ""
+    },
+    {
+     "pin": "C_SIGNAL.TX",
+     "role": "both",
+     "functions": "the flight controller's TELEM1 transmit",
+     "to": "cplug.SIGNAL.TX",
+     "harness": ""
+    },
+    {
+     "pin": "C_SIGNAL.RX",
+     "role": "both",
+     "functions": "the flight controller's TELEM1 receive",
+     "to": "cplug.SIGNAL.RX",
+     "harness": ""
+    },
+    {
+     "pin": "C_SIGNAL.TAKEOVER",
+     "role": "both",
+     "functions": "the safety monitor taking over the chute",
+     "to": "cplug.SIGNAL.TAKEOVER",
+     "harness": ""
+    },
+    {
+     "pin": "C_SIGNAL.CHUTE",
+     "role": "both",
+     "functions": "the safety monitor's release signal",
+     "to": "cplug.SIGNAL.CHUTE",
+     "harness": ""
+    }
+   ]
+  },
+  "teensy": {
+   "part": "pjrc-teensy-41",
+   "module": "base",
+   "pins": [
+    {
+     "pin": "pins.VIN",
+     "role": "power",
+     "functions": "",
+     "to": "teensy_feed.D1.K",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "pins.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "pins.3V3",
+     "role": "power",
+     "functions": "",
+     "to": "imu.J1.VIN, taps.B1.VCC, taps.B2.VCC, taps.B3.VCC, taps.B4.VCC, and 2 more",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "pins.2",
+     "role": "both",
+     "functions": "FlexPWM4.2",
+     "to": "cut.J1.NO3",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "pins.4",
+     "role": "both",
+     "functions": "FlexPWM2.0",
+     "to": "cut.J1.NO4",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "pins.5",
+     "role": "in",
+     "functions": "FlexPWM2.1",
+     "to": "taps.B2.Y",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "pins.6",
+     "role": "in",
+     "functions": "FlexPWM2.2",
+     "to": "taps.B3.Y",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "pins.7",
+     "role": "in",
+     "functions": "FlexPWM1.3, RX2",
+     "to": "taps.B1.Y",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "pins.10",
+     "role": "out",
+     "functions": "QuadTimer1.0, CS",
+     "to": "imu.J1.CS",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "pins.11",
+     "role": "out",
+     "functions": "QuadTimer1.2, MOSI, CTX1",
+     "to": "imu.J1.MOSI",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "pins.12",
+     "role": "in",
+     "functions": "QuadTimer1.1, MISO",
+     "to": "imu.J1.MISO",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "pins.13",
+     "role": "out",
+     "functions": "QuadTimer2.0, SCK, LED",
+     "to": "imu.J1.SCK",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "pins.14",
+     "role": "out",
+     "functions": "QuadTimer3.2, TX3",
+     "to": "fc.VTX.UART5_RX",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "pins.15",
+     "role": "in",
+     "functions": "QuadTimer3.3, RX3",
+     "to": "taps.B6.Y",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "pins.22",
+     "role": "both",
+     "functions": "FlexPWM4.0, CTX1",
+     "to": "cut.J1.NO1",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "pins.23",
+     "role": "both",
+     "functions": "FlexPWM4.1, CRX1",
+     "to": "cut.J1.NO2",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "pins.24",
+     "role": "in",
+     "functions": "FlexPWM1.2, TX6, SCL2",
+     "to": "taps.B4.Y",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "pins.28",
+     "role": "in",
+     "functions": "FlexPWM3.1, RX7",
+     "to": "taps.B5.Y",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "pins.30",
+     "role": "out",
+     "functions": "CRX3",
+     "to": "cut.J1.IN",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "pins.31",
+     "role": "out",
+     "functions": "CTX3",
+     "to": "p_switch.U1.S, pplug.SIGNAL.TAKEOVER, sockets.P_SIGNAL.TAKEOVER",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "pins.37",
+     "role": "out",
+     "functions": "FlexPWM2.3, CS",
+     "to": "p_switch.U1.I1, pplug.SIGNAL.CHUTE, sockets.P_SIGNAL.CHUTE",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "pins.40",
+     "role": "in",
+     "functions": "",
+     "to": "imu.J1.INT1",
+     "harness": "safety monitor"
+    }
+   ]
+  },
+  "imu": {
+   "part": "adafruit-lsm6dsox",
+   "module": "base",
+   "pins": [
+    {
+     "pin": "J1.VIN",
+     "role": "power",
+     "functions": "",
+     "to": "taps.B1.VCC, taps.B2.VCC, taps.B3.VCC, taps.B4.VCC, taps.B5.VCC, and 2 more",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "J1.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "J1.SCK",
+     "role": "in",
+     "functions": "SPI clock, I2C SCL",
+     "to": "teensy.pins.13",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "J1.MOSI",
+     "role": "in",
+     "functions": "SPI data in, I2C SDA",
+     "to": "teensy.pins.11",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "J1.MISO",
+     "role": "out",
+     "functions": "SPI data out",
+     "to": "teensy.pins.12",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "J1.CS",
+     "role": "in",
+     "functions": "SPI chip select",
+     "to": "teensy.pins.10",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "J1.INT1",
+     "role": "out",
+     "functions": "",
+     "to": "teensy.pins.40",
+     "harness": "safety monitor"
+    }
+   ]
+  },
+  "cut": {
+   "part": "cjmcu-5018",
+   "module": "base",
+   "pins": [
+    {
+     "pin": "J1.VCC",
+     "role": "power",
+     "functions": "",
+     "to": "cut_3v3.J1.VOUT",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "J1.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "J1.IN",
+     "role": "in",
+     "functions": "low picks NC, high picks NO",
+     "to": "teensy.pins.30",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "J1.EN",
+     "role": "in",
+     "functions": "low enables, high opens all four",
+     "to": "bec.pads.G, bec.pads.G2, c_node.CAN1.GND, c_node.CAN2.GND, c_node.I2C.GND, and 67 more",
+     "harness": ""
+    },
+    {
+     "pin": "J1.CM1",
+     "role": "both",
+     "functions": "common 1",
+     "to": "esc.FC.M1",
+     "harness": "esc cable"
+    },
+    {
+     "pin": "J1.NC1",
+     "role": "both",
+     "functions": "connected to CM1 when IN and EN are low",
+     "to": "fc.ESC.CH1, taps.B2.A",
+     "harness": "esc cable"
+    },
+    {
+     "pin": "J1.NO1",
+     "role": "both",
+     "functions": "connected to CM1 when IN is high and EN low",
+     "to": "teensy.pins.22",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "J1.CM2",
+     "role": "both",
+     "functions": "common 2",
+     "to": "esc.FC.M2",
+     "harness": "esc cable"
+    },
+    {
+     "pin": "J1.NC2",
+     "role": "both",
+     "functions": "connected to CM2 when IN and EN are low",
+     "to": "fc.ESC.CH2, taps.B3.A",
+     "harness": "esc cable"
+    },
+    {
+     "pin": "J1.NO2",
+     "role": "both",
+     "functions": "connected to CM2 when IN is high and EN low",
+     "to": "teensy.pins.23",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "J1.CM3",
+     "role": "both",
+     "functions": "common 3",
+     "to": "esc.FC.M3",
+     "harness": "esc cable"
+    },
+    {
+     "pin": "J1.NC3",
+     "role": "both",
+     "functions": "connected to CM3 when IN and EN are low",
+     "to": "fc.ESC.CH3, taps.B4.A",
+     "harness": "esc cable"
+    },
+    {
+     "pin": "J1.NO3",
+     "role": "both",
+     "functions": "connected to CM3 when IN is high and EN low",
+     "to": "teensy.pins.2",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "J1.CM4",
+     "role": "both",
+     "functions": "common 4",
+     "to": "esc.FC.M4",
+     "harness": "esc cable"
+    },
+    {
+     "pin": "J1.NC4",
+     "role": "both",
+     "functions": "connected to CM4 when IN and EN are low",
+     "to": "fc.ESC.CH4, taps.B5.A",
+     "harness": "esc cable"
+    },
+    {
+     "pin": "J1.NO4",
+     "role": "both",
+     "functions": "connected to CM4 when IN is high and EN low",
+     "to": "teensy.pins.4",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "J1.GND2",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": ""
+    }
+   ]
+  },
+  "cut_3v3": {
+   "part": "pololu-d36v6f3",
+   "module": "base",
+   "pins": [
+    {
+     "pin": "J1.VIN",
+     "role": "power",
+     "functions": "",
+     "to": "c_node.CAN1.5V, c_node.CAN2.5V, c_node.I2C.5V, c_node.UART.5V, cplug.SIGNAL.CAN_5V, and 21 more",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "J1.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "J1.VOUT",
+     "role": "power",
+     "functions": "",
+     "to": "cut.J1.VCC",
+     "harness": "safety monitor"
+    }
+   ]
+  },
+  "taps": {
+   "part": "safety-monitor-buffers",
+   "module": "base",
+   "pins": [
+    {
+     "pin": "B1.OE",
+     "role": "in",
+     "functions": "low enables",
+     "to": "bec.pads.G, bec.pads.G2, c_node.CAN1.GND, c_node.CAN2.GND, c_node.I2C.GND, and 58 more",
+     "harness": ""
+    },
+    {
+     "pin": "B1.A",
+     "role": "in",
+     "functions": "",
+     "to": "fc.RC.USART6_RX, rx.pads.TX",
+     "harness": "receiver"
+    },
+    {
+     "pin": "B1.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "B1.Y",
+     "role": "out",
+     "functions": "",
+     "to": "teensy.pins.7",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "B1.VCC",
+     "role": "power",
+     "functions": "",
+     "to": "imu.J1.VIN, teensy.pins.3V3",
+     "harness": ""
+    },
+    {
+     "pin": "B2.OE",
+     "role": "in",
+     "functions": "low enables",
+     "to": "bec.pads.G, bec.pads.G2, c_node.CAN1.GND, c_node.CAN2.GND, c_node.I2C.GND, and 58 more",
+     "harness": ""
+    },
+    {
+     "pin": "B2.A",
+     "role": "in",
+     "functions": "",
+     "to": "cut.J1.NC1, fc.ESC.CH1",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "B2.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": ""
+    },
+    {
+     "pin": "B2.Y",
+     "role": "out",
+     "functions": "",
+     "to": "teensy.pins.5",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "B2.VCC",
+     "role": "power",
+     "functions": "",
+     "to": "imu.J1.VIN, teensy.pins.3V3",
+     "harness": ""
+    },
+    {
+     "pin": "B3.OE",
+     "role": "in",
+     "functions": "low enables",
+     "to": "bec.pads.G, bec.pads.G2, c_node.CAN1.GND, c_node.CAN2.GND, c_node.I2C.GND, and 58 more",
+     "harness": ""
+    },
+    {
+     "pin": "B3.A",
+     "role": "in",
+     "functions": "",
+     "to": "cut.J1.NC2, fc.ESC.CH2",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "B3.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": ""
+    },
+    {
+     "pin": "B3.Y",
+     "role": "out",
+     "functions": "",
+     "to": "teensy.pins.6",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "B3.VCC",
+     "role": "power",
+     "functions": "",
+     "to": "imu.J1.VIN, teensy.pins.3V3",
+     "harness": ""
+    },
+    {
+     "pin": "B4.OE",
+     "role": "in",
+     "functions": "low enables",
+     "to": "bec.pads.G, bec.pads.G2, c_node.CAN1.GND, c_node.CAN2.GND, c_node.I2C.GND, and 58 more",
+     "harness": ""
+    },
+    {
+     "pin": "B4.A",
+     "role": "in",
+     "functions": "",
+     "to": "cut.J1.NC3, fc.ESC.CH3",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "B4.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": ""
+    },
+    {
+     "pin": "B4.Y",
+     "role": "out",
+     "functions": "",
+     "to": "teensy.pins.24",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "B4.VCC",
+     "role": "power",
+     "functions": "",
+     "to": "imu.J1.VIN, teensy.pins.3V3",
+     "harness": ""
+    },
+    {
+     "pin": "B5.OE",
+     "role": "in",
+     "functions": "low enables",
+     "to": "bec.pads.G, bec.pads.G2, c_node.CAN1.GND, c_node.CAN2.GND, c_node.I2C.GND, and 58 more",
+     "harness": ""
+    },
+    {
+     "pin": "B5.A",
+     "role": "in",
+     "functions": "",
+     "to": "cut.J1.NC4, fc.ESC.CH4",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "B5.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": ""
+    },
+    {
+     "pin": "B5.Y",
+     "role": "out",
+     "functions": "",
+     "to": "teensy.pins.28",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "B5.VCC",
+     "role": "power",
+     "functions": "",
+     "to": "imu.J1.VIN, teensy.pins.3V3",
+     "harness": ""
+    },
+    {
+     "pin": "B6.OE",
+     "role": "in",
+     "functions": "low enables",
+     "to": "bec.pads.G, bec.pads.G2, c_node.CAN1.GND, c_node.CAN2.GND, c_node.I2C.GND, and 58 more",
+     "harness": ""
+    },
+    {
+     "pin": "B6.A",
+     "role": "in",
+     "functions": "",
+     "to": "fc.VTX.UART5_TX",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "B6.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": ""
+    },
+    {
+     "pin": "B6.Y",
+     "role": "out",
+     "functions": "",
+     "to": "teensy.pins.15",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "B6.VCC",
+     "role": "power",
+     "functions": "",
+     "to": "imu.J1.VIN, teensy.pins.3V3",
+     "harness": ""
+    }
+   ]
+  },
+  "teensy_feed": {
+   "part": "bat54c-on-adapter",
+   "module": "base",
+   "pins": [
+    {
+     "pin": "D1.A1",
+     "role": "power",
+     "functions": "",
+     "to": "c_node.CAN1.5V, c_node.CAN2.5V, c_node.I2C.5V, c_node.UART.5V, cplug.SIGNAL.CAN_5V, and 21 more",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "D1.A2",
+     "role": "power",
+     "functions": "",
+     "to": "bec.pads.OUT, claws.servo1.V+, claws.servo2.V+, cplug.POWER.5V, fan.FAN.5V, and 9 more",
+     "harness": "safety monitor"
+    },
+    {
+     "pin": "D1.K",
+     "role": "power",
+     "functions": "",
+     "to": "teensy.pins.VIN",
+     "harness": "safety monitor"
+    }
+   ]
+  },
+  "vplug": {
+   "part": "module-plug",
+   "module": "V",
+   "pins": [
+    {
+     "pin": "POWER.5V",
+     "role": "power",
+     "functions": "",
+     "to": "bec.pads.OUT, claws.servo1.V+, claws.servo2.V+, cplug.POWER.5V, fan.FAN.5V, and 9 more",
+     "harness": "v"
+    },
+    {
+     "pin": "POWER.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "v"
+    },
+    {
+     "pin": "SIGNAL.CAN_5V",
+     "role": "power",
+     "functions": "",
+     "to": "c_node.CAN1.5V, c_node.CAN2.5V, c_node.I2C.5V, c_node.UART.5V, cplug.SIGNAL.CAN_5V, and 21 more",
+     "harness": "v"
+    },
+    {
+     "pin": "SIGNAL.CAN_P",
+     "role": "bus",
+     "functions": "",
+     "to": "c_node.CAN1.CAN_P, c_node.CAN2.CAN_P, cplug.SIGNAL.CAN_P, fc.CAN.CAN_P, gps.CAN1.CAN_P, and 8 more",
+     "harness": "v"
+    },
+    {
+     "pin": "SIGNAL.CAN_N",
+     "role": "bus",
+     "functions": "",
+     "to": "c_node.CAN1.CAN_N, c_node.CAN2.CAN_N, cplug.SIGNAL.CAN_N, fc.CAN.CAN_N, gps.CAN1.CAN_N, and 8 more",
+     "harness": "v"
+    },
+    {
+     "pin": "SIGNAL.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "v"
+    },
+    {
+     "pin": "SIGNAL.TX",
+     "role": "both",
+     "functions": "the flight controller's TELEM1 transmit",
+     "to": "fc.TELEM.UART7_TX, pi.GPIO.GPIO15, sockets.V_SIGNAL.TX",
+     "harness": "v"
+    },
+    {
+     "pin": "SIGNAL.RX",
+     "role": "both",
+     "functions": "the flight controller's TELEM1 receive",
+     "to": "fc.TELEM.UART7_RX, pi.GPIO.GPIO14, sockets.V_SIGNAL.RX",
+     "harness": "v"
+    },
+    {
+     "pin": "SIGNAL.TAKEOVER",
+     "role": "both",
+     "functions": "the safety monitor taking over the chute",
+     "to": "sockets.V_SIGNAL.TAKEOVER",
+     "harness": ""
+    },
+    {
+     "pin": "SIGNAL.CHUTE",
+     "role": "both",
+     "functions": "the safety monitor's release signal",
+     "to": "sockets.V_SIGNAL.CHUTE",
+     "harness": ""
+    }
+   ]
+  },
+  "gps": {
+   "part": "ark-gps",
+   "module": "base",
+   "pins": [
+    {
+     "pin": "CAN1.5V",
+     "role": "power",
+     "functions": "",
+     "to": "c_node.CAN1.5V, c_node.CAN2.5V, c_node.I2C.5V, c_node.UART.5V, cplug.SIGNAL.CAN_5V, and 20 more",
+     "harness": "v"
+    },
+    {
+     "pin": "CAN1.CAN_P",
+     "role": "bus",
+     "functions": "",
+     "to": "c_node.CAN1.CAN_P, c_node.CAN2.CAN_P, cplug.SIGNAL.CAN_P, fc.CAN.CAN_P, p_node.CAN1.CAN_P, and 7 more",
+     "harness": "v"
+    },
+    {
+     "pin": "CAN1.CAN_N",
+     "role": "bus",
+     "functions": "",
+     "to": "c_node.CAN1.CAN_N, c_node.CAN2.CAN_N, cplug.SIGNAL.CAN_N, fc.CAN.CAN_N, p_node.CAN1.CAN_N, and 7 more",
+     "harness": "v"
+    },
+    {
+     "pin": "CAN1.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "v"
+    },
+    {
+     "pin": "CAN2.5V",
+     "role": "power",
+     "functions": "",
+     "to": "c_node.CAN1.5V, c_node.CAN2.5V, c_node.I2C.5V, c_node.UART.5V, cplug.SIGNAL.CAN_5V, and 20 more",
+     "harness": ""
+    },
+    {
+     "pin": "CAN2.CAN_P",
+     "role": "bus",
+     "functions": "",
+     "to": "c_node.CAN1.CAN_P, c_node.CAN2.CAN_P, cplug.SIGNAL.CAN_P, fc.CAN.CAN_P, p_node.CAN1.CAN_P, and 7 more",
+     "harness": ""
+    },
+    {
+     "pin": "CAN2.CAN_N",
+     "role": "bus",
+     "functions": "",
+     "to": "c_node.CAN1.CAN_N, c_node.CAN2.CAN_N, cplug.SIGNAL.CAN_N, fc.CAN.CAN_N, p_node.CAN1.CAN_N, and 7 more",
+     "harness": ""
+    },
+    {
+     "pin": "CAN2.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": ""
+    },
+    {
+     "pin": "DEBUG.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": ""
+    }
+   ]
+  },
+  "pi": {
+   "part": "rpi-5-4gb",
+   "module": "base",
+   "pins": [
+    {
+     "pin": "GPIO.5V",
+     "role": "power",
+     "functions": "header pins 2 and 4",
+     "to": "bec.pads.OUT, claws.servo1.V+, claws.servo2.V+, cplug.POWER.5V, fan.FAN.5V, and 8 more",
+     "harness": "v"
+    },
+    {
+     "pin": "GPIO.GND",
+     "role": "ground",
+     "functions": "header pin 6",
+     "to": "ground",
+     "harness": "v"
+    },
+    {
+     "pin": "GPIO.GPIO14",
+     "role": "out",
+     "functions": "TXD0, header pin 8, /dev/ttyAMA0",
+     "to": "fc.TELEM.UART7_RX, sockets.V_SIGNAL.RX, vplug.SIGNAL.RX",
+     "harness": "v"
+    },
+    {
+     "pin": "GPIO.GPIO15",
+     "role": "in",
+     "functions": "RXD0, header pin 10",
+     "to": "fc.TELEM.UART7_TX, sockets.V_SIGNAL.TX, vplug.SIGNAL.TX",
+     "harness": "v"
+    },
+    {
+     "pin": "FAN.5V",
+     "role": "power",
+     "functions": "",
+     "to": "bec.pads.OUT, claws.servo1.V+, claws.servo2.V+, cplug.POWER.5V, fan.FAN.5V, and 8 more",
+     "harness": ""
+    },
+    {
+     "pin": "FAN.PWM",
+     "role": "out",
+     "functions": "",
+     "to": "fan.FAN.PWM",
+     "harness": ""
+    },
+    {
+     "pin": "FAN.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": ""
+    },
+    {
+     "pin": "FAN.TACH",
+     "role": "in",
+     "functions": "",
+     "to": "fan.FAN.TACH",
+     "harness": ""
+    },
+    {
+     "pin": "CAM0.3V3",
+     "role": "power",
+     "functions": "",
+     "to": "camera.CSI.3V3",
+     "harness": ""
+    },
+    {
+     "pin": "CAM0.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": ""
+    },
+    {
+     "pin": "CAM0.DATA",
+     "role": "bus",
+     "functions": "",
+     "to": "camera.CSI.DATA",
+     "harness": ""
+    }
+   ]
+  },
+  "fan": {
+   "part": "rpi-active-cooler",
+   "module": "base",
+   "pins": [
+    {
+     "pin": "FAN.5V",
+     "role": "power",
+     "functions": "",
+     "to": "bec.pads.OUT, claws.servo1.V+, claws.servo2.V+, cplug.POWER.5V, halow.HAT.5V, and 9 more",
+     "harness": ""
+    },
+    {
+     "pin": "FAN.PWM",
+     "role": "in",
+     "functions": "",
+     "to": "pi.FAN.PWM",
+     "harness": ""
+    },
+    {
+     "pin": "FAN.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": ""
+    },
+    {
+     "pin": "FAN.TACH",
+     "role": "out",
+     "functions": "",
+     "to": "pi.FAN.TACH",
+     "harness": ""
+    }
+   ]
+  },
+  "camera": {
+   "part": "rpi-camera-module-3",
+   "module": "base",
+   "pins": [
+    {
+     "pin": "CSI.3V3",
+     "role": "power",
+     "functions": "",
+     "to": "pi.CAM0.3V3",
+     "harness": ""
+    },
+    {
+     "pin": "CSI.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": ""
+    },
+    {
+     "pin": "CSI.DATA",
+     "role": "bus",
+     "functions": "",
+     "to": "pi.CAM0.DATA",
+     "harness": ""
+    }
+   ]
+  },
+  "halow": {
+   "part": "heltec-ht-hc01p",
+   "module": "base",
+   "pins": [
+    {
+     "pin": "HAT.5V",
+     "role": "power",
+     "functions": "",
+     "to": "bec.pads.OUT, claws.servo1.V+, claws.servo2.V+, cplug.POWER.5V, fan.FAN.5V, and 9 more",
+     "harness": ""
+    },
+    {
+     "pin": "HAT.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": ""
+    }
+   ]
+  },
+  "pplug": {
+   "part": "module-plug",
+   "module": "P",
+   "pins": [
+    {
+     "pin": "POWER.5V",
+     "role": "power",
+     "functions": "",
+     "to": "bec.pads.OUT, claws.servo1.V+, claws.servo2.V+, cplug.POWER.5V, fan.FAN.5V, and 9 more",
+     "harness": "p"
+    },
+    {
+     "pin": "POWER.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "p"
+    },
+    {
+     "pin": "SIGNAL.CAN_5V",
+     "role": "power",
+     "functions": "",
+     "to": "c_node.CAN1.5V, c_node.CAN2.5V, c_node.I2C.5V, c_node.UART.5V, cplug.SIGNAL.CAN_5V, and 21 more",
+     "harness": "p"
+    },
+    {
+     "pin": "SIGNAL.CAN_P",
+     "role": "bus",
+     "functions": "",
+     "to": "c_node.CAN1.CAN_P, c_node.CAN2.CAN_P, cplug.SIGNAL.CAN_P, fc.CAN.CAN_P, gps.CAN1.CAN_P, and 8 more",
+     "harness": "p"
+    },
+    {
+     "pin": "SIGNAL.CAN_N",
+     "role": "bus",
+     "functions": "",
+     "to": "c_node.CAN1.CAN_N, c_node.CAN2.CAN_N, cplug.SIGNAL.CAN_N, fc.CAN.CAN_N, gps.CAN1.CAN_N, and 8 more",
+     "harness": "p"
+    },
+    {
+     "pin": "SIGNAL.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "p"
+    },
+    {
+     "pin": "SIGNAL.TX",
+     "role": "both",
+     "functions": "the flight controller's TELEM1 transmit",
+     "to": "sockets.P_SIGNAL.TX",
+     "harness": ""
+    },
+    {
+     "pin": "SIGNAL.RX",
+     "role": "both",
+     "functions": "the flight controller's TELEM1 receive",
+     "to": "sockets.P_SIGNAL.RX",
+     "harness": ""
+    },
+    {
+     "pin": "SIGNAL.TAKEOVER",
+     "role": "both",
+     "functions": "the safety monitor taking over the chute",
+     "to": "p_switch.U1.S, sockets.P_SIGNAL.TAKEOVER, teensy.pins.31",
+     "harness": "p"
+    },
+    {
+     "pin": "SIGNAL.CHUTE",
+     "role": "both",
+     "functions": "the safety monitor's release signal",
+     "to": "p_switch.U1.I1, sockets.P_SIGNAL.CHUTE, teensy.pins.37",
+     "harness": "p"
+    }
+   ]
+  },
+  "p_node": {
+   "part": "ark-cannode",
+   "module": "P",
+   "pins": [
+    {
+     "pin": "CAN1.5V",
+     "role": "power",
+     "functions": "",
+     "to": "c_node.CAN1.5V, c_node.CAN2.5V, c_node.I2C.5V, c_node.UART.5V, cplug.SIGNAL.CAN_5V, and 18 more",
+     "harness": "p"
+    },
+    {
+     "pin": "CAN1.CAN_P",
+     "role": "bus",
+     "functions": "",
+     "to": "c_node.CAN1.CAN_P, c_node.CAN2.CAN_P, cplug.SIGNAL.CAN_P, fc.CAN.CAN_P, gps.CAN1.CAN_P, and 7 more",
+     "harness": "p"
+    },
+    {
+     "pin": "CAN1.CAN_N",
+     "role": "bus",
+     "functions": "",
+     "to": "c_node.CAN1.CAN_N, c_node.CAN2.CAN_N, cplug.SIGNAL.CAN_N, fc.CAN.CAN_N, gps.CAN1.CAN_N, and 7 more",
+     "harness": "p"
+    },
+    {
+     "pin": "CAN1.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "p"
+    },
+    {
+     "pin": "CAN2.5V",
+     "role": "power",
+     "functions": "",
+     "to": "c_node.CAN1.5V, c_node.CAN2.5V, c_node.I2C.5V, c_node.UART.5V, cplug.SIGNAL.CAN_5V, and 18 more",
+     "harness": ""
+    },
+    {
+     "pin": "CAN2.CAN_P",
+     "role": "bus",
+     "functions": "",
+     "to": "c_node.CAN1.CAN_P, c_node.CAN2.CAN_P, cplug.SIGNAL.CAN_P, fc.CAN.CAN_P, gps.CAN1.CAN_P, and 7 more",
+     "harness": ""
+    },
+    {
+     "pin": "CAN2.CAN_N",
+     "role": "bus",
+     "functions": "",
+     "to": "c_node.CAN1.CAN_N, c_node.CAN2.CAN_N, cplug.SIGNAL.CAN_N, fc.CAN.CAN_N, gps.CAN1.CAN_N, and 7 more",
+     "harness": ""
+    },
+    {
+     "pin": "CAN2.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": ""
+    },
+    {
+     "pin": "PWM.PWM1",
+     "role": "out",
+     "functions": "TIM2_CH1",
+     "to": "p_switch.U1.I0",
+     "harness": "p"
+    },
+    {
+     "pin": "PWM.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": ""
+    },
+    {
+     "pin": "I2C.5V",
+     "role": "power",
+     "functions": "",
+     "to": "c_node.CAN1.5V, c_node.CAN2.5V, c_node.I2C.5V, c_node.UART.5V, cplug.SIGNAL.CAN_5V, and 18 more",
+     "harness": ""
+    },
+    {
+     "pin": "I2C.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": ""
+    },
+    {
+     "pin": "UART.5V",
+     "role": "power",
+     "functions": "",
+     "to": "c_node.CAN1.5V, c_node.CAN2.5V, c_node.I2C.5V, c_node.UART.5V, cplug.SIGNAL.CAN_5V, and 18 more",
+     "harness": ""
+    },
+    {
+     "pin": "UART.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": ""
+    }
+   ]
+  },
+  "chute": {
+   "part": "fruity-chutes-harrier-40-42",
+   "module": "base",
+   "pins": [
+    {
+     "pin": "servo.SIG",
+     "role": "in",
+     "functions": "",
+     "to": "p_switch.U1.Y",
+     "harness": "p"
+    },
+    {
+     "pin": "servo.V+",
+     "role": "power",
+     "functions": "",
+     "to": "p_3v3.J1.VIN, p_diodes.pads.VOUT",
+     "harness": "p"
+    },
+    {
+     "pin": "servo.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "p"
+    }
+   ]
+  },
+  "p_switch": {
+   "part": "p-chute-switch",
+   "module": "base",
+   "pins": [
+    {
+     "pin": "U1.I1",
+     "role": "in",
+     "functions": "the safety monitor's signal",
+     "to": "pplug.SIGNAL.CHUTE, sockets.P_SIGNAL.CHUTE, teensy.pins.37",
+     "harness": "p"
+    },
+    {
+     "pin": "U1.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "p"
+    },
+    {
+     "pin": "U1.I0",
+     "role": "in",
+     "functions": "the CAN node's signal",
+     "to": "p_node.PWM.PWM1",
+     "harness": "p"
+    },
+    {
+     "pin": "U1.Y",
+     "role": "out",
+     "functions": "to the release servo",
+     "to": "chute.servo.SIG",
+     "harness": "p"
+    },
+    {
+     "pin": "U1.VCC",
+     "role": "power",
+     "functions": "",
+     "to": "p_3v3.J1.VOUT",
+     "harness": "p"
+    },
+    {
+     "pin": "U1.S",
+     "role": "in",
+     "functions": "low picks I0, high picks I1",
+     "to": "pplug.SIGNAL.TAKEOVER, sockets.P_SIGNAL.TAKEOVER, teensy.pins.31",
+     "harness": "p"
+    }
+   ]
+  },
+  "p_3v3": {
+   "part": "pololu-d36v6f3",
+   "module": "P",
+   "pins": [
+    {
+     "pin": "J1.VIN",
+     "role": "power",
+     "functions": "",
+     "to": "chute.servo.V+, p_diodes.pads.VOUT",
+     "harness": "p"
+    },
+    {
+     "pin": "J1.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "p"
+    },
+    {
+     "pin": "J1.VOUT",
+     "role": "power",
+     "functions": "",
+     "to": "p_switch.U1.VCC",
+     "harness": "p"
+    }
+   ]
+  },
+  "p_diodes": {
+   "part": "adafruit-lm66200",
+   "module": "base",
+   "pins": [
+    {
+     "pin": "pads.VIN1",
+     "role": "power",
+     "functions": "",
+     "to": "bec.pads.OUT, claws.servo1.V+, claws.servo2.V+, cplug.POWER.5V, fan.FAN.5V, and 9 more",
+     "harness": "p"
+    },
+    {
+     "pin": "pads.VIN2",
+     "role": "power",
+     "functions": "",
+     "to": "c_node.CAN1.5V, c_node.CAN2.5V, c_node.I2C.5V, c_node.UART.5V, cplug.SIGNAL.CAN_5V, and 21 more",
+     "harness": "p"
+    },
+    {
+     "pin": "pads.VOUT",
+     "role": "power",
+     "functions": "",
+     "to": "chute.servo.V+, p_3v3.J1.VIN",
+     "harness": "p"
+    },
+    {
+     "pin": "pads.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "p"
+    }
+   ]
+  },
+  "cplug": {
+   "part": "module-plug",
+   "module": "C",
+   "pins": [
+    {
+     "pin": "POWER.5V",
+     "role": "power",
+     "functions": "",
+     "to": "bec.pads.OUT, claws.servo1.V+, claws.servo2.V+, fan.FAN.5V, halow.HAT.5V, and 9 more",
+     "harness": "c"
+    },
+    {
+     "pin": "POWER.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "c"
+    },
+    {
+     "pin": "SIGNAL.CAN_5V",
+     "role": "power",
+     "functions": "",
+     "to": "c_node.CAN1.5V, c_node.CAN2.5V, c_node.I2C.5V, c_node.UART.5V, cut_3v3.J1.VIN, and 21 more",
+     "harness": "c"
+    },
+    {
+     "pin": "SIGNAL.CAN_P",
+     "role": "bus",
+     "functions": "",
+     "to": "c_node.CAN1.CAN_P, c_node.CAN2.CAN_P, fc.CAN.CAN_P, gps.CAN1.CAN_P, gps.CAN2.CAN_P, and 8 more",
+     "harness": "c"
+    },
+    {
+     "pin": "SIGNAL.CAN_N",
+     "role": "bus",
+     "functions": "",
+     "to": "c_node.CAN1.CAN_N, c_node.CAN2.CAN_N, fc.CAN.CAN_N, gps.CAN1.CAN_N, gps.CAN2.CAN_N, and 8 more",
+     "harness": "c"
+    },
+    {
+     "pin": "SIGNAL.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "c"
+    },
+    {
+     "pin": "SIGNAL.TX",
+     "role": "both",
+     "functions": "the flight controller's TELEM1 transmit",
+     "to": "sockets.C_SIGNAL.TX",
+     "harness": ""
+    },
+    {
+     "pin": "SIGNAL.RX",
+     "role": "both",
+     "functions": "the flight controller's TELEM1 receive",
+     "to": "sockets.C_SIGNAL.RX",
+     "harness": ""
+    },
+    {
+     "pin": "SIGNAL.TAKEOVER",
+     "role": "both",
+     "functions": "the safety monitor taking over the chute",
+     "to": "sockets.C_SIGNAL.TAKEOVER",
+     "harness": ""
+    },
+    {
+     "pin": "SIGNAL.CHUTE",
+     "role": "both",
+     "functions": "the safety monitor's release signal",
+     "to": "sockets.C_SIGNAL.CHUTE",
+     "harness": ""
+    }
+   ]
+  },
+  "c_node": {
+   "part": "ark-cannode",
+   "module": "C",
+   "pins": [
+    {
+     "pin": "CAN1.5V",
+     "role": "power",
+     "functions": "",
+     "to": "cplug.SIGNAL.CAN_5V, cut_3v3.J1.VIN, fc.CAN.5V, fc.GPS.5V, fc.RC.5V, and 18 more",
+     "harness": "c"
+    },
+    {
+     "pin": "CAN1.CAN_P",
+     "role": "bus",
+     "functions": "",
+     "to": "cplug.SIGNAL.CAN_P, fc.CAN.CAN_P, gps.CAN1.CAN_P, gps.CAN2.CAN_P, p_node.CAN1.CAN_P, and 7 more",
+     "harness": "c"
+    },
+    {
+     "pin": "CAN1.CAN_N",
+     "role": "bus",
+     "functions": "",
+     "to": "cplug.SIGNAL.CAN_N, fc.CAN.CAN_N, gps.CAN1.CAN_N, gps.CAN2.CAN_N, p_node.CAN1.CAN_N, and 7 more",
+     "harness": "c"
+    },
+    {
+     "pin": "CAN1.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "c"
+    },
+    {
+     "pin": "CAN2.5V",
+     "role": "power",
+     "functions": "",
+     "to": "cplug.SIGNAL.CAN_5V, cut_3v3.J1.VIN, fc.CAN.5V, fc.GPS.5V, fc.RC.5V, and 18 more",
+     "harness": ""
+    },
+    {
+     "pin": "CAN2.CAN_P",
+     "role": "bus",
+     "functions": "",
+     "to": "cplug.SIGNAL.CAN_P, fc.CAN.CAN_P, gps.CAN1.CAN_P, gps.CAN2.CAN_P, p_node.CAN1.CAN_P, and 7 more",
+     "harness": ""
+    },
+    {
+     "pin": "CAN2.CAN_N",
+     "role": "bus",
+     "functions": "",
+     "to": "cplug.SIGNAL.CAN_N, fc.CAN.CAN_N, gps.CAN1.CAN_N, gps.CAN2.CAN_N, p_node.CAN1.CAN_N, and 7 more",
+     "harness": ""
+    },
+    {
+     "pin": "CAN2.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": ""
+    },
+    {
+     "pin": "PWM.PWM1",
+     "role": "out",
+     "functions": "TIM2_CH1",
+     "to": "claws.servo1.SIG",
+     "harness": "c"
+    },
+    {
+     "pin": "PWM.PWM2",
+     "role": "out",
+     "functions": "TIM2_CH2",
+     "to": "claws.servo2.SIG",
+     "harness": "c"
+    },
+    {
+     "pin": "PWM.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": ""
+    },
+    {
+     "pin": "I2C.5V",
+     "role": "power",
+     "functions": "",
+     "to": "cplug.SIGNAL.CAN_5V, cut_3v3.J1.VIN, fc.CAN.5V, fc.GPS.5V, fc.RC.5V, and 18 more",
+     "harness": ""
+    },
+    {
+     "pin": "I2C.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": ""
+    },
+    {
+     "pin": "UART.5V",
+     "role": "power",
+     "functions": "",
+     "to": "cplug.SIGNAL.CAN_5V, cut_3v3.J1.VIN, fc.CAN.5V, fc.GPS.5V, fc.RC.5V, and 18 more",
+     "harness": ""
+    },
+    {
+     "pin": "UART.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": ""
+    }
+   ]
+  },
+  "claws": {
+   "part": "claws-placeholder",
+   "module": "base",
+   "pins": [
+    {
+     "pin": "servo1.SIG",
+     "role": "in",
+     "functions": "",
+     "to": "c_node.PWM.PWM1",
+     "harness": "c"
+    },
+    {
+     "pin": "servo1.V+",
+     "role": "power",
+     "functions": "",
+     "to": "bec.pads.OUT, cplug.POWER.5V, fan.FAN.5V, halow.HAT.5V, p_diodes.pads.VIN1, and 8 more",
+     "harness": "c"
+    },
+    {
+     "pin": "servo1.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "c"
+    },
+    {
+     "pin": "servo2.SIG",
+     "role": "in",
+     "functions": "",
+     "to": "c_node.PWM.PWM2",
+     "harness": "c"
+    },
+    {
+     "pin": "servo2.V+",
+     "role": "power",
+     "functions": "",
+     "to": "bec.pads.OUT, cplug.POWER.5V, fan.FAN.5V, halow.HAT.5V, p_diodes.pads.VIN1, and 8 more",
+     "harness": "c"
+    },
+    {
+     "pin": "servo2.GND",
+     "role": "ground",
+     "functions": "",
+     "to": "ground",
+     "harness": "c"
+    }
+   ]
+  }
+ },
  "estimates": [
   {
    "part": "holybro-tekko32-f4-50a",

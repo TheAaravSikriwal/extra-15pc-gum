@@ -1,14 +1,14 @@
 # Status
 
 **Last updated:** 2026-10-20, on the PC (Windows and WSL2 Ubuntu)
-**Step:** step 4 (the flight sim) is done. Step 5 (my firmware) is well along: it flies the flight sim's scenarios in Gazebo, and its safety monitor works in the sim.
+**Step:** steps 4 (the flight sim) and 5 (my firmware) are done, and so is the project site. Step 6 (the modules in sim) is under way.
 **Main machine:** the PC, with WSL2 Ubuntu 24.04 for the Linux tools
 
 ## Right now
 
 It's a research project (since 2026-10-17): the whole drone designed in simulation, every real part modeled and connected, the wiring worked out, my firmware flying it, and a build package at the end, with an honest list of what the sims can't prove. Nothing gets bought by default.
 
-Where to look: the live plan in the [README](README.md#the-plan), the steps in the [roadmap](docs/roadmap.md), every decision in [docs/decisions.md](docs/decisions.md), and the story in [docs/log](docs/log/).
+Where to look: the live plan in the [README](README.md#the-plan), the steps in the [roadmap](docs/roadmap.md), every decision in [docs/decisions.md](docs/decisions.md), and the story in [docs/log](docs/log/). Or the project site: `pcs14 site --flights --tunnel`, then `npm --prefix site run build` and open `site/dist/index.html`.
 
 | Step | Where it is |
 |---|---|
@@ -16,35 +16,31 @@ Where to look: the live plan in the [README](README.md#the-plan), the steps in t
 | 2. CAD | Done 2026-10-18. Every part modeled, every combination passing its checks ([report](docs/reports/cad/README.md)) |
 | 3. Electrical | Done 2026-10-19. 438 checks pass in all eight combinations ([report](docs/reports/electrical/README.md)) |
 | 4. Flight sim (PX4) | Done 2026-10-20. 62 of 78 runs pass; the misses are three findings ([report](docs/reports/flight-sim/README.md), [log](docs/log/2026-10-20-flight-sim-final.md)) |
-| 5. My firmware | In progress. Tasks 1 to 10, 12 and 13 have code and tests ([plan](docs/plans/2026-10-20-firmware.md), [log](docs/log/2026-10-20-firmware-start.md)) |
-| Aero side track | The visual half: FluidX3D's cruise and crosswind pictures work; the hover's don't yet ([log](docs/log/2026-10-20-wind-tunnel-cases.md)) |
-| Project site | Spec written: Vite, React, TypeScript, three.js, every sim played back as if live ([spec](docs/specs/2026-10-20-project-site.md)) |
+| 5. My firmware | Done 2026-10-20. 66 of 78 runs pass, every one PX4 passes among them ([log](docs/log/2026-10-20-firmware-flies.md)) |
+| 6. Modules in sim | Under way: spec and plan written, the safety monitor fires the chute, the hung flight controller passes, HaLow and the opening jolt modeled ([spec](docs/specs/2026-10-20-modules-in-sim.md), [plan](docs/plans/2026-10-20-modules-in-sim.md)) |
+| Aero side track | The visual half done: FluidX3D's cruise, crosswind and hover, now with frames along each run. The numbers wait for OpenFOAM |
+| Project site | Done 2026-10-20: the drone in 3D, the spec sheet, the wiring, every flight played back, a page per step, the tunnel, what the sims can't prove ([log](docs/log/2026-10-20-project-site.md)) |
 
-**The design today (2026-10-20).** Mission is 2408 g in the sizing model (with the 200 g growth margin) and 2208 g in the CAD, and hovers 25.8 min (22.2 pessimistic, against the 21 target). Since step 3: the pack's insides are worked out (nickel-plated copper links, 2.3 mOhm and 43 g), the GPS sits in a printed cradle on its mast, each module locks to the rail with thumb screws into heat-set inserts, and the sizing model reads full throttle straight off the motor's table.
+**The design today (2026-10-20).** Mission is 2408 g in the sizing model (with the 200 g growth margin) and 2208 g in the CAD, and hovers 25.8 min (22.2 pessimistic, against the 21 target).
 
-**Step 4's findings.** A dead motor without P is a crash (base, V, C, V+C). A GPS failure is a blind descent that ends 31 to 36 m away in C, mission, V+C and P+C, past the 30 m limit. Cruise endurance is 25% under the sizing model in every combination, because Gazebo's rotors don't gain from forward flight. The hover times agree with the sizing model to 0.1 min, and the safety monitor's triggers had no false triggers in 66 runs.
+**Step 4's findings, and what step 5 said about them.** A dead motor without P is a crash (base, V, C, V+C), on PX4 and on mine. A GPS failure on PX4 is a blind descent that ends 22 to 36 m away; on mine it ends 4 to 6 m away, so part of that finding was PX4's estimator in this sim. Cruise endurance runs about 25% under the sizing model on both, because Gazebo's rotors don't gain from forward flight.
 
-**Step 5, my firmware, so far.** C++17: a core with no hardware in it, layers for the sim, the ARK FPV and the safety monitor. It speaks PX4's MAVLink and writes PX4's log format, so the flight sim's runner flies it in PX4's place (`pcs14 flight-sim run --firmware mine`) and the same graders grade it.
-- Flying: rate, self-level, altitude, position, take-off, hold, land, return and offboard, with Mahony's attitude filter, a barometer height filter and a GPS position filter.
-- Passing in Gazebo: smoke, hover (1 mm of drift over 60 s), lost link, the parachute drop, a dead motor in P, the sagging pack; a failed GPS drifts 33 m, like PX4's.
-- Failsafes and limits: lost link, low battery, position lost, PX4's attitude failure detector with termination and the chute, the kill switch, the limits profiles, my 30 m parachute rule, and the current cap with the XT60's heat limit (90 A for 3.1 s, then easing to 29 A, as the electrical report has it).
-- The safety monitor: its own program on its own IMU, between the flight controller and the motors. Its triggers match the Python reference sample for sample, and it cut a frozen flight controller 0.26 s after it hung.
-- The ARK FPV layer: the IMU driver (IIM-42653), CRSF from the receiver and DShot buffers, tested against fakes, and an image for the H743 that builds in CI.
-- The ground station: `pcs14 ground` serves live telemetry, live tuning and the active limits profile on a web page.
+**Step 5, my firmware.** C++17: a core with no hardware in it, layers for the sim, the ARK FPV and the safety monitor. It speaks PX4's MAVLink and writes PX4's log format, so the flight sim's runner flies it in PX4's place and the same graders grade it. Rate, self-level, altitude, position, take-off, hold, land, return and offboard; PX4's failsafes by name; the geofence; pre-arm checks that include the safety monitor; the current cap with the XT60's heat limit; the fuel gauge. The ARK FPV's drivers go as far as host tests take them. The ground station talks to it in the sim.
+
+**Step 6 so far.** The safety monitor fires the chute itself now, on the pilot's switch, motors cut first, and only where P is fitted. With my flight controller frozen at 40 m in P, the monitor cut 0.29 s later, the pilot's chute went a second after the hang, and the drone settled at 4.1 m/s with 27 m to spare. HaLow's link model (Morse Micro's numbers for the chip on Heltec's card) holds 7.2 Mbps out to about 1.2 km and its slowest rate to about 5 km, 30 m up over flat ground with a 10 dB margin.
 
 **Offline?** Study from [docs/learning.md](docs/learning.md).
 
 ## Up next
 
-1. **Firmware task 11:** every scenario on my firmware in all eight combinations, laid over PX4's in the report. A first pass of steps, top speed, wind, the payload grab, endurance and low battery was flying when I stopped.
-2. **The firmware's remaining pieces:** the geofence, pre-arm checks that include the safety monitor, and the ARK FPV's drivers past the IMU, CRSF and DShot (the clock tree, SPI and timer DMA, the watchdog, I2C for the compass and barometer, DroneCAN, the SD card).
-3. **The wind tunnel's hover pictures:** a slice through a pair of props, a longer run, a color scale for the downwash.
-4. **The project site's plan,** then its build.
+1. **Step 6:** the hung flight controller in every P combination, the drop heights in Max, the parachute rule in the sim, the opening jolt from those drops, HaLow in the sim's relay, the camera, and the modules report.
+2. **OpenFOAM** for the wind tunnel's numbers.
+3. **Step 7, the smart features,** once step 6's report is in.
 
 ## Waiting on me
 
-- **Two design decisions from step 4:** should P (the chute) be in every combination, since a dead motor without it loses the drone? Should Base get an optical flow sensor, so a GPS failure isn't a blind descent? Both add weight to a design with little margin.
-- **A safety rule to confirm:** a safety monitor cut stays latched for the rest of the flight, clearing only on the ground, disarmed, with the kill switch off. That's how it's built; it's my call to confirm.
+- **Two design decisions from step 4:** should P (the chute) be in every combination, since a dead motor without it loses the drone? Should Base get an optical flow sensor, so a GPS failure isn't a blind descent? Both add weight to a design with little margin. Step 5 weakened the case for optical flow in the sim (my firmware's blind descents end 4 to 6 m away, PX4's 22 to 36 m), but a real IMU drifts more than Gazebo's.
+- **A safety rule to confirm:** a safety monitor cut stays latched for the rest of the flight, clearing only on the ground, disarmed, with the kill switch off. That's how it's built; it's my call to confirm. The monitor's chute release (new in step 6) latches the same way.
 - **The FluidX3D fork:** the wind tunnel stills stay off the repo until my modified FluidX3D is public, as its license asks for any results I post.
 - **Fruity Chutes:** ask for the Harrier release servo's voltage range and draw (the design runs on a stand-in, Hitec's HS-55).
 - **The HaLow card (step 6):** Heltec's SPI card has no working Pi 5 report; its SDIO version (on Heltec's HT-HR01 carrier) was reported working once, and USB adapters work through an OpenWrt backport.
@@ -54,6 +50,7 @@ Where to look: the live plan in the [README](README.md#the-plan), the steps in t
 
 - Rotor drag in forward flight, so cruise numbers get believable (the honesty check's big miss, and now step 4's)
 - The weight: Mission passes with 1.2 min of pessimistic hover to spare; Max is 2623 g against its own 2500 g target (report-only)
+- My firmware's height estimate lets about 6 cm of the barometer's noise through (its hovers hold within 0.12 to 0.25 m, against PX4's 0.06 to 0.20 m with Gazebo's noiseless GPS height)
 - My firmware's current estimate comes from the thrust table (about 11% under the electrical report at Max's hover); on the drone the ESC's current sensor replaces it
 - The XT60's contact mass (a 2.5 g guess): the firmware's heat limit and the burst check both rest on it
 - What the motor cut board's two undocumented 1 kOhm resistors do; the design adds its own 10 kOhm pull-down and a meter check, so the board fails safe either way

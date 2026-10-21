@@ -258,6 +258,20 @@ def test_my_firmware_runs_on_px4s_ports_for_its_instance():
     assert "--stdin" not in command
 
 
+def test_the_safety_monitor_can_fire_the_chute_only_where_there_is_one():
+    plain = run.monitor_command("/b/pcs14_monitor_sitl", "pcs14_base_0")
+    assert "--chute" not in plain
+    fitted = run.monitor_command("/b/pcs14_monitor_sitl", "pcs14_p_0", chute=True)
+    assert fitted[-1] == "--chute"
+    assert any(line.startswith(run.MONITOR_LINES) for line in ["chute released at 41.200"])
+
+
+def test_my_firmwares_runs_keep_the_parachute_rule_off_unless_a_scenario_wants_it():
+    assert run.mine_params({"MC_ROLL_P": 9.0})["PCS14_CHUTE_RULE"] == 0
+    # the chute rule scenario is the one that switches it back on
+    assert run.mine_params({"PCS14_CHUTE_RULE": 1})["PCS14_CHUTE_RULE"] == 1
+
+
 def test_only_known_firmware_flies():
     with pytest.raises(ValueError, match="no firmware called betaflight"):
         run.Session(run.toolchain(), "pcs14_base", {}, "out", "smoke", firmware="betaflight")

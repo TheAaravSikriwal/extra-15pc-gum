@@ -2,7 +2,7 @@
 
 This plan is going to change. It's the route I'm following today, not a promise. Sim results, new ideas and things I learn along the way will all reshape it, and that's fine. I can't plan for everything, but I can be prepared. When something changes, I update this file and write down why in [decisions.md](decisions.md).
 
-**Last revised:** 2026-10-20 (step 4 done, step 5 under way). Before that, 2026-10-17. It's a research project now: the goal is a virtual drone complete enough to build one day. The reasons are in [decisions.md](decisions.md), under "A research project, build-ready". The earlier revision (2026-10-14, tagged R1 to R7) is in [specs/2026-10-14-plan-revision.md](specs/2026-10-14-plan-revision.md).
+**Last revised:** 2026-10-20 (steps 4 and 5 done, the project site built, step 6 under way). Before that, 2026-10-17. It's a research project now: the goal is a virtual drone complete enough to build one day. The reasons are in [decisions.md](decisions.md), under "A research project, build-ready". The earlier revision (2026-10-14, tagged R1 to R7) is in [specs/2026-10-14-plan-revision.md](specs/2026-10-14-plan-revision.md).
 
 ## What done looks like
 
@@ -127,7 +127,7 @@ Gazebo Harmonic and PX4, in WSL2.
 6. **Ground station v1** on the laptop: live telemetry, live PID tuning, and the active limits profile always on screen. It speaks MAVLink, so QGroundControl works too.
 7. **Hardware-in-the-loop (optional):** the same firmware on a Nucleo-H743, fed by the sim.
 
-**Done when:** my firmware and the safety monitor pass the same tests as PX4. *In progress (2026-10-20): the plan's tasks 1 to 10, 12 and 13 have their code and tests; my firmware flies the smoke, hover, lost link, parachute drop, dead motor, failed sensor and sagging pack scenarios, and the safety monitor cuts a hung flight controller in the sim. Still to do: every scenario in every combination (task 11), the geofence, pre-arm checks that include the safety monitor, and the hardware drivers beyond the IMU, CRSF and DShot. See [the firmware plan](plans/2026-10-20-firmware.md).*
+**Done when:** my firmware and the safety monitor pass the same tests as PX4. *Done (2026-10-20): 66 of 78 runs pass against PX4's 62, every one PX4 passes among them, and the other twelve miss for the same reasons ([log](log/2026-10-20-firmware-flies.md)). The optional hardware-in-the-loop on a Nucleo waits, like every purchase.*
 
 ## Step 6: Modules in sim
 

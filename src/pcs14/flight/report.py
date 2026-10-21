@@ -72,6 +72,14 @@ def applies(scenario: str, setup) -> bool:
         return "P" in setup.modules
     if scenario == "payload grab":
         return "C" in setup.modules
+    # step 6's: the hung flight controller where there's a chute, the drop heights in the
+    # heaviest, the parachute rule where there's none
+    if scenario == "hung flight controller":
+        return "P" in setup.modules
+    if scenario.startswith("drop from "):
+        return setup.name == "max"
+    if scenario == "chute rule":
+        return "P" not in setup.modules
     return True
 
 
