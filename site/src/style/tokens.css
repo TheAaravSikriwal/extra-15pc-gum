@@ -844,6 +844,78 @@ ul.tree {
   right: 0;
 }
 
+/* the panel's drawer: nothing on a wide screen, a sheet along the bottom on a phone */
+.stage-drawer {
+  display: contents;
+}
+
+.drawer-handle {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  .stage-intro {
+    left: 16px;
+    top: 60px;
+    max-width: 62%;
+  }
+
+  .stage-intro h1 {
+    font-size: 18px;
+  }
+
+  .stage-intro p {
+    font-size: 12px;
+  }
+
+  .stage-switch a {
+    padding: 6px 12px;
+  }
+
+  .stage-drawer {
+    display: block;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transform: translateY(calc(100% - 44px));
+    transition: transform 0.35s ease;
+  }
+
+  .stage-drawer.open {
+    transform: none;
+  }
+
+  .drawer-handle {
+    display: block;
+    width: 100%;
+    height: 44px;
+    font: inherit;
+    font-size: 13px;
+    border: 0;
+    border-radius: 12px 12px 0 0;
+    background: rgba(11, 30, 60, 0.85);
+    color: #f4f4f2;
+    backdrop-filter: blur(6px);
+  }
+
+  .stage.fly .drawer-handle {
+    background: rgba(255, 255, 255, 0.92);
+    color: #1a1a19;
+    border-top: 1px solid #e4e4e0;
+  }
+
+  .stage-drawer .stage-panel {
+    position: static;
+    width: auto;
+    max-height: 55vh;
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+    animation: none;
+  }
+}
+
 /* the drone centers in the space the panel leaves, on screens wide enough for both */
 @media (min-width: 900px) {
   .stage-canvas {

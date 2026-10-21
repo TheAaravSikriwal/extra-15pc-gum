@@ -109,3 +109,15 @@ test("a scenario only PX4 flew offers PX4, and switching to it plays that run", 
   expect(screen.getByText("max, PX4")).toBeInTheDocument();
   expect(within(screen.getByRole("group", { name: "scenarios" })).getByRole("link", { name: "parachute drop" })).toBeInTheDocument();
 });
+
+test("on a phone the controls sit in a drawer that opens and closes", () => {
+  render(<Stage route={[]} load={load} scene={scene} />);
+  const handle = screen.getByRole("button", { name: "Show the controls" });
+  expect(handle).toHaveAttribute("aria-expanded", "false");
+  fireEvent.click(handle);
+  expect(screen.getByRole("button", { name: "Hide the controls" })).toHaveAttribute("aria-expanded", "true");
+  expect(document.querySelector(".stage-drawer")).toHaveClass("open");
+  // the drawer stays open from one mode into the other
+  fireEvent.click(screen.getByRole("button", { name: "Hide the controls" }));
+  expect(document.querySelector(".stage-drawer")).not.toHaveClass("open");
+});

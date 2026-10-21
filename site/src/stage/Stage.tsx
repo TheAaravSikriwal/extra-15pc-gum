@@ -146,6 +146,19 @@ function useFly(state: DroneState, data: StageData, load?: LoadOptions): FlyData
   return { playback, clip, story, playing, onNumbers: setPlaying };
 }
 
+// the panel beside the drone, which on a phone becomes a drawer along the bottom: closed, it
+// leaves the drone the screen with just its handle showing
+function Drawer({ open, onToggle, children }: { open: boolean; onToggle: () => void; children: ReactNode }) {
+  return (
+    <div className={`stage-drawer${open ? " open" : ""}`}>
+      <button className="drawer-handle" type="button" aria-expanded={open} onClick={onToggle}>
+        {open ? "Hide the controls" : "Show the controls"}
+      </button>
+      {children}
+    </div>
+  );
+}
+
 export interface StageProps {
   route: string[];
   load?: LoadOptions;
@@ -157,6 +170,7 @@ export function Stage({ route, load, scene }: StageProps) {
   const state = useDroneState(route);
   const data = useStageData(load);
   const fly = useFly(state, data, load);
+  const [drawer, setDrawer] = useState(false);
   const flyTo = `#/fly/${encodeURIComponent(state.scenario)}`;
   return (
     <div className={`stage ${state.mode}`} aria-hidden={state.mode === "page"} data-testid="stage">
@@ -187,8 +201,12 @@ export function Stage({ route, load, scene }: StageProps) {
       </header>
       <Menu />
       <Intro />
-      {state.mode === "inside" && <InsidePanel state={state} data={data} />}
-      {state.mode === "fly" && <FlyPanel state={state} data={data} fly={fly} />}
+      {state.mode !== "page" && (
+        <Drawer open={drawer} onToggle={() => setDrawer(!drawer)}>
+          {state.mode === "inside" && <InsidePanel state={state} data={data} />}
+          {state.mode === "fly" && <FlyPanel state={state} data={data} fly={fly} />}
+        </Drawer>
+      )}
     </div>
   );
 }

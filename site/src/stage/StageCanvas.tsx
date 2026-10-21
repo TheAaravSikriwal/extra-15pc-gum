@@ -135,6 +135,11 @@ export function StageCanvas({
   const inside = state.mode === "inside";
   // phones get each wire as a thin line instead of a tube
   const light = useMemo(() => typeof window !== "undefined" && window.matchMedia?.("(max-width: 700px)").matches, []);
+  // the fit frames the drone's height, so a screen taller than it is wide needs room for its width
+  const margin = useMemo(() => {
+    const aspect = typeof window === "undefined" ? 1.5 : window.innerWidth / window.innerHeight;
+    return aspect < 1 ? 1.25 / aspect : 1.25;
+  }, []);
   // where the assembled drone's feet are, for its shadow
   const floor = useMemo(() => (root ? new THREE.Box3().setFromObject(root).min.y : 0), [root]);
   // a new focus only when the pin itself moves, so the glide runs once per pick
@@ -148,7 +153,7 @@ export function StageCanvas({
       <hemisphereLight args={["#f4f4f2", "#2c2c2a", 0.6]} />
       <directionalLight position={[1, 2, 1.5]} intensity={2.4} />
       <directionalLight position={[-1, 0.5, -1]} intensity={0.7} />
-      <Bounds fit clip observe margin={1.25}>
+      <Bounds fit clip observe margin={margin}>
         <group ref={drone}>
         {root && <DroneScene
           root={root}
