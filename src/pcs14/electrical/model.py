@@ -33,6 +33,8 @@ class Board(Strict):
         default_factory=dict
     )  # how pins are used
     terminator: bool | None = None  # a CAN node's own switchable terminator
+    # the CAD's piece it is, for a part the frame places rather than design/cad.yaml (a motor)
+    piece: str | None = None
 
 
 class WireRun(Strict):

@@ -97,6 +97,40 @@ export interface Wires {
   routes: Route[];
 }
 
+// every wire pin to pin, in the drone's frame (the CAD's, mm, z up)
+export interface WireEnd3d {
+  pin: string; // BOARD.CONNECTOR.PIN
+  at_mm: number[];
+  piece: string; // the model's piece it rides with when pulled apart
+}
+
+export interface Wire3d {
+  label: string;
+  harness: string;
+  ends: WireEnd3d[];
+  route: string | null;
+  route_piece: string | null;
+  path_mm: number[][]; // the route's points from the first end's side
+  awg: number;
+  wire: string;
+  role: string; // power, ground, signal or bus
+  length_mm: number;
+}
+
+export interface PinSource {
+  connector: string; // BOARD.CONNECTOR
+  part_id: string;
+  estimate: boolean;
+  url: string | null;
+  note: string | null;
+}
+
+export interface Wires3d {
+  schema_version: number;
+  wires: Wire3d[];
+  connectors: PinSource[];
+}
+
 export interface FlightEvent {
   at: number; // s into the run
   name: string;
@@ -409,6 +443,10 @@ export const FIELDS = {
   Wire: ["label", "ends"],
   Route: ["name", "node", "wires", "heating_share"],
   Wires: ["schema_version", "routes"],
+  WireEnd3d: ["pin", "at_mm", "piece"],
+  Wire3d: ["label", "harness", "ends", "route", "route_piece", "path_mm", "awg", "wire", "role", "length_mm"],
+  PinSource: ["connector", "part_id", "estimate", "url", "note"],
+  Wires3d: ["schema_version", "wires", "connectors"],
   Playback: [
     "schema_version",
     "scenario",

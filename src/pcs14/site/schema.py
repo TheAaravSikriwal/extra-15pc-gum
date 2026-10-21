@@ -119,6 +119,41 @@ class Wires(_Shape):
     routes: list[Route]
 
 
+class WireEnd3d(_Shape):
+    pin: str  # BOARD.CONNECTOR.PIN, the connection list's name for it
+    at_mm: list[float]  # in the drone's frame, the CAD's (z up)
+    piece: str  # the model's piece it rides with when the drone is pulled apart
+
+
+class Wire3d(_Shape):
+    label: str
+    harness: str
+    ends: list[WireEnd3d]  # two
+    route: str | None  # its CAD route, or None for a short jumper
+    route_piece: str | None  # the model's piece for that route
+    path_mm: list[list[float]]  # the route's points from the first end's side, or none
+    awg: int
+    wire: str  # its type, in words
+    role: str  # what its first pin carries: power, ground, signal or bus
+    length_mm: float  # along its route, or its own length: the wiring guide's cut length
+
+
+class PinSource(_Shape):
+    connector: str  # BOARD.CONNECTOR
+    part_id: str
+    estimate: bool
+    url: str | None
+    note: str | None
+
+
+class Wires3d(_Shape):
+    """wires3d.json: every wire pin to pin in the drone's frame, and where the pins came from."""
+
+    schema_version: int
+    wires: list[Wire3d]
+    connectors: list[PinSource]
+
+
 class Event(_Shape):
     at: float  # s into the log
     name: str
@@ -444,6 +479,7 @@ FILES: dict[str, type[_Shape]] = {
     "spec": SpecSheet,
     "parts": Parts,
     "wires": Wires,
+    "wires3d": Wires3d,
     "flights": Flights,
     "playback": Playback,
     "steps": Steps,

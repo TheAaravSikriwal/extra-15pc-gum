@@ -1,7 +1,9 @@
 """`pcs14 site`: every step's report into the site's data files.
 
-It only reads the reports' own data files (docs/reports/*/*.json), never the design or the
-CAD, so what the site shows is exactly what the reports say. A report that isn't there is
+It reads the reports' own data files (docs/reports/*/*.json), so what the site shows is
+exactly what the reports say. Three things read the design itself, because they are the
+design: the library and the catalog (pcs14.site.library) and every wire in 3D
+(pcs14.site.wires3d). A report that isn't there is
 listed as missing in index.json and its files are skipped: the site grows as the steps do.
 """
 
@@ -215,6 +217,12 @@ def write_all(out, reports, commit: str | None = None, today: str | None = None)
         written.append(_write(out, "wires", wires(found["electrical"])))
     if found["electrical"] is not None and "boards" in found["electrical"]:
         written.append(_write(out, "wiring", wiring(found["electrical"], reports, out)))
+    # every wire pin to pin, for the drone view, from the design beside the docs
+    design = reports.resolve().parent.parent / "design"
+    if (design / "electrical.yaml").is_file():
+        from pcs14.site.wires3d import wires3d
+
+        written.append(_write(out, "wires3d", wires3d(design)))
     # the home page's drone
     view = reports / "cad" / "views" / "three-quarter.png"
     if view.is_file():

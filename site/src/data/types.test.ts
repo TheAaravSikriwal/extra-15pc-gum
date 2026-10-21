@@ -16,6 +16,7 @@ import tunnel from "../../schema/tunnel.schema.json";
 import unproven from "../../schema/unproven.schema.json";
 import wiring from "../../schema/wiring.schema.json";
 import wires from "../../schema/wires.schema.json";
+import wires3d from "../../schema/wires3d.schema.json";
 import { FIELDS, SCHEMA_VERSION } from "./types";
 
 test("Index has the schema's fields", () => {
@@ -44,6 +45,13 @@ test("the parts' and wires' shapes have the schema's fields", () => {
   expect(Object.keys(wires.properties).sort()).toEqual([...FIELDS.Wires].sort());
   expect(Object.keys(wires.$defs.Route.properties).sort()).toEqual([...FIELDS.Route].sort());
   expect(Object.keys(wires.$defs.Wire.properties).sort()).toEqual([...FIELDS.Wire].sort());
+});
+
+test("every wire in 3D has the schema's fields", () => {
+  expect(Object.keys(wires3d.properties).sort()).toEqual([...FIELDS.Wires3d].sort());
+  for (const name of ["Wire3d", "WireEnd3d", "PinSource"] as const) {
+    expect(Object.keys(wires3d.$defs[name].properties).sort()).toEqual([...FIELDS[name]].sort());
+  }
 });
 
 test("the flights' shapes have the schema's fields", () => {

@@ -10,10 +10,10 @@ boards:
   # Base: the power path
   lead: {part: base-wiring} # the drone's XT60 on the battery leads
   esc: {part: holybro-tekko32-f4-50a}
-  m1: {part: emax-e3-2814-850kv} # front right (PX4's quad X numbering)
-  m2: {part: emax-e3-2814-850kv} # back left
-  m3: {part: emax-e3-2814-850kv} # front left
-  m4: {part: emax-e3-2814-850kv} # back right
+  m1: {part: emax-e3-2814-850kv, piece: motor front right} # PX4's quad X numbering
+  m2: {part: emax-e3-2814-850kv, piece: motor back left}
+  m3: {part: emax-e3-2814-850kv, piece: motor front left}
+  m4: {part: emax-e3-2814-850kv, piece: motor back right}
   fuses: {part: branch-fuses} # F1 feeds the module supply, F2 the flight controller
   bec: {part: matek-bec12s-pro} # the module supply
   # Base: flying

@@ -1,0 +1,190 @@
+{
+ "$defs": {
+  "PinSource": {
+   "additionalProperties": false,
+   "properties": {
+    "connector": {
+     "title": "Connector",
+     "type": "string"
+    },
+    "part_id": {
+     "title": "Part Id",
+     "type": "string"
+    },
+    "estimate": {
+     "title": "Estimate",
+     "type": "boolean"
+    },
+    "url": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "title": "Url"
+    },
+    "note": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "title": "Note"
+    }
+   },
+   "required": [
+    "connector",
+    "part_id",
+    "estimate",
+    "url",
+    "note"
+   ],
+   "title": "PinSource",
+   "type": "object"
+  },
+  "Wire3d": {
+   "additionalProperties": false,
+   "properties": {
+    "label": {
+     "title": "Label",
+     "type": "string"
+    },
+    "harness": {
+     "title": "Harness",
+     "type": "string"
+    },
+    "ends": {
+     "items": {
+      "$ref": "#/$defs/WireEnd3d"
+     },
+     "title": "Ends",
+     "type": "array"
+    },
+    "route": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "title": "Route"
+    },
+    "route_piece": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "title": "Route Piece"
+    },
+    "path_mm": {
+     "items": {
+      "items": {
+       "type": "number"
+      },
+      "type": "array"
+     },
+     "title": "Path Mm",
+     "type": "array"
+    },
+    "awg": {
+     "title": "Awg",
+     "type": "integer"
+    },
+    "wire": {
+     "title": "Wire",
+     "type": "string"
+    },
+    "role": {
+     "title": "Role",
+     "type": "string"
+    },
+    "length_mm": {
+     "title": "Length Mm",
+     "type": "number"
+    }
+   },
+   "required": [
+    "label",
+    "harness",
+    "ends",
+    "route",
+    "route_piece",
+    "path_mm",
+    "awg",
+    "wire",
+    "role",
+    "length_mm"
+   ],
+   "title": "Wire3d",
+   "type": "object"
+  },
+  "WireEnd3d": {
+   "additionalProperties": false,
+   "properties": {
+    "pin": {
+     "title": "Pin",
+     "type": "string"
+    },
+    "at_mm": {
+     "items": {
+      "type": "number"
+     },
+     "title": "At Mm",
+     "type": "array"
+    },
+    "piece": {
+     "title": "Piece",
+     "type": "string"
+    }
+   },
+   "required": [
+    "pin",
+    "at_mm",
+    "piece"
+   ],
+   "title": "WireEnd3d",
+   "type": "object"
+  }
+ },
+ "additionalProperties": false,
+ "description": "wires3d.json: every wire pin to pin in the drone's frame, and where the pins came from.",
+ "properties": {
+  "schema_version": {
+   "title": "Schema Version",
+   "type": "integer"
+  },
+  "wires": {
+   "items": {
+    "$ref": "#/$defs/Wire3d"
+   },
+   "title": "Wires",
+   "type": "array"
+  },
+  "connectors": {
+   "items": {
+    "$ref": "#/$defs/PinSource"
+   },
+   "title": "Connectors",
+   "type": "array"
+  }
+ },
+ "required": [
+  "schema_version",
+  "wires",
+  "connectors"
+ ],
+ "title": "Wires3d",
+ "type": "object"
+}
