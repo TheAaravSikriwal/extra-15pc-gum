@@ -5,7 +5,11 @@ id: littelfuse-mini-297
 maker: Littelfuse
 model: MINI blade fuse, 32 V (297 series)
 part_number: 0297xxx
-checked: 2026-10-18
+checked: 2026-10-21
+buy_note: "3 A: 0297003; 2 A: 0297002, the same price"
+fallback: {"maker": "Eaton Bussmann", "model": "BK/ATM-3 mini blade", "note": "the same size; five times the price, and a second maker's trip curve", "link": "https://www.mouser.com/en/ProductDetail/Bussmann-Eaton/BK-ATM-3?qs=ar9f0rk5DXAVJQInQBqqvQ%3D%3D", "price_usd": 1.96}
+price_usd: 0.39
+link: 'https://www.mouser.com/en/ProductDetail/Littelfuse/0297003.WXNV?qs=WtG364jHAdxHR7%2F%2F%252BiOsmQ%3D%3D'
 source: {kind: manufacturer, url: 'https://atta.szlcsc.com/upload/public/pdf/source/20241028/EC0235DBD6F881A867CEA06A6175F69D.pdf', checked: 2026-10-18, note: "Littelfuse's MINI 32 V datasheet (revised 2024-09-27), hosted by LCSC because littelfuse.com refuses scripts: typical weight per fuse 0.57 g"}
 mass_g: 0.57
 electrical:

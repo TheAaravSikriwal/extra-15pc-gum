@@ -16,6 +16,7 @@ from pydantic import Field, ValidationError, model_validator
 from pcs14 import units
 from pcs14.catalog.source import Strict
 from pcs14.design import _explain
+from pcs14.unproven import Unproven
 
 Module = Literal["base", "V", "P", "C"]
 PACK = "pack"
@@ -42,6 +43,7 @@ class WireRun(Strict):
     length_mm: float | None = Field(default=None, gt=0)  # for short runs without a route
     harness: str
     name: str | None = None
+    own_lead: bool = False  # a part's own lead (a motor's), cut to length: nothing to buy
 
     @property
     def label(self) -> str:
@@ -120,7 +122,8 @@ class ConnectionList(Strict):
     fuses: list[FuseChoice] = Field(default_factory=list)
     requires: list[Requirement] = Field(default_factory=list)
     cell_links: CellLinks | None = None
-    unproven: list[str] = Field(default_factory=list)  # what the design knowingly doesn't cover
+    # what the design knowingly doesn't cover, and the first thing to measure once it's built
+    unproven: list[Unproven] = Field(default_factory=list)
     checks: CheckNumbers | None = None
 
     @model_validator(mode="after")

@@ -1,0 +1,161 @@
+# What the build needs that isn't a catalog part: the ground side, the pack's supplies, tools,
+# spares, and a few module items the catalog doesn't carry, for the build package's parts list
+# (pcs14 package). Written and researched 2026-10-21. A price or a link left empty hasn't been
+# checked; the parts list counts it as unpriced, never as free.
+items:
+  - id: ground-transmitter
+    group: ground
+    name: Transmitter
+    why: "The pilot's sticks and the kill switch, over 2.4 GHz ExpressLRS (the control link stays off 900 MHz). SA arms, SD is the kill switch, both two-position latching. Takes two 18650s, not included"
+    maker: RadioMaster
+    model: Pocket (M2) ELRS, FCC version
+    link: https://radiomasterrc.com/products/pocket-radio-controller-m2
+    price_usd: 71.50
+    checked: 2026-10-21
+    fallback: {maker: RadioMaster, model: Boxer EdgeTX ELRS, link: "https://www.racedayquads.com/products/pre-order-radiomaster-boxer-edgetx-rc-transmitter-choose-version", price_usd: 181.99, note: "full-size gimbals and up to 1 W, at two and a half times the price; the switch names change"}
+  - id: ground-halow
+    group: ground
+    name: HaLow on the laptop's side
+    why: "The ground end of V's video and telemetry link, over Ethernet to the laptop. The same MM6108 chip as the drone's card. Which card the drone gets is still my call"
+    maker: Heltec Automation
+    model: HT-H7608 V2 HaLow router, 902-928 MHz
+    link: https://heltec.org/project/ht-h7608/
+    price_usd: 79.00
+    checked: 2026-10-21
+    fallback: {maker: Morse Micro (with GL.iNet), model: HaLowLink 2, link: "https://www.gl-inet.com/en-us/products/halowlink2", note: "Morse Micro's own router, about $130 (seen in search results), but a newer MM8108 chip: bench-test it against the drone's MM6108 first"}
+  - id: ground-charger
+    group: ground
+    name: Balance charger
+    why: "Charges the 6S Li-ion pack through its balance lead. On AC it tops out around 6 to 7 A for this pack; a full 8 A needs a 24 V DC supply"
+    maker: ToolkitRC
+    model: M8AC, AC 200 W / DC 600 W
+    link: https://pyrodrone.com/collections/all/products/toolkitrc-m8ac-1-8s-ac-200w-dc-600w-20a-battery-charger-xt60
+    price_usd: 121.99
+    checked: 2026-10-21
+    fallback: {maker: HOTA, model: D6 Pro dual channel, link: "https://www.racedayquads.com/products/hota-d6-pro-dual-channel-325w-15a-ac-dc-battery-charger", price_usd: 149.99, note: "the same 200 W AC limit, two channels, bulkier"}
+  - id: smoke-stopper
+    group: tools
+    name: Smoke stopper
+    why: "An electronic fuse in series for the first power-up, so a wiring mistake trips instead of burning. Use its 2 A setting so the ESC's capacitors don't trip it"
+    maker: ViFly
+    model: Short Saver 2 (XT30 and XT60)
+    link: https://www.racedayquads.com/products/vifly-short-saver-2-smoke-stopper-xt30-xt60
+    price_usd: 17.49
+    checked: 2026-10-21
+    fallback: {maker: JHEMCU, model: XT30 / XT60 Smoke Stopper, link: "https://www.racedayquads.com/products/jhemcu-xt30-xt60-smoke-stopper", price_usd: 6.99, note: "a resettable fuse with a 0.5 A hold: only good for the very first power-on"}
+  - id: pack-strip
+    group: supplies
+    name: Nickel-plated copper strip, 10 x 0.3 mm, 2 m
+    why: "The pack's cell links: copper carries the 90 A cap at 15 A/mm2, where nickel strip would run at 37. Small spot welders struggle with 0.3 mm copper: check the welder"
+    maker: RIWETRA
+    model: Nickel-plated copper strip, 10 mm x 0.3 mm, 2 m
+    link: https://www.amazon.com/dp/B0G1KL5ZS9
+    price_usd: 28.00
+    checked: 2026-10-21
+    fallback: {maker: Unbranded, model: "nickel-plated copper strip, 8 x 0.15 mm, 10 ft", link: "https://www.amazon.com/dp/B0B789WW5D", price_usd: 14.00, note: "thinner: two or three layers stacked for the same current, or the pack's limit rechecked"}
+  - id: pack-insulators
+    group: supplies
+    name: Insulator rings for 21700 cells, 20
+    why: "Insulates each cell's positive end from the strip"
+    maker: 18650 Battery Store
+    model: 21700 battery terminal insulator rings, black, 20 pcs
+    link: https://www.18650batterystore.com/products/21700-insulator-black
+    price_usd: 1.49
+    checked: 2026-10-21
+  - id: pack-wrap
+    group: supplies
+    name: Pack heat shrink
+    why: "The pack's outer wrap; the flat width depends on the cell layout"
+    maker: JichuET
+    model: PVC heat shrink, 200 mm flat, 3 m
+    link: https://www.amazon.com/dp/B09SVFL33L
+    price_usd: 13.99
+    checked: 2026-10-21
+  - id: pack-balance-lead
+    group: supplies
+    name: 6S balance lead
+    why: "The seven wires from the pack's junctions to its JST-XH plug"
+    maker: GetFPV
+    model: 6S JST-XH balance lead, 100 mm, 22 AWG silicone
+    link: https://www.getfpv.com/balance-lead-replacement-cable-6s-jst-xh.html
+    price_usd: 2.99
+    checked: 2026-10-21
+  - id: heat-shrink
+    group: supplies
+    name: Heat shrink assortment
+    why: "Over every soldered end in the wiring guide, 3 mm to 10 mm"
+    maker: Any
+    model: Polyolefin heat shrink, 3 to 10 mm
+  - id: tools-soldering
+    group: tools
+    name: Soldering iron, solder and flux
+    why: "A temperature-controlled iron that holds its heat on the ESC's 12 AWG pads, solder and flux"
+    maker: Any
+    model: A temperature-controlled soldering station
+  - id: tools-meter
+    group: tools
+    name: Multimeter
+    why: "Every check in the wiring guide and the test plans; one that reads continuity and low resistance"
+    maker: Any
+    model: A digital multimeter with continuity and a low ohms range
+  - id: tools-spot-welder
+    group: tools
+    name: Spot welder
+    why: "The pack's strip goes on by spot welding; cells are never soldered. Not needed if the pack is bought built"
+    maker: Any
+    model: A battery spot welder that can weld 0.3 mm copper strip
+  - id: tools-prop-balancer
+    group: tools
+    name: Prop balancer
+    why: "The arms ring sideways close to what an unbalanced prop shakes them at in a hover (the structure report)"
+    maker: Any
+    model: A magnetic prop balancer for 5 mm bores
+  - id: spare-props
+    group: spares
+    name: Props, a spare set
+    why: "Props break; a set of four, two each way, like the build's (sold in pairs)"
+    maker: Gemfan
+    model: 1050 tri-blade, a pair
+    qty: 2
+    link: https://www.getfpv.com/gemfan-1050-cl-cinelifter-3-blade-propeller-set-of-2-glass-fiber-nylon.html
+    price_usd: 11.99
+    checked: 2026-10-21
+  - id: spare-fuses
+    group: spares
+    name: MINI fuses, spares
+    why: "The two branch fuses are soldered in; keep spares of both ratings"
+    maker: Littelfuse
+    model: MINI blade fuses, 297 series, two 3 A and two 2 A
+    qty: 4
+    link: https://www.mouser.com/en/ProductDetail/Littelfuse/0297003.WXNV?qs=WtG364jHAdxHR7%2F%2F%252BiOsmQ%3D%3D
+    price_usd: 0.39
+    checked: 2026-10-21
+  - id: rpi-microsd
+    module: V
+    group: ground
+    name: microSD card for the Pi
+    why: "The Pi 5 boots from it; Raspberry Pi's own A2 card is the one specified for the Pi 5"
+    maker: Raspberry Pi
+    model: microSD card, 64 GB, A2
+    link: https://www.pishop.us/product/raspberry-pi-sd-card-64gb/
+    price_usd: 30.95
+    checked: 2026-10-21
+    fallback: {maker: SanDisk, model: Extreme 64GB microSDXC A2, note: "the same class; its price couldn't be confirmed on the day"}
+  - id: gps-mast-tube
+    module: V
+    group: ground
+    name: Carbon tube for the GPS mast
+    why: "The mast's tube, 8 mm across and 90 mm tall in the CAD (design/cad.yaml); the printed foot and cradle hold it"
+    maker: Any
+    model: Carbon fiber tube, 8 mm outside, at least 100 mm long
+  - id: release-servo
+    module: P
+    group: ground
+    name: Release servo (stand-in)
+    why: "The Harrier bundle has no servo. This is the design's stand-in until Fruity Chutes says which one theirs is"
+    maker: Hitec RCD
+    model: HS-55 micro servo (31055S)
+    link: https://hitecrcd.com/hs-55-economy-feather-servo/
+    price_usd: 16.99
+    checked: 2026-10-21
+    fallback: {maker: Hitec RCD, model: HS-65MG (32065S), link: "https://hitecrcd.com/hs-65mg-metal-gear-analog-micro-servo/", price_usd: 35.99, note: "metal gears and more torque, 4 g heavier; maybe the better release servo"}

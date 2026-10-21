@@ -3,9 +3,10 @@ type: esc
 id: holybro-tekko32-f4-50a
 maker: Holybro
 model: Tekko32 F4 4in1 50A (AM32)
-link: https://holybro.com/products/tekko32-f4-4in1-50a-esc
+link: 'https://holybro.com/collections/fpv-esc/products/tekko32-f4-4in1-50a-esc'
 price_usd: 62.99
-checked: 2026-10-17
+checked: 2026-10-21
+fallback: {"maker": "Lumenier", "model": "ELITE PRO 60A 2-6S AM32 4-in-1, 30x30", "note": "the same AM32 firmware and mount with more headroom, but 13 g heavier and 3 mm taller, against the frame's 19 mm stack height", "link": "https://www.getfpv.com/electronics/electronic-speed-controllers-esc/4-in-1-esc-s/lumenier-elite-pro-60a-2-6s-am32-4-in-1-esc-30x30.html", "price_usd": 110.49}
 source: {kind: manufacturer, url: 'https://holybro.com/products/tekko32-f4-4in1-50a-esc', checked: 2026-10-17, note: "AM32 firmware; the AM32 README lists bidirectional DShot (https://github.com/am32-firmware/AM32), though Holybro's page doesn't say it"}
 mass_g: 13.8
 cells_min: 4

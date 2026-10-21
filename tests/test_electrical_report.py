@@ -8,6 +8,7 @@ import numpy as np
 import pytest
 
 from pcs14.electrical.checks import Finding
+from pcs14.unproven import Unproven
 
 GOLDEN = Path(__file__).parent / "fixtures" / "electrical_report" / "README.md"
 
@@ -87,7 +88,7 @@ def made_up_run(**changes):
             Estimate("t-load", ("load",), ("draws[J.5V]",), "From a similar board."),
             Estimate("t-servo", ("servo",), (), "A stand-in until the real one is picked."),
         ),
-        unproven=("A dead short in the battery leads.",),
+        unproven=(Unproven(what="A dead short in the battery leads.", measure="Look."),),
         files=(
             "harnesses/power.svg",
             "kicad/electrical.kicad_sch",

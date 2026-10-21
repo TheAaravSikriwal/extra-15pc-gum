@@ -20,6 +20,7 @@ REPORTS = {  # each report the site reads, by name, and its data file under the 
     "flight-sim": "flight-sim/flight-sim.json",
     "modules": "modules/modules.json",
     "smart": "smart/smart.json",
+    "structure": "structure/structure.json",
 }
 
 
@@ -167,6 +168,25 @@ def hero(view, out, margin_px: int = 48) -> Path:
     return path
 
 
+GUIDES = (("The parts list", "parts.md"), ("The assembly guide", "assembly.md"),
+          ("The wiring guide", "wiring.md"), ("The firmware", "firmware.md"),
+          ("The test plans", "tests.md"), ("The legal checklist", "legal.md"))  # fmt: skip
+
+
+def build_data(package: dict) -> schema.Build:
+    """build.json from the build package's own data file."""
+    from pcs14.site.steps import GITHUB
+
+    return schema.Build(
+        schema_version=schema.SCHEMA_VERSION,
+        generated=package["generated"],
+        totals=[schema.BuildTotal(**t) for t in package["totals"]],
+        lines=[schema.BuildLine(**x) for x in package["lines"]],
+        guides=[schema.BuildGuide(name=n, url=GITHUB + f"docs/build/{f}") for n, f in GUIDES],
+        open=package.get("open", []),
+    )
+
+
 def write_all(out, reports, commit: str | None = None, today: str | None = None) -> list[Path]:
     """Writes every data file the reports allow, then index.json; returns the paths."""
     out, reports = Path(out), Path(reports)
@@ -200,6 +220,10 @@ def write_all(out, reports, commit: str | None = None, today: str | None = None)
         from pcs14.site.steps import steps_data
 
         written.append(_write(out, "steps", steps_data(readme, reports.resolve().parent, out)))
+    # the build package, when pcs14 package has written it
+    package = docs / "build" / "package.json"
+    if package.is_file():
+        written.append(_write(out, "build", build_data(json.loads(package.read_text("utf-8")))))
     index = schema.Index(
         schema_version=schema.SCHEMA_VERSION,
         generated=today or date.today().isoformat(),

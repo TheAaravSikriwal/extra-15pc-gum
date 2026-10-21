@@ -130,18 +130,18 @@ wires:
   - {ends: [lead.XT60.-, esc.BAT.GND], wire: ul3135-silicone, awg: 12, route: battery leads, harness: main power}
 
   # The motors: their own 18 AWG leads, cut to the routes along the arms
-  - {ends: [esc.MOTORS.M1A, m1.leads.A], wire: ul3135-silicone, awg: 18, route: motor leads front right, harness: motors}
-  - {ends: [esc.MOTORS.M1B, m1.leads.B], wire: ul3135-silicone, awg: 18, route: motor leads front right, harness: motors}
-  - {ends: [esc.MOTORS.M1C, m1.leads.C], wire: ul3135-silicone, awg: 18, route: motor leads front right, harness: motors}
-  - {ends: [esc.MOTORS.M2A, m2.leads.A], wire: ul3135-silicone, awg: 18, route: motor leads back left, harness: motors}
-  - {ends: [esc.MOTORS.M2B, m2.leads.B], wire: ul3135-silicone, awg: 18, route: motor leads back left, harness: motors}
-  - {ends: [esc.MOTORS.M2C, m2.leads.C], wire: ul3135-silicone, awg: 18, route: motor leads back left, harness: motors}
-  - {ends: [esc.MOTORS.M3A, m3.leads.A], wire: ul3135-silicone, awg: 18, route: motor leads front left, harness: motors}
-  - {ends: [esc.MOTORS.M3B, m3.leads.B], wire: ul3135-silicone, awg: 18, route: motor leads front left, harness: motors}
-  - {ends: [esc.MOTORS.M3C, m3.leads.C], wire: ul3135-silicone, awg: 18, route: motor leads front left, harness: motors}
-  - {ends: [esc.MOTORS.M4A, m4.leads.A], wire: ul3135-silicone, awg: 18, route: motor leads back right, harness: motors}
-  - {ends: [esc.MOTORS.M4B, m4.leads.B], wire: ul3135-silicone, awg: 18, route: motor leads back right, harness: motors}
-  - {ends: [esc.MOTORS.M4C, m4.leads.C], wire: ul3135-silicone, awg: 18, route: motor leads back right, harness: motors}
+  - {ends: [esc.MOTORS.M1A, m1.leads.A], wire: ul3135-silicone, awg: 18, route: motor leads front right, harness: motors, own_lead: true}
+  - {ends: [esc.MOTORS.M1B, m1.leads.B], wire: ul3135-silicone, awg: 18, route: motor leads front right, harness: motors, own_lead: true}
+  - {ends: [esc.MOTORS.M1C, m1.leads.C], wire: ul3135-silicone, awg: 18, route: motor leads front right, harness: motors, own_lead: true}
+  - {ends: [esc.MOTORS.M2A, m2.leads.A], wire: ul3135-silicone, awg: 18, route: motor leads back left, harness: motors, own_lead: true}
+  - {ends: [esc.MOTORS.M2B, m2.leads.B], wire: ul3135-silicone, awg: 18, route: motor leads back left, harness: motors, own_lead: true}
+  - {ends: [esc.MOTORS.M2C, m2.leads.C], wire: ul3135-silicone, awg: 18, route: motor leads back left, harness: motors, own_lead: true}
+  - {ends: [esc.MOTORS.M3A, m3.leads.A], wire: ul3135-silicone, awg: 18, route: motor leads front left, harness: motors, own_lead: true}
+  - {ends: [esc.MOTORS.M3B, m3.leads.B], wire: ul3135-silicone, awg: 18, route: motor leads front left, harness: motors, own_lead: true}
+  - {ends: [esc.MOTORS.M3C, m3.leads.C], wire: ul3135-silicone, awg: 18, route: motor leads front left, harness: motors, own_lead: true}
+  - {ends: [esc.MOTORS.M4A, m4.leads.A], wire: ul3135-silicone, awg: 18, route: motor leads back right, harness: motors, own_lead: true}
+  - {ends: [esc.MOTORS.M4B, m4.leads.B], wire: ul3135-silicone, awg: 18, route: motor leads back right, harness: motors, own_lead: true}
+  - {ends: [esc.MOTORS.M4C, m4.leads.C], wire: ul3135-silicone, awg: 18, route: motor leads back right, harness: motors, own_lead: true}
 
   # The two fused branches, tapped off the ESC's battery pads
   - {ends: [esc.BAT.VBAT, fuses.F1.A], wire: ul3135-silicone, awg: 20, route: battery taps, harness: battery taps}
@@ -296,13 +296,20 @@ wires:
 
 # What this design knowingly doesn't cover; it goes in the report's unproven list.
 unproven:
-  - "A dead short in the battery leads. Nothing electrical stops it; only the leads' routing and sleeving protect against it."
-  - "The motor cut board's two undocumented 1 kOhm resistors. Check them with a meter; pull-ups would make the board fail the wrong way, which the added pull-down only partly covers."
-  - "Powering the Pi 5 through its GPIO 5 V pins, which Raspberry Pi's docs don't describe."
-  - "The Pi 5's highest safe input. Raspberry Pi publishes only a 5.1 V supply and the 4.63 V undervoltage warning, so its 5.19 V from the BEC is checked against USB's 5.25 V ceiling, with no margin."
-  - "The ESC cable's re-pinning: Holybro doesn't say which end of its plug is pin 1."
-  - "Whether the ARK FPV terminates its CAN port. If it does, the harness's terminator at that end comes off."
-  - "The XT60's contact mass, a 2.5 g guess. The firmware's heat limit and the burst check both rest on it: heavier contacts give the burst more time."
+  - what: "A dead short in the battery leads. Nothing electrical stops it; only the leads' routing and sleeving protect against it."
+    measure: "Inspect the leads' routing and sleeving after every crash and every pack change."
+  - what: "The motor cut board's two undocumented 1 kOhm resistors. Check them with a meter; pull-ups would make the board fail the wrong way, which the added pull-down only partly covers."
+    measure: "Measure them with a meter before the board goes in."
+  - what: "Powering the Pi 5 through its GPIO 5 V pins, which Raspberry Pi's docs don't describe."
+    measure: "The Pi at full load through its GPIO pins on the bench, its own undervoltage flags logged."
+  - what: "The Pi 5's highest safe input. Raspberry Pi publishes only a 5.1 V supply and the 4.63 V undervoltage warning, so its 5.19 V from the BEC is checked against USB's 5.25 V ceiling, with no margin."
+    measure: "The BEC's output at the Pi's pins under full load, with a meter; then ask Raspberry Pi."
+  - what: "The ESC cable's re-pinning: Holybro doesn't say which end of its plug is pin 1."
+    measure: "Find pin 1 with a meter against the ESC's pads before the cable is cut."
+  - what: "Whether the ARK FPV terminates its CAN port. If it does, the harness's terminator at that end comes off."
+    measure: "CAN_H to CAN_L on the bare board: 120 ohm means it terminates itself."
+  - what: "The XT60's contact mass, a 2.5 g guess. The firmware's heat limit and the burst check both rest on it: heavier contacts give the burst more time."
+    measure: "Weigh a contact; and the XT60's temperature after a burst, with a thermocouple."
 
 # The check numbers, from the spec's "The check numbers" (2026-10-18)
 checks:

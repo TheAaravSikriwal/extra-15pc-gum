@@ -6,7 +6,11 @@ id: jst-sh
 maker: JST
 model: SH series wire-to-board connector, 1.0 mm pitch
 part_number: SHR-08V-S (8-pin housing)
-checked: 2026-10-18
+checked: 2026-10-21
+buy_note: "genuine JST from Mouser: SHR housings $0.10 and pre-crimped leads at $0.49, cut in half; $2.06 is an 8-pin plug with its leads"
+fallback: {"maker": "AIRBOT", "model": "SH 1.0 silicone cable set", "note": "a clone kit with fixed lead lengths", "link": "https://www.racedayquads.com/products/sh-1-0-silicone-cable-set", "price_usd": 6.99}
+price_usd: 2.06
+link: 'https://www.mouser.com/en/ProductDetail/JST-Commercial/ASSHSSH28K152?qs=QpmGXVUTftEMSPTtBZfang%3D%3D'
 source: {kind: estimate, checked: 2026-10-18, note: "JST publishes no mass. 0.03 g per contact position, both halves, is a guess from the size of the parts"}
 mass_g: 0.03
 electrical:

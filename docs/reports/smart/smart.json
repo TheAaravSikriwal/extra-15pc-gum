@@ -932,15 +932,42 @@
   }
  },
  "unproven": [
-  "Gazebo's rotors don't feel the air: no cheaper forward flight, no lift from rising air on the rotors, no vortex ring state. So the turn-back warning was checked against the sim's power, not a real pack's; soar mode's real saving (about 76 W in a 4 m/s column, by momentum theory) is a number, not a measurement; and the spiral descent's whole reason for being, keeping out of its own downwash, can't be shown here.",
-  "Wind sensing reads the sim's wind exactly because the estimate and Gazebo use the same drag formula. A real drone's drag area and its lean in gusts will make it worse.",
-  "Self-tuning's 0.3% is a clean sim: motors that follow a first-order lag exactly, a gyro with little noise, no blade flapping or rotor damping. A real drone will do worse, and the fit runs on the ground from the log for now, not on board.",
-  "GPS-free flight's estimate flew over a made-up textured field at 3 m/s and 6 m up, with the sim's true attitude plus noise. No motion blur, no rolling shutter, no light changing, no grass moving. At 15 m/s the frames stopped matching (12.6% drift). The TF-Luna it needs for its height reads to 8 m at best, less in sunlight. And it isn't in the loop yet: my firmware doesn't fly on it.",
-  "The maps are orthomosaics from known poses over flat ground: no heights (OpenDroneMap isn't installed), tall things lean on the map, and V's camera had to point straight down, which its bracket can't do (it's tipped 30 degrees for the live video).",
-  "Change detection and the safe spots ran on a world of flat colors. Real ground has texture, shadows that move with the sun, and grass that changes between flights.",
-  "Object detection ran on colored boxes, not real things: the model calls them cubes and green rectangular objects. It drew a box around the whole frame on an empty one. And it ran on the PC's RTX 3060; how fast the laptop's integrated graphics runs it is unknown.",
-  "The plain-English missions' local model misread \"60 m west of home\" as a point north and east. The checker passed it because it was safe. Only my approval, on a map, can catch a plan that's safe but wrong.",
-  "The Meshtastic relay is a link budget over flat ground with a 10 dB margin: no trees, no hills, no other radios. Where the node lives (V, Base or its own module) is still open."
+  {
+   "what": "Gazebo's rotors don't feel the air: no cheaper forward flight, no lift from rising air on the rotors, no vortex ring state. So the turn-back warning was checked against the sim's power, not a real pack's; soar mode's real saving (about 76 W in a 4 m/s column, by momentum theory) is a number, not a measurement; and the spiral descent's whole reason for being, keeping out of its own downwash, can't be shown here.",
+   "measure": "The forward-flight power from a GPS-logged cruise with the current logged; a hover in a known updraft (a slope on a windy day) for soar mode; careful descent tests for the vortex ring state."
+  },
+  {
+   "what": "Wind sensing reads the sim's wind exactly because the estimate and Gazebo use the same drag formula. A real drone's drag area and its lean in gusts will make it worse.",
+   "measure": "A hover beside an anemometer on a mast, the two compared."
+  },
+  {
+   "what": "Self-tuning's 0.3% is a clean sim: motors that follow a first-order lag exactly, a gyro with little noise, no blade flapping or rotor damping. A real drone will do worse, and the fit runs on the ground from the log for now, not on board.",
+   "measure": "Three stick doublets, tethered and logged, the fit's inertia against the CAD's and against a swing test of the frame on a bifilar pendulum."
+  },
+  {
+   "what": "GPS-free flight's estimate flew over a made-up textured field at 3 m/s and 6 m up, with the sim's true attitude plus noise. No motion blur, no rolling shutter, no light changing, no grass moving. At 15 m/s the frames stopped matching (12.6% drift). The TF-Luna it needs for its height reads to 8 m at best, less in sunlight. And it isn't in the loop yet: my firmware doesn't fly on it.",
+   "measure": "The same rectangle at 3 m/s over grass, GPS logged but not used, the estimate against it."
+  },
+  {
+   "what": "The maps are orthomosaics from known poses over flat ground: no heights (OpenDroneMap isn't installed), tall things lean on the map, and V's camera had to point straight down, which its bracket can't do (it's tipped 30 degrees for the live video).",
+   "measure": "A mapping run over a field with markers whose spacing is measured with a tape."
+  },
+  {
+   "what": "Change detection and the safe spots ran on a world of flat colors. Real ground has texture, shadows that move with the sun, and grass that changes between flights.",
+   "measure": "The same mapping run on two days over the same field, with one thing moved."
+  },
+  {
+   "what": "Object detection ran on colored boxes, not real things: the model calls them cubes and green rectangular objects. It drew a box around the whole frame on an empty one. And it ran on the PC's RTX 3060; how fast the laptop's integrated graphics runs it is unknown.",
+   "measure": "The model on the real camera's recorded video, scored against boxes drawn by hand, and its speed on the laptop."
+  },
+  {
+   "what": "The plain-English missions' local model, asked for a point 60 m west of home, wrote one north and east. The checker passed it because it was safe. Only my approval, on a map, can catch a plan that's safe but wrong.",
+   "measure": "A log of what the model gets wrong over many requests; every plan drawn on the map before it's approved."
+  },
+  {
+   "what": "The Meshtastic relay is a link budget over flat ground with a 10 dB margin: no trees, no hills, no other radios. Where the node lives (V, Base or its own module) is still open.",
+   "measure": "A walk-out range test with two nodes, one on a 10 m mast, then one on the drone."
+  }
  ],
  "detection": {
   "model": "qwen2.5vl:7b",

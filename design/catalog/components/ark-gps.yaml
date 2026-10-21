@@ -4,7 +4,9 @@ id: ark-gps
 maker: ARK Electronics
 model: ARK GPS (DroneCAN, u-blox NEO-M9N, BMM150 compass, BMP388 barometer)
 price_usd: 225.0
-checked: 2026-10-18
+checked: 2026-10-21
+fallback: {"maker": "Holybro", "model": "DroneCAN M9N GPS (SKU 12032)", "note": "the same M9N and DroneCAN, but 20 g heavier, a different shape for the cradle, and one CAN port", "link": "https://holybro.com/products/dronecan-m9n-gps", "price_usd": 77.99}
+link: 'https://arkelectron.com/product/ark-gps/'
 source: {kind: manufacturer, url: 'https://docs.arkelectron.com/products/gps/ark-gps/hardware.md', checked: 2026-10-18, note: "ARK's hardware page: 5 x 5 x 1 cm, 16 g (neither says whether the case is included), two CAN plugs and a debug plug. $225 and in stock on ARK's shop (https://arkelectron.com/product/ark-gps/). It won't boot unless the flight controller has an SD card in it"}
 mass_g: 16
 power_w: 0.55

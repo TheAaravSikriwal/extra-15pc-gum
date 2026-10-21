@@ -3,7 +3,11 @@ type: component
 id: halow-antenna-915
 maker: Various
 model: 915 MHz dipole antenna with an IPEX pigtail (placeholder)
-checked: '2026-10-17'
+checked: 2026-10-21
+buy_note: "the pick for the placeholder: Taoglas FXP290.07.0100A, a 75 x 45 mm flex antenna, 1.5 dBi, U.FL; DigiKey's price came from its search listing, and it needs a flat spot away from the carbon"
+fallback: {"maker": "Molex", "model": "2111400100 ISM 868/915 MHz flexible antenna", "note": "the same connector, cheaper, but dual-band and lower gain", "link": "https://www.digikey.com/en/products/detail/molex/2111400100/9953925", "price_usd": 2.61}
+price_usd: 11.07
+link: 'https://www.digikey.com/en/products/detail/taoglas-limited/FXP290-07-0100A/2332717'
 source:
   kind: estimate
   checked: '2026-10-17'

@@ -4,7 +4,11 @@ type: component
 id: bat54c-on-adapter
 maker: Diodes Incorporated (diode)
 model: BAT54C dual Schottky diode (common cathode) on a SOT-23 adapter
-checked: 2026-10-18
+checked: 2026-10-21
+buy_note: "onsemi's BAT54CLT3G ($0.13), the same dual Schottky, on a SparkFun BOB-00717 adapter ($1.25); check its pinout"
+fallback: {"maker": "Diodes Incorporated", "model": "BAT54C-7-F", "note": "the catalog's own part, back ordered until April 2027", "link": "https://www.mouser.com/ProductDetail/Diodes-Incorporated/BAT54C-7-F?qs=A%2FGeX6qn32NJhN9M%2F3GNcA%3D%3D", "price_usd": 0.32}
+price_usd: 1.38
+link: 'https://www.mouser.com/ProductDetail/onsemi/BAT54CLT3G?qs=CBDP9nzV7kkNgCKU97dzRw%3D%3D'
 source: {kind: manufacturer, url: 'https://www.diodes.com/assets/Datasheets/ds11005.pdf', checked: 2026-10-18, note: "The diode itself is 0.008 g (Diodes Inc). The adapter board's mass isn't published; 0.15 g is a guess"}
 mass_g: 0.16
 cad:

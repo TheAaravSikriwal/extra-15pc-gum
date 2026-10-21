@@ -4,7 +4,10 @@ id: heltec-ht-hc01p
 maker: Heltec
 model: HT-HC01P Wi-Fi HaLow card with Pi HAT
 price_usd: 18.8
-checked: 2026-10-17
+checked: 2026-10-21
+buy_note: "out of stock on the day: the module $12.90 and its Pi HAT $5.90 (https://heltec.org/project/ht-hc01p-hat/); Heltec lists Pi 1 to 4 only, and the Pi 5 swap is still open"
+fallback: {"maker": "Heltec Automation", "model": "HC01P V2 HaLow module, 902-928 MHz", "note": "the same card, chip and HAT with a 27 dBm front end: more current from the Pi, and its own driver config", "link": "https://heltec.org/project/hc01p-v2/", "price_usd": 11.5}
+link: 'https://heltec.org/project/ht-hc01p/'
 source: {kind: estimate, url: 'https://heltec.org/project/ht-hc01p/', checked: 2026-10-17, note: "Heltec's 35 g figure sits next to shipping dimensions, so 15 g is assumed for the mini-PCIe card, HAT and antenna. Card $12.90, HAT $5.90"}
 mass_g: 15
 power_w: 1.06

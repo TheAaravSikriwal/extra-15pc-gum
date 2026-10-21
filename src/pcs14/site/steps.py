@@ -3,6 +3,7 @@
 entries, matched to their steps by their names. Nothing here is written twice.
 """
 
+import posixpath
 import re
 import shutil
 from dataclasses import dataclass
@@ -24,8 +25,8 @@ STEPS = (
     ("firmware", r"firmware", None, None),
     ("modules", r"Modules in sim", "modules/modules.json", "modules/stills"),
     ("smart", r"Smart features", "smart/smart.json", "smart/stills"),
-    ("build", r"Build package", None, None),
-    ("structure", r"Structure", None, None),
+    ("build", r"Build package", "../build/package.json", None),
+    ("structure", r"Structure", "structure/structure.json", "structure/stills"),
     ("aero", r"Aero", None, None),
     ("design-hunt", r"Design hunt", None, None),
     ("site", r"Project site", None, None),
@@ -39,6 +40,8 @@ LOG_WORDS = (
     ("firmware", ("firmware",)),
     ("modules", ("modules",)),
     ("smart", ("smart-features",)),
+    ("structure", ("structure",)),
+    ("build", ("build-package",)),
     ("aero", ("wind-tunnel",)),
     ("site", ("project-site",)),
 )
@@ -169,6 +172,11 @@ def _logs(log_folder: Path) -> dict[str, list[schema.LogEntry]]:
     return found
 
 
+def _folder(report_file: str) -> str:
+    """The report's folder in the repo, "../build" and all resolved."""
+    return posixpath.normpath(f"docs/reports/{Path(report_file).parent.as_posix()}")
+
+
 def steps_data(readme_path, docs, out) -> schema.Steps:
     import json
 
@@ -190,7 +198,7 @@ def steps_data(readme_path, docs, out) -> schema.Steps:
             data = json.loads((docs / "reports" / report_file).read_text(encoding="utf-8"))
             report = schema.ReportRef(
                 verdict=data.get("verdict"), generated=data.get("generated"),
-                url=GITHUB + f"docs/reports/{Path(report_file).parent.as_posix()}/README.md",
+                url=GITHUB + _folder(report_file) + "/README.md",
             )  # fmt: skip
         made.append(schema.Step(
             id=step_id, number=row.number, name=row.name, purpose=row.purpose,

@@ -9,11 +9,13 @@ from pathlib import Path
 
 import numpy as np
 
+from pcs14 import unproven
 from pcs14.flight import grade
 from pcs14.flight.batch import load_results
 from pcs14.flight.drag import Chute
 from pcs14.modules import chute as chute_math
 from pcs14.modules import companion, halow, video
+from pcs14.unproven import Unproven
 
 HUNG = "hung flight controller"
 RULE = "chute rule"
@@ -27,20 +29,59 @@ HALOW_DISTANCES_M = (100, 500, 1000, 2000, 3000, 5000, 8000)
 SETUP_ORDER = ("base", "V", "P", "C", "mission", "V+C", "P+C", "max")
 
 UNPROVEN = (
-    "The canopy's timing. Fruity Chutes publishes no ejection or opening time, so the 0.2 s and "
-    "1.0 s the sim uses are my guesses, and the lowest height the chute saves the drone from "
-    "rests on them (the table under the drop heights).",
-    "The opening jolt. The sim's canopy grows in a straight line and never overshoots, which "
-    "real canopies do as they fill, so its number is low. The bound uses Knacke's infinite-mass "
-    "opening coefficient, which is high for a drone this light under a canopy this big. The "
-    "real number is between them.",
-    "A hung flight controller here is a frozen process. A real one could hang with its DShot "
-    "outputs in any state, which the safety monitor's takeover of the lines has to win against; "
-    "that's tested on the host, not on a board.",
-    "HaLow's range: line of sight over flat ground, with a 10 dB margin standing in for the "
-    "drone's body, multipath and a laptop held low. No trees, hills or buildings. And the "
-    "radio's numbers are Morse Micro's for its own module, not Heltec's for its card.",
-    "The companion computer's comparison is from published numbers, not measured on a board.",
+    Unproven(
+        what=(
+            "The canopy's timing. Fruity Chutes publishes no ejection or opening time, so the 0.2"
+            " s and 1.0 s the sim uses are my guesses, and the lowest height the chute saves the "
+            "drone from rests on them (the table under the drop heights)."
+        ),
+        measure=(
+            "Fruity Chutes' own numbers, asked for; then a drop of the canopy with a dummy "
+            "weight, filmed, to time its opening."
+        ),
+    ),
+    Unproven(
+        what=(
+            "The opening jolt. The sim's canopy grows in a straight line and never overshoots, "
+            "which real canopies do as they fill, so its number is low. The bound uses Knacke's "
+            "infinite-mass opening coefficient, which is high for a drone this light under a "
+            "canopy this big. The real number is between them."
+        ),
+        measure=("A load cell inline on the riser, in the same drop."),
+    ),
+    Unproven(
+        what=(
+            "A hung flight controller here is a frozen process. A real one could hang with its "
+            "DShot outputs in any state, which the safety monitor's takeover of the lines has to "
+            "win against; that's tested on the host, not on a board."
+        ),
+        measure=(
+            "On the bench, props off: the ARK FPV halted in a debugger, and the safety monitor "
+            "taking the ESC lines and stopping the motors."
+        ),
+    ),
+    Unproven(
+        what=(
+            "HaLow's range: line of sight over flat ground, with a 10 dB margin standing in for "
+            "the drone's body, multipath and a laptop held low. No trees, hills or buildings. And"
+            " the radio's numbers are Morse Micro's for its own module, not Heltec's for its "
+            "card."
+        ),
+        measure=(
+            "A walk-out range test with the drone on a 10 m mast, logging the link's rate against"
+            " the distance."
+        ),
+    ),
+    Unproven(
+        what=(
+            "The companion computer's comparison is from published numbers, not measured on a "
+            "board."
+        ),
+        measure=(
+            "The Pi 5 running the video encode and the flow estimate, its CPU load and "
+            "temperature logged."
+        ),
+    ),
 )
 
 
@@ -185,7 +226,7 @@ def render(run: ModulesRun, generated: str) -> str:
         "## What it can't prove",
         "",
     ]
-    lines += [f"- {u}" for u in UNPROVEN]
+    lines += unproven.bullets(UNPROVEN)
     lines += [""]
     return "\n".join(lines)
 
@@ -341,7 +382,7 @@ def to_data(run: ModulesRun, generated: str) -> dict:
         "companion": companion.verdict().pick,
         "healthy_runs": run.healthy_runs,
         "false_triggers": [list(x) for x in run.false_triggers],
-        "unproven": list(UNPROVEN),
+        "unproven": unproven.data(UNPROVEN),
     }  # fmt: skip
 
 

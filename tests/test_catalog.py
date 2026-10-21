@@ -164,3 +164,26 @@ def test_power_draw_needs_a_source(scratch):
     )
     with pytest.raises(CatalogError, match="power_source"):
         load_catalog(scratch, allow_made_up=True)
+
+
+def test_a_part_can_name_its_fallback(scratch):
+    fallback = (
+        "fallback: {maker: Otherco, model: Q9x5, link: 'https://example.com/q9x5', "
+        'note: "lighter, and the same hub"}\n'
+    )
+    write(scratch / "props", "testco-p9x5.yaml", GOOD_PROP + fallback)
+    prop = load_catalog(scratch, allow_made_up=True).props["testco-p9x5"]
+    assert prop.fallback.maker == "Otherco" and "hub" in prop.fallback.note
+
+
+def test_a_fallback_needs_a_maker_and_why(scratch):
+    write(scratch / "props", "bad.yaml", GOOD_PROP + "fallback: {model: Q9x5}\n")
+    with pytest.raises(CatalogError, match="bad.yaml.*fallback"):
+        load_catalog(scratch, allow_made_up=True)
+
+
+def test_no_fallback_says_why(scratch):
+    none = 'fallback: {none: true, note: "the only canopy made for this size"}\n'
+    write(scratch / "props", "testco-p9x5.yaml", GOOD_PROP + none)
+    prop = load_catalog(scratch, allow_made_up=True).props["testco-p9x5"]
+    assert prop.fallback.none and prop.fallback.maker is None

@@ -3,8 +3,11 @@ type: prop
 id: gemfan-1050x3
 maker: Gemfan
 model: 1050 3-blade
-link: https://www.gemfanhobby.com/1050-cinelifter-glass-fiber-nylon-3-blade.html
-checked: 2026-10-17
+link: 'https://www.getfpv.com/gemfan-1050-cl-cinelifter-3-blade-propeller-set-of-2-glass-fiber-nylon.html'
+checked: 2026-10-21
+buy_note: "sold in pairs at $11.99; back ordered at GetFPV on the day"
+fallback: {"maker": "HQProp", "model": "MacroQuad 10x5x3, 2 CW + 2 CCW", "note": "the same size and hub, 6 g a prop heavier, and the motor's thrust table was measured on Gemfan, so recheck", "link": "https://www.readymaderc.com/products/details/86878-hq-macroquad-prop-10x5x3-2ccw-2cw-black-glass-fiber-reinforced-nylon", "price_usd": 17.86}
+price_usd: 6.0
 source: {kind: manufacturer, url: 'https://www.gemfanhobby.com/1050-cinelifter-glass-fiber-nylon-3-blade.html', checked: 2026-10-17, note: "Glass fiber reinforced nylon. Gemfan lists it as approximately 16.8 g"}
 mass_g: 16.8
 diameter_in: 10

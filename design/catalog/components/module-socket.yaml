@@ -3,7 +3,10 @@ type: component
 id: module-socket
 maker: Amass and JST
 model: Module sockets, three slots (an XT30U and an 8-pin JST-GH each)
-checked: 2026-10-18
+checked: 2026-10-21
+buy_note: "an estimate from its pieces: three XT30U halves ($0.32), three 8-pin JST-GH plugs with leads (about $2.48), a 4-pin plug ($1.26) and two resistors"
+fallback: {"maker": "Amass and JST", "model": "the same halves from the XT30 and JST-GH fallbacks", "note": "see those two"}
+price_usd: 9.85
 source: {kind: estimate, checked: 2026-10-18, note: "Three XT30U halves at 0.99 g (LCSC's listing) and three 8-pin JST-GH halves at about 0.2 g (the jst-gh estimate), about 3.6 g, plus the 4-pin JST-GH plug for the flight controller and two terminator resistors, about 0.3 g"}
 mass_g: 3.9
 cad:

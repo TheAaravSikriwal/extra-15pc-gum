@@ -23,6 +23,25 @@ __all__ = ["Source", "SourceKind", "Strict"]
 ID_PATTERN = r"^[a-z0-9][a-z0-9.-]*$"
 
 
+class Fallback(Strict):
+    """A part's second choice for the build package: what to buy if it can't be had, and why
+    it's second, including what in the design would change. Or `none`, with why there's no
+    sensible second choice."""
+
+    none: bool = False
+    maker: str | None = None
+    model: str | None = None
+    link: HttpUrl | None = None
+    price_usd: float | None = Field(default=None, ge=0)
+    note: str
+
+    @model_validator(mode="after")
+    def _named(self):
+        if not self.none and not (self.maker and self.model):
+            raise ValueError("a fallback names its maker and model, or says none: true")
+        return self
+
+
 class Part(Strict):
     type: str
     id: str = Field(pattern=ID_PATTERN)
@@ -32,6 +51,8 @@ class Part(Strict):
     link: HttpUrl | None = None
     price_usd: float | None = Field(default=None, ge=0)
     checked: date | None = None
+    fallback: Fallback | None = None  # the build package's second choice
+    buy_note: str | None = None  # what the shop said the day it was checked: stock, pack sizes
     source: Source
     mass_g: float = Field(gt=0)
     cad: AnyCad | None = None  # every part in the build gets one; see pcs14.catalog.cad
@@ -310,6 +331,8 @@ class WireGauge(Strict):
     resistance_mohm_per_m: float = Field(gt=0)  # the conductor, at 20 °C
     outer_diameter_mm: float = Field(gt=0)  # over the insulation
     mass_g_per_m: float = Field(gt=0)
+    link: HttpUrl | None = None  # where to buy this gauge, for the build package
+    price_usd_per_m: float | None = Field(default=None, ge=0)  # what it costs there, a meter
 
     @property
     def resistance_per_m(self) -> float:

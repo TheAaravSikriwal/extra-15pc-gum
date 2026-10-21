@@ -5,7 +5,11 @@ id: amass-xt30
 maker: Amass
 model: XT30U connector
 part_number: XT30U-M
-checked: 2026-10-18
+checked: 2026-10-21
+buy_note: "20 pairs for $12.69 from a reseller that says genuine Amass; GetFPV's genuine set was out of stock"
+fallback: {"maker": "Amass (per GetFPV)", "model": "XT30U pigtails, 18 AWG, 10 cm, 3 pcs", "note": "the same connector already on 18 AWG leads", "link": "https://www.getfpv.com/xt30u-18awg-male-female-pigtail-3pcs.html", "price_usd": 9.99}
+price_usd: 0.32
+link: 'https://www.amazon.com/dp/B08H1JP7NW'
 source: {kind: manufacturer, url: 'https://www.china-amass.com/biao/268.html', checked: 2026-10-18, note: "Amass's XT30U (gold) page: 20 A MAX (16 AWG, rise under 85 K), 80 V DC rated, contact resistance 1.2 mOhm max. The nickel XT30UPB is 15 A. Mass 0.99 g from LCSC's listing for XT30U-M (https://www.lcsc.com/product-detail/C99101.html), not from Amass"}
 mass_g: 0.99
 electrical:

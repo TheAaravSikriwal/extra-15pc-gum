@@ -241,6 +241,8 @@ How parts bend and break, what a finite element model actually is, and why vibra
 - [ ] **Read:** Singiresu S. Rao, *Mechanical Vibrations* (Pearson). Natural frequencies and resonance.
 - [ ] **Do:** the FreeCAD FEM workbench tutorials on the FreeCAD wiki ([wiki.freecad.org](https://wiki.freecad.org)), which run CalculiX underneath.
 
+The first pass (2026-10-21) used two ideas worth knowing by name. Rayleigh's method: a beam's first mode from its stiffness and a share of its own mass at the tip, which is in Rao's chapter on vibration of continuous systems. And the Campbell diagram: a part's modes as lines across a chart of rotation speed, with the speeds that shake it (once a turn, once a blade) drawn over them, so a crossing near the operating speed jumps out.
+
 ## 17. Parachutes and radio links
 
 *Came up in step 6, the modules in sim (2026-10-20).*

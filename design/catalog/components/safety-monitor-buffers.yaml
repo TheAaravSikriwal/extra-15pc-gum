@@ -5,7 +5,11 @@ type: component
 id: safety-monitor-buffers
 maker: Texas Instruments (chips), SparkFun (adapters)
 model: Six SN74LVC1G125 buffers on SparkFun SOT-23 adapters (BOB-00717)
-checked: 2026-10-18
+checked: 2026-10-21
+buy_note: "six TI 74LVC1G125DBVRG4 at $0.77 and six SparkFun BOB-00717 adapters at $1.25 (https://www.sparkfun.com/sparkfun-sot23-to-dip-adapter.html); the plain SN74LVC1G125DBVR was out of stock until February 2027"
+fallback: {"maker": "Nexperia", "model": "74LVC1G125GV-Q100", "note": "the same buffer in the same size of package; check its pinout against TI's before wiring", "link": "https://www.mouser.com/en/ProductDetail/Nexperia/74LVC1G125GV-Q100?qs=vnbNJPHmPnMppZZ6gawcFw%3D%3D", "price_usd": 0.14}
+price_usd: 12.12
+link: 'https://www.mouser.com/ProductDetail/Texas-Instruments/74LVC1G125DBVRG4?qs=pajgIaoyDUi0MXq%2Fp1CdDQ%3D%3D'
 source: {kind: estimate, checked: 2026-10-18, note: "Neither TI nor SparkFun publishes a mass. 0.2 g each (a 0.34 x 0.46 inch adapter board, https://www.sparkfun.com/sparkfun-sot23-to-dip-adapter.html, and a SOT-23 chip), so 1.2 g for six"}
 mass_g: 1.2
 cad:

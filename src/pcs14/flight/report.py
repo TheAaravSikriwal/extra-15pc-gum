@@ -7,7 +7,8 @@ models' numbers and every estimate they rest on.
 
 from dataclasses import dataclass
 
-from pcs14 import __version__
+from pcs14 import __version__, unproven
+from pcs14.unproven import Unproven
 
 # every scenario, in the order the report lists them
 SCENARIOS = (
@@ -25,16 +26,57 @@ SCENARIOS = (
     "payload grab",
 )
 UNPROVEN = (
-    "The parachute's descent rate. Its drag comes from Fruity Chutes' own rating, so the sim "
-    "only repeats it; the drop checks the order of events and the height lost.",
-    "The payload grab. Gazebo's attach joint stands in for the claws, which are a placeholder "
-    "anyway.",
-    "My firmware's current cap and the XT60's heat limit. This is PX4, which has neither, so "
-    "the motors are held at their worst-case top speed instead.",
-    "The props' in-plane drag, their rolling moment and the motors' spin-up times, which are "
-    "PX4's x500 values.",
-    "Body drag beyond a frontal-area estimate, until the wind tunnel side track has real tables.",
-    "Vibration, and anything else a real IMU sees that clean Gaussian noise doesn't.",
+    Unproven(
+        what=(
+            "The parachute's descent rate. Its drag comes from Fruity Chutes' own rating, so the "
+            "sim only repeats it; the drop checks the order of events and the height lost."
+        ),
+        measure=(
+            "A drop test of the chute with a dummy weight of the drone's mass, filmed against a "
+            "tape to time its descent, before the chute ever flies on the drone."
+        ),
+    ),
+    Unproven(
+        what=(
+            "The payload grab. Gazebo's attach joint stands in for the claws, which are a "
+            "placeholder anyway."
+        ),
+        measure=("Waits for the claws' design."),
+    ),
+    Unproven(
+        what=(
+            "My firmware's current cap and the XT60's heat limit. This is PX4, which has neither,"
+            " so the motors are held at their worst-case top speed instead."
+        ),
+        measure=(
+            "On the bench, tethered with the props on: the current at full throttle, logged, and "
+            "the XT60's temperature after a burst, with a thermocouple."
+        ),
+    ),
+    Unproven(
+        what=(
+            "The props' in-plane drag, their rolling moment and the motors' spin-up times, which "
+            "are PX4's x500 values."
+        ),
+        measure=(
+            "One motor and prop on a thrust stand: thrust and current through the throttle, and "
+            "the spin-up time from a step."
+        ),
+    ),
+    Unproven(
+        what=(
+            "Body drag beyond a frontal-area estimate, until the wind tunnel side track has real "
+            "tables."
+        ),
+        measure=("A GPS-logged cruise at a steady speed in still air, with the current logged."),
+    ),
+    Unproven(
+        what=("Vibration, and anything else a real IMU sees that clean Gaussian noise doesn't."),
+        measure=(
+            "A gyro log with the props spinning, tethered: its spectrum against the arms' "
+            "frequencies and the props' speeds."
+        ),
+    ),
 )
 
 
@@ -400,7 +442,7 @@ def render(run: FlightSimRun, generated: str | None = None) -> str:
     lines += ["", "## What it rests on", ""]
     lines += [f"- {e}" for e in run.estimates] or ["Nothing."]
     lines += ["", "## What it can't prove", ""]
-    lines += [f"- {u}" for u in UNPROVEN]
+    lines += unproven.bullets(UNPROVEN)
     lines += ["", "## Files", ""]
     if run.files:
         lines += ["Generated on every run, not committed (they're build outputs):", ""]
@@ -443,7 +485,7 @@ def to_data(run: FlightSimRun, generated: str | None = None) -> dict:
             "closing": closing(mine_view(run)),
         },
         "estimates": list(run.estimates),
-        "unproven": list(UNPROVEN),
+        "unproven": unproven.data(UNPROVEN),
         "files": list(run.files),
         "skipped": list(run.skipped),
     }

@@ -5,7 +5,11 @@ id: jst-gh
 maker: JST
 model: GH series wire-to-board connector, 1.25 mm pitch
 part_number: GHR-08V-S (8-pin housing)
-checked: 2026-10-18
+checked: 2026-10-21
+buy_note: "genuine JST from Mouser: housings $0.10 (4-pin) to $0.16 (8-pin) and pre-crimped leads at $0.58, cut in half for two ends; $1.90 is a typical 6-pin plug with its leads"
+fallback: {"maker": "elechawk", "model": "GH1.25 pre-crimped cable kit, 15 cm", "note": "pre-crimped and cheaper per plug, but a clone, not genuine JST", "link": "https://www.amazon.com/dp/B07PBHN7TM", "price_usd": 18.99}
+price_usd: 1.9
+link: 'https://www.mouser.com/en/ProductDetail/JST-Commercial/AGHGH28K305?qs=QpmGXVUTftHuHDeXhn0HhA%3D%3D'
 source: {kind: estimate, checked: 2026-10-18, note: "JST publishes no mass. 0.05 g per contact position, both halves, is a guess from the size of the parts; a whole 8-pin pair would be about 0.4 g"}
 mass_g: 0.05
 electrical:

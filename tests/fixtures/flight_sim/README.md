@@ -76,12 +76,12 @@ Each combination's model, as generated. The weight is the CAD's, without the siz
 
 ## What it can't prove
 
-- The parachute's descent rate. Its drag comes from Fruity Chutes' own rating, so the sim only repeats it; the drop checks the order of events and the height lost.
-- The payload grab. Gazebo's attach joint stands in for the claws, which are a placeholder anyway.
-- My firmware's current cap and the XT60's heat limit. This is PX4, which has neither, so the motors are held at their worst-case top speed instead.
-- The props' in-plane drag, their rolling moment and the motors' spin-up times, which are PX4's x500 values.
-- Body drag beyond a frontal-area estimate, until the wind tunnel side track has real tables.
-- Vibration, and anything else a real IMU sees that clean Gaussian noise doesn't.
+- The parachute's descent rate. Its drag comes from Fruity Chutes' own rating, so the sim only repeats it; the drop checks the order of events and the height lost. *First to measure:* A drop test of the chute with a dummy weight of the drone's mass, filmed against a tape to time its descent, before the chute ever flies on the drone.
+- The payload grab. Gazebo's attach joint stands in for the claws, which are a placeholder anyway. *First to measure:* Waits for the claws' design.
+- My firmware's current cap and the XT60's heat limit. This is PX4, which has neither, so the motors are held at their worst-case top speed instead. *First to measure:* On the bench, tethered with the props on: the current at full throttle, logged, and the XT60's temperature after a burst, with a thermocouple.
+- The props' in-plane drag, their rolling moment and the motors' spin-up times, which are PX4's x500 values. *First to measure:* One motor and prop on a thrust stand: thrust and current through the throttle, and the spin-up time from a step.
+- Body drag beyond a frontal-area estimate, until the wind tunnel side track has real tables. *First to measure:* A GPS-logged cruise at a steady speed in still air, with the current logged.
+- Vibration, and anything else a real IMU sees that clean Gaussian noise doesn't. *First to measure:* A gyro log with the props spinning, tethered: its spectrum against the arms' frequencies and the props' speeds.
 
 ## Files
 

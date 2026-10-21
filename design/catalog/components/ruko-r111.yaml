@@ -3,8 +3,11 @@ type: component
 id: ruko-r111
 maker: Ruko
 model: R111 Remote ID broadcast module
-price_usd: 59.99
-checked: 2026-10-17
+price_usd: 39.99
+checked: 2026-10-21
+buy_note: "the R111S seems to have replaced the R111 (both FAA-accepted; the R111S is RID000001939); Ruko lists 13.5 g, so check it against the mount"
+fallback: {"maker": "Holy Stone", "model": "HSRID03", "note": "FAA-accepted with its own battery; its size and weight aren't published, so the mount and weight need checking", "link": "https://store.holystone.com/products/hsrid03", "price_usd": 39.99}
+link: 'https://www.amazon.com/Ruko-Aircraft-Tracker-Regulation-Compliant/dp/B0DG53V8JG'
 source: {kind: manufacturer, url: 'https://ruko.net/blogs/ruko/introducing-ruko-r111-remote-id-module-enhancing-drone-safety-and-compliance', checked: 2026-10-17, note: "FAA-accepted broadcast module with its own battery (5 h or more), so it takes no power from the drone"}
 mass_g: 13.5
 cad:

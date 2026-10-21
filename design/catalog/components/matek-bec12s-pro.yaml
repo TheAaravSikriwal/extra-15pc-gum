@@ -3,7 +3,11 @@ type: component
 id: matek-bec12s-pro
 maker: Matek
 model: BEC12S-PRO 5 V 5 A supply for the Pi
-checked: 2026-10-17
+checked: 2026-10-21
+buy_note: "its default output is 5.2 V, which the electrical report uses"
+fallback: {"maker": "Pololu", "model": "D36V50F5 (item 4091)", "note": "5.0 V at 5.5 A from up to 50 V; 2 g heavier and a different shape for its mount", "link": "https://www.pololu.com/product/4091", "price_usd": 39.95}
+price_usd: 22.99
+link: 'https://www.racedayquads.com/products/matek-bec12s-pro-9-55v-to-5-8-12v-5a'
 source: {kind: manufacturer, url: 'https://www.mateksys.com/?portfolio=bec12s-pro', checked: 2026-10-17, note: "9-55 V in, 5.2 V out, 5 A continuous, 88-96% efficient"}
 mass_g: 5
 power_w: 1.0

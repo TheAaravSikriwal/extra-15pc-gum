@@ -139,7 +139,7 @@ Every number comes from a maker's datasheet or a measurement, except these estim
 
 ## What it can't prove
 
-- A dead short in the battery leads.
+- A dead short in the battery leads. *First to measure:* Look.
 - The switch sims use generic models built from datasheet numbers, with no ground bounce or noise from the motor current. A clean sim isn't a scope on the real thing.
 
 ## Files

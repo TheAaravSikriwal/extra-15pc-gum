@@ -4,7 +4,10 @@ id: ark-fpv
 maker: ARK Electronics
 model: ARK FPV flight controller
 price_usd: 194.99
-checked: 2026-10-18
+checked: 2026-10-21
+buy_note: "in stock on the day; ARK lists its barometer as a BMP390, which my firmware's driver also accepts"
+fallback: {"maker": "Holybro", "model": "Kakute H7 V1.5 (SKU 11091)", "note": "the same STM32H743 and mount and runs PX4, but different sensors (my firmware's drivers are written for the ARK's), no compass and solder pads instead of JST-GH", "link": "https://holybro.com/products/kakute-h7", "price_usd": 85.0}
+link: 'https://arkelectron.com/product/ark-fpv-flight-controller/'
 source: {kind: manufacturer, url: 'https://docs.arkelectron.com/products/flight-controller/ark-fpv/hardware.md', checked: 2026-10-18, note: "ARK's hardware page: STM32H743, 36 x 36 x 8 mm, 30.5 mm mounting, 7.5 g with the microSD card. $194.99 and on backorder on ARK's shop (https://arkelectron.com/product/ark-fpv-flight-controller/)"}
 mass_g: 7.5
 power_w: 1.5

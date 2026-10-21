@@ -1,7 +1,7 @@
 # Status
 
 **Last updated:** 2026-10-21, on the PC (Windows and WSL2 Ubuntu)
-**Step:** steps 4 to 7 are done (step 6 except C, the claws), and so is the project site. Step 8, the build package, is next.
+**Step:** every step is done, 1 to 8 (step 6 except C, the claws), with the structure side track's first pass and the project site. What's left is my review, and the calls below that are mine.
 **Main machine:** the PC, with WSL2 Ubuntu 24.04 for the Linux tools
 
 ## Right now
@@ -19,6 +19,8 @@ Where to look: the live plan in the [README](README.md#the-plan), the steps in t
 | 5. My firmware | Done 2026-10-20. 66 of 78 runs pass, every one PX4 passes among them ([log](docs/log/2026-10-20-firmware-flies.md)) |
 | 6. Modules in sim | Done 2026-10-20 for P and V; C waits on the claw conversation. Every P and V scenario passes ([report](docs/reports/modules/README.md), [log](docs/log/2026-10-20-modules-in-sim.md)) |
 | 7. Smart features in sim | Done 2026-10-21. All twelve work in the sim, 22 of 22 runs ([report](docs/reports/smart/README.md), [log](docs/log/2026-10-21-smart-features.md)) |
+| 8. Build package | Done 2026-10-21. Parts with links, prices and fallbacks, the guides, PX4 first, the test plans and the legal checklist ([package](docs/build/README.md), [log](docs/log/2026-10-21-build-package.md)) |
+| Structure side track | First pass 2026-10-21: beam math. The arms are strong; they ring near the hover; the chute's mount needs a hang test ([report](docs/reports/structure/README.md), [log](docs/log/2026-10-21-structure-first-pass.md)) |
 | Aero side track | The visual half done: FluidX3D's cruise, crosswind and hover, now with frames along each run. The numbers wait for OpenFOAM |
 | Project site | Done 2026-10-20: the drone in 3D, the spec sheet, the wiring, every flight played back, a page per step, the tunnel, what the sims can't prove ([log](docs/log/2026-10-20-project-site.md)) |
 
@@ -32,20 +34,25 @@ Where to look: the live plan in the [README](README.md#the-plan), the steps in t
 
 **Step 7.** The landing modes each come down within 0.1 m. The turn-back warning lands within 8% of the energy home, once it stopped counting on cheaper forward flight. Self-tuning finds the roll inertia within 0.3% in all eight combinations from three stick doublets, after step 4's big steps missed by up to 62%. A plain-English mission flies, but the local model misread "60 m west" into a plan that was safe and wrong, so plans get approved on a map. The spiral holds its helix within 0.3 m; soar mode finds a 4 m/s updraft over a minute's hover. Mapping, change detection and the safe-spot landing work over the flat-colored scenery. Flying without GPS, the camera and the rangefinder ended 0.17 m off after 103 m at 3 m/s; at 15 m/s they lost the ground. The vision model boxed 14 of 20 things: a describer, not a detector to land by.
 
+**Step 8 and the structure.** `pcs14 package` writes the build package to docs/build: $875 of parts for Base, $2,171 for Max, and $362 bought once, every bought part with a buy link, the day it was checked and a fallback. PX4 flies first; my firmware's register-level drivers and the safety monitor's Teensy image aren't built for a board yet. The structure's first pass, in beam math: the arms take about seven times full thrust, but their sideways mode (80 to 144 Hz) sits where an unbalanced prop shakes them in a hover (88 to 103 Hz), so props get balanced and the first gyro log gets checked; the chute's mount gets a hang test.
+
 **Offline?** Study from [docs/learning.md](docs/learning.md) (topic 18 is new: system identification, optical flow and vision models).
 
 ## Up next
 
-1. **Step 8, the build package:** the parts list with links, prices and fallbacks, the assembly and wiring guides from the CAD and the wiring diagrams, the firmware's build steps, test plans and the legal checklist.
-2. **The side tracks:** the structure (beam math first, since there's no CalculiX here), OpenFOAM for the wind tunnel's numbers.
-3. **The site's last refresh** once step 8 is in: `pcs14 site --flights --tunnel`, then the build.
+1. **My review,** step by step, on the site (`pcs14 site --flights --tunnel`, then `npm --prefix site run build` and `npm --prefix site run preview`).
+2. **The calls below that are mine.**
+3. **The side tracks' real tools,** once installed: CalculiX for the cradle, the rail and the legs; OpenFOAM for the wind tunnel's numbers.
 
 ## Waiting on me
 
 - **Two design decisions from step 4:** should P (the chute) be in every combination, since a dead motor without it loses the drone? Should Base get an optical flow sensor, so a GPS failure isn't a blind descent? Both add weight to a design with little margin. Step 5 weakened the case for optical flow in the sim (my firmware's blind descents end 4 to 6 m away, PX4's 22 to 36 m), but a real IMU drifts more than Gazebo's.
 - **A safety rule to confirm:** a safety monitor cut stays latched for the rest of the flight, clearing only on the ground, disarmed, with the kill switch off. That's how it's built; it's my call to confirm. The monitor's chute release (new in step 6) latches the same way.
 - **The FluidX3D fork:** the wind tunnel stills stay off the repo until my modified FluidX3D is public, as its license asks for any results I post.
-- **Fruity Chutes:** ask for the Harrier release servo's voltage range and draw (the design runs on a stand-in, Hitec's HS-55), and how long the canopy takes to fill: the lowest height the chute saves the drone from rests on it.
+- **Fruity Chutes:** ask for the Harrier release servo's voltage range and draw (the design runs on a stand-in, Hitec's HS-55), and how long the canopy takes to fill. Their deployment chart says 52.5 ft (16 m) at least for the IFC-42, against the 10 m step 6's sim saved it from on my guessed opening time. The Harrier 40-42 was also sold out on 2026-10-21, quote only.
+- **The chute switch's chip:** Nexperia's 74LVC1G157 is back ordered to October 2027. TI's SN74LVC1G97, wired as a mux, is in stock and fits, but selects the other way round, so its two data inputs swap in the connection list. A design change for me to approve.
+- **Steel screws for the module rail:** the structure's first pass found the rail's four nylon screws thin margin for the chute's opening jolt (2.4 to 3.2 times). Steel is about 3 g more.
+- **PJRC's Teensy core:** the safety monitor's image for the Teensy needs it, a download for me to approve. Until then the monitor isn't on the drone.
 - **The claws (C):** the roadmap holds C until a unique claw on an actual arm comes up. That conversation is mine.
 - **Installs that need sudo:** OpenFOAM and CalculiX in WSL, for the aero and structure side tracks' numbers. OpenDroneMap and OpenCV would let step 7's maps get heights and its GPS-free estimate a real VIO package.
 - **The HaLow card (step 6):** Heltec's SPI card has no working Pi 5 report; its SDIO version (on Heltec's HT-HR01 carrier) was reported working once, and USB adapters work through an OpenWrt backport.

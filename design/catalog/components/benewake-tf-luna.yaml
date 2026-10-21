@@ -3,9 +3,10 @@ type: component
 id: benewake-tf-luna
 maker: Benewake
 model: TF-Luna lidar
-link: https://en.benewake.com/TFLuna/index.html
-price_usd: 24.9
-checked: 2026-10-17
+link: 'https://www.robotshop.com/products/benewake-tf-luna-8m-lidar-distance-sensor'
+price_usd: 20.96
+checked: 2026-10-21
+fallback: {"maker": "Benewake", "model": "TFmini-S (SparkFun SEN-16977)", "note": "longer range (12 m) at the same weight, but a different body for the bracket and a tighter 5 V supply", "link": "https://www.sparkfun.com/tfmini-s-micro-lidar-module.html", "price_usd": 72.95}
 source: {kind: manufacturer, url: 'https://en.benewake.com/uploadfiles/2025/04/20250430174501874.pdf', checked: 2026-10-17, note: "Datasheet A05 gives under 5 g; 5 g is used. Range 0.2-8 m"}
 mass_g: 5
 power_w: 0.35

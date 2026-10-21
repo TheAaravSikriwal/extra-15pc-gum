@@ -259,6 +259,36 @@ def build_parser() -> argparse.ArgumentParser:
         const=Path("site/schema"),
         help="also export the data's shapes as JSON Schema (default folder: site/schema)",
     )
+    structure = commands.add_parser(
+        "structure",
+        help="The structure side track's first pass: the arms and the chute's mount, as beams.",
+        description="The structure side track's first pass: the arms under full thrust and "
+        "their bending modes against the props' speeds, and the chute mount's joints against "
+        "step 6's jolt bound, as textbook beams. Written to docs/reports/structure/.",
+    )
+    for name, default in (("--catalog", "design/catalog"), ("--build", "design/build.yaml"),
+                          ("--targets", "design/targets.yaml"), ("--docs", "docs"),
+                          ("--exports", "outputs/flight-sim"),
+                          ("--out", "docs/reports/structure")):  # fmt: skip
+        structure.add_argument(name, type=Path, default=Path(default))
+    structure.add_argument("--allow-made-up", action="store_true", help=argparse.SUPPRESS)
+    package = commands.add_parser(
+        "package",
+        help="Step 8: the build package, docs/build/, from the catalog, the build and the reports.",
+        description="Step 8: the build package. The parts list with prices and fallbacks, the "
+        "assembly and wiring guides, the firmware, the test plans and the legal checklist, "
+        "written to docs/build/ from the catalog, the build, the connection list and the "
+        "reports' data files.",
+    )
+    for name, default in (("--catalog", "design/catalog"), ("--build", "design/build.yaml"),
+                          ("--targets", "design/targets.yaml"), ("--cad", "design/cad.yaml"),
+                          ("--electrical", "design/electrical.yaml"),
+                          ("--extras", "design/package.yaml"), ("--docs", "docs"),
+                          ("--exports", "outputs/flight-sim"),
+                          ("--out", "docs/build")):  # fmt: skip
+        package.add_argument(name, type=Path, default=Path(default))
+    package.add_argument("--no-renders", action="store_true", help="skip the assembly renders")
+    package.add_argument("--allow-made-up", action="store_true", help=argparse.SUPPRESS)
     modules = commands.add_parser(
         "modules",
         help="Step 6's report: the modules in sim, from the flight sim's runs of them.",
@@ -871,6 +901,35 @@ def run_smart(args) -> int:
     return 0 if checked.ok else 1
 
 
+def run_structure(args) -> int:
+    from datetime import date
+
+    from pcs14.structure import report
+
+    _, build, _ = _load(args)
+    written = report.write(build, args.docs, args.exports, args.out, date.today().isoformat())
+    data = report.collect(build, args.docs, args.exports)
+    print(f"Structure, first pass: verdict {report.verdict(data)}")
+    print(f"Report written to {Path(args.out).resolve()} ({len(written)} files)")
+    return 0
+
+
+def run_package(args) -> int:
+    from datetime import date
+
+    from pcs14.cad.settings import load_settings
+    from pcs14.electrical.model import load_connection_list
+    from pcs14.package import write
+
+    catalog, build, targets = _load(args)
+    written = write.write(args.out, date.today().isoformat(), catalog, build, targets,
+                          load_connection_list(args.electrical), load_settings(args.cad),
+                          args.docs, args.exports, args.extras,
+                          renders=not args.no_renders)  # fmt: skip
+    print(f"Build package written to {Path(args.out).resolve()} ({len(written)} files)")
+    return 0
+
+
 def run_modules(args) -> int:
     from datetime import date
 
@@ -923,6 +982,8 @@ COMMANDS = {
     "flight-sim": run_flight_sim,
     "tunnel": run_tunnel,
     "modules": run_modules,
+    "package": run_package,
+    "structure": run_structure,
     "smart": run_smart,
     "ground": run_ground,
     "site": run_site,

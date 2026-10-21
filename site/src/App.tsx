@@ -1,6 +1,7 @@
 // The pages, by route, under one quiet line of links.
 import { lazy, type ReactNode, Suspense } from "react";
 
+import { Build } from "./pages/Build";
 import { Flights } from "./pages/Flights";
 import { Home } from "./pages/Home";
 import { Spec } from "./pages/Spec";
@@ -23,6 +24,7 @@ export const PAGES: { route: string; name: string }[] = [
   { route: "steps", name: "Every step" },
   { route: "tunnel", name: "The wind tunnel" },
   { route: "unproven", name: "What it can't prove" },
+  { route: "build", name: "Build it" },
 ];
 
 export function pageFor(route: string[]): ReactNode {
@@ -52,6 +54,8 @@ export function pageFor(route: string[]): ReactNode {
       return <Tunnel />;
     case "unproven":
       return <Unproven />;
+    case "build":
+      return <Build />;
     case "wiring":
       return <Wiring board={route[1]} />;
     default:

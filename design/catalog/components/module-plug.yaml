@@ -3,7 +3,10 @@ type: component
 id: module-plug
 maker: Amass and JST
 model: Module plug (an XT30U and an 8-pin JST-GH)
-checked: 2026-10-18
+checked: 2026-10-21
+buy_note: "an estimate from its pieces: an XT30U half ($0.32) and an 8-pin JST-GH plug with leads (about $2.48)"
+fallback: {"maker": "Amass and JST", "model": "the same halves from the XT30 and JST-GH fallbacks", "note": "see those two"}
+price_usd: 2.8
 source: {kind: estimate, checked: 2026-10-18, note: "An XT30U half at 0.99 g (LCSC's listing) and an 8-pin JST-GH half at about 0.2 g (the jst-gh estimate)"}
 mass_g: 1.2
 cad:

@@ -4,8 +4,11 @@ type: component
 id: cjmcu-5018
 maker: Texas Instruments (chip), various (board)
 model: TS3A5018 quad two-way analog switch on a CJMCU-5018 breakout
-price_usd: 1.2
-checked: 2026-10-18
+price_usd: 6.99
+checked: 2026-10-21
+buy_note: "NOYITO on Amazon; Siqma sells it at $1.20 with a minimum of eight"
+fallback: {"maker": "Texas Instruments and Adafruit", "model": "TS3A5018DR on an Adafruit SOIC-16 breakout (1207)", "note": "the same chip on a different board: the pin order and mount change, and its decoupling capacitor is mine to add", "link": "https://www.mouser.com/en/ProductDetail/Texas-Instruments/TS3A5018DR?qs=0O%2FZFlpUpJXorOS44CKPgg%3D%3D", "price_usd": 0.84}
+link: 'https://www.amazon.com/dp/B07PS18HST'
 source: {kind: manufacturer, url: 'https://store.siqma.com/ts3a5018-4channel-switch-module.html', checked: 2026-10-18, note: "Siqma's listing: 26 x 18 mm, 18 pins, 1.8 to 3.6 V, $1.20. NOYITO sells the same board on Amazon (https://www.amazon.com/dp/B07PS18HST). Nobody publishes its mass; 1.0 g is a guess, plus 0.1 g for the pull-down resistor added to it"}
 mass_g: 1.1
 cad:

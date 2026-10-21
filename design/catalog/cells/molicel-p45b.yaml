@@ -3,9 +3,11 @@ type: cell
 id: molicel-p45b
 maker: Molicel
 model: INR-21700-P45B
-link: https://www.molicel.com/product/inr-21700-p45b/
-price_usd: 7.49  # https://liionwholesale.com/products/molicel-npe-inr-21700-p45b-50a-4500mah-flat-top-21700-battery-authorized-distributor
-checked: 2026-10-17
+link: 'https://liionwholesale.com/products/molicel-npe-inr-21700-p45b-50a-4500mah-flat-top-21700-battery-authorized-distributor'
+price_usd: 7.49
+checked: 2026-10-21
+buy_note: "out of stock at Liion Wholesale on the day; GetFPV had it at about $13 a cell, in stock"
+fallback: {"maker": "Molicel", "model": "INR-21700-P42A", "note": "the same size and 45 A rating; the pack drops from 9.0 to 8.4 Ah, about 7% less flight time", "link": "https://imrbatteries.com/products/molicel-p42a-21700-4200mah-45a-battery"}
 source: {kind: manufacturer, url: 'https://www.molicel.com/wp-content/uploads/INR21700P45B_1.4_Product-Data-Sheet-of-INR-21700-P45B-80109.pdf', checked: 2026-10-17, note: "Datasheet v1.4. Mass is the datasheet maximum; no measured mass found."}
 mass_g: 70
 capacity_mah: 4500

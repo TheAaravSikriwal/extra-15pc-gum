@@ -4,7 +4,10 @@ type: component
 id: pololu-d36v6f3
 maker: Pololu
 model: D36V6F3 3.3 V 600 mA step-down regulator (item 3791)
-checked: 2026-10-18
+checked: 2026-10-21
+fallback: {"maker": "Pololu", "model": "D24V5F3 (item 2842)", "note": "the same size and pins; 36 V in at most (fine on 6S) and 500 mA out", "link": "https://www.pololu.com/product/2842", "price_usd": 8.95}
+price_usd: 5.95
+link: 'https://www.pololu.com/product/3791'
 source: {kind: manufacturer, url: 'https://www.pololu.com/product/3791/specs', checked: 2026-10-18, note: "Pololu: 0.5 g without headers, 0.4 x 0.5 x 0.1 inches, pins SHDN, VIN, GND, VOUT on a 0.1 inch pitch. Pololu lists it as active and preferred"}
 mass_g: 0.5
 cad:

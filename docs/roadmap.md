@@ -169,6 +169,8 @@ Each one gets proven in sim, and whatever the sim can't show goes on the unprove
 
 ## Step 8: The build package
 
+*Done 2026-10-21: [docs/build](build/README.md). The safety monitor's Teensy image and my firmware's register-level drivers aren't built for a board yet, and the package says so.*
+
 1. **The parts list:** part numbers, supplier links, prices, and a fallback part for each
 2. **The assembly guide:** exploded views rendered from the CAD
 3. **The wiring guide:** generated from the wiring diagrams

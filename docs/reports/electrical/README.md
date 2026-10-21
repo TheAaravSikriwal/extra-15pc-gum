@@ -1,6 +1,6 @@
 # The wiring (electrical)
 
-*Generated on 2026-10-20 by pcs14 0.1.0, the electrical layer in `src/pcs14/electrical/`. One connection list, `design/electrical.yaml`, holds every board, connector and wire. Everything here comes from it, checked in every module combination and flight case.*
+*Generated on 2026-10-21 by pcs14 0.1.0, the electrical layer in `src/pcs14/electrical/`. One connection list, `design/electrical.yaml`, holds every board, connector and wire. Everything here comes from it, checked in every module combination and flight case.*
 
 ![The safety monitor takes over an ESC line, in ngspice](stills/takeover-portrait.png)
 
@@ -878,13 +878,13 @@ Every number comes from a maker's datasheet or a measurement, except these estim
 
 ## What it can't prove
 
-- A dead short in the battery leads. Nothing electrical stops it; only the leads' routing and sleeving protect against it.
-- The motor cut board's two undocumented 1 kOhm resistors. Check them with a meter; pull-ups would make the board fail the wrong way, which the added pull-down only partly covers.
-- Powering the Pi 5 through its GPIO 5 V pins, which Raspberry Pi's docs don't describe.
-- The Pi 5's highest safe input. Raspberry Pi publishes only a 5.1 V supply and the 4.63 V undervoltage warning, so its 5.19 V from the BEC is checked against USB's 5.25 V ceiling, with no margin.
-- The ESC cable's re-pinning: Holybro doesn't say which end of its plug is pin 1.
-- Whether the ARK FPV terminates its CAN port. If it does, the harness's terminator at that end comes off.
-- The XT60's contact mass, a 2.5 g guess. The firmware's heat limit and the burst check both rest on it: heavier contacts give the burst more time.
+- A dead short in the battery leads. Nothing electrical stops it; only the leads' routing and sleeving protect against it. *First to measure:* Inspect the leads' routing and sleeving after every crash and every pack change.
+- The motor cut board's two undocumented 1 kOhm resistors. Check them with a meter; pull-ups would make the board fail the wrong way, which the added pull-down only partly covers. *First to measure:* Measure them with a meter before the board goes in.
+- Powering the Pi 5 through its GPIO 5 V pins, which Raspberry Pi's docs don't describe. *First to measure:* The Pi at full load through its GPIO pins on the bench, its own undervoltage flags logged.
+- The Pi 5's highest safe input. Raspberry Pi publishes only a 5.1 V supply and the 4.63 V undervoltage warning, so its 5.19 V from the BEC is checked against USB's 5.25 V ceiling, with no margin. *First to measure:* The BEC's output at the Pi's pins under full load, with a meter; then ask Raspberry Pi.
+- The ESC cable's re-pinning: Holybro doesn't say which end of its plug is pin 1. *First to measure:* Find pin 1 with a meter against the ESC's pads before the cable is cut.
+- Whether the ARK FPV terminates its CAN port. If it does, the harness's terminator at that end comes off. *First to measure:* CAN_H to CAN_L on the bare board: 120 ohm means it terminates itself.
+- The XT60's contact mass, a 2.5 g guess. The firmware's heat limit and the burst check both rest on it: heavier contacts give the burst more time. *First to measure:* Weigh a contact; and the XT60's temperature after a burst, with a thermocouple.
 - The switch sims use generic models built from datasheet numbers, with no ground bounce or noise from the motor current. A clean sim isn't a scope on the real thing.
 
 ## Files

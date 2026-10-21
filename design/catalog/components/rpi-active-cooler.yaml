@@ -3,7 +3,10 @@ type: component
 id: rpi-active-cooler
 maker: Raspberry Pi
 model: Active cooler for the Pi 5
-checked: 2026-10-17
+checked: 2026-10-21
+fallback: {"maker": "Argon 40", "model": "THRML 30mm Active Cooler", "note": "the same fan header; its height isn't published, so its clearance under the HaLow HAT needs checking", "link": "https://argon40.com/products/argon-thrml-30mm-active-cooler", "price_usd": 9.99}
+price_usd: 10.95
+link: 'https://www.pishop.us/product/raspberry-pi-active-cooler/'
 source: {kind: estimate, checked: 2026-10-17, note: "The Pi 5 throttles under sustained load without cooling; about 15 g assumed for a small heatsink and fan"}
 mass_g: 15
 power_w: 0.3

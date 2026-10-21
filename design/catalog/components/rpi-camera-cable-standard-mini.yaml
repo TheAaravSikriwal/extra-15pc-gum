@@ -3,8 +3,11 @@ type: component
 id: rpi-camera-cable-standard-mini
 maker: Raspberry Pi
 model: Camera cable, Standard-Mini, 200 mm
-link: https://www.raspberrypi.com/documentation/accessories/camera.html
-checked: '2026-10-17'
+link: 'https://www.adafruit.com/product/5818'
+checked: 2026-10-21
+buy_note: "not the look-alike display cables, which don't work with cameras"
+fallback: {"maker": "Raspberry Pi (via Adafruit)", "model": "Pi 5 camera cable, 300 mm (5819)", "note": "the same cable, 100 mm longer to route", "link": "https://www.adafruit.com/product/5819", "price_usd": 3.16}
+price_usd: 2.7
 source:
   kind: estimate
   checked: '2026-10-17'

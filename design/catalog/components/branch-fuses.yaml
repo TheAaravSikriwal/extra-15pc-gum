@@ -5,7 +5,11 @@ type: component
 id: branch-fuses
 maker: Littelfuse (fuses)
 model: Two MINI blade fuses, soldered inline under heat shrink
-checked: 2026-10-19
+checked: 2026-10-21
+buy_note: "one 3 A (0297003) and one 2 A (0297002), $0.39 each at Mouser"
+fallback: {"maker": "Eaton Bussmann", "model": "BK/ATM-3 and ATM-2", "note": "the same size, five times the price"}
+price_usd: 0.78
+link: 'https://www.mouser.com/en/ProductDetail/Littelfuse/0297003.WXNV?qs=WtG364jHAdxHR7%2F%2F%252BiOsmQ%3D%3D'
 source: {kind: estimate, checked: 2026-10-19, note: "Two fuses at 0.57 g (Littelfuse's datasheet) and a 25 mm sleeve of heat shrink over each, about 0.5 g, a guess from its size: polyolefin about 0.5 mm thick once shrunk around a MINI's body, about 11 by 4 mm. The wires' own solder joints are counted in the wiring. Soldered in, a blown fuse takes a soldering iron to replace; these only blow on a fault. The inline holders they replace were a 6 g guess (decided 2026-10-19, for the weight)"}
 mass_g: 2.1
 cad:

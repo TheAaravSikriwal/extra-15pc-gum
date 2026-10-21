@@ -7,6 +7,7 @@ import json
 import re
 from pathlib import Path
 
+from pcs14 import unproven
 from pcs14.site import schema
 from pcs14.site.steps import GITHUB
 
@@ -16,6 +17,7 @@ REPORTS = (
     ("Flight sim", "flight-sim"),
     ("Modules in sim", "modules"),
     ("Smart features", "smart"),
+    ("Structure", "structure"),
 )
 
 
@@ -53,7 +55,8 @@ def unproven_data(docs) -> schema.Unproven:
         listed = json.loads(path.read_text(encoding="utf-8")).get("unproven") or []
         groups.append(schema.UnprovenGroup(
             name=name, url=GITHUB + f"docs/reports/{folder}/README.md",
-            items=[schema.UnprovenItem(what=w) for w in listed]))  # fmt: skip
+            items=[schema.UnprovenItem(what=u.what, measure=u.measure)
+                   for u in unproven.read(listed)]))  # fmt: skip
     return schema.Unproven(schema_version=schema.SCHEMA_VERSION, groups=groups)
 
 

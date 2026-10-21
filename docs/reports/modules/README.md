@@ -1,6 +1,6 @@
 # Modules in sim (step 6)
 
-*Generated 2026-10-20 by `pcs14 modules`, from the flight sim's runs of step 6's scenarios on my firmware. The spec is [docs/specs/2026-10-20-modules-in-sim.md](../../specs/2026-10-20-modules-in-sim.md).*
+*Generated 2026-10-21 by `pcs14 modules`, from the flight sim's runs of step 6's scenarios on my firmware. The spec is [docs/specs/2026-10-20-modules-in-sim.md](../../specs/2026-10-20-modules-in-sim.md).*
 
 ## The verdict
 
@@ -59,7 +59,7 @@ The canopy's peak pull on the drone, for the structure track: the sim's, from Ga
 
 ### The false-trigger replay on my firmware
 
-The safety monitor's reference triggers, replayed over the 79 healthy runs my firmware flew, where nothing fails on purpose: none fired. They stay in shadow mode anyway, until real flights show the same.
+The safety monitor's reference triggers, replayed over the 101 healthy runs my firmware flew, where nothing fails on purpose: none fired. They stay in shadow mode anyway, until real flights show the same.
 
 Under the canopy the monitor's own tumble-tilt trigger fires too, logged only: the drone hangs at an angle from the chute's mount. By then the motors are already cut, so it changes nothing, but it's one more reason the triggers stay in shadow mode until real flights show what they see.
 
@@ -149,8 +149,8 @@ The claws are still a placeholder: the roadmap holds C until a unique claw on an
 
 ## What it can't prove
 
-- The canopy's timing. Fruity Chutes publishes no ejection or opening time, so the 0.2 s and 1.0 s the sim uses are my guesses, and the lowest height the chute saves the drone from rests on them (the table under the drop heights).
-- The opening jolt. The sim's canopy grows in a straight line and never overshoots, which real canopies do as they fill, so its number is low. The bound uses Knacke's infinite-mass opening coefficient, which is high for a drone this light under a canopy this big. The real number is between them.
-- A hung flight controller here is a frozen process. A real one could hang with its DShot outputs in any state, which the safety monitor's takeover of the lines has to win against; that's tested on the host, not on a board.
-- HaLow's range: line of sight over flat ground, with a 10 dB margin standing in for the drone's body, multipath and a laptop held low. No trees, hills or buildings. And the radio's numbers are Morse Micro's for its own module, not Heltec's for its card.
-- The companion computer's comparison is from published numbers, not measured on a board.
+- The canopy's timing. Fruity Chutes publishes no ejection or opening time, so the 0.2 s and 1.0 s the sim uses are my guesses, and the lowest height the chute saves the drone from rests on them (the table under the drop heights). *First to measure:* Fruity Chutes' own numbers, asked for; then a drop of the canopy with a dummy weight, filmed, to time its opening.
+- The opening jolt. The sim's canopy grows in a straight line and never overshoots, which real canopies do as they fill, so its number is low. The bound uses Knacke's infinite-mass opening coefficient, which is high for a drone this light under a canopy this big. The real number is between them. *First to measure:* A load cell inline on the riser, in the same drop.
+- A hung flight controller here is a frozen process. A real one could hang with its DShot outputs in any state, which the safety monitor's takeover of the lines has to win against; that's tested on the host, not on a board. *First to measure:* On the bench, props off: the ARK FPV halted in a debugger, and the safety monitor taking the ESC lines and stopping the motors.
+- HaLow's range: line of sight over flat ground, with a 10 dB margin standing in for the drone's body, multipath and a laptop held low. No trees, hills or buildings. And the radio's numbers are Morse Micro's for its own module, not Heltec's for its card. *First to measure:* A walk-out range test with the drone on a 10 m mast, logging the link's rate against the distance.
+- The companion computer's comparison is from published numbers, not measured on a board. *First to measure:* The Pi 5 running the video encode and the flow estimate, its CPU load and temperature logged.

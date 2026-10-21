@@ -5,7 +5,11 @@ id: amass-xt60
 maker: Amass
 model: XT60 battery connector
 part_number: XT60-M
-checked: 2026-10-18
+checked: 2026-10-21
+buy_note: "sold as five pairs for $8.99"
+fallback: {"maker": "Amass", "model": "XT60H, single halves", "note": "the same connector from another shop", "link": "https://www.racedayquads.com/products/amass-xt60h-connector-1pc-choose-your-version", "price_usd": 0.99}
+price_usd: 0.9
+link: 'https://www.getfpv.com/amass-xt60h-power-connectors-male-female-5-sets-10-pcs.html'
 source: {kind: manufacturer, url: 'https://datasheet.lcsc.com/datasheet/pdf/bf4ed80d93eda3bacf37967ce1d2662b.pdf', checked: 2026-10-18, note: "Amass's XT60 product specification 2021V1: 35 A MAX (12 AWG, rise under 85 °C), 500 V DC, contact resistance 1.0 mOhm max, -20 to 120 °C. Mass 3.29 g from LCSC's listing for XT60-M (https://www.lcsc.com/product-detail/C98733.html), not from Amass"}
 mass_g: 3.29
 electrical:

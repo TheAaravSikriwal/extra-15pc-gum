@@ -4,9 +4,11 @@ type: motor
 id: emax-e3-2814-850kv
 maker: Emax
 model: E3 2814 850KV
-link: https://emaxmodel.com/motor-detail-dark.html?motor=e3-2814
+link: 'https://shop.emax-usa.com/products/emax-e3-2814-brushless-motor'
 price_usd: 37.99
-checked: 2026-10-17
+checked: 2026-10-21
+buy_note: "out of stock at EMAX USA on the day; EMAX's global shop had it at $58.50"
+fallback: {"maker": "iFlight", "model": "XING 2814 880KV", "note": "the same 19 x 19 mm mount and 5 mm shaft, 6 g heavier, and a lower peak; its thrust table is only an image, so the sizing model would need it read first", "link": "https://shop.iflight.com/xing-x2814-fpv-nextgen-motor-pro838", "price_usd": 38.99}
 source: {kind: manufacturer, url: 'https://emaxmodel.com/motor-detail-dark.html?motor=e3-2814', checked: 2026-10-17, note: "82 g without the motor wires. 3-6S. 58.4 A peak and 1460 W on 6S. 61 mOhm. The price is from shop.emax-usa.com, where it showed as unavailable"}
 mass_g: 82
 kv: 850

@@ -47,6 +47,7 @@ Instead of buying parts and building it, I'm designing the whole drone in simula
 | Compass interference from the power wires | Compass readings against throttle |
 | Solder joints, connectors and tolerances | The bench checks |
 | Forward-flight power, especially the drag the props add at speed (see the honesty check below) | A GPS-logged cruise at a steady speed, with current logged |
+| The chute's opening height: Fruity Chutes' chart puts the Harrier's canopy at 52.5 ft (16 m) at least, against the 10 m the sim saved it from on a guessed 1 s opening | Fruity Chutes' own numbers, then a drop test with a dummy weight |
 
 ### The first honesty check (2026-10-17)
 
@@ -239,6 +240,19 @@ I asked for the open items to keep moving without stopping to ask, so these were
 - **The camera goes on a model only when a scenario asks for it** (V's Camera Module 3, 720p at 30 frames a second, just ahead of the body, tipped 30 degrees down), as a copy of the model's SDF in the run's folder. PX4's server config loads Gazebo's rendering system for every run, so a camera on every model would render in every batch.
 - **The live video's budget is 60% of HaLow's rate on the air, less 0.1 Mbps of telemetry,** a rough figure for 802.11's overhead at these rates, encoded as H.264 in software the way the Pi 5 would.
 - **The companion computer stays the Pi 5,** with the numbers behind it: neither it nor the Jetson Orin Nano has a hardware video encoder, the jobs that want a GPU run on the laptop, and visual-inertial odometry has been run on older ARM boards than the Pi 5's.
+
+### The build package and the structure's first pass (decided 2026-10-21)
+
+My calls, written down as I made them. The reasons are in the [step 8 spec](specs/2026-10-21-build-package.md), the [structure spec](specs/2026-10-21-structure-beams.md) and their logs.
+
+- **The build package is generated,** by `pcs14 package` into `docs/build/`, from the catalog, the build, the connection list and the reports, so it says what they say.
+- **Every bought part carries a fallback,** in the catalog's `fallback` field, with what changes in the design if it's used, and a `buy_note` for what the shop said on the day (stock, pack sizes, a better price elsewhere). Prices drift; the date is beside each one.
+- **A part's own lead isn't bought twice.** The connection list marks the motors' leads `own_lead`; the parts list skips them, the wiring guide keeps them.
+- **PX4 flies first,** with the flight sim's parameters (less the simulator's own), as lines for PX4's console. My firmware flies only after its register-level drivers pass on the bench against PX4 on the same board.
+- **Until the safety monitor's Teensy image exists, it isn't on the drone,** and the first flights are PX4's, tethered. The image needs PJRC's Teensy core, a download for me to approve.
+- **Every unproven item carries the first thing to measure,** written in its own report beside the claim; the site and the test plans read the same pairs.
+- **The arms' in-plane mode sits near the hover's once-a-turn shake** (80 to 144 Hz against 88 to 103 Hz): balance every prop, check the first tethered gyro log near 90 to 100 Hz, and notch it if it's there.
+- **The chute's mount gets a hang test before P flies:** 26 kg (the opening jolt's bound) from the riser's point for a minute, then 39 kg. Steel screws for the module rail (about 3 g more) are suggested, and waiting for my review.
 
 ### The smart features in sim (decided 2026-10-20 and 2026-10-21)
 

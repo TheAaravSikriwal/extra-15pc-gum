@@ -4,7 +4,9 @@ id: ark-cannode
 maker: ARK Electronics
 model: ARK CANnode (DroneCAN node with 8 PWM outputs)
 price_usd: 150.0
-checked: 2026-10-18
+checked: 2026-10-21
+fallback: {"maker": "Matek", "model": "CAN-L4-PWM (AP_Periph)", "note": "a different node and firmware: no IMU, one CAN port, servo power on its own pads, so the harness changes; its price couldn't be confirmed", "link": "https://www.getfpv.com/mateksys-ap-periph-dronecan-to-pwm-adapter-can-l4-pwm.html"}
+link: 'https://arkelectron.com/product/ark-cannode/'
 source: {kind: manufacturer, url: 'https://docs.arkelectron.com/products/sensor/ark-cannode/hardware.md', checked: 2026-10-18, note: "ARK's hardware page: 3.0 x 3.0 x 1.03 cm, 5 g. PX4's page says 1.3 cm tall (https://docs.px4.io/main/en/dronecan/ark_cannode). $150 and in stock on ARK's shop (https://arkelectron.com/product/ark-cannode/). Runs PX4's own node firmware"}
 mass_g: 5
 power_w: 0.2

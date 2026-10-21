@@ -8,7 +8,7 @@ outside tools; the files that need them are made separately and listed in the ru
 
 from dataclasses import dataclass, field
 
-from pcs14 import __version__
+from pcs14 import __version__, unproven
 from pcs14.electrical.checks import Finding
 
 PIN_MAPS = ("fc", "teensy")  # the boards whose every pin gets a table
@@ -77,7 +77,7 @@ class ElectricalRun:
     power_tree: str
     pin_maps: tuple[tuple[str, str, str], ...]  # (board, part, Markdown table)
     estimates: tuple[Estimate, ...]
-    unproven: tuple[str, ...]
+    unproven: tuple  # pcs14.unproven.Unproven
     files: tuple[str, ...] = ()  # generated next to the report, relative to it
     erc: int | None = None  # KiCad's rules check: violations, or None when it didn't run
     skipped: tuple[str, ...] = ()  # what didn't run, and why
@@ -395,7 +395,7 @@ def render(run: ElectricalRun, generated: str | None = None) -> str:
     if not run.estimates:
         lines.append("Nothing.")
     lines += ["", "## What it can't prove", ""]
-    lines += [f"- {item}" for item in run.unproven] or ["Nothing listed."]
+    lines += unproven.bullets(run.unproven) or ["Nothing listed."]
     if run.switch is not None:
         lines.append(
             "- The switch sims use generic models built from datasheet numbers, with no ground "
@@ -506,7 +506,7 @@ def _data(run: ElectricalRun, generated: str | None) -> dict:
             {"part": e.part_id, "boards": list(e.boards), "items": list(e.items), "note": e.note}
             for e in run.estimates
         ],
-        "unproven": list(run.unproven),
+        "unproven": unproven.data(run.unproven),
         "kicad_rules_violations": run.erc,
         "files": list(run.files),
         "exports": list(run.exports),

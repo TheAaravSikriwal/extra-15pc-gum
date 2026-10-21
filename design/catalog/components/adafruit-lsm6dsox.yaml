@@ -6,7 +6,9 @@ id: adafruit-lsm6dsox
 maker: Adafruit (board), STMicroelectronics (chip)
 model: LSM6DSOX 6-DoF accelerometer and gyroscope breakout (product 4438)
 price_usd: 11.95
-checked: 2026-10-18
+checked: 2026-10-21
+fallback: {"maker": "Adafruit", "model": "LSM6DSO32 breakout (4692)", "note": "the same family; its accelerometer has no +-2 g range, so the monitor's range setting changes", "link": "https://www.adafruit.com/product/4692", "price_usd": 12.5}
+link: 'https://www.adafruit.com/product/4438'
 source: {kind: manufacturer, url: 'https://www.adafruit.com/product/4438', checked: 2026-10-18, note: "Adafruit: 1.7 g, 25.6 x 17.8 x 4.6 mm, SPI or I2C, a regulator good for at least 250 mA and level-shifted inputs, so it runs from 3 V or 5 V. $11.95, in stock"}
 mass_g: 1.7
 power_w: 0.05

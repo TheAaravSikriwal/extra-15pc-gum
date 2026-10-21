@@ -3,9 +3,11 @@ type: component
 id: pjrc-teensy-41
 maker: PJRC
 model: Teensy 4.1 (safety monitor)
-link: https://www.pjrc.com/store/teensy41.html
+link: 'https://www.sparkfun.com/teensy-4-1.html'
 price_usd: 31.5
-checked: 2026-10-17
+checked: 2026-10-21
+buy_note: "PJRC sends buyers to SparkFun, which makes Teensy now"
+fallback: {"maker": "PJRC (made by SparkFun)", "model": "Teensy 4.0 (DEV-15583)", "note": "the same chip, but fewer pins, no microSD and a different size: the monitor's pin map and mount change", "link": "https://www.sparkfun.com/teensy-4-0.html", "price_usd": 23.8}
 source: {kind: manufacturer, url: 'https://joy-it.net/en/products/Teensy41', checked: 2026-10-17, note: "PJRC lists no mass; 15 g is a distributor figure that may include pins"}
 mass_g: 15
 power_w: 0.5

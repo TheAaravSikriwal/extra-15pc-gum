@@ -4,7 +4,10 @@ id: rpi-5-4gb
 maker: Raspberry Pi
 model: Raspberry Pi 5 (4 GB) companion computer
 price_usd: 110.0
-checked: 2026-10-17
+checked: 2026-10-21
+buy_note: "up from $60 at launch, after Raspberry Pi's 2026 price rises"
+fallback: {"maker": "Raspberry Pi", "model": "Raspberry Pi 5 8GB", "note": "the same board with more memory", "link": "https://www.pishop.us/product/raspberry-pi-5-8gb/", "price_usd": 175.0}
+link: 'https://www.pishop.us/product/raspberry-pi-5-4gb/'
 source: {kind: manufacturer, url: 'https://www.ldlc.com/en/product/PB00574323.html', checked: 2026-10-17, note: "Raspberry Pi publishes no mass; 46 g is a reseller figure. $110 list price from Raspberry Pi's product brief"}
 mass_g: 46
 power_w: 8.0

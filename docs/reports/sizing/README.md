@@ -1,6 +1,6 @@
 # Sizing report
 
-*Generated on 2026-10-20 by pcs14 0.1.0, the sizing model in `src/pcs14/sizing/`. Numbers shown as A / B are the published data / the pessimistic version. Rounding always goes toward failing.*
+*Generated on 2026-10-21 by pcs14 0.1.0, the sizing model in `src/pcs14/sizing/`. Numbers shown as A / B are the published data / the pessimistic version. Rounding always goes toward failing.*
 
 ## The verdict
 

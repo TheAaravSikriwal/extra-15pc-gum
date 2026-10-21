@@ -3,9 +3,11 @@ type: component
 id: radiomaster-rp2-v2
 maker: RadioMaster
 model: RP2 V2 ExpressLRS 2.4 GHz receiver
-link: https://radiomasterrc.com/products/rp2-expresslrs-2-4ghz-nano-receiver
+link: 'https://www.radiomasterrc.com/products/rp2-expresslrs-2-4ghz-nano-receiver'
 price_usd: 18.99
-checked: 2026-10-17
+checked: 2026-10-21
+buy_note: "order the FCC version"
+fallback: {"maker": "BETAFPV", "model": "ELRS Nano Receiver 2.4GHz", "note": "the same CRSF wiring, but a T antenna on U.FL to mount", "link": "https://racedayquads.com/products/betafpv-elrs-nano-2-4ghz-receiver", "price_usd": 11.99}
 source: {kind: manufacturer, url: 'https://radiomasterrc.com/products/rp2-expresslrs-2-4ghz-nano-receiver', checked: 2026-10-17}
 mass_g: 0.55
 power_w: 0.4

@@ -289,6 +289,46 @@ class Unproven(_Shape):
     groups: list[UnprovenGroup]
 
 
+class BuildLine(_Shape):
+    module: str  # base, V, P, C, or "once"
+    group: str  # bought, wire, plug, hardware, printed, ground, supplies, tools, spares
+    name: str
+    qty: float
+    unit: str
+    maker: str
+    model: str
+    link: str | None = None
+    price_each_usd: float | None = None
+    total_usd: float | None = None
+    checked: str | None = None
+    fallback: str
+    note: str
+
+
+class BuildTotal(_Shape):
+    setup: str  # a combination, or "once"
+    usd: float  # of the priced lines
+    unpriced: int
+    printed: int
+    printed_g: float
+
+
+class BuildGuide(_Shape):
+    name: str
+    url: str
+
+
+class Build(_Shape):
+    """build.json: the build package's parts list, its totals and its guides."""
+
+    schema_version: int
+    generated: str
+    totals: list[BuildTotal]
+    lines: list[BuildLine]
+    guides: list[BuildGuide]
+    open: list[str]
+
+
 # each data file's name (without .json) and its shape
 FILES: dict[str, type[_Shape]] = {
     "index": Index,
@@ -301,4 +341,5 @@ FILES: dict[str, type[_Shape]] = {
     "tunnel": Tunnel,
     "unproven": Unproven,
     "wiring": Wiring,
+    "build": Build,
 }

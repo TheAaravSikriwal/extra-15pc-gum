@@ -1,0 +1,209 @@
+{
+ "$defs": {
+  "BuildGuide": {
+   "additionalProperties": false,
+   "properties": {
+    "name": {
+     "title": "Name",
+     "type": "string"
+    },
+    "url": {
+     "title": "Url",
+     "type": "string"
+    }
+   },
+   "required": [
+    "name",
+    "url"
+   ],
+   "title": "BuildGuide",
+   "type": "object"
+  },
+  "BuildLine": {
+   "additionalProperties": false,
+   "properties": {
+    "module": {
+     "title": "Module",
+     "type": "string"
+    },
+    "group": {
+     "title": "Group",
+     "type": "string"
+    },
+    "name": {
+     "title": "Name",
+     "type": "string"
+    },
+    "qty": {
+     "title": "Qty",
+     "type": "number"
+    },
+    "unit": {
+     "title": "Unit",
+     "type": "string"
+    },
+    "maker": {
+     "title": "Maker",
+     "type": "string"
+    },
+    "model": {
+     "title": "Model",
+     "type": "string"
+    },
+    "link": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Link"
+    },
+    "price_each_usd": {
+     "anyOf": [
+      {
+       "type": "number"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Price Each Usd"
+    },
+    "total_usd": {
+     "anyOf": [
+      {
+       "type": "number"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Total Usd"
+    },
+    "checked": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Checked"
+    },
+    "fallback": {
+     "title": "Fallback",
+     "type": "string"
+    },
+    "note": {
+     "title": "Note",
+     "type": "string"
+    }
+   },
+   "required": [
+    "module",
+    "group",
+    "name",
+    "qty",
+    "unit",
+    "maker",
+    "model",
+    "fallback",
+    "note"
+   ],
+   "title": "BuildLine",
+   "type": "object"
+  },
+  "BuildTotal": {
+   "additionalProperties": false,
+   "properties": {
+    "setup": {
+     "title": "Setup",
+     "type": "string"
+    },
+    "usd": {
+     "title": "Usd",
+     "type": "number"
+    },
+    "unpriced": {
+     "title": "Unpriced",
+     "type": "integer"
+    },
+    "printed": {
+     "title": "Printed",
+     "type": "integer"
+    },
+    "printed_g": {
+     "title": "Printed G",
+     "type": "number"
+    }
+   },
+   "required": [
+    "setup",
+    "usd",
+    "unpriced",
+    "printed",
+    "printed_g"
+   ],
+   "title": "BuildTotal",
+   "type": "object"
+  }
+ },
+ "additionalProperties": false,
+ "description": "build.json: the build package's parts list, its totals and its guides.",
+ "properties": {
+  "schema_version": {
+   "title": "Schema Version",
+   "type": "integer"
+  },
+  "generated": {
+   "title": "Generated",
+   "type": "string"
+  },
+  "totals": {
+   "items": {
+    "$ref": "#/$defs/BuildTotal"
+   },
+   "title": "Totals",
+   "type": "array"
+  },
+  "lines": {
+   "items": {
+    "$ref": "#/$defs/BuildLine"
+   },
+   "title": "Lines",
+   "type": "array"
+  },
+  "guides": {
+   "items": {
+    "$ref": "#/$defs/BuildGuide"
+   },
+   "title": "Guides",
+   "type": "array"
+  },
+  "open": {
+   "items": {
+    "type": "string"
+   },
+   "title": "Open",
+   "type": "array"
+  }
+ },
+ "required": [
+  "schema_version",
+  "generated",
+  "totals",
+  "lines",
+  "guides",
+  "open"
+ ],
+ "title": "Build",
+ "type": "object"
+}

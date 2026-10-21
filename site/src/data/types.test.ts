@@ -1,4 +1,5 @@
 // The TypeScript shapes against the JSON Schema pcs14 site --schema exports (site/schema).
+import build from "../../schema/build.schema.json";
 import flights from "../../schema/flights.schema.json";
 import index from "../../schema/index.schema.json";
 import parts from "../../schema/parts.schema.json";
@@ -72,4 +73,11 @@ test("the wiring's shapes have the schema's fields", () => {
 
 test("the version the site reads is the one pcs14 writes", () => {
   expect(SCHEMA_VERSION).toBe(1);
+});
+
+test("the build package's shapes have the schema's fields", () => {
+  expect(Object.keys(build.properties).sort()).toEqual([...FIELDS.Build].sort());
+  for (const name of ["BuildLine", "BuildTotal", "BuildGuide"] as const) {
+    expect(Object.keys(build.$defs[name].properties).sort()).toEqual([...FIELDS[name]].sort());
+  }
 });

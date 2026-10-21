@@ -1,0 +1,107 @@
+{
+ "generated": "2026-10-21",
+ "verdict": "open",
+ "arm": {
+  "length_m": 0.1845441558772843,
+  "tip_mass_kg": 0.1028
+ },
+ "top_thrust_n": 38.638200999999995,
+ "root_stress_mpa": 58.207789291117074,
+ "modes": [
+  {
+   "name": "vertical",
+   "low_hz": 37.46635090736069,
+   "high_hz": 67.42439297900634
+  },
+  {
+   "name": "in the frame's plane",
+   "low_hz": 80.28503765863005,
+   "high_hz": 144.48084209787072
+  }
+ ],
+ "near": [
+  {
+   "mode": "in the frame's plane",
+   "setup": "base",
+   "per_turn": 1,
+   "hz": 88.22506270019822
+  },
+  {
+   "mode": "in the frame's plane",
+   "setup": "C",
+   "per_turn": 1,
+   "hz": 96.28723635632805
+  },
+  {
+   "mode": "in the frame's plane",
+   "setup": "max",
+   "per_turn": 1,
+   "hz": 102.66438581774736
+  },
+  {
+   "mode": "in the frame's plane",
+   "setup": "mission",
+   "per_turn": 1,
+   "hz": 95.12316006204266
+  },
+  {
+   "mode": "in the frame's plane",
+   "setup": "P",
+   "per_turn": 1,
+   "hz": 91.97880809113887
+  },
+  {
+   "mode": "in the frame's plane",
+   "setup": "P+C",
+   "per_turn": 1,
+   "hz": 99.52003384684359
+  },
+  {
+   "mode": "in the frame's plane",
+   "setup": "V",
+   "per_turn": 1,
+   "hz": 91.89036257152712
+  },
+  {
+   "mode": "in the frame's plane",
+   "setup": "V+C",
+   "per_turn": 1,
+   "hz": 99.43158832723184
+  }
+ ],
+ "joints": [
+  {
+   "name": "the Harrier's base: three 4-40 steel screws",
+   "margin_low": 24.54233342292357,
+   "margin_high": 36.81350013438536
+  },
+  {
+   "name": "the cradle's rail locks: two M3 steel screws in heat-set inserts",
+   "margin_low": 1.1799198761020948,
+   "margin_high": 3.146453002938919
+  },
+  {
+   "name": "the rail on the top plate: four M3 nylon screws",
+   "margin_low": 2.3739987907174145,
+   "margin_high": 3.1653317209565532
+  }
+ ],
+ "unproven": [
+  {
+   "what": "The laminate: iFlight publishes nothing about the Nazgul's carbon, so its stiffness runs 40 to 70 GPa and its strength from 400 MPa, typical woven plate.",
+   "measure": "A tap test on a spare arm, clamped as on the frame, with a phone's accelerometer or a microphone: its ring frequency gives the stiffness."
+  },
+  {
+   "what": "The clamp: where the arm's free length starts depends on how tightly the plates hold it, swept 10% either way here.",
+   "measure": "The same tap test on the built frame."
+  },
+  {
+   "what": "The heat-set inserts' pull-out and the printed cradle and rail: guesses, and the weakest links between the chute's riser and the frame.",
+   "measure": "A hang test before P flies: 26 kg (the jolt's bound) from the riser's point on the mounted cradle for a minute, then 39 kg (one and a half times); nothing cracks, creeps or pulls out."
+  },
+  {
+   "what": "Crashes, and the legs' TPU under a hard landing: no FE model without CalculiX.",
+   "measure": "Drop tests of the legs with a dummy weight, from 0.25 m up to 1 m."
+  }
+ ]
+}

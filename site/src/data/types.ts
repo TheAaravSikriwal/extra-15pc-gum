@@ -251,6 +251,44 @@ export interface Unproven {
   groups: UnprovenGroup[];
 }
 
+export interface BuildLine {
+  module: string;
+  group: string;
+  name: string;
+  qty: number;
+  unit: string;
+  maker: string;
+  model: string;
+  link?: string | null;
+  price_each_usd?: number | null;
+  total_usd?: number | null;
+  checked?: string | null;
+  fallback: string;
+  note: string;
+}
+
+export interface BuildTotal {
+  setup: string;
+  usd: number;
+  unpriced: number;
+  printed: number;
+  printed_g: number;
+}
+
+export interface BuildGuide {
+  name: string;
+  url: string;
+}
+
+export interface Build {
+  schema_version: number;
+  generated: string;
+  totals: BuildTotal[];
+  lines: BuildLine[];
+  guides: BuildGuide[];
+  open: string[];
+}
+
 // the fields each shape has, for the check against the schema
 export const FIELDS = {
   ReportFound: ["file", "found", "generated", "verdict"],
@@ -318,4 +356,22 @@ export const FIELDS = {
   BoardPins: ["name", "part", "module", "pins"],
   Harness: ["name", "file"],
   Wiring: ["schema_version", "boards", "harnesses", "schematic", "kicad"],
+  BuildLine: [
+    "module",
+    "group",
+    "name",
+    "qty",
+    "unit",
+    "maker",
+    "model",
+    "link",
+    "price_each_usd",
+    "total_usd",
+    "checked",
+    "fallback",
+    "note",
+  ],
+  BuildTotal: ["setup", "usd", "unpriced", "printed", "printed_g"],
+  BuildGuide: ["name", "url"],
+  Build: ["schema_version", "generated", "totals", "lines", "guides", "open"],
 } as const;

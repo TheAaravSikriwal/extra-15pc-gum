@@ -4,7 +4,10 @@ id: rpi-camera-module-3
 maker: Raspberry Pi
 model: Camera Module 3
 price_usd: 29.25
-checked: 2026-10-17
+checked: 2026-10-21
+buy_note: "its own cable doesn't fit the Pi 5; the Pi 5 cable is its own line"
+fallback: {"maker": "Raspberry Pi", "model": "Camera Module 3 Wide (Adafruit 5658)", "note": "the same sensor and board, but a 120 degree view: the mapping's scale and the detector's sizes change", "link": "https://www.adafruit.com/product/5658", "price_usd": 38.5}
+link: 'https://www.pishop.us/product/raspberry-pi-camera-module-3/'
 source: {kind: manufacturer, url: 'https://github.com/raspberrypi/documentation/blob/master/documentation/asciidoc/accessories/camera/hardware_specification.adoc', checked: 2026-10-17}
 mass_g: 4
 power_w: 1.0
