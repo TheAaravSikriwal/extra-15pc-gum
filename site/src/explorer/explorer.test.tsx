@@ -207,3 +207,55 @@ test("given every wire, it draws each one in place of the bundled route", async 
   expect(drawn.children[0].userData.wire).toBe("lead.XT60.+ to esc.BAT.VBAT");
   expect(root.getObjectByName("wire_battery_leads")!.visible).toBe(false);
 });
+
+test("a look's chips and pins take their own materials, and the board its maker's mask", async () => {
+  const root = new THREE.Group();
+  const board = new THREE.Group();
+  board.name = nodeName("pjrc-teensy-41");
+  // the loader's unique names: a second board's pins arrive as "pins_1"
+  for (const name of ["board", "chips", "pins_1"]) {
+    const part = new THREE.Group();
+    part.name = name;
+    part.add(new THREE.Mesh(new THREE.BoxGeometry(0.01, 0.01, 0.01)));
+    board.add(part);
+  }
+  root.add(board);
+  const pieces = new Map([["pjrc-teensy-41", { ...piece("pjrc-teensy-41", "base"), part_id: "pjrc-teensy-41" }]]);
+  await ReactThreeTestRenderer.create(
+    <DroneScene root={root} pieces={pieces} routes={new Map()} modulesOn={new Set()} explode={0}
+      selected={null} combination="max" kase="hover" onSelect={() => {}} />,
+  );
+  const color = (name: string) =>
+    ((board.getObjectByName(name)!.children[0] as THREE.Mesh).material as THREE.MeshStandardMaterial).color.getHexString();
+  expect(color("chips")).toBe("141414");
+  expect(color("pins_1")).toBe("c9a13b");
+  expect(color("board")).toBe("1f6b3a"); // PJRC's green
+});
+
+test("with a wire picked, the pieces it doesn't join fade to ghosts", async () => {
+  const root = model();
+  const wire = {
+    label: "frame to chute",
+    harness: "h",
+    ends: [
+      { pin: "a.J1.1", at_mm: [0, 0, 0], piece: "frame" },
+      { pin: "b.J1.1", at_mm: [100, 0, 0], piece: "fruity-chutes-harrier" },
+    ],
+    route: null,
+    route_piece: null,
+    path_mm: [],
+    awg: 26,
+    diameter_mm: 1,
+    wire: "silicone",
+    role: "signal",
+    length_mm: 100,
+    gaps_mm: [],
+  };
+  await ReactThreeTestRenderer.create(
+    <DroneScene root={root} pieces={PIECES} routes={new Map()} modulesOn={new Set(["P"])} explode={0}
+      selected={null} combination="max" kase="hover" onSelect={() => {}} wires={[wire]} pickedWire="frame to chute" />,
+  );
+  const material = (name: string) => (root.getObjectByName(name)!.children[0] as THREE.Mesh).material as THREE.Material;
+  expect(material("frame").transparent).toBe(false); // one of its ends
+  expect(material("wire_battery_leads").transparent).toBe(true); // not on this wire: a ghost
+});

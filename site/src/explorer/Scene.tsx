@@ -11,7 +11,9 @@ import type { Piece, Route, Wire3d } from "../data/types";
 import { exploded, heatColor, propSpin, shows, type Vec } from "./logic";
 import { focusOf, wireStates } from "./explore";
 import {
+  SUBPART_NAMES,
   dimWireMaterial,
+  ghostMaterial,
   heatMaterial,
   LIT_WIRE,
   lookFor,
@@ -101,6 +103,7 @@ interface Home {
   center: Vec;
   turns: number; // propSpin's
   meshes: THREE.Mesh[];
+  parts: (string | null)[]; // each mesh's named part of the look (chips, plugs...), if any
 }
 
 // a textured piece's meshes get texture coordinates, once, at the texture's size in the
@@ -130,34 +133,64 @@ export function DroneScene(p: SceneProps) {
       if (!name) return;
       const c = new THREE.Box3().setFromObject(node).getCenter(new THREE.Vector3());
       const meshes: THREE.Mesh[] = [];
+      const parts: (string | null)[] = [];
+      // a mesh's named part of the look: the nearest node between it and the piece with one.
+      // GLTFLoader makes repeated names unique ("pins", then "pins_1"), so the number goes
+      const partOf = (m: THREE.Object3D): string | null => {
+        for (let o: THREE.Object3D | null = m; o && o !== node; o = o.parent) {
+          const name = o.name.replace(/_\d+$/, "");
+          if (SUBPART_NAMES.has(name)) return name;
+        }
+        return null;
+      };
       node.traverse((m) => {
         if (m instanceof THREE.Mesh) {
           m.castShadow = true;
           meshes.push(m);
+          parts.push(partOf(m));
         }
       });
       const look = lookFor(p.pieces.get(name) as Piece);
-      if (look.texture) giveUVs(meshes, TILE[look.texture]);
+      // the texture goes on the piece itself or its board, not on the chips and pins
+      if (look.texture) giveUVs(meshes.filter((_, k) => parts[k] === null || parts[k] === "board"), TILE[look.texture]);
       found.push({ name, node, position: node.position.clone(), middle: local(node, c),
-                   center: local(node, whole), turns: propSpin(name), meshes });  // prettier-ignore
+                   center: local(node, whole), turns: propSpin(name), meshes, parts });  // prettier-ignore
     });
     return { found, byNode };
   }, [p.root, p.pieces]);
 
+  // the pieces a picked wire joins
+  const ends = useMemo(() => {
+    const w = p.pickedWire ? p.wires?.find((x) => x.label === p.pickedWire) : undefined;
+    return w ? new Set(w.ends.map((e) => e.piece)) : null;
+  }, [p.pickedWire, p.wires]);
+
   useLayoutEffect(() => {
-    for (const { name, node, position, middle, center, meshes } of homes.found) {
+    for (const { name, node, position, middle, center, meshes, parts } of homes.found) {
       const piece = p.pieces.get(name) as Piece;
       node.visible = shows(piece, p.modulesOn);
       const [dx, dy, dz] = exploded(middle, center, p.explode);
       node.position.set(position.x + dx, position.y + dy, position.z + dz);
       const share = p.heat ? p.routes.get(name)?.heating_share[p.combination]?.[p.kase] : undefined;
-      const material =
-        name === p.selected ? SELECTED : share !== undefined ? heatMaterial(heatColor(share)) : materialFor(lookFor(piece));
-      for (const m of meshes) m.material = material;
+      // with a wire picked, every piece but the two it joins fades to a ghost, so a close-up of
+      // its pins can't end up behind something
+      const ghost = ends !== null && !ends.has(name);
+      const material = ghost
+        ? ghostMaterial(lookFor(piece))
+        : name === p.selected
+          ? SELECTED
+          : share !== undefined
+            ? heatMaterial(heatColor(share))
+            : materialFor(lookFor(piece));
+      meshes.forEach((m, k) => {
+        // a look's chips, plugs and pins take their own materials, unless the whole piece is lit
+        const own = parts[k] && !ghost && material !== SELECTED && share === undefined;
+        m.material = own ? materialFor(lookFor(piece, parts[k])) : ghost && parts[k] ? ghostMaterial(lookFor(piece, parts[k])) : material;
+      });
       // the bundled routes give way to the wires drawn one by one
       if (p.wires && piece.kind === "wire") node.visible = false;
     }
-  }, [homes, p.pieces, p.routes, p.modulesOn, p.explode, p.selected, p.combination, p.kase, p.heat, p.wires]);
+  }, [homes, p.pieces, p.routes, p.modulesOn, p.explode, p.selected, p.combination, p.kase, p.heat, p.wires, ends]);
 
   // every wire, rebuilt as the drone pulls apart, under the pieces' own parent; lit, faded or
   // hidden for whatever's picked, with the picked pins labeled

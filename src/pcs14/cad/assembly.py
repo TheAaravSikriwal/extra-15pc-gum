@@ -17,7 +17,8 @@ from build123d import Align, Compound, Cylinder, Plane, Pos, Sphere
 
 from pcs14.cad.frame import FrameModel, build_frame
 from pcs14.cad.locate import placed
-from pcs14.cad.parts import build_part, pack_layout, pack_solid, prop_disk, prop_look
+from pcs14.cad.looks import look_for
+from pcs14.cad.parts import build_part, pack_layout, pack_solid, prop_disk, prop_look, prop_solid
 from pcs14.cad.printed import build_printed
 from pcs14.cad.settings import WIRING_PARTS, CadSettings, Wire
 from pcs14.design import Build
@@ -37,6 +38,8 @@ class Piece:
     budget_mass: float  # kg, what the sizing model counts for it today
     moving: bool = False
     part_id: str | None = None
+    # what the pictures and the site's model show, inside the solid; the checks use the solid
+    look: object | None = None
 
 
 @dataclass(frozen=True)
@@ -153,10 +156,12 @@ class Drone:
                 build.frame.mass,
                 build.frame.mass,
                 part_id=build.frame.id,
+                look=frame.look,
             )
         ]
         motor = build_part(build.motor)
-        look, disk = prop_look(build.prop), prop_disk(build.prop)
+        motor_look = look_for(build.motor)
+        blades, look, disk = prop_solid(build.prop), prop_look(build.prop), prop_disk(build.prop)
         hub_z = build.motor.cad.size("bell_length_mm") + 0.002  # props sit on the shaft
         disks = []
         for x, y, z in frame.motor_mounts:
@@ -170,17 +175,19 @@ class Drone:
                     build.motor.mass,
                     build.motor.mass,
                     part_id=build.motor.id,
+                    look=Pos(x, y, z) * motor_look if motor_look is not None else None,
                 )
             )
             pieces.append(
                 Piece(
                     f"prop {corner}",
-                    Pos(x, y, z + hub_z) * look,
+                    Pos(x, y, z + hub_z) * blades,
                     "prop",
                     "base",
                     build.prop.mass,
                     build.prop.mass,
                     part_id=build.prop.id,
+                    look=Pos(x, y, z + hub_z) * look,
                 )
             )
             disks.append(Pos(x, y, z + hub_z) * disk)
@@ -200,6 +207,7 @@ class Drone:
         for spot in settings.spots():
             part = catalog_parts[spot.part_id]
             mass = part.mass * spot.share
+            look = look_for(part)
             pieces.append(
                 Piece(
                     spot.name,
@@ -210,6 +218,7 @@ class Drone:
                     mass,
                     moving=spot.part_id in MOVING_PARTS,
                     part_id=spot.part_id,
+                    look=placed(look, spot.placement) if look is not None else None,
                 )
             )
 

@@ -40,7 +40,7 @@ def _color(piece) -> np.ndarray:
 def _triangles(pieces, offsets=None):
     polygons, colors = [], []
     for piece in pieces:
-        vertices, triangles = piece.solid.tessellate(0.0008, 0.4)
+        vertices, triangles = (piece.look or piece.solid).tessellate(0.0008, 0.4)
         points = np.array([(v.X, v.Y, v.Z) for v in vertices])
         if offsets is not None:
             points = points + offsets[piece.name]

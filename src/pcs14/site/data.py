@@ -98,13 +98,24 @@ def wires(electrical: dict) -> schema.Wires:
 
 
 def glb_nodes(path) -> list[str]:
-    """The named nodes in a GLB, read from its JSON chunk (glTF 2.0's binary layout)."""
+    """The pieces in a GLB, read from its JSON chunk (glTF 2.0's binary layout): its named
+    nodes with no named node above them. Below a piece are the named parts of its look (a
+    board's "chips" and "pins"), which aren't pieces of their own."""
     raw = Path(path).read_bytes()
     length, kind = struct.unpack("<I4s", raw[12:20])
     if raw[:4] != b"glTF" or kind != b"JSON":
         raise ValueError(f"{path} isn't a GLB")
-    gltf = json.loads(raw[20 : 20 + length])
-    return [n["name"] for n in gltf.get("nodes", []) if n.get("name")]
+    nodes = json.loads(raw[20 : 20 + length]).get("nodes", [])
+    parent = {child: k for k, n in enumerate(nodes) for child in n.get("children", [])}
+
+    def under_a_named_one(k: int) -> bool:
+        while k in parent:
+            k = parent[k]
+            if nodes[k].get("name"):
+                return True
+        return False
+
+    return [n["name"] for k, n in enumerate(nodes) if n.get("name") and not under_a_named_one(k)]
 
 
 def _write(out: Path, name: str, model) -> Path:

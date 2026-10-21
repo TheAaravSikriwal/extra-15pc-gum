@@ -32,13 +32,19 @@ CFD_SKIPS = ("prop", "wire")
 BOTTOM = (Align.CENTER, Align.CENTER, Align.MIN)
 
 
-def _compound(pieces) -> Compound:
+def _compound(pieces, looks: bool = False) -> Compound:
     children = []
     for piece in pieces:
-        shape = piece.solid
+        shape = (piece.look or piece.solid) if looks else piece.solid
         shape.label = piece.name
         children.append(shape)
     return Compound(children=children)  # an assembly, so every part keeps its name
+
+
+def model_shapes(pieces) -> list:
+    """What the pictures and the site's model draw: each piece's look where it has one, named
+    for the piece, and its plain solid elsewhere."""
+    return list(_compound(pieces, looks=True).children)
 
 
 def export_step_file(pieces, path: Path) -> Path:
@@ -107,7 +113,9 @@ def export_cfd(pieces, path: Path) -> Path:
 def export_glb(pieces, path: Path) -> Path:
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    export_gltf(_compound(pieces), path, unit=Unit.M, binary=True, linear_deflection=0.0005)
+    export_gltf(
+        _compound(pieces, looks=True), path, unit=Unit.M, binary=True, linear_deflection=0.0005
+    )
     return path
 
 

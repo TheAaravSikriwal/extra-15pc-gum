@@ -32,6 +32,15 @@ test("wires wear their insulation: red for power, black motor leads, light signa
   expect(lookFor(piece("wire", null, "wire gps")).color).not.toBe(power);
 });
 
+test("a board's chips, plugs and pins each look like themselves, and the board keeps its mask", () => {
+  const teensy = piece("bought", "pjrc-teensy-41");
+  expect(lookFor(teensy, "chips").color).toBe("#141414");
+  expect(lookFor(teensy, "pins").metalness).toBeGreaterThan(0.8); // gold
+  expect(lookFor(teensy, "plugs").color).not.toBe(lookFor(teensy, "chips").color);
+  expect(lookFor(teensy, "board").color).toBe(lookFor(teensy).color); // the solder mask
+  expect(lookFor(piece("motor", "emax-e3-2814-850kv"), "gap").color).toBe("#a8642a"); // copper
+});
+
 test("one material per look, made once", () => {
   const a = materialFor(lookFor(piece("motor", "emax-e3-2814-850kv")));
   const b = materialFor(lookFor(piece("motor", "emax-e3-2814-850kv")));

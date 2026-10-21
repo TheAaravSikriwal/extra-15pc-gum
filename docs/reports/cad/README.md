@@ -1,6 +1,6 @@
 # The virtual drone (CAD)
 
-*Generated on 2026-10-20 by pcs14 0.1.0, the CAD layer in `src/pcs14/cad/`. Every module combination gets built, its pack slid to where it balances best, and checked: collisions, prop clearance, the parachute's cone, the module rail, balance, and the makers' placement rules.*
+*Generated on 2026-10-21 by pcs14 0.1.0, the CAD layer in `src/pcs14/cad/`. Every module combination gets built, its pack slid to where it balances best, and checked: collisions, prop clearance, the parachute's cone, the module rail, balance, and the makers' placement rules.*
 
 ![The drone, three-quarter view](views/three-quarter.png)
 

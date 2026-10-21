@@ -73,10 +73,25 @@ function wireColor(name: string): string {
   return "#cfccc3";
 }
 
-export function lookFor(piece: Piece): Look {
+// the named parts of a piece's look (pcs14.cad.looks): the chips, plugs and pins on a board,
+// a motor's gap over its windings and its shaft. The board and the bell keep the piece's own look
+const SUBPARTS: Record<string, Omit<Look, "key">> = {
+  chips: { color: "#141414", metalness: 0.1, roughness: 0.55, texture: null }, // black epoxy
+  plugs: { color: "#e6dfcc", metalness: 0, roughness: 0.6, texture: null }, // JST's off-white nylon
+  pins: { color: "#c9a13b", metalness: 0.9, roughness: 0.3, texture: null }, // gold plating
+  antenna: { color: "#d9d2bf", metalness: 0.1, roughness: 0.45, clearcoat: 0.3, texture: null }, // ceramic
+  gap: { color: "#a8642a", metalness: 0.6, roughness: 0.4, texture: null }, // copper windings
+  shaft: { color: "#b8b8b4", metalness: 0.9, roughness: 0.25, texture: null }, // steel
+  base: { color: "#2a2b2e", metalness: 0.7, roughness: 0.4, texture: null },
+};
+
+export const SUBPART_NAMES = new Set([...Object.keys(SUBPARTS), "board", "bell"]);
+
+export function lookFor(piece: Piece, subpart?: string | null): Look {
   const base = piece.kind === "wire" ? { ...KINDS.wire, color: wireColor(piece.name) } : (KINDS[piece.kind] ?? KINDS.bought);
   const part = (piece.part_id && PARTS[piece.part_id]) || {};
-  const look = { texture: null, ...base, ...part } as Omit<Look, "key">;
+  const own = subpart ? SUBPARTS[subpart] : undefined;
+  const look = (own ? { ...own } : { texture: null, ...base, ...part }) as Omit<Look, "key">;
   const key = [look.color, look.metalness, look.roughness, look.clearcoat ?? 0, look.texture ?? ""].join("|");
   return { ...look, key };
 }
@@ -200,6 +215,24 @@ export function wireMaterial(color: string): THREE.MeshPhysicalMaterial {
 }
 
 const faded = new Map<string, THREE.MeshPhysicalMaterial>();
+
+const ghosts = new Map<string, THREE.MeshPhysicalMaterial>();
+
+// a piece faded to a ghost while a wire is picked, so the wire and its pins show through it
+export function ghostMaterial(look: Look): THREE.MeshPhysicalMaterial {
+  let m = ghosts.get(look.key);
+  if (!m) {
+    m = new THREE.MeshPhysicalMaterial({
+      color: look.color,
+      roughness: 0.8,
+      transparent: true,
+      opacity: 0.12,
+      depthWrite: false,
+    });
+    ghosts.set(look.key, m);
+  }
+  return m;
+}
 
 // a wire faded back while something else is picked
 export function dimWireMaterial(color: string): THREE.MeshPhysicalMaterial {

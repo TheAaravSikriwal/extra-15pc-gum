@@ -28,6 +28,7 @@ class FrameModel:
     bay_floor: float  # top of the middle plate, where the stack starts
     bay_height: float
     top: float  # top of the top plate
+    look: Compound | None = None  # for the pictures: the arms with their lightening slots
 
 
 def build_frame(frame: Frame) -> FrameModel:
@@ -109,6 +110,21 @@ def build_frame(frame: Frame) -> FrameModel:
 
     solid = Compound([plates, arms, *standoffs])
     solid.label = frame.id
+    # the look: two lightening slots down each arm, the way carbon arms are cut, between the
+    # body plates and the motor pad; the checks keep the solid arms
+    slotted = arms
+    for angle in (45, -45, 135, -135):
+        a = math.radians(angle)
+        for at in (0.5, 0.72):
+            slot = Box(
+                0.13 * reach, 0.38 * cad.size("arm_width_mm"), 1.0, align=(Align.CENTER,) * 3
+            )
+            slotted -= (
+                Pos(at * reach * math.cos(a), at * reach * math.sin(a), 0) * Rot(0, 0, angle) * slot
+            )
+    slotted.label = "arms"
+    look = Compound([plates, slotted, *standoffs])
+    look.label = frame.id
     return FrameModel(
         solid=solid,
         carbon=carbon,
@@ -117,4 +133,5 @@ def build_frame(frame: Frame) -> FrameModel:
         bay_floor=bay_floor,
         bay_height=bay_height,
         top=top_z + plate_t,
+        look=look,
     )

@@ -9,7 +9,20 @@ work; the existing CAD models in the local cache are what make pictures look rea
 import math
 from dataclasses import dataclass
 
-from build123d import Align, Box, Compound, Cylinder, Part, Polygon, Pos, Rot, extrude
+from build123d import (
+    Align,
+    Box,
+    Compound,
+    Cylinder,
+    Part,
+    Plane,
+    Polygon,
+    Pos,
+    Rectangle,
+    Rot,
+    extrude,
+    loft,
+)
 
 from pcs14.catalog import Cell, Prop
 from pcs14.catalog import Part as CatalogPart
@@ -82,13 +95,15 @@ def prop_disk(prop: Prop) -> Part:
     return disk
 
 
-def prop_look(prop: Prop) -> Part:
-    """A simple three-blade prop for pictures: a hub with its bore, and flat tapered blades
-    set at the pitch angle three quarters of the way out. It stays inside prop_disk."""
+def prop_solid(prop: Prop) -> Part:
+    """The prop the mass spread uses: a hub with its bore and flat tapered blades set at the
+    pitch angle three quarters of the way out. The pictures draw prop_look's twisted blades;
+    spreading the mass over those moves the drone's inertia by 0.07%, and every flight model was
+    made with this one, so it stays. Both stay inside prop_disk."""
     cad = prop.cad
     radius, hub_r = prop.diameter / 2, cad.size("hub_diameter_mm") / 2
     hub_t = cad.size("hub_thickness_mm")
-    look = Cylinder(hub_r, hub_t, align=BOTTOM)
+    solid = Cylinder(hub_r, hub_t, align=BOTTOM)
     root, tip = cad.size("blade_width_mm"), cad.size("blade_width_mm") / 4
     start, end = 0.8 * hub_r, radius - 0.001
     outline = Polygon(
@@ -97,6 +112,59 @@ def prop_look(prop: Prop) -> Part:
     blade = extrude(outline, 0.002, both=True)
     pitch = math.degrees(math.atan(prop.pitch / (2 * math.pi * 0.75 * radius)))
     blade = Pos(0, 0, hub_t / 2) * Rot(pitch, 0, 0) * blade
+    for k in range(prop.blades):
+        solid += Rot(0, 0, k * 360 / prop.blades) * blade
+    solid -= Cylinder(
+        cad.size("bore_mm") / 2, THROUGH, align=(Align.CENTER, Align.CENTER, Align.CENTER)
+    )
+    solid.label = f"{prop.id} solid"
+    return solid
+
+
+@dataclass(frozen=True)
+class BladeSection:
+    radius: float  # m from the hub's middle
+    chord: float  # m across
+    thickness: float  # m
+    angle_deg: float  # the blade's angle to the disk there
+
+
+BLADE_AT = (0.11, 0.2, 0.32, 0.45, 0.58, 0.72, 0.86, 0.98)  # where the sections are, of the radius
+
+
+def blade_sections(prop: Prop) -> list[BladeSection]:
+    """The blade's cross-sections, root to tip: each set at the angle the pitch gives at its
+    radius, atan(pitch / (2 pi r)), so the blade twists flatter toward the tip. The chord is
+    widest a third of the way out and narrows to a quarter at the tip, and near the root it's
+    kept narrow enough that the steep blade stays inside the hub's thickness, which is the disk
+    the checks use."""
+    cad = prop.cad
+    radius, hub_t = prop.diameter / 2, cad.size("hub_thickness_mm")
+    widest = cad.size("blade_width_mm")
+    out = []
+    for f in BLADE_AT:
+        r = max(f * radius, 0.8 * cad.size("hub_diameter_mm") / 2)
+        angle = math.atan(prop.pitch / (2 * math.pi * r))
+        shape = 0.55 + 0.45 * f / 0.33 if f < 0.33 else 1.0 - 0.75 * (f - 0.33) / 0.67
+        thickness = 0.0018 - 0.001 * f
+        fits = (0.92 * hub_t - thickness * math.cos(angle)) / math.sin(angle)
+        out.append(BladeSection(r, min(widest * shape, fits), thickness, math.degrees(angle)))
+    return out
+
+
+def prop_look(prop: Prop) -> Part:
+    """The prop for pictures: the hub with its bore, and each blade lofted through its sections,
+    twisting from steep at the root to flat at the tip. It stays inside prop_disk."""
+    cad = prop.cad
+    hub_r, hub_t = cad.size("hub_diameter_mm") / 2, cad.size("hub_thickness_mm")
+    look = Cylinder(hub_r, hub_t, align=BOTTOM)
+    faces = [
+        Pos(s.radius, 0, hub_t / 2)
+        * Rot(s.angle_deg, 0, 0)
+        * (Plane.YZ * Rectangle(s.chord, s.thickness))
+        for s in blade_sections(prop)
+    ]
+    blade = loft(faces)
     for k in range(prop.blades):
         look += Rot(0, 0, k * 360 / prop.blades) * blade
     look -= Cylinder(
