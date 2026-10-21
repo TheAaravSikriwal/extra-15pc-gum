@@ -1,0 +1,137 @@
+{
+ "$defs": {
+  "Event": {
+   "additionalProperties": false,
+   "properties": {
+    "at": {
+     "title": "At",
+     "type": "number"
+    },
+    "name": {
+     "title": "Name",
+     "type": "string"
+    }
+   },
+   "required": [
+    "at",
+    "name"
+   ],
+   "title": "Event",
+   "type": "object"
+  },
+  "FindingRow": {
+   "additionalProperties": false,
+   "properties": {
+    "check": {
+     "title": "Check",
+     "type": "string"
+    },
+    "passed": {
+     "title": "Passed",
+     "type": "boolean"
+    },
+    "detail": {
+     "title": "Detail",
+     "type": "string"
+    }
+   },
+   "required": [
+    "check",
+    "passed",
+    "detail"
+   ],
+   "title": "FindingRow",
+   "type": "object"
+  }
+ },
+ "additionalProperties": false,
+ "description": "flights/<setup>-<scenario>-<firmware>.json: one run, for the site to play back.",
+ "properties": {
+  "schema_version": {
+   "title": "Schema Version",
+   "type": "integer"
+  },
+  "scenario": {
+   "title": "Scenario",
+   "type": "string"
+  },
+  "setup": {
+   "title": "Setup",
+   "type": "string"
+  },
+  "firmware": {
+   "title": "Firmware",
+   "type": "string"
+  },
+  "passed": {
+   "title": "Passed",
+   "type": "boolean"
+  },
+  "findings": {
+   "items": {
+    "$ref": "#/$defs/FindingRow"
+   },
+   "title": "Findings",
+   "type": "array"
+  },
+  "t": {
+   "items": {
+    "type": "number"
+   },
+   "title": "T",
+   "type": "array"
+  },
+  "position": {
+   "items": {
+    "items": {
+     "type": "number"
+    },
+    "type": "array"
+   },
+   "title": "Position",
+   "type": "array"
+  },
+  "attitude": {
+   "items": {
+    "items": {
+     "type": "number"
+    },
+    "type": "array"
+   },
+   "title": "Attitude",
+   "type": "array"
+  },
+  "motors": {
+   "items": {
+    "items": {
+     "type": "number"
+    },
+    "type": "array"
+   },
+   "title": "Motors",
+   "type": "array"
+  },
+  "events": {
+   "items": {
+    "$ref": "#/$defs/Event"
+   },
+   "title": "Events",
+   "type": "array"
+  }
+ },
+ "required": [
+  "schema_version",
+  "scenario",
+  "setup",
+  "firmware",
+  "passed",
+  "findings",
+  "t",
+  "position",
+  "attitude",
+  "motors",
+  "events"
+ ],
+ "title": "Playback",
+ "type": "object"
+}

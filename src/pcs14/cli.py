@@ -235,6 +235,14 @@ def build_parser() -> argparse.ArgumentParser:
     site.add_argument("--reports", type=Path, default=Path("docs/reports"))
     site.add_argument("--out", type=Path, default=Path("site/public/data"))
     site.add_argument(
+        "--flights",
+        type=Path,
+        nargs="?",
+        const=Path("outputs/flight-sim"),
+        help="also every flight's playback file, from the flight sim's logs (default folder: "
+        "outputs/flight-sim; the logs are only on the machine that flew them)",
+    )
+    site.add_argument(
         "--schema",
         type=Path,
         nargs="?",
@@ -804,6 +812,11 @@ def run_site(args) -> int:
     written = data.write_all(args.out, args.reports, commit)
     if args.schema is not None:
         written += data.write_schema(args.schema)
+    if args.flights is not None:
+        from pcs14.site import flights
+
+        results, logs = flights.from_outputs(args.flights)
+        written += flights.write_flights(args.out, results, logs)
     index = data.load(Path(args.out) / "index.json", data.schema.Index)
     missing = [name for name, r in index.reports.items() if not r.found]
     print(f"Wrote {len(written)} files to {Path(args.out).resolve()}")

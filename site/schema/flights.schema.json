@@ -1,0 +1,87 @@
+{
+ "$defs": {
+  "Run": {
+   "additionalProperties": false,
+   "properties": {
+    "scenario": {
+     "title": "Scenario",
+     "type": "string"
+    },
+    "setup": {
+     "title": "Setup",
+     "type": "string"
+    },
+    "firmware": {
+     "title": "Firmware",
+     "type": "string"
+    },
+    "flown": {
+     "title": "Flown",
+     "type": "boolean"
+    },
+    "passed": {
+     "title": "Passed",
+     "type": "boolean"
+    },
+    "file": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "File"
+    }
+   },
+   "required": [
+    "scenario",
+    "setup",
+    "firmware",
+    "flown",
+    "passed"
+   ],
+   "title": "Run",
+   "type": "object"
+  }
+ },
+ "additionalProperties": false,
+ "description": "flights.json: every run of both firmwares, for the matrices and the playback pages.",
+ "properties": {
+  "schema_version": {
+   "title": "Schema Version",
+   "type": "integer"
+  },
+  "scenarios": {
+   "items": {
+    "type": "string"
+   },
+   "title": "Scenarios",
+   "type": "array"
+  },
+  "setups": {
+   "items": {
+    "type": "string"
+   },
+   "title": "Setups",
+   "type": "array"
+  },
+  "runs": {
+   "items": {
+    "$ref": "#/$defs/Run"
+   },
+   "title": "Runs",
+   "type": "array"
+  }
+ },
+ "required": [
+  "schema_version",
+  "scenarios",
+  "setups",
+  "runs"
+ ],
+ "title": "Flights",
+ "type": "object"
+}

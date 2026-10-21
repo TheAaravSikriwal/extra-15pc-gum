@@ -117,10 +117,57 @@ class Wires(_Shape):
     routes: list[Route]
 
 
+class Event(_Shape):
+    at: float  # s into the log
+    name: str
+
+
+class FindingRow(_Shape):
+    check: str
+    passed: bool
+    detail: str
+
+
+class Playback(_Shape):
+    """flights/<setup>-<scenario>-<firmware>.json: one run, for the site to play back."""
+
+    schema_version: int
+    scenario: str
+    setup: str
+    firmware: str  # px4 or mine
+    passed: bool
+    findings: list[FindingRow]
+    t: list[float]  # s
+    position: list[list[float]]  # m, east, north, up, from Gazebo's ground truth
+    attitude: list[list[float]]  # quaternions x, y, z, w: the body (forward-left-up) to it
+    motors: list[list[float]]  # rad/s, each motor
+    events: list[Event]
+
+
+class Run(_Shape):
+    scenario: str
+    setup: str
+    firmware: str
+    flown: bool
+    passed: bool
+    file: str | None = None  # its playback file, when its log is there
+
+
+class Flights(_Shape):
+    """flights.json: every run of both firmwares, for the matrices and the playback pages."""
+
+    schema_version: int
+    scenarios: list[str]
+    setups: list[str]
+    runs: list[Run]
+
+
 # each data file's name (without .json) and its shape
 FILES: dict[str, type[_Shape]] = {
     "index": Index,
     "spec": SpecSheet,
     "parts": Parts,
     "wires": Wires,
+    "flights": Flights,
+    "playback": Playback,
 }
