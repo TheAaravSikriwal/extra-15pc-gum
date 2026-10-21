@@ -53,6 +53,9 @@ class FlightLog:
     rotor_speed: np.ndarray  # rad/s, (n, 4)
     events: list = field(default_factory=list)  # (s, name)
     attitude: np.ndarray | None = None  # (n, 4) quaternions, x y z w, body to the local frame
+    # the motors' commands at their own rate, (t, (m, 4) rad/s): the ground truth can be slower
+    # than the motors, and self-tuning needs every command
+    esc: tuple | None = None
 
     def window(self, start: float, end: float) -> np.ndarray:
         return (self.t >= start) & (self.t <= end)

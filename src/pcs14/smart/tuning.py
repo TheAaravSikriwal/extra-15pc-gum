@@ -18,6 +18,7 @@ import numpy as np
 class Found:
     inertia: float  # kg m^2
     fit: float  # r^2 of the measured acceleration against the asked one
+    delay_s: float = 0.0  # how late the motors got their commands, where that was looked for
 
 
 def identify_inertia(t, rate, asked, believed: float) -> Found:
@@ -87,3 +88,80 @@ def identify_roll(t, roll_rate, rotor_speed, motor_constant: float, rotor_y,
     spread = rates - rates.mean()
     fit = 1.0 - float(np.dot(residual, residual) / np.dot(spread, spread))
     return Found(inertia=float(1.0 / solution[0]), fit=fit)
+
+
+DELAYS_S = tuple(round(0.004 * k, 3) for k in range(21))  # 0 to 80 ms, a loop step apart
+
+
+def identify_roll_with_delay(t, roll_rate, rotor_speed, motor_constant: float, rotor_y,
+                             lag_s: float = 0.0, delays=DELAYS_S) -> Found:  # fmt: skip
+    """identify_roll, with the commands' dead time found too: the log has each command when
+    the loop sent it, and the motors get it later (in the sim, a few of Gazebo's steps), which
+    reads as a bigger inertia if it's left out. The dead time that fits best wins."""
+    t = np.asarray(t, dtype=float)
+    speeds = np.asarray(rotor_speed, dtype=float)
+    best = None
+    for delay in delays:
+        late = np.column_stack([np.interp(t - delay, t, speeds[:, k])
+                                for k in range(speeds.shape[1])])  # fmt: skip
+        found = identify_roll(t, roll_rate, late, motor_constant, rotor_y, lag_s)
+        if best is None or found.fit > best.fit:
+            best = Found(found.inertia, found.fit, float(delay))
+    return best
+
+
+def lagged_asymmetric(t, asked, up_s: float, down_s: float) -> np.ndarray:
+    """What motors do with the speeds they're asked for when they speed up faster than they
+    slow down (Gazebo's motor model: 12.5 ms up, 25 ms down), each column on its own."""
+    asked = np.asarray(asked, dtype=float)
+    out = np.empty_like(asked)
+    out[0] = asked[0]
+    dt = np.diff(np.asarray(t, dtype=float), prepend=t[0])
+    for k in range(1, len(out)):
+        step = asked[k] - out[k - 1]
+        tau = np.where(step > 0, up_s, down_s)
+        out[k] = out[k - 1] + step * (1.0 - np.exp(-dt[k] / tau))
+    return out
+
+
+def identify_roll_doublets(t, roll_rate, rotor_speed, motor_constant: float, rotor_y, windows,
+                           up_s: float, down_s: float, delays=DELAYS_S) -> Found:  # fmt: skip
+    """The roll inertia from the doublets the firmware flew for it: in each doublet's own
+    window (start, end), the gyro's roll rate against the integral of the rotors' roll torque
+    (their commanded speeds, late by the dead time, through the motors' lags), with an offset
+    and a trend of its own, so a trim that wanders between and during them (the drone drifting
+    sideways, rotor drag above the center of gravity) doesn't count as inertia. The dead time
+    that fits best wins.
+
+    Step 7 found this the hard way: fitted over stretches picked out by how busy the torque
+    was, with one trim for the whole flight, the same doublets read 12% low in base."""
+    t = np.asarray(t, dtype=float)
+    rate = np.asarray(roll_rate, dtype=float)
+    speeds = np.asarray(rotor_speed, dtype=float)
+    arms = np.asarray(rotor_y, dtype=float)
+    masks = [(t >= a) & (t <= b) for a, b in windows]
+    n = len(masks)
+    best = None
+    for delay in delays:
+        late = np.column_stack([np.interp(t - delay, t, speeds[:, k])
+                                for k in range(speeds.shape[1])])  # fmt: skip
+        actual = lagged_asymmetric(t, late, up_s, down_s)
+        torque = motor_constant * (actual**2 * arms).sum(axis=1)
+        rows, ys = [], []
+        for j, m in enumerate(masks):
+            tt, tq = t[m], torque[m]
+            integral = np.concatenate([[0.0], np.cumsum(0.5 * (tq[1:] + tq[:-1]) * np.diff(tt))])
+            block = np.zeros((m.sum(), 1 + 2 * n))
+            block[:, 0] = integral
+            block[:, 1 + j] = 1.0
+            block[:, 1 + n + j] = tt - tt[0]
+            rows.append(block)
+            ys.append(rate[m])
+        design, ys = np.vstack(rows), np.concatenate(ys)
+        solution = np.linalg.lstsq(design, ys, rcond=None)[0]
+        residual = ys - design @ solution
+        spread = ys - ys.mean()
+        fit = 1.0 - float(np.dot(residual, residual) / np.dot(spread, spread))
+        if best is None or fit > best.fit:
+            best = Found(float(1.0 / solution[0]), fit, float(delay))
+    return best

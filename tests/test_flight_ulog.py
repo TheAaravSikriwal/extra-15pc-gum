@@ -160,3 +160,17 @@ def test_a_failsafe_already_up_at_boot_isnt_an_event():
     names = [n for _, n in ulog.flight_log(made_up).events]
     assert names.count("link lost") == 1  # only the real one, at 105 s
     assert ulog.flight_log(made_up).when("link lost") == pytest.approx(105.0)
+
+
+def test_the_motors_commands_are_kept_at_their_own_rate_too():
+    # the ground truth can be slower than the motors (50 Hz against 250 in my firmware's
+    # logs); self-tuning needs every command, not the ones nearest the truth's samples
+    made_up = topics()
+    te = np.arange(0, 10.0, 1 / 250) + 100.0
+    made_up["esc_status"] = {"timestamp": us(te)} | {
+        f"esc[{k}].esc_rpm": 600.0 + 10.0 * np.sin(2 * np.pi * 30.0 * te) for k in range(4)
+    }
+    log = ulog.flight_log(made_up)
+    t, speeds = log.esc
+    assert len(t) == len(te) and speeds.shape == (len(te), 4)
+    assert speeds[:, 0].max() - speeds[:, 0].min() == pytest.approx(20.0, abs=0.5)

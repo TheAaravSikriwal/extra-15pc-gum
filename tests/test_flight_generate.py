@@ -236,3 +236,15 @@ def test_my_firmware_gets_the_whole_drone_as_one_body():
     assert rotors[2][0] > 0 and rotors[2][1] < 0 and rotors[2][2] == pytest.approx(-0.016)
     assert lines["idle_rad_s"] == [round(0.15 * 930.0)]
     assert lines["max_rad_s"] == [pytest.approx(930.0)]
+
+
+def test_the_models_numbers_carry_its_whole_inertia_for_self_tuning():
+    from pcs14.flight.generate import firmware_airframe, model_info
+
+    model = made_up_model()
+    info = model_info(model)
+    line = next(x for x in firmware_airframe(model).splitlines() if x.startswith("inertia_kg_m2"))
+    assert info["inertia_kg_m2"] == pytest.approx([float(w) for w in line.split()[1:4]])
+    # each rotor's arm across, left positive (Gazebo's frame), from the center of gravity
+    assert len(info["rotor_y_m"]) == 4
+    assert sum(info["rotor_y_m"]) == pytest.approx(0.0, abs=0.01)

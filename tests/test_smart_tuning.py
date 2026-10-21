@@ -34,7 +34,8 @@ def test_the_gains_scale_with_the_inertia_they_were_set_for():
     assert tuning.torque_scale(found=0.05, believed=0.04) == pytest.approx(1.25)
 
 
-def made_up_roll(inertia=0.03, kf=8.5e-6, arm=0.148, dt=0.004, seconds=3.0, lag=0.02):
+def made_up_roll(inertia=0.03, kf=8.5e-6, arm=0.148, dt=0.004, seconds=3.0, lag=0.02,
+                 delay=0.0):  # fmt: skip
     """A drone rolling to its motors: the right pair and the left pair split by a doublet in
     their commanded speeds, the motors following those with a first-order lag, the roll rate
     integrated from their torque over the inertia."""
@@ -48,6 +49,7 @@ def made_up_roll(inertia=0.03, kf=8.5e-6, arm=0.148, dt=0.004, seconds=3.0, lag=
     for k in range(1, len(t)):
         actual[k] = actual[k - 1] + (asked[k] - actual[k - 1]) * dt / lag
     torque = kf * (actual**2 * y).sum(axis=1)
+    torque = np.interp(t - delay, t, torque)  # the command reaching the motors late
     rate = np.cumsum(torque / inertia) * dt
     return t, rate, asked, y
 
@@ -59,3 +61,40 @@ def test_the_inertia_comes_back_out_of_a_flight_log():
     # without the motors' lag the torque runs ahead of the turn, and the answer is off
     rough = tuning.identify_roll(t, rate, asked, motor_constant=8.5e-6, rotor_y=y, lag_s=0.0)
     assert abs(rough.inertia / 0.03 - 1) > abs(found.inertia / 0.03 - 1)
+
+
+def test_a_late_command_is_found_along_with_the_inertia():
+    # the log has each command when my firmware sent it; Gazebo turns the motors a few steps
+    # later, which looks like a bigger inertia if it's left out
+    t, rate, asked, y = made_up_roll(inertia=0.03, delay=0.032)
+    found = tuning.identify_roll_with_delay(t, rate, asked, motor_constant=8.5e-6, rotor_y=y,
+                                            lag_s=0.02)  # fmt: skip
+    assert found.delay_s == pytest.approx(0.032, abs=0.0041)
+    assert found.inertia == pytest.approx(0.03, rel=0.03)
+    on_time = tuning.identify_roll(t, rate, asked, motor_constant=8.5e-6, rotor_y=y, lag_s=0.02)
+    assert on_time.inertia > 1.05 * 0.03
+
+
+def test_the_doublets_give_the_inertia_with_a_trim_that_drifts():
+    # three doublets, motors that speed up faster than they slow down, commands that reach
+    # them 8 ms late, and a trim torque that wanders as the drone drifts (rotor drag): fitted
+    # over the doublets' own windows, each with its own offset and trend
+    dt, inertia, kf, arm = 0.004, 0.013, 1.58e-5, 0.1485
+    t = np.arange(0.0, 9.0, dt)
+    y = np.array([-arm, arm, arm, -arm])
+    windows, split = [], np.zeros_like(t)
+    for start in (1.0, 3.5, 6.0):
+        split += np.where((t >= start) & (t < start + 0.25), 25.0, 0.0)
+        split -= np.where((t >= start + 0.25) & (t < start + 0.5), 25.0, 0.0)
+        windows.append((start - 0.05, start + 0.8))
+    asked = np.stack([560.0 + split * np.sign(yy) for yy in y], axis=1)
+    late = np.stack([np.interp(t - 0.008, t, asked[:, k]) for k in range(4)], axis=1)
+    actual = tuning.lagged_asymmetric(t, late, up_s=0.0125, down_s=0.025)
+    trim = 0.002 * np.sin(2 * np.pi * t / 7.0)  # a torque the fit isn't told about
+    torque = kf * (actual**2 * y).sum(axis=1) + trim
+    rate = np.cumsum(torque / inertia) * dt
+    found = tuning.identify_roll_doublets(t, rate, asked, kf, y, windows, up_s=0.0125,
+                                          down_s=0.025)  # fmt: skip
+    assert found.inertia == pytest.approx(inertia, rel=0.03)
+    assert found.delay_s == pytest.approx(0.008, abs=0.0041)
+    assert found.fit > 0.99

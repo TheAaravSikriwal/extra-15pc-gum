@@ -216,6 +216,10 @@ def flight_log(topics, marks=()) -> FlightLog:
         q = np.column_stack([np.interp(t, ta, att[f"q[{k}]"]) for k in range(4)])
         attitude = enu_attitude(q)
     found = events(topics, t, rotors) + [(float(s), n) for s, n in marks]
+    esc = None
+    if "esc_status" in topics:
+        te = _seconds(topics["esc_status"])
+        esc = (te, rotor_speeds(topics, te))
     return FlightLog(
         t=t,
         position=position,
@@ -223,6 +227,7 @@ def flight_log(topics, marks=()) -> FlightLog:
         rotor_speed=rotors,
         events=sorted(found, key=lambda e: e[0]),
         attitude=attitude,
+        esc=esc,
     )
 
 

@@ -17,6 +17,10 @@ matrix: each runs when it's named.
   4 m/s (the script turns the wind's upward part on while the drone is in it) and a hover
   there. The detector finds the column by the thrust it saves. In Gazebo that's only the push
   on the body; on a real drone the rotors gain more, which is the momentum-theory number
+- roll doublet (all eight): 10 m up in altitude mode, three roll doublets on the stick (a
+  quarter stick each way for a quarter second), and self-tuning's fit of the roll inertia from
+  the gyro and the motors' commanded speeds, its dead time found along with it, against the
+  model's own inertia. Step 4's 15 degree steps made a poor excitation (off by 9 to 62%)
 - mapping run (V): V's camera pointed straight down (the bracket would need a mapping position),
   a lawnmower grid 30 m up over the scenery step 6 put out, every third frame kept, and the
   orthomosaic built from the frames and the log's poses (pcs14.smart.ortho)
@@ -820,6 +824,94 @@ def grade_flow(log, imu, c) -> list:
     ]  # fmt: skip
 
 
+# --- self-tuning --------------------------------------------------------------------------
+
+DOUBLET_HEIGHT_M = 10.0
+DOUBLET_STICK = 0.25  # of full stick: about 9 degrees asked
+DOUBLET_HALF_S = 0.25  # each way
+DOUBLET_REST_S = 2.0
+DOUBLETS = 3
+DOUBLET_BEFORE_S = 0.05  # each doublet's window: from just before it
+DOUBLET_AFTER_S = 0.3  # to a while after, as the drone settles
+TUNING_TOLERANCE = 0.15
+
+
+def doublet_params(c) -> dict:
+    return {"COM_RC_IN_MODE": 1}  # the sticks come over MAVLink, the way a joystick's do
+
+
+async def roll_doublet(s):
+    import contextlib
+
+    from pcs14.flight.scenarios import Aborted
+    from pcs14.flight.scenarios.basic import Sticks, land
+
+    await take_off(s, DOUBLET_HEIGHT_M)
+    async with Sticks(s) as sticks:
+        await s.clock.sleep(1.0)
+        for _ in range(5):
+            with contextlib.suppress(Exception):
+                await s.drone.manual_control.start_altitude_control()
+            if await s.clock.until(lambda: s.state.mode.endswith("ALTCTL"), 2.0):
+                break
+        else:
+            raise Aborted(f"it never went into altitude mode (it stayed in {s.state.mode})")
+        await s.clock.sleep(2.0)
+        for k in range(DOUBLETS):
+            s.mark(f"doublet {k} start")
+            await sticks.move(y=DOUBLET_STICK)
+            await s.clock.sleep(DOUBLET_HALF_S)
+            await sticks.move(y=-DOUBLET_STICK)
+            await s.clock.sleep(DOUBLET_HALF_S)
+            await sticks.move(y=0.0)
+            s.mark(f"doublet {k} end")
+            await s.clock.sleep(DOUBLET_REST_S)
+        await s.drone.action.hold()
+        await s.clock.sleep(2.0)
+        await land(s)
+
+
+def doublet_inertia(log, imu, c):
+    """Self-tuning's answer from the doublets: the gyro's roll rate on the IMU's own times, the
+    motors' commanded speeds, the model's motor constant, rotor arms and motor lags, fitted
+    over each doublet's own window (pcs14.smart.tuning.identify_roll_doublets)."""
+    import numpy as np
+
+    from pcs14.smart import tuning
+
+    windows = []
+    for k in range(DOUBLETS):
+        start, end = log.when(f"doublet {k} start"), log.when(f"doublet {k} end")
+        if start is None or end is None:
+            return None
+        windows.append((start - DOUBLET_BEFORE_S, end + DOUBLET_AFTER_S))
+    if not imu:
+        return None
+    t = np.array([sample.t for sample in imu])
+    inside = (t >= windows[0][0] - 1.0) & (t <= windows[-1][1] + 1.0)
+    t = t[inside]
+    rate = np.array([sample.gyro[0] for sample in imu])[inside]
+    # the commands at their own rate: the ground truth's 50 Hz would smooth away the fast
+    # changes the fit needs (Max read 13% low that way)
+    te, commands = log.esc if log.esc is not None else (log.t, log.rotor_speed)
+    speeds = np.column_stack([np.interp(t, te, commands[:, k]) for k in range(4)])
+    up, down = c.model.get("motor_lag_s", (0.0125, 0.025))
+    return tuning.identify_roll_doublets(t, rate, speeds, c.model["motor_constant"],
+                                         c.model["rotor_y_m"], windows, up, down)  # fmt: skip
+
+
+def grade_doublet(log, imu, c) -> list:
+    found = doublet_inertia(log, imu, c)
+    if found is None or "inertia_kg_m2" not in c.model:
+        return [grade.Finding("the doublets", False, None, None, "", "no doublets in the log")]
+    truth = c.model["inertia_kg_m2"][0]
+    off = found.inertia / truth - 1
+    words = (f"found {found.inertia:.5f} kg m^2 against the model's {truth:.5f}: {off:+.1%} "
+             f"(fit {found.fit:.2f}, the motors {found.delay_s * 1000:.0f} ms late)")  # fmt: skip
+    return [grade.Finding("roll inertia", abs(off) <= TUNING_TOLERANCE, off, TUNING_TOLERANCE,
+                          "", words)]  # fmt: skip
+
+
 SCENARIOS = (
     Scenario("land now", land_now, grade_land_now, budget_s=180.0),
     Scenario("back to start", back_to_start, grade_back_to_start, budget_s=180.0),
@@ -828,6 +920,7 @@ SCENARIOS = (
     Scenario("planned mission", planned_mission, grade_planned_mission, budget_s=600.0),
     Scenario("spiral descent", spiral_descent, grade_spiral, budget_s=240.0),
     Scenario("lift", lift, grade_lift, budget_s=240.0),
+    Scenario("roll doublet", roll_doublet, grade_doublet, budget_s=180.0, params=doublet_params),
     Scenario(
         "mapping run, box moved",
         mapping_run_moved,
