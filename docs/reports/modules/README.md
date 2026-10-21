@@ -4,7 +4,7 @@
 
 ## The verdict
 
-**pass.** 12 of 12 runs pass.
+**pass.** 20 of 20 runs pass.
 
 ## P: the parachute
 
@@ -57,6 +57,12 @@ The canopy's peak pull on the drone, for the structure track: the sim's, from Ga
 | P+C | 9.3 m/s | 40 N (1.8 g) | 171 N (7.9 g) |
 | max | 9.7 m/s | 43 N (1.9 g) | 186 N (8.0 g) |
 
+### The false-trigger replay on my firmware
+
+The safety monitor's reference triggers, replayed over the 79 healthy runs my firmware flew, where nothing fails on purpose: none fired. They stay in shadow mode anyway, until real flights show the same.
+
+Under the canopy the monitor's own tumble-tilt trigger fires too, logged only: the drone hangs at an angle from the chute's mount. By then the motors are already cut, so it changes nothing, but it's one more reason the triggers stay in shadow mode until real flights show what they see.
+
 ### The parachute rule
 
 Without P, my firmware won't go above 30 m. A take-off asked for 40 m:
@@ -86,9 +92,43 @@ The rate the link holds, by distance and the drone's height, over flat ground wi
 
 ![HaLow's range](stills/halow-wide.png)
 
-### The camera and the video
+In the sim, the ground station's link went through the model at the drone's distance while it flew 7 km out at 10 m and back. Its pilot's link and its companion computer's aren't HaLow, so it should fly on regardless:
 
-Live video at the rate HaLow holds: about 2 Mbps carries 720p at 30 frames a second, so the live view holds to the distance where the table drops under that, and full-resolution stills go when the link allows.
+| Combination | Where the link faded | The flight |
+|---|---|---|
+| V | under half got through from 5861 m, against the model's 5941 m | ended on the ground, 2 m from where it started |
+| mission | under half got through from 5895 m, against the model's 5937 m | ended on the ground, 1 m from where it started |
+| V+C | under half got through from 5953 m, against the model's 5926 m | ended on the ground, 2 m from where it started |
+| max | under half got through from 5891 m, against the model's 5945 m | ended on the ground, 1 m from where it started |
+
+### The live video
+
+What's left of the link for video at each distance, 30 m up: about 60% of the rate on the air carries data, less 0.1 Mbps of telemetry, encoded as H.264 in software the way the Pi 5 would (pcs14.modules.video). Full-resolution stills for mapping go when the link allows.
+
+| Distance | On the air | For video | Carries |
+|---|---|---|---|
+| 0.1 km | 7.20 Mbps | 4220 kbps | 720p at 30 frames a second |
+| 0.5 km | 7.20 Mbps | 4220 kbps | 720p at 30 frames a second |
+| 1 km | 7.20 Mbps | 4220 kbps | 720p at 30 frames a second |
+| 2 km | 4.30 Mbps | 2480 kbps | 720p at 30 frames a second |
+| 3 km | 2.20 Mbps | 1220 kbps | 480p at 30 frames a second |
+| 5 km | 0.72 Mbps | 332 kbps | 240p at 10 frames a second |
+| 8 km | 0.00 Mbps | 0 kbps | no video |
+
+### The camera
+
+V's camera (the Camera Module 3, 720p at 30 frames a second) on the model, flown 20 m up over a shed, some trees and a box, every third frame saved:
+
+| Combination | Frames | Rate | The flight |
+|---|---|---|---|
+| V | 1031 frames saved | 10.0 saved a second of the sim's, against 10 | ended on the ground, 0 m from where it started |
+| mission | 1031 frames saved | 10.0 saved a second of the sim's, against 10 | ended on the ground, 0 m from where it started |
+| V+C | 1031 frames saved | 10.0 saved a second of the sim's, against 10 | ended on the ground, 0 m from where it started |
+| max | 1031 frames saved | 10.0 saved a second of the sim's, against 10 | ended on the ground, 0 m from where it started |
+
+The camera scenario's own frames (V's Camera Module 3 in Gazebo, 20 m up over a shed, some trees and a box), encoded at those budgets. The frames were saved at 10 a second, so each clip gives every frame the bits it would get at 30. The clips stay out of the repo, like every video. The three look alike, and that's the sim flattering the link: Gazebo's world here is flat colors with no texture, which compresses to almost nothing. Real video, with grass and leaves moving, would need far more bits for the same picture, so the table's resolutions are the honest part, not the still.
+
+![What the laptop sees](stills/video-wide.png)
 
 ### The companion computer
 

@@ -135,6 +135,7 @@ async def run_one(
     session = Session(tools, model, params, exports, name, instance, speed, firmware=firmware)
     session.context = context
     session.world_file = scenario.world
+    session.camera = scenario.camera
     budget = scenario.budget_s(context) if callable(scenario.budget_s) else scenario.budget_s
     outcome = await fly(session, scenario.fly, budget, scenario.prepare)
     result = graded(scenario, outcome, context)

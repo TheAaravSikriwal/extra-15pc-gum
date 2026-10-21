@@ -144,7 +144,7 @@ Gazebo Harmonic and PX4, in WSL2.
    - the companion computer's jobs, which settle Pi 5 vs Jetson
 3. **C (claws):** only if a unique claw on an actual arm comes up. Grab and release, a sudden mass change, perching.
 
-**Done when:** each module passes its tests in every combination it's part of.
+**Done when:** each module passes its tests in every combination it's part of. *Done for P and V (2026-10-20): every P and V scenario passes in every combination it's part of, and the report has what the sims couldn't settle ([log](log/2026-10-20-modules-in-sim.md)). C waits on the claw conversation; the payload grab keeps passing in every C combination.*
 
 ## Step 7: Smart features in sim
 

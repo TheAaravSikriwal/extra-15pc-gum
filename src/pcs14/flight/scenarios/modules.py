@@ -13,6 +13,9 @@ loop is mine. None of them is in step 4's matrix: each runs when it's named.
   through the HaLow model (pcs14.flight.run.HalowLink): what reaches the laptop fades with
   distance as the model says, and the drone flies on regardless, because its pilot's link and
   its companion computer's aren't HaLow
+- camera (V): V's camera on the model (the Camera Module 3, 720p at 30 frames a second), a few
+  simple things along the way (a shed, some trees, a box), 20 m up and 60 m north at 5 m/s and
+  back, every third frame saved for the live video's encodes
 """
 
 import asyncio
@@ -278,6 +281,87 @@ def grade_halow_range(log, imu, c) -> list:
     return out
 
 
+# --- the camera ---------------------------------------------------------------------------
+
+CAMERA_HEIGHT_M = 20.0
+CAMERA_OUT_M = 60.0
+CAMERA_SPEED_MS = 5.0
+CAMERA_EVERY = 3  # of the camera's 30 frames a second: 10 a second saved
+# Gazebo's frame: x east, y north, z up; size in m, color as red, green, blue
+SCENERY = (
+    ("shed", (6.0, 25.0, 1.5), (4.0, 3.0, 3.0), (0.55, 0.45, 0.38)),
+    ("box", (-5.0, 40.0, 0.6), (1.2, 1.2, 1.2), (0.9, 0.31, 0.63)),
+    *((f"tree_{k}", (x, y, 2.5), (0.8, 0.8, 5.0), (0.2, 0.45, 0.25))
+      for k, (x, y) in enumerate(((-8, 15), (9, 50), (-3, 62), (12, 35), (-12, 30)))),
+)  # fmt: skip
+
+
+def scenery_sdf(name: str, position, size, color) -> str:
+    """A static box, for the camera to have something to look at."""
+    x, y, z = position
+    c = " ".join(f"{v:g}" for v in color) + " 1"
+    sx, sy, sz = size
+    return (f'<sdf version="1.9"><model name="{name}"><static>true</static>'
+            f"<pose>{x:g} {y:g} {z:g} 0 0 0</pose><link name='l'><visual name='v'>"
+            f"<geometry><box><size>{sx:g} {sy:g} {sz:g}</size></box></geometry>"
+            f"<material><ambient>{c}</ambient><diffuse>{c}</diffuse></material>"
+            "</visual></link></model></sdf>")  # fmt: skip
+
+
+async def camera(s):
+    from mavsdk.offboard import PositionNedYaw
+
+    from pcs14.flight.scenarios.basic import go_to, leave_offboard, offboard_here
+
+    for name, position, size, color in SCENERY:
+        # the spawn's own pose wins over the model's, so it goes in the spawn
+        await s.spawn_sdf(scenery_sdf(name, (0, 0, 0), size, color).replace("'", '"'), name,
+                          position)  # fmt: skip
+    folder = s.exports / "camera" / s.model
+    recorder = s.record_camera(folder, CAMERA_EVERY)
+    try:
+        await take_off(s, CAMERA_HEIGHT_M)
+        await offboard_here(s)
+        # facing north, the way it flies: Gazebo spawns the model facing east, which would have
+        # it fly sideways with the camera looking at empty ground
+        await s.drone.offboard.set_position_ned(PositionNedYaw(0, 0, -CAMERA_HEIGHT_M, 0.0))
+        await s.clock.until(lambda: abs(((s.state.heading + 180) % 360) - 180) < 3.0, 20.0)
+        s.mark("look")
+        await s.drone.offboard.set_position_ned(
+            PositionNedYaw(CAMERA_OUT_M, 0, -CAMERA_HEIGHT_M, 0.0))  # fmt: skip
+        await s.clock.until(lambda: s.state.north >= CAMERA_OUT_M - 1.0, 60.0)
+        # (the position setpoint has no speed in it: my firmware flies it at its own pace)
+        await s.clock.sleep(2.0)
+        await go_to(s, 0.0, 0.0, CAMERA_HEIGHT_M, tolerance=1.0)
+        await leave_offboard(s)
+        await s.drone.action.land()
+        await s.clock.until(lambda: not s.state.in_air, 90.0)
+    finally:
+        recorder.close()
+        s.result.notes["frames"] = list(recorder.saved)
+
+
+def grade_frames(times, every: int = CAMERA_EVERY, rate_hz: float = 30.0) -> list:
+    import numpy as np
+
+    count = len(times)
+    out = [grade.Finding("camera frames", count >= 50, count, 50, "",
+                         f"{count} frames saved")]  # fmt: skip
+    if count < 2:
+        return out
+    gaps = np.diff(np.asarray(times))
+    rate = 1.0 / float(np.median(gaps))
+    want = rate_hz / every
+    words = f"{rate:.1f} saved a second of the sim's, against {want:g}"
+    out.append(grade.Finding("camera rate", abs(rate - want) <= 0.1 * want, rate, want, "Hz",
+                             words))  # fmt: skip
+    return out
+
+
+def grade_camera(log, imu, c) -> list:
+    return grade_frames(c.notes.get("frames", [])) + [grade.ends_safely(log, 5.0)]
+
+
 SCENARIOS = (
     # no `failure` mark: the batch's trigger check reads the flight controller's IMU, which is
     # frozen here; grade_hung reads the monitor's own triggers instead
@@ -287,6 +371,7 @@ SCENARIOS = (
                healthy=False, failure="terminate") for h in DROP_HEIGHTS),
     Scenario("chute rule", chute_rule, grade_chute_rule, budget_s=240.0,
              params=chute_rule_params),
+    Scenario("camera", camera, grade_camera, budget_s=240.0, camera=True),
     Scenario("halow range", halow_range, grade_halow_range,
              budget_s=2 * HALOW_OUT_M / HALOW_SPEED_MS + 300.0),
 )  # fmt: skip

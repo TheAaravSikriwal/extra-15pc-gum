@@ -320,6 +320,32 @@ def payload_sdf(mass: float, size: float = 0.08) -> str:
 
 FINE_STEP = 0.002  # s, the physics step of the fine world (pcs14-fine.sdf)
 
+# Module V's camera, the Raspberry Pi Camera Module 3 (66 degrees across with its standard lens),
+# at the 720p the live video carries, just ahead of the body (it reaches 0.17 m forward) and
+# tipped 30 degrees down. It only goes on a
+# model when a scenario asks for it: PX4's server config loads Gazebo's rendering sensors
+# system, so a camera on every model would render in every run
+CAMERA = """      <sensor name="camera" type="camera">
+        <pose>0.18 0 0.0 0 0.5236 0</pose>
+        <always_on>1</always_on>
+        <update_rate>30</update_rate>
+        <camera>
+          <horizontal_fov>1.15192</horizontal_fov>
+          <image><width>1280</width><height>720</height><format>R8G8B8</format></image>
+          <clip><near>0.05</near><far>500</far></clip>
+        </camera>
+      </sensor>
+"""
+
+
+def with_camera(sdf: str) -> str:
+    """A model's SDF with V's camera on its body (base_link), if it hasn't one already."""
+    if 'type="camera"' in sdf:
+        return sdf
+    start = sdf.index('<link name="base_link">')
+    end = sdf.index("    </link>", start)
+    return sdf[:end] + CAMERA + sdf[end:]
+
 
 def world_sdf(name: str = "pcs14", wind=(0.0, 0.0, 0.0), step: float = 0.004) -> str:
     """PX4's default world, plus the wind our drag plugin starts from. `step` is the physics

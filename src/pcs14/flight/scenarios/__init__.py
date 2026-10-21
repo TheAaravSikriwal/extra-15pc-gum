@@ -49,6 +49,7 @@ class Scenario:
     prepare: Callable | None = None  # async (Session) -> None: sets up the world before PX4
     failure: str | None = None  # the mark where something fails on purpose, for the monitor
     world: str = "pcs14"  # the world's file; pcs14-fine has a 2 ms physics step
+    camera: bool = False  # V's camera on the model (pcs14.flight.generate.with_camera)
 
 
 def scenarios() -> dict[str, Scenario]:

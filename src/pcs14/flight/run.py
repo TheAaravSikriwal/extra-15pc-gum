@@ -439,6 +439,39 @@ class HalowLink:
             self._transport.close()
 
 
+class CameraRecorder:
+    """Saves a Gazebo camera's frames as PNGs, every `every`th one, with each one's sim time in
+    frames.txt: what the live video and the mapping runs start from."""
+
+    def __init__(self, topics, topic: str, folder: Path, every: int = 3):
+        self.folder = Path(folder)
+        self.folder.mkdir(parents=True, exist_ok=True)
+        self.every, self.seen, self.saved = every, 0, []
+        self._lock = threading.Lock()
+        topics.node.subscribe(topics._kind("gz.msgs.Image"), topic, self._on_image)
+
+    def _on_image(self, message):
+        import numpy as np
+        from PIL import Image
+
+        with self._lock:
+            self.seen += 1
+            if (self.seen - 1) % self.every:
+                return
+            t = message.header.stamp.sec + message.header.stamp.nsec * 1e-9
+            k = len(self.saved)
+        pixels = np.frombuffer(message.data, dtype=np.uint8)
+        frame = pixels.reshape(message.height, message.width, -1)[:, :, :3]
+        Image.fromarray(frame).save(self.folder / f"frame-{k:04d}.png")
+        with self._lock:
+            self.saved.append(t)
+
+    def close(self):
+        with self._lock:
+            times = list(self.saved)
+        (self.folder / "frames.txt").write_text("".join(f"{t:.3f}\n" for t in times), "utf-8")
+
+
 class Clock:
     """PX4's clock, s since it booted, from the IMU timestamps MAVSDK passes on. In the sim
     that's Gazebo's time, so the scripts keep time at any speed. If it stands still for
@@ -606,6 +639,7 @@ class Session:
         self.drone = None
         self.context = None  # pcs14.flight.scenarios.Context, for the script
         self.world_file = WORLD  # the world's file: pcs14, or pcs14-fine for a finer step
+        self.camera = False  # V's camera on the model, for the scenarios that look
         self._processes: list = []
         self._tasks: list = []
         self._outputs: list = []
@@ -691,6 +725,22 @@ class Session:
                 return
             await asyncio.sleep(1.0)
         raise SimError("Gazebo's world never came up; see gz.log")
+
+    def _model_sdf(self, home: Path) -> Path:
+        """The model's SDF, or with the camera on it, a copy in the run's folder (its meshes
+        are model:// paths, so they still resolve)."""
+        if not self.camera:
+            return home / "model.sdf"
+        from pcs14.flight.generate import with_camera
+
+        copy = self.folder / "model-camera.sdf"
+        copy.write_text(with_camera((home / "model.sdf").read_text(encoding="utf-8")), "utf-8")
+        return copy
+
+    def record_camera(self, folder: Path, every: int = 3) -> "CameraRecorder":
+        """Starts saving every `every`th frame of the model's camera into `folder`."""
+        topic = f"/world/{WORLD}/model/{self.entity}/link/base_link/sensor/camera/image"
+        return CameraRecorder(self.gz(), topic, folder, every)
 
     async def spawn(self, sdf_file, name: str, position=(0.0, 0.0, 0.0)):
         """Puts a model from an SDF file into the world (Gazebo's own frame: x east, y north,
@@ -787,7 +837,7 @@ class Session:
         info = json.loads((home / "model.json").read_text())
         if not world_ready:
             await self.wait_for_world()
-        await self.spawn(home / "model.sdf", self.entity, (0.0, 0.0, info["lift_off_m"]))
+        await self.spawn(self._model_sdf(home), self.entity, (0.0, 0.0, info["lift_off_m"]))
         if self.speed != 1:
             await self.gz_service(
                 f"/world/{WORLD}/set_physics", "gz.msgs.Physics", "gz.msgs.Boolean",

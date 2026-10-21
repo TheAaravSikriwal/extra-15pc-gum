@@ -43,6 +43,10 @@ def made_up_exports(tmp_path):
     result(exports, "P", "hung flight controller", notes=hung, marks=[[41.0, "chute fired"]])
     result(exports, "max", "drop from 10 m")
     result(exports, "base", "chute rule", passed=False)
+    result(exports, "V", "camera")
+    quiet = [{"check": "false triggers", "passed": True, "value": 0, "limit": 0, "unit": "",
+              "detail": "the safety monitor's triggers fired: none", "extra": None}]  # fmt: skip
+    result(exports, "V", "hover", findings=quiet)  # one of step 4's, on my firmware
     return exports
 
 
@@ -52,7 +56,9 @@ def test_it_collects_every_step_6_run_and_works_out_the_jolt(tmp_path):
         ("hung flight controller", "P"),
         ("drop from 10 m", "max"),
         ("chute rule", "base"),
+        ("camera", "V"),
     }
+    assert run.healthy_runs == 1 and run.false_triggers == ()
     (jolt,) = run.jolts
     assert jolt.setup == "P" and jolt.bound_n > jolt.sim_n > 0
     assert report.verdict(run) == "fail"  # the chute rule missed
@@ -62,7 +68,9 @@ def test_the_report_says_what_it_found_and_what_it_cant_prove(tmp_path):
     run = report.collect(made_up_exports(tmp_path))
     text = report.render(run, generated="2026-10-20")
     for words in ("# Modules in sim", "## P: the parachute", "## V: vision and nav",
-                  "## C: the claws", "## What it can't prove", "Raspberry Pi 5"):  # fmt: skip
+                  "## C: the claws", "## What it can't prove", "Raspberry Pi 5",
+                  "over the 1 healthy runs", "720p at 30 frames a second",
+                  "### The camera"):  # fmt: skip
         assert words in text, words
     written = report.write(made_up_exports(tmp_path / "again"), tmp_path / "out", "2026-10-20")
     names = {p.name for p in written}

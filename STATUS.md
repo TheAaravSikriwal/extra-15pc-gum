@@ -1,7 +1,7 @@
 # Status
 
 **Last updated:** 2026-10-20, on the PC (Windows and WSL2 Ubuntu)
-**Step:** steps 4 (the flight sim) and 5 (my firmware) are done, and so is the project site. Step 6 (the modules in sim) is under way.
+**Step:** steps 4 to 6 are done (step 6 except C, the claws), and so is the project site. Step 7, the smart features, is next.
 **Main machine:** the PC, with WSL2 Ubuntu 24.04 for the Linux tools
 
 ## Right now
@@ -17,7 +17,7 @@ Where to look: the live plan in the [README](README.md#the-plan), the steps in t
 | 3. Electrical | Done 2026-10-19. 438 checks pass in all eight combinations ([report](docs/reports/electrical/README.md)) |
 | 4. Flight sim (PX4) | Done 2026-10-20. 62 of 78 runs pass; the misses are three findings ([report](docs/reports/flight-sim/README.md), [log](docs/log/2026-10-20-flight-sim-final.md)) |
 | 5. My firmware | Done 2026-10-20. 66 of 78 runs pass, every one PX4 passes among them ([log](docs/log/2026-10-20-firmware-flies.md)) |
-| 6. Modules in sim | Under way: spec and plan written, the safety monitor fires the chute, the hung flight controller passes, HaLow and the opening jolt modeled ([spec](docs/specs/2026-10-20-modules-in-sim.md), [plan](docs/plans/2026-10-20-modules-in-sim.md)) |
+| 6. Modules in sim | Done 2026-10-20 for P and V; C waits on the claw conversation. Every P and V scenario passes ([report](docs/reports/modules/README.md), [log](docs/log/2026-10-20-modules-in-sim.md)) |
 | Aero side track | The visual half done: FluidX3D's cruise, crosswind and hover, now with frames along each run. The numbers wait for OpenFOAM |
 | Project site | Done 2026-10-20: the drone in 3D, the spec sheet, the wiring, every flight played back, a page per step, the tunnel, what the sims can't prove ([log](docs/log/2026-10-20-project-site.md)) |
 
@@ -27,22 +27,24 @@ Where to look: the live plan in the [README](README.md#the-plan), the steps in t
 
 **Step 5, my firmware.** C++17: a core with no hardware in it, layers for the sim, the ARK FPV and the safety monitor. It speaks PX4's MAVLink and writes PX4's log format, so the flight sim's runner flies it in PX4's place and the same graders grade it. Rate, self-level, altitude, position, take-off, hold, land, return and offboard; PX4's failsafes by name; the geofence; pre-arm checks that include the safety monitor; the current cap with the XT60's heat limit; the fuel gauge. The ARK FPV's drivers go as far as host tests take them. The ground station talks to it in the sim.
 
-**Step 6 so far.** The safety monitor fires the chute itself now, on the pilot's switch, motors cut first, and only where P is fitted. With my flight controller frozen at 40 m in P, the monitor cut 0.29 s later, the pilot's chute went a second after the hang, and the drone settled at 4.1 m/s with 27 m to spare. HaLow's link model (Morse Micro's numbers for the chip on Heltec's card) holds 7.2 Mbps out to about 1.2 km and its slowest rate to about 5 km, 30 m up over flat ground with a 10 dB margin.
+**Step 6.** The safety monitor fires the chute itself now, on the pilot's switch, motors cut first, and only where P is fitted. With my flight controller frozen at 40 m in P, the monitor cut 0.29 s later, the pilot's chute went a second after the hang, and the drone settled at 4.1 m/s with 27 m to spare. Drops from 10 m up all saved, but the height the chute needs rests on its unpublished opening time: 5 m lost at 1 s, 11 m at 2 s. The opening jolt: the sim's 2 g against the textbook bound's 8 to 12 g, which the structure track designs to. HaLow's link model (Morse Micro's numbers for the chip on Heltec's card) holds 7.2 Mbps out to about 1.2 km and its slowest rate to about 5 km, 30 m up over flat ground; in the sim the ground station's link faded within 1.5% of the model, and the drone flew on. V's camera renders in Gazebo inside WSL. The companion computer stays the Pi 5.
 
 **Offline?** Study from [docs/learning.md](docs/learning.md).
 
 ## Up next
 
-1. **Step 6:** the hung flight controller in every P combination, the drop heights in Max, the parachute rule in the sim, the opening jolt from those drops, HaLow in the sim's relay, the camera, and the modules report.
-2. **OpenFOAM** for the wind tunnel's numbers.
-3. **Step 7, the smart features,** once step 6's report is in.
+1. **Step 7, the smart features:** the spec and plan, then the features. The wind estimate and the battery warning, the Meshtastic relay's link, self-tuning's identification and the mission checker already have their math and tests; the local model (Qwen2.5 7B through Ollama) wrote a plan from plain English that the checker passed, and the checker refused one that went over 400 ft.
+2. **Step 8, the build package.**
+3. **The side tracks:** the structure (beam math first, since there's no CalculiX here), OpenFOAM for the wind tunnel's numbers.
 
 ## Waiting on me
 
 - **Two design decisions from step 4:** should P (the chute) be in every combination, since a dead motor without it loses the drone? Should Base get an optical flow sensor, so a GPS failure isn't a blind descent? Both add weight to a design with little margin. Step 5 weakened the case for optical flow in the sim (my firmware's blind descents end 4 to 6 m away, PX4's 22 to 36 m), but a real IMU drifts more than Gazebo's.
 - **A safety rule to confirm:** a safety monitor cut stays latched for the rest of the flight, clearing only on the ground, disarmed, with the kill switch off. That's how it's built; it's my call to confirm. The monitor's chute release (new in step 6) latches the same way.
 - **The FluidX3D fork:** the wind tunnel stills stay off the repo until my modified FluidX3D is public, as its license asks for any results I post.
-- **Fruity Chutes:** ask for the Harrier release servo's voltage range and draw (the design runs on a stand-in, Hitec's HS-55).
+- **Fruity Chutes:** ask for the Harrier release servo's voltage range and draw (the design runs on a stand-in, Hitec's HS-55), and how long the canopy takes to fill: the lowest height the chute saves the drone from rests on it.
+- **The claws (C):** the roadmap holds C until a unique claw on an actual arm comes up. That conversation is mine.
+- **Installs that need sudo:** OpenFOAM and CalculiX in WSL, for the aero and structure side tracks' numbers.
 - **The HaLow card (step 6):** Heltec's SPI card has no working Pi 5 report; its SDIO version (on Heltec's HT-HR01 carrier) was reported working once, and USB adapters work through an OpenWrt backport.
 - **The ARM compiler on the PC,** if I want to build the H743 image locally (`sudo apt install gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib` in WSL). CI builds it either way.
 

@@ -3,6 +3,178 @@
  "verdict": "pass",
  "runs": [
   {
+   "scenario": "camera",
+   "setup": "V",
+   "passed": true,
+   "findings": [
+    {
+     "check": "camera frames",
+     "passed": true,
+     "value": 1031,
+     "limit": 50,
+     "unit": "",
+     "detail": "1031 frames saved",
+     "extra": null
+    },
+    {
+     "check": "camera rate",
+     "passed": true,
+     "value": 10.000000000000213,
+     "limit": 10.0,
+     "unit": "Hz",
+     "detail": "10.0 saved a second of the sim's, against 10",
+     "extra": null
+    },
+    {
+     "check": "no fly-away",
+     "passed": true,
+     "value": 0.10395325975268709,
+     "limit": 5.0,
+     "unit": "m",
+     "detail": "ended on the ground, 0 m from where it started",
+     "extra": null
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "camera",
+   "setup": "mission",
+   "passed": true,
+   "findings": [
+    {
+     "check": "camera frames",
+     "passed": true,
+     "value": 1031,
+     "limit": 50,
+     "unit": "",
+     "detail": "1031 frames saved",
+     "extra": null
+    },
+    {
+     "check": "camera rate",
+     "passed": true,
+     "value": 10.000000000000213,
+     "limit": 10.0,
+     "unit": "Hz",
+     "detail": "10.0 saved a second of the sim's, against 10",
+     "extra": null
+    },
+    {
+     "check": "no fly-away",
+     "passed": true,
+     "value": 0.09827011298342925,
+     "limit": 5.0,
+     "unit": "m",
+     "detail": "ended on the ground, 0 m from where it started",
+     "extra": null
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "camera",
+   "setup": "V+C",
+   "passed": true,
+   "findings": [
+    {
+     "check": "camera frames",
+     "passed": true,
+     "value": 1031,
+     "limit": 50,
+     "unit": "",
+     "detail": "1031 frames saved",
+     "extra": null
+    },
+    {
+     "check": "camera rate",
+     "passed": true,
+     "value": 10.000000000000213,
+     "limit": 10.0,
+     "unit": "Hz",
+     "detail": "10.0 saved a second of the sim's, against 10",
+     "extra": null
+    },
+    {
+     "check": "no fly-away",
+     "passed": true,
+     "value": 0.10836888276566639,
+     "limit": 5.0,
+     "unit": "m",
+     "detail": "ended on the ground, 0 m from where it started",
+     "extra": null
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "camera",
+   "setup": "max",
+   "passed": true,
+   "findings": [
+    {
+     "check": "camera frames",
+     "passed": true,
+     "value": 1031,
+     "limit": 50,
+     "unit": "",
+     "detail": "1031 frames saved",
+     "extra": null
+    },
+    {
+     "check": "camera rate",
+     "passed": true,
+     "value": 10.000000000000213,
+     "limit": 10.0,
+     "unit": "Hz",
+     "detail": "10.0 saved a second of the sim's, against 10",
+     "extra": null
+    },
+    {
+     "check": "no fly-away",
+     "passed": true,
+     "value": 0.09791185006386029,
+     "limit": 5.0,
+     "unit": "m",
+     "detail": "ended on the ground, 0 m from where it started",
+     "extra": null
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none",
+     "extra": null
+    }
+   ]
+  },
+  {
    "scenario": "chute rule",
    "setup": "base",
    "passed": true,
@@ -311,6 +483,142 @@
    ]
   },
   {
+   "scenario": "halow range",
+   "setup": "V",
+   "passed": true,
+   "findings": [
+    {
+     "check": "link fades where the model says",
+     "passed": true,
+     "value": 5860.902350167379,
+     "limit": 5940.730238857668,
+     "unit": "m",
+     "detail": "under half got through from 5861 m, against the model's 5941 m",
+     "extra": null
+    },
+    {
+     "check": "no fly-away",
+     "passed": true,
+     "value": 1.517925589170372,
+     "limit": 5.0,
+     "unit": "m",
+     "detail": "ended on the ground, 2 m from where it started",
+     "extra": null
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "halow range",
+   "setup": "mission",
+   "passed": true,
+   "findings": [
+    {
+     "check": "link fades where the model says",
+     "passed": true,
+     "value": 5895.402838624756,
+     "limit": 5936.863681423172,
+     "unit": "m",
+     "detail": "under half got through from 5895 m, against the model's 5937 m",
+     "extra": null
+    },
+    {
+     "check": "no fly-away",
+     "passed": true,
+     "value": 1.4761173316836267,
+     "limit": 5.0,
+     "unit": "m",
+     "detail": "ended on the ground, 1 m from where it started",
+     "extra": null
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "halow range",
+   "setup": "V+C",
+   "passed": true,
+   "findings": [
+    {
+     "check": "link fades where the model says",
+     "passed": true,
+     "value": 5952.575202416752,
+     "limit": 5926.0025889734725,
+     "unit": "m",
+     "detail": "under half got through from 5953 m, against the model's 5926 m",
+     "extra": null
+    },
+    {
+     "check": "no fly-away",
+     "passed": true,
+     "value": 1.5868078460879653,
+     "limit": 5.0,
+     "unit": "m",
+     "detail": "ended on the ground, 2 m from where it started",
+     "extra": null
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none",
+     "extra": null
+    }
+   ]
+  },
+  {
+   "scenario": "halow range",
+   "setup": "max",
+   "passed": true,
+   "findings": [
+    {
+     "check": "link fades where the model says",
+     "passed": true,
+     "value": 5891.04785881176,
+     "limit": 5945.080170434107,
+     "unit": "m",
+     "detail": "under half got through from 5891 m, against the model's 5945 m",
+     "extra": null
+    },
+    {
+     "check": "no fly-away",
+     "passed": true,
+     "value": 1.2661158931697925,
+     "limit": 5.0,
+     "unit": "m",
+     "detail": "ended on the ground, 1 m from where it started",
+     "extra": null
+    },
+    {
+     "check": "false triggers",
+     "passed": true,
+     "value": 0,
+     "limit": 0,
+     "unit": "",
+     "detail": "the safety monitor's triggers fired: none",
+     "extra": null
+    }
+   ]
+  },
+  {
    "scenario": "hung flight controller",
    "setup": "P",
    "passed": true,
@@ -574,6 +882,8 @@
   }
  },
  "companion": "Raspberry Pi 5 (4 GB)",
+ "healthy_runs": 79,
+ "false_triggers": [],
  "unproven": [
   "The canopy's timing. Fruity Chutes publishes no ejection or opening time, so the 0.2 s and 1.0 s the sim uses are my guesses, and the lowest height the chute saves the drone from rests on them (the table under the drop heights).",
   "The opening jolt. The sim's canopy grows in a straight line and never overshoots, which real canopies do as they fill, so its number is low. The bound uses Knacke's infinite-mass opening coefficient, which is high for a drone this light under a canopy this big. The real number is between them.",

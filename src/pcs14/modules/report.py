@@ -10,13 +10,15 @@ from pathlib import Path
 import numpy as np
 
 from pcs14.flight import grade
+from pcs14.flight.batch import load_results
 from pcs14.flight.drag import Chute
 from pcs14.modules import chute as chute_math
-from pcs14.modules import companion, halow
+from pcs14.modules import companion, halow, video
 
 HUNG = "hung flight controller"
 RULE = "chute rule"
 RANGE = "halow range"
+CAMERA = "camera"
 OWN_TRIGGER = "monitor's own trigger"
 DROP_PREFIX = "drop from "
 OPENING_TIMES_S = (0.5, 1.0, 1.5, 2.0, 3.0)
@@ -83,6 +85,9 @@ class ModulesRun:
     opening: tuple  # (opening_s, chute_math.Drop) for Max under the Harrier
     max_mass_kg: float
     canopy_area_m2: float
+    healthy_runs: int = 0  # my firmware's, where nothing fails on purpose
+    video: bool = False  # the camera's frames got encoded for the side-by-side still
+    false_triggers: tuple = ()  # (scenario, setup, detail) where the triggers fired anyway
 
 
 def _model(exports: Path, setup: str) -> dict:
@@ -91,7 +96,7 @@ def _model(exports: Path, setup: str) -> dict:
 
 
 def _is_step6(name: str) -> bool:
-    return name in (HUNG, RULE, RANGE) or name.startswith(DROP_PREFIX)
+    return name in (HUNG, RULE, RANGE, CAMERA) or name.startswith(DROP_PREFIX)
 
 
 def collect(exports) -> ModulesRun:
@@ -118,7 +123,14 @@ def collect(exports) -> ModulesRun:
     area = heaviest.get("chute", {}).get("canopy_area_m2", 1.93)
     ejection = heaviest.get("chute", {}).get("ejection_s", 0.2)
     opening = tuple((s, chute_math.drop(Chute(area, ejection, s), mass)) for s in OPENING_TIMES_S)
-    return ModulesRun(tuple(runs), jolts, opening, mass, area)
+    healthy, fired = 0, []
+    for r in load_results(exports, firmware="mine"):
+        for f in r.findings:
+            if f.check == "false triggers":
+                healthy += 1
+                if f.value:
+                    fired.append((r.scenario, r.setup, f.detail))
+    return ModulesRun(tuple(runs), jolts, opening, mass, area, healthy, tuple(fired))
 
 
 def _jolt(run: Run, model: dict) -> Jolt | None:
@@ -232,6 +244,19 @@ def _parachute(run: ModulesRun) -> list[str]:
             out.append(f"| {j.setup} | {j.speed_ms:.1f} m/s | {j.sim_n:.0f} N ({j.sim_g:.1f} g) | "
                        f"{j.bound_n:.0f} N ({j.bound_g:.1f} g) |")  # fmt: skip
         out += [""]
+    out += ["### The false-trigger replay on my firmware", ""]
+    if run.false_triggers:
+        out += [f"The safety monitor's triggers fired in {len(run.false_triggers)} of the "
+                f"{run.healthy_runs} healthy runs:", ""]  # fmt: skip
+        out += [f"- {s} in {c}: {d}" for s, c, d in run.false_triggers]
+    else:
+        out += [f"The safety monitor's reference triggers, replayed over the {run.healthy_runs} "
+                "healthy runs my firmware flew, where nothing fails on purpose: none fired. "
+                "They stay in shadow mode anyway, until real flights show the same."]  # fmt: skip
+    out += ["", "Under the canopy the monitor's own tumble-tilt trigger fires too, logged only: "
+            "the drone hangs at an angle from the chute's mount. By then the motors are already "
+            "cut, so it changes nothing, but it's one more reason the triggers stay in shadow "
+            "mode until real flights show what they see.", ""]  # fmt: skip
     rule = [r for r in run.runs if r.scenario == RULE]
     if rule:
         out += ["### The parachute rule", "",
@@ -264,10 +289,35 @@ def _vision(run: ModulesRun) -> list[str]:
         for r in flown:
             out.append(f"| {r.setup} | {_cell(r.finding('link fades where the model says'))} | "
                        f"{_cell(r.finding('no fly-away'))} |")  # fmt: skip
-    out += ["", "### The camera and the video", "",
-            "Live video at the rate HaLow holds: about 2 Mbps carries 720p at 30 frames a "
-            "second, so the live view holds to the distance where the table drops under that, "
-            "and full-resolution stills go when the link allows.", "",
+    out += ["", "### The live video", "",
+            "What's left of the link for video at each distance, 30 m up: about 60% of the "
+            "rate on the air carries data, less 0.1 Mbps of telemetry, encoded as H.264 in "
+            "software the way the Pi 5 would (pcs14.modules.video). Full-resolution stills for "
+            "mapping go when the link allows.", "",
+            "| Distance | On the air | For video | Carries |", "|---|---|---|---|"]  # fmt: skip
+    for row in video.at_distances(HALOW_DISTANCES_M, 30.0):
+        out.append(f"| {row.distance_m / 1000:g} km | {row.phy_mbps:.2f} Mbps | "
+                   f"{row.kbps:.0f} kbps | {row.carries} |")  # fmt: skip
+    shot = [r for r in run.runs if r.scenario == CAMERA]
+    if shot:
+        out += ["", "### The camera", "",
+                "V's camera (the Camera Module 3, 720p at 30 frames a second) on the model, "
+                "flown 20 m up over a shed, some trees and a box, every third frame saved:", "",
+                "| Combination | Frames | Rate | The flight |", "|---|---|---|---|"]  # fmt: skip
+        for r in shot:
+            cells = [_cell(r.finding(k)) for k in ("camera frames", "camera rate", "no fly-away")]
+            out.append(f"| {r.setup} | " + " | ".join(cells) + " |")
+    if run.video:
+        out += ["", "The camera scenario's own frames (V's Camera Module 3 in Gazebo, 20 m up "
+                "over a shed, some trees and a box), encoded at those budgets. The frames were "
+                "saved at 10 a second, so each clip gives every frame the bits it would get at "
+                "30. The clips stay out of the repo, like every video. The three look alike, "
+                "and that's the sim flattering the link: Gazebo's world here is flat colors "
+                "with no texture, which compresses to almost nothing. Real video, with grass "
+                "and leaves moving, would need far more bits for the same picture, so the "
+                "table's resolutions are the honest part, not the still.", "",
+                "![What the laptop sees](stills/video-wide.png)"]  # fmt: skip
+    out += ["",
             "### The companion computer", "", companion.verdict().why, "",
             "| Board | What | Found | Source |", "|---|---|---|---|"]  # fmt: skip
     for b in companion.BOARDS:
@@ -289,6 +339,8 @@ def to_data(run: ModulesRun, generated: str) -> dict:
         "halow": {f"{h:g}": {f"{d}": halow.Link().rate_mbps(d, h) for d in HALOW_DISTANCES_M}
                   for h in HALOW_HEIGHTS_M},
         "companion": companion.verdict().pick,
+        "healthy_runs": run.healthy_runs,
+        "false_triggers": [list(x) for x in run.false_triggers],
         "unproven": list(UNPROVEN),
     }  # fmt: skip
 
@@ -343,6 +395,55 @@ def halow_still(path: Path, size: str = "wide") -> Path:
     return path
 
 
+def video_still(frames: Path, clips: Path, path: Path, at_s: float = 44.0,
+                size: str = "wide") -> Path | None:  # fmt: skip
+    """The camera scenario's frames encoded at what HaLow holds at 1, 3 and 5 km, and the same
+    moment from each, side by side. The clips go to `clips` (not the repo: no videos there)."""
+    import bisect
+    import subprocess
+
+    from PIL import Image
+
+    from pcs14.report import charts
+
+    listed = frames / "frames.txt"
+    if video.ffmpeg() is None or not listed.is_file():
+        return None
+    times = [float(x) for x in listed.read_text(encoding="utf-8").split()]
+    # the clip's own time of the moment at `at_s` s of the sim's clock: frames at 10 a second
+    offset = min(bisect.bisect_left(times, at_s), max(len(times) - 1, 0)) / video.SAVED_FPS
+    clips.mkdir(parents=True, exist_ok=True)
+    panels = []
+    for c in video.comparison():
+        name = f"halow-{c.distance_m / 1000:g}km"
+        clip = video.encode(frames, clips / f"{name}.mp4", kbps=max(c.kbps_at_10, 50),
+                            fps=video.SAVED_FPS, height=c.lines)  # fmt: skip
+        grab = clips / f"{name}.png"
+        subprocess.run([video.ffmpeg(), "-y", "-loglevel", "error", "-ss", f"{offset:.2f}",
+                        "-i", str(clip), "-frames:v", "1", str(grab)], check=True)  # fmt: skip
+        panels.append((c, Image.open(grab).convert("RGB")))
+    canvas = charts.Canvas("What the laptop sees", "The live video at the rate HaLow holds, "
+                           "30 m up over flat ground", made_up=False, size=size)  # fmt: skip
+    (ax,) = canvas.axes
+    ax.set_axis_off()
+    width = 640
+    sheet = Image.new("RGB", (width * len(panels) + 20 * (len(panels) - 1), 360), (11, 11, 11))
+    for k, (_, im) in enumerate(panels):
+        sheet.paste(im.resize((width, 360), Image.Resampling.NEAREST), (k * (width + 20), 0))
+    ax.imshow(sheet)
+    fonts = charts._fonts()
+    for k, (c, _) in enumerate(panels):
+        ax.text((k + 0.5) * (width + 20), 395, f"{c.distance_m / 1000:g} km: {c.row.carries}, "
+                f"{c.row.kbps:.0f} kbps", ha="center", va="top", fontsize=13,
+                color=charts._c("text"), family=fonts["body"])  # fmt: skip
+    canvas.headline(f"{panels[-1][0].row.kbps:.0f} kbps",
+                    "at 5 km, and it holds up here because the sim's world is flat colors. "
+                    "Real video, grass and leaves moving, needs far more bits for the same "
+                    "picture.")  # fmt: skip
+    canvas.save(path)
+    return path
+
+
 def write(exports, out, generated: str) -> list[Path]:
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
@@ -353,6 +454,14 @@ def write(exports, out, generated: str) -> list[Path]:
     for size in STILL_SIZES:
         drawn.append(opening_still(run, stills / f"opening-{size}.png", size))
         drawn.append(halow_still(stills / f"halow-{size}.png", size))
+    frames = Path(exports) / "camera" / "pcs14_v"
+    clips = Path(exports).parent / "modules" / "video"
+    seen = video_still(frames, clips, stills / "video-wide.png")
+    if seen is not None:
+        drawn.append(seen)
+        from dataclasses import replace
+
+        run = replace(run, video=True)
     (out / "README.md").write_bytes(render(run, generated).encode("utf-8"))
     (out / "modules.json").write_bytes(
         (json.dumps(to_data(run, generated), indent=1, default=float) + "\n").encode()

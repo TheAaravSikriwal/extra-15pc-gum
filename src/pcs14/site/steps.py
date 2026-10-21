@@ -49,7 +49,7 @@ LEARNING = {
     "electrical": (15,),
     "flight-sim": (8, 1),
     "firmware": (9, 10, 11),
-    "modules": (8,),
+    "modules": (8, 17),
     "smart": (10,),
     "build": (12, 13),
     "structure": (16,),

@@ -8,7 +8,7 @@ import numpy as np
 import pytest
 
 from pcs14.flight.drag import Chute
-from pcs14.flight.generate import FlightModel, RotorSpot, world_sdf
+from pcs14.flight.generate import FlightModel, RotorSpot, with_camera, world_sdf
 from pcs14.flight.motor import MotorModel
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -62,6 +62,21 @@ def test_the_model_is_valid_sdf_with_everything_px4_needs():
     assert [m.findtext("motorNumber") for m in motors] == ["0", "1", "2", "3"]
     drag = next(p for p in root.iter("plugin") if p.get("filename") == "pcs14-drag")
     assert drag.find("chute") is not None
+
+
+def test_the_camera_goes_on_the_body_only_when_a_scenario_asks_for_it():
+    plain = made_up_model().sdf()
+    assert "camera" not in plain  # it would render in every run otherwise
+    root = ET.fromstring(with_camera(plain))
+    base = next(link for link in root.iter("link") if link.get("name") == "base_link")
+    (camera,) = [s for s in base.iter("sensor") if s.get("type") == "camera"]
+    # the Camera Module 3's 66 degrees across, at 1280 x 720 and 30 frames a second
+    assert float(camera.findtext("camera/horizontal_fov")) == pytest.approx(
+        math.radians(66), abs=1e-3
+    )
+    assert camera.findtext("camera/image/width") == "1280"
+    assert camera.findtext("update_rate") == "30"
+    assert with_camera(with_camera(plain)).count('type="camera"') == 1  # only ever one
 
 
 def test_no_chute_and_no_payload_unless_the_module_is_there():

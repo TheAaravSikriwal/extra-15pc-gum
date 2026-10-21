@@ -26,6 +26,9 @@ def test_each_new_scenario_flies_where_it_means_something():
     assert report.applies("chute rule", setup("V", ("V",)))
     assert report.applies("halow range", setup("V", ("V",)))
     assert not report.applies("halow range", setup("P", ("P",)))  # no HaLow without V
+    assert report.applies("camera", setup("V", ("V",)))
+    assert not report.applies("camera", setup("C", ("C",)))
+    assert scenarios()["camera"].camera and not scenarios()["hover"].camera
     assert not report.applies("chute rule", setup("mission", ("V", "P")))
 
 
@@ -107,6 +110,19 @@ def test_the_link_fades_where_the_model_says():
     found = {f.check: f for f in m.grade_link(seconds)}
     assert found["link fades where the model says"].passed
     assert abs(found["link fades where the model says"].value - edge) / edge < 0.03
+
+
+def test_the_camera_grade_wants_frames_at_the_rate_asked_for(tmp_path):
+    times = [10.0 + 0.1 * k for k in range(120)]
+    found = {f.check: f for f in m.grade_frames(times, every=3)}
+    assert found["camera frames"].passed and found["camera frames"].value == 120
+    assert abs(found["camera rate"].value - 10.0) < 0.01
+    assert not m.grade_frames(times[:10], every=3)[0].passed  # too few to be a recording
+
+
+def test_the_scenery_is_static_models_along_the_path():
+    sdf = m.scenery_sdf("shed", (30.0, 2.0, 1.5), size=(4.0, 3.0, 3.0), color=(0.5, 0.45, 0.4))
+    assert "<static>true</static>" in sdf and "<box>" in sdf and "shed" in sdf
 
 
 def test_a_monitor_that_never_cut_fails():

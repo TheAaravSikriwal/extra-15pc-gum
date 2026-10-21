@@ -236,6 +236,8 @@ I asked for the open items to keep moving without stopping to ask, so these were
 - **Step 6's scenarios fly my firmware only:** the hung flight controller needs my monitor in the loop, and the drop heights and the jolt are about the drone and the chute. They stay out of step 4's matrix and run when they're named.
 - **The opening jolt gets two numbers:** the sim's, from Gazebo's ground truth during the opening, and the textbook bound, Cx q CdS with Knacke's 1.7 for a solid canopy at infinite mass. The structure track designs to the bound.
 - **HaLow is modeled from Morse Micro's numbers** for the MM6108 module (Heltec publishes no sensitivity for its card), line of sight over flat ground at 915 MHz with the ground's reflection, and a 10 dB fade margin for everything that leaves out.
+- **The camera goes on a model only when a scenario asks for it** (V's Camera Module 3, 720p at 30 frames a second, just ahead of the body, tipped 30 degrees down), as a copy of the model's SDF in the run's folder. PX4's server config loads Gazebo's rendering system for every run, so a camera on every model would render in every batch.
+- **The live video's budget is 60% of HaLow's rate on the air, less 0.1 Mbps of telemetry,** a rough figure for 802.11's overhead at these rates, encoded as H.264 in software the way the Pi 5 would.
 - **The companion computer stays the Pi 5,** with the numbers behind it: neither it nor the Jetson Orin Nano has a hardware video encoder, the jobs that want a GPU run on the laptop, and visual-inertial odometry has been run on older ARM boards than the Pi 5's.
 
 ### What the electrical build changed (2026-10-18)

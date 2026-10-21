@@ -241,6 +241,20 @@ How parts bend and break, what a finite element model actually is, and why vibra
 - [ ] **Read:** Singiresu S. Rao, *Mechanical Vibrations* (Pearson). Natural frequencies and resonance.
 - [ ] **Do:** the FreeCAD FEM workbench tutorials on the FreeCAD wiki ([wiki.freecad.org](https://wiki.freecad.org)), which run CalculiX underneath.
 
+## 17. Parachutes and radio links
+
+*Came up in step 6, the modules in sim (2026-10-20).*
+
+Two things the modules needed that nothing before them did. A parachute's opening shock: how hard a canopy pulls as it fills, which depends on how fast the drone is falling, how big the canopy is and how fast it inflates, and which the chute's mount has to survive. And a radio link budget: the power that leaves one antenna, what the path takes away, and whether what's left clears the receiver's sensitivity at the rate you want. Past a couple of kilometers near the ground, the ground's own reflection starts cancelling the direct signal, which is why the drone's height changes HaLow's range so much.
+
+- [ ] **Read:** T. W. Knacke, *Parachute Recovery Systems Design Manual* (Para Publishing, 1992). The opening-force chapter is where the coefficient in the jolt's bound comes from.
+- [ ] **Read:** Theodore S. Rappaport, *Wireless Communications: Principles and Practice* (Prentice Hall), the chapter on large-scale path loss: free space, the two-ray ground reflection model, and link budgets.
+- [ ] **Read:** the Wi-Fi Alliance's page on Wi-Fi HaLow ([wi-fi.org](https://www.wi-fi.org/discover-wi-fi/wi-fi-halow)), for what 802.11ah is for and why it trades rate for range.
+
+One more for topic 10: GPS-free flight runs on visual-inertial odometry, the camera and the IMU fused into a position, and that's the companion computer's one hard job.
+
+- [ ] **Read:** Jeffrey Delmerico and Davide Scaramuzza, "A Benchmark Comparison of Monocular Visual-Inertial Odometry Algorithms for Flying Robots" (ICRA 2018), which ran the open-source pipelines on boards like the ones a drone can carry.
+
 ## Coming up later
 
 These get filled in properly when I get close to them.
