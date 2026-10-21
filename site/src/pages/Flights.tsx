@@ -19,8 +19,9 @@ export function Flights({ load }: { load?: LoadOptions }) {
     <main className="wide">
       <h1>Every flight</h1>
       <p>
-        Twelve scenarios in eight module combinations, flown in Gazebo by PX4 and by my own
-        firmware, graded the same way. Pick any run to watch it.
+        Every scenario from steps 4 to 7, flown in Gazebo. Step 4's twelve were flown by PX4 and by
+        my own firmware in all eight module combinations, graded the same way; the modules' and
+        the smart features' runs from steps 6 and 7 by mine. Pick any run to watch it.
       </p>
       {["px4", "mine"].map((firmware) => {
         const runs = data.runs.filter((r) => r.firmware === firmware);
@@ -32,7 +33,7 @@ export function Flights({ load }: { load?: LoadOptions }) {
             </h2>
             <Matrix
               title={`${NAMES[firmware]} runs`}
-              rows={data.scenarios}
+              rows={data.scenarios.filter((s) => runs.some((r) => r.scenario === s))}
               columns={data.setups}
               cell={(scenario, setup) =>
                 runs.some((r) => r.scenario === scenario && r.setup === setup)

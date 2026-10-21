@@ -45,6 +45,30 @@
    ],
    "title": "Run",
    "type": "object"
+  },
+  "ScenarioAbout": {
+   "additionalProperties": false,
+   "properties": {
+    "name": {
+     "title": "Name",
+     "type": "string"
+    },
+    "step": {
+     "title": "Step",
+     "type": "integer"
+    },
+    "what": {
+     "title": "What",
+     "type": "string"
+    }
+   },
+   "required": [
+    "name",
+    "step",
+    "what"
+   ],
+   "title": "ScenarioAbout",
+   "type": "object"
   }
  },
  "additionalProperties": false,
@@ -59,6 +83,13 @@
     "type": "string"
    },
    "title": "Scenarios",
+   "type": "array"
+  },
+  "about": {
+   "items": {
+    "$ref": "#/$defs/ScenarioAbout"
+   },
+   "title": "About",
    "type": "array"
   },
   "setups": {
@@ -79,6 +110,7 @@
  "required": [
   "schema_version",
   "scenarios",
+  "about",
   "setups",
   "runs"
  ],

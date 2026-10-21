@@ -6,12 +6,18 @@ import { Flights, runLink } from "./Flights";
 
 const INDEX: FlightsData = {
   schema_version: 1,
-  scenarios: ["hover", "dead motor"],
+  scenarios: ["hover", "dead motor", "spiral descent"],
+  about: [
+    { name: "hover", step: 4, what: "Ten meters up." },
+    { name: "dead motor", step: 4, what: "One motor stops." },
+    { name: "spiral descent", step: 7, what: "Down on a helix." },
+  ],
   setups: ["base", "P"],
   runs: [
     { scenario: "hover", setup: "base", firmware: "px4", flown: true, passed: true, file: "f1" },
     { scenario: "dead motor", setup: "base", firmware: "px4", flown: true, passed: false, file: "f2" },
     { scenario: "hover", setup: "base", firmware: "mine", flown: true, passed: true, file: "f3" },
+    { scenario: "spiral descent", setup: "base", firmware: "mine", flown: true, passed: true, file: "f4" },
   ],
 };
 
@@ -24,8 +30,10 @@ test("both firmwares get a matrix, and a flown cell links to its run", async () 
   const px4 = await screen.findByRole("region", { name: "PX4 v1.17.0" });
   expect(within(px4).getByText("PX4 v1.17.0: 1 of 2 pass")).toBeInTheDocument();
   expect(within(px4).getAllByRole("link")[0]).toHaveAttribute("href", runLink("base", "hover"));
+  expect(within(px4).queryByText("spiral descent")).toBeNull(); // a row only where it flew
   const mine = screen.getByRole("region", { name: "My firmware" });
-  expect(within(mine).getByText("My firmware: 1 of 1 pass")).toBeInTheDocument();
+  expect(within(mine).getByText("My firmware: 2 of 2 pass")).toBeInTheDocument();
+  expect(within(mine).getByText("spiral descent")).toBeInTheDocument();
   expect(runLink("V+C", "dead motor")).toBe("#/flights/V%2BC/dead%20motor");
 });
 

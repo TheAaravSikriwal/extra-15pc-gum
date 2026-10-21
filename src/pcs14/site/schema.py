@@ -155,11 +155,18 @@ class Run(_Shape):
     file: str | None = None  # its playback file, when its log is there
 
 
+class ScenarioAbout(_Shape):
+    name: str
+    step: int  # the step that flew it first: 4 (both firmwares), 6 or 7 (mine)
+    what: str  # what it tests, in a line
+
+
 class Flights(_Shape):
     """flights.json: every run of both firmwares, for the matrices and the playback pages."""
 
     schema_version: int
     scenarios: list[str]
+    about: list[ScenarioAbout]
     setups: list[str]
     runs: list[Run]
 

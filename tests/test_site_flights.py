@@ -62,3 +62,31 @@ def test_the_index_lists_every_run_of_both_firmwares(tmp_path):
     assert one["firmware"] == "mine"
     assert (tmp_path / "flights" / "base-hover-mine.js").exists()  # for pages opened from disk
     assert "flights.json" in [p.name for p in written]
+
+
+def test_every_scenario_from_steps_4_to_7_says_what_it_tests():
+    names = flights.ALL_SCENARIOS
+    for name in ("hover", "payload grab", "hung flight controller", "drop from 10 m",
+                 "spiral descent", "mapping run, box moved"):  # fmt: skip
+        assert name in names
+    assert names.index("payload grab") < names.index("chute rule") < names.index("lift")
+    steps = {name: flights.about(name).step for name in names}
+    assert steps["hover"] == 4 and steps["halow range"] == 6 and steps["flow run"] == 7
+    for name in names:
+        what = flights.about(name).what
+        assert what.endswith(".") and "—" not in what  # a sentence, and no em dashes
+
+
+def test_the_index_carries_the_later_steps_runs_and_what_each_tests(tmp_path):
+    spiral = ScenarioResult("spiral descent", "base", True, (DRIFT,))
+    moved = ScenarioResult("mapping run, box moved", "V", True, (DRIFT,))
+    results = {"px4": [RESULT], "mine": [RESULT, spiral, moved]}
+    flights.write_flights(tmp_path, results, lambda *_: (made_up_log(), [], RESULT))
+    index = schema.Flights.model_validate_json((tmp_path / "flights.json").read_text())
+    assert [r.scenario for r in index.runs if r.firmware == "mine"] == [
+        "hover", "spiral descent", "mapping run, box moved"]  # fmt: skip
+    files = [r.file for r in index.runs]
+    assert "flights/v-mapping-run-box-moved-mine.json" in files  # no commas in a file name
+    about = {a.name: a for a in index.about}
+    assert about["spiral descent"].step == 7 and about["spiral descent"].what
+    assert index.scenarios == list(flights.ALL_SCENARIOS)

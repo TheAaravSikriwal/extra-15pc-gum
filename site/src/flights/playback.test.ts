@@ -73,6 +73,7 @@ test("a matrix cell says how a firmware's run went", () => {
   const flights: Flights = {
     schema_version: 1,
     scenarios: ["hover"],
+    about: [{ name: "hover", step: 4, what: "Ten meters up." }],
     setups: ["base", "P"],
     runs: [{ scenario: "hover", setup: "base", firmware: "mine", flown: true, passed: false }],
   };

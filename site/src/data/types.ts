@@ -131,9 +131,16 @@ export interface Run {
   file?: string | null;
 }
 
+export interface ScenarioAbout {
+  name: string;
+  step: number; // the step that flew it first: 4 (both firmwares), 6 or 7 (mine)
+  what: string;
+}
+
 export interface Flights {
   schema_version: number;
   scenarios: string[];
+  about: ScenarioAbout[];
   setups: string[];
   runs: Run[];
 }
@@ -416,7 +423,8 @@ export const FIELDS = {
     "events",
   ],
   Run: ["scenario", "setup", "firmware", "flown", "passed", "file"],
-  Flights: ["schema_version", "scenarios", "setups", "runs"],
+  ScenarioAbout: ["name", "step", "what"],
+  Flights: ["schema_version", "scenarios", "about", "setups", "runs"],
   Step: [
     "id",
     "number",
