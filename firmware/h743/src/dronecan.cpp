@@ -8,11 +8,15 @@ namespace pcs14::dronecan {
 namespace {
 bool should_accept(const CanardInstance*, uint64_t* signature, uint16_t data_type_id,
                    CanardTransferType type, uint8_t) {
-  if (type == CanardTransferTypeBroadcast && data_type_id == kNodeStatusId) {
+  if (type != CanardTransferTypeBroadcast) return false;
+  if (data_type_id == kNodeStatusId) {
     *signature = kNodeStatusSignature;
-    return true;
+  } else if (data_type_id == kFix2Id) {
+    *signature = kFix2Signature;
+  } else {
+    return false;  // everything else waits for its decoder
   }
-  return false;  // everything else waits for its decoder
+  return true;
 }
 
 void on_reception(CanardInstance* ins, CanardRxTransfer* transfer) {
@@ -47,12 +51,64 @@ NodeStatus decode_node_status(const uint8_t* bytes, size_t size) {
   return s;
 }
 
+bool decode_fix2(const CanardRxTransfer* t, Fix& out) {
+  // the DSDL's layout, in bits: two uint56 timestamps, uint3 time standard, void13, uint8 leap
+  // seconds, int37 longitude and latitude (1e-8 degrees), int27 heights (mm), float32[3]
+  // velocity, uint6 sats, uint2 status, uint4 mode, uint6 sub mode, then float16[<=36]
+  // covariance with a 6-bit length, float16 pdop, and an ECEF tail this doesn't need
+  constexpr uint32_t kFixedBits = 384;
+  if (t->payload_len * 8u < kFixedBits + 6) return false;
+  Fix f;
+  int64_t lon = 0, lat = 0;
+  int32_t h_ellipsoid = 0, h_msl = 0;
+  float v[3] = {};
+  canardDecodeScalar(t, 0, 56, false, &f.timestamp_us);
+  canardDecodeScalar(t, 56, 56, false, &f.gnss_timestamp_us);
+  canardDecodeScalar(t, 112, 3, false, &f.time_standard);
+  canardDecodeScalar(t, 128, 8, false, &f.leap_seconds);
+  canardDecodeScalar(t, 136, 37, true, &lon);
+  canardDecodeScalar(t, 173, 37, true, &lat);
+  canardDecodeScalar(t, 210, 27, true, &h_ellipsoid);
+  canardDecodeScalar(t, 237, 27, true, &h_msl);
+  for (uint32_t k = 0; k < 3; ++k) canardDecodeScalar(t, 264 + 32 * k, 32, true, &v[k]);
+  canardDecodeScalar(t, 360, 6, false, &f.sats);
+  canardDecodeScalar(t, 366, 2, false, &f.status);
+  canardDecodeScalar(t, 368, 4, false, &f.mode);
+  canardDecodeScalar(t, 372, 6, false, &f.sub_mode);
+  uint8_t n = 0;
+  canardDecodeScalar(t, 378, 6, false, &n);
+  if (n > 36 || t->payload_len * 8u < kFixedBits + 16u * (n + 1u)) return false;
+  for (uint32_t k = 0; k < n; ++k) {
+    uint16_t half = 0;
+    canardDecodeScalar(t, kFixedBits + 16 * k, 16, false, &half);
+    f.covariance[k] = canardConvertFloat16ToNativeFloat(half);
+  }
+  f.covariance_count = n;
+  uint16_t pdop = 0;
+  canardDecodeScalar(t, kFixedBits + 16u * n, 16, false, &pdop);
+  f.pdop = canardConvertFloat16ToNativeFloat(pdop);
+  f.longitude_deg = static_cast<double>(lon) * 1e-8;
+  f.latitude_deg = static_cast<double>(lat) * 1e-8;
+  f.height_ellipsoid_m = static_cast<float>(h_ellipsoid) * 0.001f;
+  f.height_msl_m = static_cast<float>(h_msl) * 0.001f;
+  f.velocity = {v[0], v[1], v[2]};
+  out = f;
+  return true;
+}
+
 Node::Node(uint8_t node_id) {
   canardInit(&canard_, arena_, sizeof(arena_), on_reception, should_accept, this);
   canardSetLocalNodeID(&canard_, node_id);
 }
 
 void Node::on_transfer(CanardRxTransfer* t) {
+  if (t->data_type_id == kFix2Id) {
+    if (decode_fix2(t, fix_)) {
+      have_fix_ = true;
+      fix_at_us_ = now_us_;
+    }
+    return;
+  }
   if (t->data_type_id != kNodeStatusId || t->payload_len < kNodeStatusBytes) return;
   uint8_t bytes[kNodeStatusBytes];
   for (size_t k = 0; k < kNodeStatusBytes; ++k) {

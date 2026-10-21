@@ -1,6 +1,7 @@
 // DroneCAN on the ARK FPV's CAN bus: two nodes, both libcanard, talking frame by frame.
 #include <doctest/doctest.h>
 
+#include <algorithm>
 #include <vector>
 
 #include "pcs14/h743/dronecan.hpp"
@@ -55,4 +56,55 @@ TEST_CASE("it sends its own status once a second, and a node gone quiet for 3 s 
   CHECK(fc.status(kGpsId)->health == Health::Critical);
   CHECK(fc.alive(kGpsId, 3900000));
   CHECK_FALSE(fc.alive(kGpsId, 4100000));  // DroneCAN's offline timeout
+}
+
+TEST_CASE("the GPS's Fix2 decodes from the frames pydronecan makes for it") {
+  // made with pydronecan (dronecan/pydronecan at 092d09cb) from the DSDL (dronecan/DSDL at
+  // b4653c7a): latitude 42.3456789, longitude -71.12345678, from node 10, transfer ID 5
+  const uint8_t frames[][8] = {
+      {0xe9, 0x0e, 0x15, 0xcd, 0x5b, 0x07, 0x00, 0x85},
+      {0x00, 0x00, 0xb1, 0x68, 0xde, 0x3a, 0x00, 0x25},
+      {0x00, 0x00, 0x40, 0x00, 0x12, 0xb2, 0x37, 0x05},
+      {0x12, 0x58, 0xf6, 0x93, 0x03, 0x37, 0xe0, 0x25},
+      {0x0e, 0x4c, 0x00, 0x03, 0x75, 0x90, 0x00, 0x05},
+      {0x00, 0x00, 0xc0, 0x3f, 0x00, 0x00, 0x80, 0x25},
+      {0xbe, 0x00, 0x00, 0x00, 0x3e, 0x47, 0x10, 0x05},
+      {0x43, 0x00, 0x38, 0x00, 0x34, 0x00, 0x44, 0x25},
+  };
+  const uint8_t last[3] = {0x00, 0x3d, 0x45};
+  Node fc(kFlightControllerId);
+  for (const auto& bytes : frames) {
+    Frame f;
+    f.id = 0x1804270a | CANARD_CAN_FRAME_EFF;
+    std::copy(bytes, bytes + 8, f.data.begin());
+    f.size = 8;
+    fc.receive(f, 2000000);
+  }
+  CHECK(fc.fix() == nullptr);  // not until the last frame
+  Frame f;
+  f.id = 0x1804270a | CANARD_CAN_FRAME_EFF;
+  std::copy(last, last + 3, f.data.begin());
+  f.size = 3;
+  fc.receive(f, 2000000);
+  const Fix* fix = fc.fix();
+  REQUIRE(fix != nullptr);
+  CHECK(fix->timestamp_us == 123456789u);
+  CHECK(fix->gnss_timestamp_us == 987654321u);
+  CHECK(fix->leap_seconds == 18);
+  CHECK(fix->latitude_deg == doctest::Approx(42.3456789).epsilon(1e-12));
+  CHECK(fix->longitude_deg == doctest::Approx(-71.12345678).epsilon(1e-12));
+  CHECK(fix->height_ellipsoid_m == doctest::Approx(12.345f));
+  CHECK(fix->height_msl_m == doctest::Approx(45.678f));
+  CHECK(fix->velocity.x == doctest::Approx(1.5f));
+  CHECK(fix->velocity.y == doctest::Approx(-0.25f));
+  CHECK(fix->velocity.z == doctest::Approx(0.125f));
+  CHECK(fix->sats == 17);
+  CHECK(fix->status == kFix3d);
+  CHECK(fix->mode == 1);
+  CHECK(fix->sub_mode == 1);
+  REQUIRE(fix->covariance_count == 3);
+  CHECK(fix->covariance[2] == doctest::Approx(4.0f));
+  CHECK(fix->pdop == doctest::Approx(1.25f));
+  CHECK(fc.fix_fresh(2500000));
+  CHECK_FALSE(fc.fix_fresh(3500000));  // a GPS that stops talking for a second is stale
 }

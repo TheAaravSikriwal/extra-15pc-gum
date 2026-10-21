@@ -6,9 +6,12 @@
 // flight controller knows the GPS and the module nodes are there and healthy. A node that has
 // said nothing for 3 s is offline, as the spec has it.
 //
-// Next: the GPS's own messages (uavcan.equipment.gnss.Fix2 and the compass and barometer on the
-// same board). They're multi-frame, and their transfer CRC starts from each type's signature,
-// which comes from the DSDL compiler; until that's in, only NodeStatus is decoded.
+// It also takes the GPS's fix, uavcan.equipment.gnss.Fix2, decoded field by field at the DSDL's
+// bit offsets with libcanard's scalar decoder. The data type IDs and signatures come from
+// pydronecan reading the DSDL (dronecan/pydronecan at 092d09cb, dronecan/DSDL at b4653c7a), and
+// the tests check the decoder against frames pydronecan made. Next: the compass and barometer on
+// the GPS's board (MagneticFieldStrength2, StaticPressure), for when the flight controller's own
+// aren't enough.
 #pragma once
 
 #include <array>
@@ -19,12 +22,16 @@ extern "C" {
 #include "canard.h"
 }
 
+#include "pcs14/math.hpp"
+
 namespace pcs14::dronecan {
 
 constexpr uint16_t kNodeStatusId = 341;  // uavcan.protocol.NodeStatus
-// its signature, as libcanard's original demo had it; a single-frame transfer like this one
-// carries no CRC, so it never reaches the wire
-constexpr uint64_t kNodeStatusSignature = 0x0f0868d0c1a7c6f1ULL;
+constexpr uint64_t kNodeStatusSignature = 0x0f0868d0c1a7c6f1ULL;  // pydronecan's, from the DSDL
+constexpr uint16_t kFix2Id = 1063;  // uavcan.equipment.gnss.Fix2
+constexpr uint64_t kFix2Signature = 0xca41e7000f37435fULL;
+// a GPS sends 5 to 10 fixes a second; a second without one is stale
+constexpr uint64_t kFixStaleUs = 1000000;
 constexpr size_t kNodeStatusBytes = 7;
 constexpr uint64_t kStatusEveryUs = 1000000;
 constexpr uint64_t kOfflineUs = 3000000;
@@ -49,6 +56,23 @@ struct NodeStatus {
 };
 
 void encode(const NodeStatus& s, uint8_t* out);  // kNodeStatusBytes
+
+constexpr uint8_t kFixNone = 0, kFixTimeOnly = 1, kFix2d = 2, kFix3d = 3;  // Fix2's status
+
+struct Fix {
+  uint64_t timestamp_us = 0, gnss_timestamp_us = 0;
+  uint8_t time_standard = 0, leap_seconds = 0;
+  double latitude_deg = 0, longitude_deg = 0;  // from 1e-8 degree counts: about a millimeter
+  float height_ellipsoid_m = 0, height_msl_m = 0;
+  Vec3 velocity;  // m/s, north-east-down
+  uint8_t sats = 0, status = kFixNone, mode = 0, sub_mode = 0;
+  float covariance[36] = {};
+  uint8_t covariance_count = 0;
+  float pdop = 0;
+};
+
+// a whole Fix2 transfer's payload into a Fix; false if it's too short to be one
+bool decode_fix2(const CanardRxTransfer* t, Fix& out);
 NodeStatus decode_node_status(const uint8_t* bytes, size_t size);
 
 struct Frame {
@@ -72,6 +96,10 @@ class Node {
 
   bool alive(uint8_t node_id, uint64_t now_us) const;
   const NodeStatus* status(uint8_t node_id) const;  // the last one heard, or nullptr
+  const Fix* fix() const { return have_fix_ ? &fix_ : nullptr; }  // the last fix heard
+  bool fix_fresh(uint64_t now_us) const {
+    return have_fix_ && now_us - fix_at_us_ <= kFixStaleUs;
+  }
 
   // libcanard's callbacks, routed here through its user pointer
   void on_transfer(CanardRxTransfer* t);
@@ -89,6 +117,9 @@ class Node {
   bool started_ = false;
   uint64_t now_us_ = 0;
   std::array<Heard, 128> heard_{};
+  Fix fix_;
+  bool have_fix_ = false;
+  uint64_t fix_at_us_ = 0;
 };
 
 }  // namespace pcs14::dronecan
