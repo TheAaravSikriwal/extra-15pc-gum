@@ -640,6 +640,7 @@ class Session:
         self.context = None  # pcs14.flight.scenarios.Context, for the script
         self.world_file = WORLD  # the world's file: pcs14, or pcs14-fine for a finer step
         self.camera = False  # V's camera on the model, for the scenarios that look
+        self.camera_pitch_deg = 30.0
         self._processes: list = []
         self._tasks: list = []
         self._outputs: list = []
@@ -734,7 +735,8 @@ class Session:
         from pcs14.flight.generate import with_camera
 
         copy = self.folder / "model-camera.sdf"
-        copy.write_text(with_camera((home / "model.sdf").read_text(encoding="utf-8")), "utf-8")
+        sdf = (home / "model.sdf").read_text(encoding="utf-8")
+        copy.write_text(with_camera(sdf, self.camera_pitch_deg), "utf-8")
         return copy
 
     def record_camera(self, folder: Path, every: int = 3) -> "CameraRecorder":

@@ -50,6 +50,7 @@ class Scenario:
     failure: str | None = None  # the mark where something fails on purpose, for the monitor
     world: str = "pcs14"  # the world's file; pcs14-fine has a 2 ms physics step
     camera: bool = False  # V's camera on the model (pcs14.flight.generate.with_camera)
+    camera_pitch_deg: float = 30.0  # tipped down this far: the bracket's 30, or 90 for mapping
 
 
 def scenarios() -> dict[str, Scenario]:

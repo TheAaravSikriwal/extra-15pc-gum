@@ -338,13 +338,18 @@ CAMERA = """      <sensor name="camera" type="camera">
 """
 
 
-def with_camera(sdf: str) -> str:
-    """A model's SDF with V's camera on its body (base_link), if it hasn't one already."""
+CAMERA_PITCH_DEG = 30.0  # the bracket's, for the live video
+
+
+def with_camera(sdf: str, pitch_deg: float = CAMERA_PITCH_DEG) -> str:
+    """A model's SDF with V's camera on its body (base_link), tipped `pitch_deg` down, if it
+    hasn't one already. A mapping run points it straight down (90)."""
     if 'type="camera"' in sdf:
         return sdf
     start = sdf.index('<link name="base_link">')
     end = sdf.index("    </link>", start)
-    return sdf[:end] + CAMERA + sdf[end:]
+    camera = CAMERA.replace("0 0.5236 0</pose>", f"0 {math.radians(pitch_deg):.4f} 0</pose>")
+    return sdf[:end] + camera + sdf[end:]
 
 
 def world_sdf(name: str = "pcs14", wind=(0.0, 0.0, 0.0), step: float = 0.004) -> str:

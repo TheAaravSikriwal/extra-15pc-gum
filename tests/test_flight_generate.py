@@ -77,6 +77,7 @@ def test_the_camera_goes_on_the_body_only_when_a_scenario_asks_for_it():
     assert camera.findtext("camera/image/width") == "1280"
     assert camera.findtext("update_rate") == "30"
     assert with_camera(with_camera(plain)).count('type="camera"') == 1  # only ever one
+    assert "0 1.5708 0</pose>" in with_camera(plain, pitch_deg=90.0)  # straight down, mapping
 
 
 def test_no_chute_and_no_payload_unless_the_module_is_there():

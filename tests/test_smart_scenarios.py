@@ -27,6 +27,8 @@ def test_the_landing_modes_fly_in_base_and_stay_out_of_step_4s_matrix():
     assert report.applies("planned mission", setup("mission", ("V", "P")))
     assert report.applies("spiral descent", setup("base"))
     assert report.applies("lift", setup("base"))
+    assert report.applies("mapping run", setup("V", ("V",)))
+    assert scenarios()["mapping run"].camera_pitch_deg == 90.0
     assert not report.applies("planned mission", setup("V", ("V",)))
     assert not report.applies("turn back", setup("base"))
     for name in smart.LANDING:

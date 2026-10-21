@@ -17,6 +17,9 @@ matrix: each runs when it's named.
   4 m/s (the script turns the wind's upward part on while the drone is in it) and a hover
   there. The detector finds the column by the thrust it saves. In Gazebo that's only the push
   on the body; on a real drone the rotors gain more, which is the momentum-theory number
+- mapping run (V): V's camera pointed straight down (the bracket would need a mapping position),
+  a lawnmower grid 30 m up over the scenery step 6 put out, every third frame kept, and the
+  orthomosaic built from the frames and the log's poses (pcs14.smart.ortho)
 - planned mission (mission): the plan `pcs14 smart` wrote from plain English (a local model,
   then the checker), approved here by the test script, which says so in the log, since on the
   drone the approving is mine. A plan the checker refused never gets approved, so never flies
@@ -24,6 +27,7 @@ matrix: each runs when it's named.
 
 import asyncio
 import math
+from pathlib import Path
 
 from pcs14.flight import grade
 from pcs14.flight.scenarios import Scenario
@@ -395,6 +399,92 @@ def grade_lift(log, imu, c) -> list:
     ]  # fmt: skip
 
 
+# --- the mapping run ----------------------------------------------------------------------
+
+MAP_HEIGHT_M = 30.0
+MAP_LINES_EAST = (-14.0, -2.0, 10.0)  # m: the grid's lines, flown north and south in turn
+MAP_NORTH = (5.0, 70.0)
+MAP_AREA = ((-25.0, 25.0), (0.0, 75.0))  # east, north: the map's edges
+MAP_M_PER_PX = 0.1
+
+
+async def mapping_run(s):
+    from pcs14.flight.scenarios.modules import CAMERA_EVERY, SCENERY, scenery_sdf
+
+    for name, position, size, color in SCENERY:
+        await s.spawn_sdf(scenery_sdf(name, (0, 0, 0), size, color).replace("'", '"'), name,
+                          position)  # fmt: skip
+    folder = s.exports / "camera" / f"{s.model}-mapping"
+    recorder = s.record_camera(folder, CAMERA_EVERY)
+    try:
+        await take_off(s, MAP_HEIGHT_M)
+        await offboard_here(s)
+        s.mark("grid start")
+        for k, east in enumerate(MAP_LINES_EAST):
+            a, b = MAP_NORTH if k % 2 == 0 else MAP_NORTH[::-1]
+            await go_to(s, a, east, MAP_HEIGHT_M, tolerance=1.0)
+            await go_to(s, b, east, MAP_HEIGHT_M, tolerance=1.0)
+        s.mark("grid end")
+        await go_to(s, 0.0, 0.0, MAP_HEIGHT_M, tolerance=1.0)
+        await leave_offboard(s)
+        await s.drone.action.land()
+        await _down(s)
+    finally:
+        recorder.close()
+        s.result.notes["frames"] = list(recorder.saved)
+        s.result.notes["frames folder"] = folder.as_posix()
+
+
+def build_map(log, frames_folder, times, pitch_deg: float = 90.0, every: int = 1):
+    """The orthomosaic from a run's saved frames (and their sim times) and its log's poses."""
+    import numpy as np
+    from PIL import Image
+
+    from pcs14.flight.generate import CAMERA
+    from pcs14.smart import ortho
+
+    camera = ortho.Camera(width=1280, height=720, hfov_rad=1.15192)
+    assert "<horizontal_fov>1.15192</horizontal_fov>" in CAMERA  # the same camera
+    offset = (0.18, 0.0, 0.0)
+    frames = []
+    start, end = log.when("grid start"), log.when("grid end")
+    for k, t in enumerate(times):
+        if k % every or not (start <= t <= end):
+            continue
+        i = min(int(np.searchsorted(log.t, t)), len(log.t) - 1)
+        pose = ortho.Pose.on_drone(log.position[i], log.attitude[i], offset,
+                                   np.radians(pitch_deg))  # fmt: skip
+        picture = np.asarray(Image.open(Path(frames_folder) / f"frame-{k:04d}.png").convert("RGB"))
+        frames.append((picture, pose))
+    return ortho.mosaic(frames, camera, *MAP_AREA, m_per_px=MAP_M_PER_PX)
+
+
+def grade_mapping(log, imu, c) -> list:
+    import numpy as np
+
+    from pcs14.flight.scenarios.modules import SCENERY
+
+    folder, times = c.notes.get("frames folder"), c.notes.get("frames", [])
+    if not folder or not times:
+        return [grade.Finding("the map", False, None, None, "", "no frames")]
+    found = build_map(log, folder, times, every=2)
+    out = [grade.Finding("the map", found.covered > 0.9, found.covered, 0.9, "",
+                         f"{found.covered:.0%} of the area seen")]  # fmt: skip
+    ground = found.color_at(east=20.0, north=5.0).astype(float)
+    for name, (x, y, _), _size, color in SCENERY:
+        want = np.array(color) * 255
+        # the map's pixel nearest its own color within a meter of where it stands, nearer that
+        # color than the ground's: it's on the map, and within a meter of the right place
+        seen = found.nearest_color(east=x, north=y, color=want, within_m=1.0).astype(float)
+        ok = np.linalg.norm(seen - want) < np.linalg.norm(seen - ground)
+        words = f"at {x:g} m east, {y:g} m north: {tuple(int(v) for v in seen)}"
+        out.append(grade.Finding(f"{name} on the map", ok, None, None, "", words))
+    from PIL import Image
+
+    Image.fromarray(found.image).save(Path(folder).parent / f"{Path(folder).name}.png")
+    return out
+
+
 SCENARIOS = (
     Scenario("land now", land_now, grade_land_now, budget_s=180.0),
     Scenario("back to start", back_to_start, grade_back_to_start, budget_s=180.0),
@@ -403,4 +493,12 @@ SCENARIOS = (
     Scenario("planned mission", planned_mission, grade_planned_mission, budget_s=600.0),
     Scenario("spiral descent", spiral_descent, grade_spiral, budget_s=240.0),
     Scenario("lift", lift, grade_lift, budget_s=240.0),
+    Scenario(
+        "mapping run",
+        mapping_run,
+        grade_mapping,
+        budget_s=600.0,
+        camera=True,
+        camera_pitch_deg=90.0,
+    ),
 )
