@@ -1,11 +1,10 @@
-// The pages, by route, under one quiet line of links.
+// The drone view, always there, and the pages that open over it, by route.
 import { lazy, type ReactNode, Suspense } from "react";
 
 import { Build } from "./pages/Build";
 import { Catalog } from "./pages/Catalog";
 import { Data } from "./pages/Data";
 import { Flights } from "./pages/Flights";
-import { Home } from "./pages/Home";
 import { Library } from "./pages/Library";
 import { MathPage } from "./pages/MathPage";
 import { Spec } from "./pages/Spec";
@@ -14,37 +13,15 @@ import { Tunnel } from "./pages/Tunnel";
 import { Unproven } from "./pages/Unproven";
 import { Wiring } from "./pages/Wiring";
 import { useRoute } from "./route";
+import { Menu } from "./stage/Menu";
+import { modeOf } from "./stage/modes";
+import { Stage } from "./stage/Stage";
 
-// the 3D page brings three.js, about a megabyte, so it loads only when someone opens it
-const Explorer = lazy(() => import("./pages/Explorer").then((m) => ({ default: m.Explorer })));
+// the flight pages bring three.js, about a megabyte, so they load only when opened
 const FlightRun = lazy(() => import("./pages/FlightRun").then((m) => ({ default: m.FlightRun })));
-
-export const PAGES: { route: string; name: string }[] = [
-  { route: "", name: "Extra 15pc Gum" },
-  { route: "drone", name: "The drone in 3D" },
-  { route: "spec", name: "Spec sheet" },
-  { route: "wiring", name: "The wiring" },
-  { route: "flights", name: "Every flight" },
-  { route: "steps", name: "Every step" },
-  { route: "tunnel", name: "The wind tunnel" },
-  { route: "unproven", name: "What it can't prove" },
-  { route: "build", name: "Build it" },
-  { route: "library", name: "The library" },
-  { route: "catalog", name: "The catalog" },
-  { route: "data", name: "The data" },
-  { route: "math", name: "The math" },
-];
 
 export function pageFor(route: string[]): ReactNode {
   switch (route[0] ?? "") {
-    case "":
-      return <Home />;
-    case "drone":
-      return (
-        <Suspense fallback={<p>Loading the drone</p>}>
-          <Explorer />
-        </Suspense>
-      );
     case "spec":
       return <Spec />;
     case "flights":
@@ -86,16 +63,19 @@ export function pageFor(route: string[]): ReactNode {
 
 export function App() {
   const route = useRoute();
+  const mode = modeOf(route);
   return (
     <>
-      <nav aria-label="pages">
-        {PAGES.map((p) => (
-          <a key={p.route} href={`#/${p.route}`} aria-current={route[0] === p.route || (!route[0] && !p.route) ? "page" : undefined}>
-            {p.name}
-          </a>
-        ))}
-      </nav>
-      {pageFor(route)}
+      <Stage route={route} />
+      {mode === "page" && (
+        <div className="page-over">
+          <nav className="page-back" aria-label="back">
+            <a href="#/">Back to the drone</a>
+            <Menu />
+          </nav>
+          {pageFor(route)}
+        </div>
+      )}
     </>
   );
 }

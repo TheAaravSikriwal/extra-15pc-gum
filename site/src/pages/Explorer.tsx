@@ -12,6 +12,9 @@ import { shows } from "../explorer/logic";
 import { useModel } from "../explorer/model";
 import { boardsOf } from "./Wiring";
 import { DroneScene } from "../explorer/Scene";
+import { combinationFor, numbersFor } from "../stage/combos";
+
+export { combinationFor, numbersFor };
 
 const MODULES = ["V", "P", "C"];
 const CASES = ["hover", "cruise", "burst", "worst"];
@@ -34,32 +37,6 @@ export interface ViewState {
   combination: string;
   kase: string;
   select: (name: string | null) => void;
-}
-
-// the combination the modules switched on make
-export function combinationFor(on: Set<string>): string {
-  const names: Record<string, string> = {
-    "": "base",
-    V: "V",
-    P: "P",
-    C: "C",
-    "V+P": "mission",
-    "V+C": "V+C",
-    "P+C": "P+C",
-    "V+P+C": "max",
-  };
-  return names[MODULES.filter((m) => on.has(m)).join("+")];
-}
-
-// one line of what the switched-on modules make: the weight, the hover time and the verdict
-export function numbersFor(spec: SpecSheet | null | undefined, combination: string): string | null {
-  const c = spec?.combinations.find((x) => x.name === combination);
-  if (!c) return null;
-  const hover = c.checks.find((k) => k.name === "Hover time");
-  const time = hover
-    ? `, hovers ${hover.nominal.toFixed(1)} min${hover.pessimistic != null ? ` (${hover.pessimistic.toFixed(1)} pessimistic)` : ""}`
-    : "";
-  return `${c.name}: ${Math.round(c.mass_g)} g${time}, ${c.verdict}`;
 }
 
 export function ExplorerView({ parts, wires, spec, wiring, view }: ExplorerViewProps) {
