@@ -80,8 +80,11 @@ def applies(scenario: str, setup) -> bool:
         return setup.name == "max"
     if scenario == "chute rule":
         return "P" not in setup.modules
-    if scenario in ("halow range", "camera"):
+    if scenario in ("halow range", "camera", "turn back"):
         return "V" in setup.modules
+    # step 7's: the landing modes are the firmware's, not a module's, so base flies them
+    if scenario in ("land now", "back to start", "land here"):
+        return setup.name == "base"
     return True
 
 

@@ -34,6 +34,15 @@ def test_the_way_home_costs_more_into_the_wind():
     assert wind.energy_home_wh(power, 1800.0, -1.0, 0.0, 12.0, 0.0, 10.0) == math.inf
 
 
+def test_the_warning_never_counts_on_flying_being_cheaper_than_hovering():
+    def power(speed):  # a real rotor's curve: cheaper in forward flight, dearer flat out
+        return 300.0 - 8.0 * speed + 0.6 * speed**2
+
+    careful = wind.never_below_hover(power)
+    assert careful(10.0) == 300.0  # the model says 280 W at 10 m/s; the warning counts 300
+    assert careful(25.0) == power(25.0)  # flat out it costs more than hovering anyway
+
+
 def test_it_says_turn_back_while_there_is_still_enough_to_get_home():
     assert not wind.turn_back(remaining_wh=80.0, reserve_wh=20.0, home_wh=30.0)
     assert wind.turn_back(remaining_wh=55.0, reserve_wh=20.0, home_wh=30.0)  # 35 < 1.25 * 30

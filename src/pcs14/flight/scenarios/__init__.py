@@ -53,8 +53,8 @@ class Scenario:
 
 
 def scenarios() -> dict[str, Scenario]:
-    from pcs14.flight.scenarios import basic, capability, failsafes, failures, modules
+    from pcs14.flight.scenarios import basic, capability, failsafes, failures, modules, smart
 
     found = (basic.SCENARIOS + capability.SCENARIOS + failsafes.SCENARIOS + failures.SCENARIOS
-             + modules.SCENARIOS)  # fmt: skip
+             + modules.SCENARIOS + smart.SCENARIOS)  # fmt: skip
     return {s.name: s for s in found}

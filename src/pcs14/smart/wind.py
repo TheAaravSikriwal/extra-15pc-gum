@@ -7,7 +7,8 @@ drone leans into it. Software only, nothing new on the drone.
 
 The warning is the energy home against that wind: the power at the airspeed it flies home at
 (the sizing model's curve), for as long as the ground speed toward home makes it take, against
-what's left above the reserve, with a margin.
+what's left above the reserve, with a margin. It never counts on flying being cheaper than
+hovering (never_below_hover).
 """
 
 import math
@@ -57,6 +58,15 @@ def energy_home_wh(power, distance_m: float, home_north: float, home_east: float
     if ground <= 0:
         return math.inf
     return power(airspeed_ms) * (distance_m / ground) / 3600.0
+
+
+def never_below_hover(power):
+    """The power curve the warning uses: the model's, but never less than hovering. Real rotors
+    do get cheaper in forward flight (the sizing model's curve dips), and Gazebo's don't, so the
+    sim draws its hover power flying home whatever the speed; a warning that counted on the dip
+    would be optimistic exactly when being wrong strands the drone."""
+    hover = power(0.0)
+    return lambda speed: max(power(speed), hover)
 
 
 def turn_back(remaining_wh: float, reserve_wh: float, home_wh: float,
