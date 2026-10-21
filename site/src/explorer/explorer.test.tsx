@@ -158,3 +158,31 @@ test("nothing picked, the card says what to do", () => {
   render(<Card piece={null} route={null} combination="max" kase="hover" />);
   expect(screen.getByText("Click any part of the drone.")).toBeInTheDocument();
 });
+
+test("given every wire, it draws each one in place of the bundled route", async () => {
+  const root = model();
+  const wire = {
+    label: "lead.XT60.+ to esc.BAT.VBAT",
+    harness: "main power",
+    ends: [
+      { pin: "lead.XT60.+", at_mm: [0, 0, 0], piece: "frame" },
+      { pin: "esc.BAT.VBAT", at_mm: [100, 0, 0], piece: "fruity-chutes-harrier" },
+    ],
+    route: "battery leads",
+    route_piece: "wire battery leads",
+    path_mm: [[50, 0, 10]],
+    awg: 12,
+    diameter_mm: 3.4,
+    wire: "silicone",
+    role: "power",
+    length_mm: 110,
+  };
+  await ReactThreeTestRenderer.create(
+    <DroneScene root={root} pieces={PIECES} routes={new Map()} modulesOn={new Set(["P"])} explode={0}
+      selected={null} combination="max" kase="hover" onSelect={() => {}} wires={[wire]} />,
+  );
+  const drawn = root.getObjectByName("wires3d")!;
+  expect(drawn.children).toHaveLength(1);
+  expect(drawn.children[0].userData.wire).toBe("lead.XT60.+ to esc.BAT.VBAT");
+  expect(root.getObjectByName("wire_battery_leads")!.visible).toBe(false);
+});

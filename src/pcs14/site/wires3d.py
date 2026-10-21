@@ -120,9 +120,11 @@ def wires3d(design: Path) -> schema.Wires3d:
                      < math.dist(a.at_mm, path[0]) + math.dist(b.at_mm, path[-1])):  # fmt: skip
             path.reverse()
         length = sum(map(math.dist, path, path[1:])) if route else run.length_mm
+        gauge = next(g for g in parts[run.wire].gauges if g.awg == run.awg)
         out.append(schema.Wire3d(
             label=run.label, harness=run.harness, ends=[a, b], route=run.route,
-            route_piece=route_piece, path_mm=path, awg=run.awg, wire=parts[run.wire].model,
+            route_piece=route_piece, path_mm=path, awg=run.awg,
+            diameter_mm=gauge.outer_diameter_mm, wire=parts[run.wire].model,
             role=role(run.ends[0]), length_mm=round(length, 1),
         ))  # fmt: skip
     return schema.Wires3d(schema_version=schema.SCHEMA_VERSION, wires=out,

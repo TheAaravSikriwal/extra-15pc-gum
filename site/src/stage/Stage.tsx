@@ -5,7 +5,7 @@
 import { lazy, type ReactNode, Suspense, useMemo, useState } from "react";
 
 import type { LoadOptions } from "../data/load";
-import type { Flights, Parts, Piece, Route, SpecSheet, Wires, Wiring } from "../data/types";
+import type { Flights, Parts, Piece, Route, SpecSheet, Wires, Wires3d, Wiring } from "../data/types";
 import { useData } from "../data/useData";
 import { combinationFor } from "./combos";
 import { Blueprint } from "./Blueprint";
@@ -43,6 +43,7 @@ export interface StageData {
   spec: SpecSheet | null;
   wiring: Wiring | null;
   flights: Flights | null;
+  wires3d: Wires3d | null;
   pieces: Map<string, Piece>;
   routes: Map<string, Route>;
 }
@@ -85,9 +86,10 @@ function useStageData(load?: LoadOptions): StageData {
   const spec = useData<SpecSheet>("spec.json", load).data;
   const wiring = useData<Wiring>("wiring.json", load).data;
   const flights = useData<Flights>("flights.json", load).data;
+  const wires3d = useData<Wires3d>("wires3d.json", load).data;
   const pieces = useMemo(() => new Map((parts?.pieces ?? []).map((p) => [p.name, p])), [parts]);
   const routes = useMemo(() => new Map((wires?.routes ?? []).map((r) => [r.node, r])), [wires]);
-  return { parts, wires, spec, wiring, flights, pieces, routes };
+  return { parts, wires, spec, wiring, flights, wires3d, pieces, routes };
 }
 
 function Intro() {

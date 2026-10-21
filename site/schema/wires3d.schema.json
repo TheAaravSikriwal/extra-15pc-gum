@@ -102,6 +102,10 @@
      "title": "Awg",
      "type": "integer"
     },
+    "diameter_mm": {
+     "title": "Diameter Mm",
+     "type": "number"
+    },
     "wire": {
      "title": "Wire",
      "type": "string"
@@ -123,6 +127,7 @@
     "route_piece",
     "path_mm",
     "awg",
+    "diameter_mm",
     "wire",
     "role",
     "length_mm"

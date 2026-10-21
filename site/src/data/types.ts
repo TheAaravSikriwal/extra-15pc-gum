@@ -112,6 +112,7 @@ export interface Wire3d {
   route_piece: string | null;
   path_mm: number[][]; // the route's points from the first end's side
   awg: number;
+  diameter_mm: number;
   wire: string;
   role: string; // power, ground, signal or bus
   length_mm: number;
@@ -444,7 +445,7 @@ export const FIELDS = {
   Route: ["name", "node", "wires", "heating_share"],
   Wires: ["schema_version", "routes"],
   WireEnd3d: ["pin", "at_mm", "piece"],
-  Wire3d: ["label", "harness", "ends", "route", "route_piece", "path_mm", "awg", "wire", "role", "length_mm"],
+  Wire3d: ["label", "harness", "ends", "route", "route_piece", "path_mm", "awg", "diameter_mm", "wire", "role", "length_mm"],
   PinSource: ["connector", "part_id", "estimate", "url", "note"],
   Wires3d: ["schema_version", "wires", "connectors"],
   Playback: [

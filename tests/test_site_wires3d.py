@@ -68,7 +68,7 @@ def test_a_routed_wire_follows_its_route_from_the_end_nearest_its_first_pin(data
     first, last = leads.path_mm[0], leads.path_mm[-1]
     a, b = leads.ends[0].at_mm, leads.ends[1].at_mm
     assert math.dist(a, first) + math.dist(b, last) <= math.dist(a, last) + math.dist(b, first)
-    assert leads.awg == 12 and leads.role == "power"
+    assert leads.awg == 12 and leads.role == "power" and leads.diameter_mm > 3  # 12 AWG silicone
     assert leads.length_mm == pytest.approx(
         sum(map(math.dist, leads.path_mm, leads.path_mm[1:])), rel=0.01
     )

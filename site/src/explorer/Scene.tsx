@@ -1,12 +1,15 @@
 // The drone in 3D: the CAD's GLB, each piece in what it's made of, the modules switched on or
-// off, pulled apart for the exploded view, and a click on a piece or a wire picking it.
+// off, pulled apart for the exploded view, and a click on a piece or a wire picking it. Given
+// every wire pin to pin, it draws each one in place of the CAD's bundled routes, stretching
+// between its pieces as they pull apart.
 import { type ThreeEvent, useFrame } from "@react-three/fiber";
 import { useLayoutEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 
-import type { Piece, Route } from "../data/types";
+import type { Piece, Route, Wire3d } from "../data/types";
 import { exploded, heatColor, propSpin, shows, type Vec } from "./logic";
-import { heatMaterial, lookFor, materialFor, planarUVs, SELECTED, TILE } from "./materials";
+import { heatMaterial, lookFor, materialFor, planarUVs, SELECTED, TILE, wireMaterial } from "./materials";
+import { type Vec3, visibleWires, wireColor, wirePoints } from "./wires3d";
 
 export interface SceneProps {
   root: THREE.Object3D; // the GLB's scene
@@ -20,6 +23,29 @@ export interface SceneProps {
   heat?: boolean; // the wires colored by their heating, or else in their insulation
   onSelect: (name: string | null) => void;
   spin?: number; // rad/s for the props, just for show; 0 holds them still
+  wires?: Wire3d[]; // every wire pin to pin, drawn in place of the bundled routes
+  light?: boolean; // each wire a thin line, for phones
+}
+
+// each wire as a tube at its own thickness, or a line when light
+function wireObject(points: Vec3[], radius: number, material: THREE.Material, light: boolean): THREE.Object3D {
+  const vectors = points.map((p) => new THREE.Vector3(...p));
+  if (light) {
+    return new THREE.Line(new THREE.BufferGeometry().setFromPoints(vectors), material);
+  }
+  const path = new THREE.CurvePath<THREE.Vector3>();
+  for (let k = 1; k < vectors.length; k++) path.add(new THREE.LineCurve3(vectors[k - 1], vectors[k]));
+  return new THREE.Mesh(new THREE.TubeGeometry(path, Math.max(8, vectors.length * 6), radius, 6, false), material);
+}
+
+const LINES = new Map<string, THREE.LineBasicMaterial>();
+function lineMaterial(color: string): THREE.LineBasicMaterial {
+  let m = LINES.get(color);
+  if (!m) {
+    m = new THREE.LineBasicMaterial({ color });
+    LINES.set(color, m);
+  }
+  return m;
 }
 
 // the name three.js gives a piece's node: its GLTFLoader cleans names on the way in, so
@@ -101,8 +127,41 @@ export function DroneScene(p: SceneProps) {
       const material =
         name === p.selected ? SELECTED : share !== undefined ? heatMaterial(heatColor(share)) : materialFor(lookFor(piece));
       for (const m of meshes) m.material = material;
+      // the bundled routes give way to the wires drawn one by one
+      if (p.wires && piece.kind === "wire") node.visible = false;
     }
-  }, [homes, p.pieces, p.routes, p.modulesOn, p.explode, p.selected, p.combination, p.kase, p.heat]);
+  }, [homes, p.pieces, p.routes, p.modulesOn, p.explode, p.selected, p.combination, p.kase, p.heat, p.wires]);
+
+  // every wire, rebuilt as the drone pulls apart, under the pieces' own parent
+  const wireGroup = useMemo(() => new THREE.Group(), []);
+  useLayoutEffect(() => {
+    const parent = homes.found[0]?.node.parent;
+    if (!parent || !p.wires) return;
+    wireGroup.name = "wires3d";
+    parent.add(wireGroup);
+    const offsets = new Map<string, Vec3>();
+    const shown = new Set<string>();
+    for (const { name, middle, center } of homes.found) {
+      offsets.set(name, exploded(middle, center, p.explode) as Vec3);
+      if (shows(p.pieces.get(name) as Piece, p.modulesOn)) shown.add(name);
+    }
+    for (const w of visibleWires(p.wires, shown)) {
+      const share = p.heat && w.route_piece ? p.routes.get(w.route_piece)?.heating_share[p.combination]?.[p.kase] : undefined;
+      const color = share !== undefined ? heatColor(share) : wireColor(w.role, w.harness);
+      const material = p.light ? lineMaterial(color) : share !== undefined ? heatMaterial(color) : wireMaterial(color);
+      const points = wirePoints(w, (piece) => offsets.get(piece) ?? [0, 0, 0]);
+      const object = wireObject(points, (w.diameter_mm / 2) * 0.001, material, !!p.light);
+      object.userData.wire = w.label;
+      wireGroup.add(object);
+    }
+    return () => {
+      for (const child of [...wireGroup.children]) {
+        if (child instanceof THREE.Mesh || child instanceof THREE.Line) child.geometry.dispose();
+        wireGroup.remove(child);
+      }
+      parent.remove(wireGroup);
+    };
+  }, [homes, wireGroup, p.wires, p.light, p.pieces, p.routes, p.modulesOn, p.explode, p.combination, p.kase, p.heat]);
 
   // the props turning about their hubs, which is where the CAD puts each prop's node, about the
   // CAD's up (its z)

@@ -133,6 +133,7 @@ class Wire3d(_Shape):
     route_piece: str | None  # the model's piece for that route
     path_mm: list[list[float]]  # the route's points from the first end's side, or none
     awg: int
+    diameter_mm: float  # over its insulation, from the wire's gauge table
     wire: str  # its type, in words
     role: str  # what its first pin carries: power, ground, signal or bus
     length_mm: float  # along its route, or its own length: the wiring guide's cut length

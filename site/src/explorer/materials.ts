@@ -179,6 +179,18 @@ export const TILE = { carbon: 0.008, board: 0.03 };
 // the selected piece, lit in spearmint whatever it's made of
 export const SELECTED = new THREE.MeshPhysicalMaterial({ color: "#3ddc97", emissive: "#123d2a", roughness: 0.4 });
 
+const insulations = new Map<string, THREE.MeshPhysicalMaterial>();
+
+// a wire's silicone insulation in its color: soft, a little sheen
+export function wireMaterial(color: string): THREE.MeshPhysicalMaterial {
+  let m = insulations.get(color);
+  if (!m) {
+    m = new THREE.MeshPhysicalMaterial({ color, roughness: 0.55, clearcoat: 0.15 });
+    insulations.set(color, m);
+  }
+  return m;
+}
+
 const heats = new Map<string, THREE.MeshPhysicalMaterial>();
 
 // a wire colored by its heating, for when that's what's being shown

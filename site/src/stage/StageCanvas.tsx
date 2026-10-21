@@ -36,6 +36,8 @@ export function StageCanvas({ state, data, load }: { state: DroneState; data: St
   const [turning, setTurning] = useState(true);
   const { root } = useModel("drone.glb", load);
   const inside = state.mode === "inside";
+  // phones get each wire as a thin line instead of a tube
+  const light = useMemo(() => typeof window !== "undefined" && window.matchMedia?.("(max-width: 700px)").matches, []);
   // where the assembled drone's feet are, for its shadow
   const floor = useMemo(() => (root ? new THREE.Box3().setFromObject(root).min.y : 0), [root]);
   return (
@@ -55,6 +57,8 @@ export function StageCanvas({ state, data, load }: { state: DroneState; data: St
           combination={state.combination}
           kase={state.kase}
           heat={state.heat}
+          wires={data.wires3d?.wires}
+          light={light}
           onSelect={inside ? state.select : () => undefined}
           spin={PROP_SHOW_SPIN}
         />}
