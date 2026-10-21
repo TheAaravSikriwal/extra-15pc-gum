@@ -25,6 +25,8 @@ def landing_at(east, north, t_end=30.0):
 def test_the_landing_modes_fly_in_base_and_stay_out_of_step_4s_matrix():
     assert report.applies("turn back", setup("V", ("V",)))
     assert report.applies("planned mission", setup("mission", ("V", "P")))
+    assert report.applies("spiral descent", setup("base"))
+    assert report.applies("lift", setup("base"))
     assert not report.applies("planned mission", setup("V", ("V",)))
     assert not report.applies("turn back", setup("base"))
     for name in smart.LANDING:
@@ -81,6 +83,23 @@ def test_a_planned_mission_counts_each_waypoint_it_got_to():
     assert [f.passed for f in found] == [True, True]
     plan.waypoints[1].east_m = 35  # never went there
     assert not smart.grade_waypoints(log, plan)[1].passed
+
+
+def test_the_lift_grade_finds_the_column_by_the_thrust_it_saves():
+    t = np.arange(0.0, 60.0, 0.1)
+    # 580 rad/s holding still, a little less in the rising air: what a 4 m/s updraft takes off
+    # a body of 0.03 m^2 (0.294 N), with the hover's wobble on top
+    rng = np.random.default_rng(6)
+    less = 580.0 * (1 - 0.294 / (4 * 8.5e-6 * 580.0**2)) ** 0.5
+    speed = np.where((t > 30) & (t < 45), less, 580.0) + rng.normal(0, 2.0, len(t))
+    log = FlightLog(t=t, position=np.zeros((len(t), 3)), velocity=np.zeros((len(t), 3)),
+                    rotor_speed=np.tile(speed[:, None], (1, 4)),
+                    events=[(10.0, "still start"), (22.0, "still end"),
+                            (32.0, "lifted start"), (44.0, "lifted end")])  # fmt: skip
+    c = NS(model={"motor_constant": 8.5e-6, "drag_area_m2": 0.03})
+    found = {f.check: f for f in smart.grade_lift(log, None, c)}
+    assert found["lift found"].passed
+    assert found["the updraft"].passed
 
 
 def test_a_landing_counts_where_it_was_asked_for():

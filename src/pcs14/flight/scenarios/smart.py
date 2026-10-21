@@ -10,6 +10,13 @@ matrix: each runs when it's named.
   firmware's own gauge measured on the way home. My firmware's simulated pack drains on a
   clock, not by power, so the pack itself can't run out early; the gauge's current, from the
   motors' thrust, is what the prediction is checked against
+- spiral descent (base): from 40 m down a helix (8 m across, 1.5 m/s down, 4 m/s around), its
+  setpoints streamed the way the companion computer would, then straight down for the last
+  4 m. The path only: Gazebo has no vortex ring state for the helix to avoid
+- lift (base): 20 m up, a hover in still air, then 30 m north into a column of air rising at
+  4 m/s (the script turns the wind's upward part on while the drone is in it) and a hover
+  there. The detector finds the column by the thrust it saves. In Gazebo that's only the push
+  on the body; on a real drone the rotors gain more, which is the momentum-theory number
 - planned mission (mission): the plan `pcs14 smart` wrote from plain English (a local model,
   then the checker), approved here by the test script, which says so in the log, since on the
   drone the approving is mine. A plan the checker refused never gets approved, so never flies
@@ -279,10 +286,121 @@ def grade_planned_mission(log, imu, c) -> list:
     return out
 
 
+# --- the spiral descent -------------------------------------------------------------------
+
+SPIRAL_START_M = 40.0
+SPIRAL_STEP_S = 0.1  # between setpoints, on the sim's clock
+SPIRAL_RADIUS_TOLERANCE_M = 1.5
+SPIRAL_SINK_TOLERANCE_MS = 0.3
+
+
+async def spiral_descent(s):
+    from mavsdk.offboard import PositionNedYaw
+
+    from pcs14.smart.spiral import Spiral
+
+    await take_off(s, SPIRAL_START_M)
+    await offboard_here(s)
+    path = Spiral(start_m=SPIRAL_START_M, start_north=s.state.north, start_east=s.state.east)
+    s.result.notes["spiral"] = {"start_m": path.start_m, "start_north": path.start_north,
+                                "start_east": path.start_east}  # fmt: skip
+    s.mark("spiral")
+    start = s.clock.now
+    while (t := s.clock.now - start) <= path.turning_s:
+        north, east, height = path.at(t)
+        await s.drone.offboard.set_position_ned(PositionNedYaw(north, east, -height, 0.0))
+        await s.clock.sleep(SPIRAL_STEP_S)
+    s.mark("straight")
+    await leave_offboard(s)
+    await s.drone.action.land()
+    await _down(s)
+
+
+def grade_spiral(log, imu, c) -> list:
+    from pcs14.smart.spiral import Spiral, followed
+
+    notes = c.notes.get("spiral", {})
+    begin = log.when("spiral")
+    if begin is None or not notes:
+        return [grade.Finding("the spiral", False, None, None, "", "it never started")]
+    path = Spiral(**notes)
+    inside = log.window(begin, begin + path.turning_s)
+    t = log.t[inside] - begin
+    east, north, height = log.position[inside].T
+    found = followed(t, north, east, height, path)
+    return [
+        grade.Finding("the helix", found.radius_error_m <= SPIRAL_RADIUS_TOLERANCE_M,
+                      found.radius_error_m, SPIRAL_RADIUS_TOLERANCE_M, "m",
+                      f"at most {found.radius_error_m:.1f} m off the circle"),
+        grade.Finding("the sink rate",
+                      abs(found.sink_ms - path.sink_ms) <= SPIRAL_SINK_TOLERANCE_MS,
+                      found.sink_ms, path.sink_ms, "m/s",
+                      f"sank at {found.sink_ms:.2f} m/s, asked for {path.sink_ms:g}"),
+        grade.touchdown(log, c.sim.failures.max_touchdown_ms),
+    ]  # fmt: skip
+
+
+# --- soar mode's lift detector -------------------------------------------------------------
+
+LIFT_HEIGHT_M = 20.0
+LIFT_NORTH_M = 30.0
+LIFT_UPDRAFT_MS = 4.0
+LIFT_HOLD_S = 60.0  # soar mode is for waiting, so it can average a minute: a tenth of a newton
+
+
+async def lift(s):
+    from pcs14.flight.generate import WIND_TOPIC
+    from pcs14.flight.scenarios.basic import hold
+
+    await take_off(s, LIFT_HEIGHT_M)
+    await offboard_here(s)
+    await s.clock.sleep(4.0)
+    await hold(s, LIFT_HOLD_S, "still")
+    await go_to(s, LIFT_NORTH_M, 0.0, LIFT_HEIGHT_M, tolerance=1.0)
+    await s.gz_publish(WIND_TOPIC, "gz.msgs.Vector3d", f"z: {LIFT_UPDRAFT_MS}")
+    await s.clock.sleep(6.0)
+    await hold(s, LIFT_HOLD_S, "lifted")
+    await s.gz_publish(WIND_TOPIC, "gz.msgs.Vector3d", "z: 0")
+    await go_to(s, 0.0, 0.0, LIFT_HEIGHT_M, tolerance=1.0)
+    await leave_offboard(s)
+    await s.drone.action.land()
+    await _down(s)
+
+
+def grade_lift(log, imu, c) -> list:
+    import numpy as np
+
+    from pcs14.smart import lift as detector
+
+    def thrusts(name):
+        inside = log.window(log.when(f"{name} start"), log.when(f"{name} end"))
+        return np.array([detector.thrust_n(w, c.model["motor_constant"])
+                         for w in log.rotor_speed[inside]])  # fmt: skip
+
+    still, lifted = thrusts("still"), thrusts("lifted")
+    deficit = float(still.mean() - lifted.mean())
+    error = detector.standard_error(still, lifted)
+    found = detector.is_lift(deficit, error)
+    updraft = detector.updraft_in_sim(deficit, c.model["drag_area_m2"])
+    saving = detector.power_saving_w(float(still.mean()), updraft)
+    return [
+        grade.Finding("lift found", found, deficit, None, "N",
+                      f"{deficit:.2f} N less thrust in the column, {deficit / error:.1f} "
+                      "standard errors past zero"),
+        grade.Finding("the updraft", abs(updraft - LIFT_UPDRAFT_MS) <= 0.25 * LIFT_UPDRAFT_MS,
+                      updraft, LIFT_UPDRAFT_MS, "m/s",
+                      f"{updraft:.1f} m/s rising, by the push on the body (the sim's "
+                      f"{LIFT_UPDRAFT_MS:g}); a real rotor would save about {saving:.0f} W "
+                      "in it"),
+    ]  # fmt: skip
+
+
 SCENARIOS = (
     Scenario("land now", land_now, grade_land_now, budget_s=180.0),
     Scenario("back to start", back_to_start, grade_back_to_start, budget_s=180.0),
     Scenario("land here", land_here, grade_land_here, budget_s=180.0),
     Scenario("turn back", turn_back, grade_turn_back, budget_s=420.0),
     Scenario("planned mission", planned_mission, grade_planned_mission, budget_s=600.0),
+    Scenario("spiral descent", spiral_descent, grade_spiral, budget_s=240.0),
+    Scenario("lift", lift, grade_lift, budget_s=240.0),
 )
