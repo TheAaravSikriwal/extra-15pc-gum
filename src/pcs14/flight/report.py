@@ -85,6 +85,8 @@ def applies(scenario: str, setup) -> bool:
     # step 7's: the landing modes are the firmware's, not a module's, so base flies them
     if scenario in ("land now", "back to start", "land here"):
         return setup.name == "base"
+    if scenario == "planned mission":
+        return setup.name == "mission"
     return True
 
 

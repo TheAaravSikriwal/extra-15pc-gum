@@ -139,3 +139,77 @@ def ollama(model: str = "qwen2.5:7b-instruct", host: str = "http://127.0.0.1:114
             return json.loads(reply.read())["response"]
 
     return ask
+
+
+class NotFlyable(ValueError):
+    """A plan the checker refused: nothing approves it."""
+
+
+class Saved(BaseModel):
+    """A plan as it goes from the laptop to the drone: the words it came from, the plan, the
+    checker's verdict on it, and who approved it. Only a plan the checker passed and someone
+    approved is flyable."""
+
+    words: str
+    plan: Plan
+    problems: list[str]
+    energy_wh: float
+    profile: str
+    approved_by: str | None = None
+
+    @property
+    def ok(self) -> bool:
+        return not self.problems
+
+    @property
+    def flyable(self) -> bool:
+        return self.ok and self.approved_by is not None
+
+
+def save(path, words: str, plan: Plan, checked: Checked, approved_by: str | None,
+         profile: str = "us-recreational"):  # fmt: skip
+    from pathlib import Path
+
+    saved = Saved(words=words, plan=plan, problems=checked.problems, energy_wh=checked.energy_wh,
+                  profile=profile, approved_by=approved_by)  # fmt: skip
+    Path(path).parent.mkdir(parents=True, exist_ok=True)
+    Path(path).write_bytes((saved.model_dump_json(indent=1) + "\n").encode("utf-8"))
+    return Path(path)
+
+
+def load(path) -> Saved:
+    from pathlib import Path
+
+    return Saved.model_validate_json(Path(path).read_text(encoding="utf-8"))
+
+
+def approve(path, by: str) -> Saved:
+    """Marks a saved plan approved by `by`. A plan the checker refused raises NotFlyable."""
+    saved = load(path)
+    if not saved.ok:
+        raise NotFlyable("the checker refused it: " + "; ".join(saved.problems))
+    saved.approved_by = by
+    from pathlib import Path
+
+    Path(path).write_bytes((saved.model_dump_json(indent=1) + "\n").encode("utf-8"))
+    return saved
+
+
+MAX_SPEED_MS = 15.0  # what a planned mission may ask for; the firmware's own limit is higher
+
+
+def drone_for(build, targets, setup) -> Drone:
+    """The drone the checker sees for one combination: its pack's energy, full, the reserve at
+    the targets' share of it, and the pessimistic sizing model's power, never cheaper than a
+    hover (pcs14.smart.wind.never_below_hover)."""
+    from pcs14.sizing.battery import Pack
+    from pcs14.sizing.flight import power_model
+    from pcs14.smart.wind import never_below_hover
+
+    pack = Pack(build.pack)
+    steps = 50
+    energy = sum(pack.ocv((k + 0.5) / steps) for k in range(steps)) / steps * pack.capacity / 3600
+    model = power_model(build, setup, 0.0, pessimistic=True)
+    return Drone(chute="P" in setup.modules, battery_wh=energy,
+                 reserve_wh=energy * targets.reserve_fraction,
+                 power=never_below_hover(model.power), max_speed_ms=MAX_SPEED_MS)  # fmt: skip

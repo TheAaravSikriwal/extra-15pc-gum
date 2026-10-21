@@ -9,6 +9,7 @@
     pcs14 flight-sim  Gazebo models of every combination for PX4, and the flight sim report
     pcs14 tunnel   the wind tunnel's visuals: FluidX3D runs of the drone and their stills
     pcs14 modules  step 6's report: the modules in sim, from the flight sim's runs of them
+    pcs14 smart    step 7: plan a mission from plain English (a local model), checked
 
 Every run saves a Rerun recording to outputs/rerun/ (or wherever --record says), and --live
 opens the viewer and streams into it as the run happens.
@@ -266,6 +267,22 @@ def build_parser() -> argparse.ArgumentParser:
     )
     modules.add_argument("--exports", type=Path, default=Path("outputs/flight-sim"))
     modules.add_argument("--out", type=Path, default=Path("docs/reports/modules"))
+    smart = commands.add_parser(
+        "smart",
+        help="Step 7: a mission from plain English, through a local model, then the checker.",
+        description="Step 7: a mission from plain English. A local model (Ollama) writes the "
+        "plan, the deterministic checker checks it against the limits profile and the drone, "
+        "and the plan is saved for approval. The model never commands the motors.",
+    )
+    smart.add_argument("words", help="what to do, in plain English")
+    smart.add_argument("--setup", default="mission", help="the module combination")
+    smart.add_argument("--profile", default="us-recreational", choices=("max", "us-recreational"))
+    smart.add_argument("--model", default="qwen2.5:7b-instruct", help="Ollama's model")
+    smart.add_argument("--out", type=Path, default=Path("outputs/smart/plan.json"))
+    for name, default in (("--catalog", "design/catalog"), ("--build", "design/build.yaml"),
+                          ("--targets", "design/targets.yaml")):  # fmt: skip
+        smart.add_argument(name, type=Path, default=Path(default))
+    smart.add_argument("--allow-made-up", action="store_true", help=argparse.SUPPRESS)
     validate = commands.add_parser(
         "validate",
         help="The honesty check: the model against published builds and cell curves.",
@@ -816,6 +833,27 @@ def run_ground(args) -> int:
     return 0
 
 
+def run_smart(args) -> int:
+    from pcs14.smart import missions
+
+    _, build, targets = _load(args)
+    setup = _pick([args.setup], {s.name: s for s in targets.combinations()}, "combination")[0]
+    plan = missions.plan_from_words(args.words, missions.ollama(args.model))
+    checked = missions.check(plan, missions.drone_for(build, targets, setup),
+                             missions.PROFILES[args.profile])  # fmt: skip
+    path = missions.save(args.out, args.words, plan, checked, approved_by=None,
+                         profile=args.profile)  # fmt: skip
+    print(plan.model_dump_json(indent=1))
+    if checked.ok:
+        print(f"The checker passes it ({checked.energy_wh:.1f} Wh). It needs approving before "
+              f"it flies: {path}")  # fmt: skip
+    else:
+        print("The checker refuses it:")
+        for problem in checked.problems:
+            print(f"  - {problem}")
+    return 0 if checked.ok else 1
+
+
 def run_modules(args) -> int:
     from datetime import date
 
@@ -868,6 +906,7 @@ COMMANDS = {
     "flight-sim": run_flight_sim,
     "tunnel": run_tunnel,
     "modules": run_modules,
+    "smart": run_smart,
     "ground": run_ground,
     "site": run_site,
 }

@@ -10,6 +10,9 @@ matrix: each runs when it's named.
   firmware's own gauge measured on the way home. My firmware's simulated pack drains on a
   clock, not by power, so the pack itself can't run out early; the gauge's current, from the
   motors' thrust, is what the prediction is checked against
+- planned mission (mission): the plan `pcs14 smart` wrote from plain English (a local model,
+  then the checker), approved here by the test script, which says so in the log, since on the
+  drone the approving is mine. A plan the checker refused never gets approved, so never flies
 """
 
 import asyncio
@@ -216,9 +219,70 @@ def grade_turn_back(log, imu, c) -> list:
     return out
 
 
+# --- a planned mission --------------------------------------------------------------------
+
+WAYPOINT_RADIUS_M = 2.0
+SCRIPT_APPROVAL = "the test script, in the sim (on the drone, the approving is mine)"
+
+
+async def planned_mission(s):
+    from pcs14.smart import missions
+
+    path = s.exports.parent / "smart" / "plan.json"
+    saved = missions.approve(path, by=SCRIPT_APPROVAL)  # raises if the checker refused it
+    s.result.notes["plan"] = saved.model_dump()
+    plan = saved.plan
+    first = plan.waypoints[0]
+    await take_off(s, first.height_m)
+    await offboard_here(s)
+    for k, w in enumerate(plan.waypoints, start=1):
+        s.mark(f"waypoint {k}")
+        await go_to(s, w.north_m, w.east_m, w.height_m, tolerance=1.0, timeout=180.0)
+        if w.hold_s:
+            await s.clock.sleep(w.hold_s)
+    await leave_offboard(s)
+    if plan.end == "land":
+        await s.drone.action.land()
+    else:
+        await s.drone.action.return_to_launch()
+    await s.clock.until(lambda: not s.state.in_air, 240.0)
+    await s.clock.sleep(2.0)
+
+
+def grade_waypoints(log, plan) -> list:
+    """Each waypoint: how close the flight came to it (the log is east, north, up)."""
+    import numpy as np
+
+    out = []
+    for k, w in enumerate(plan.waypoints, start=1):
+        target = np.array([w.east_m, w.north_m, w.height_m])
+        closest = float(np.min(np.linalg.norm(log.position - target, axis=1)))
+        out.append(grade.Finding(f"waypoint {k}", closest <= WAYPOINT_RADIUS_M, closest,
+                                 WAYPOINT_RADIUS_M, "m",
+                                 f"came within {closest:.1f} m of {w.north_m:g} m north, "
+                                 f"{w.east_m:g} m east, {w.height_m:g} m up"))  # fmt: skip
+    return out
+
+
+def grade_planned_mission(log, imu, c) -> list:
+    from pcs14.smart.missions import Plan
+
+    saved = c.notes.get("plan")
+    if not saved:
+        return [grade.Finding("the plan", False, None, None, "", "no approved plan flew")]
+    plan = Plan.model_validate(saved["plan"])
+    out = [grade.Finding("the plan", True, None, None, "",
+                         f"\"{saved['words']}\", approved by {saved['approved_by']}")]  # fmt: skip
+    out += grade_waypoints(log, plan)
+    if plan.end == "return":
+        out.append(grade.ends_safely(log, 3.0))
+    return out
+
+
 SCENARIOS = (
     Scenario("land now", land_now, grade_land_now, budget_s=180.0),
     Scenario("back to start", back_to_start, grade_back_to_start, budget_s=180.0),
     Scenario("land here", land_here, grade_land_here, budget_s=180.0),
     Scenario("turn back", turn_back, grade_turn_back, budget_s=420.0),
+    Scenario("planned mission", planned_mission, grade_planned_mission, budget_s=600.0),
 )

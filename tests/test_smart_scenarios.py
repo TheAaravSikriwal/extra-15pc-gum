@@ -24,6 +24,8 @@ def landing_at(east, north, t_end=30.0):
 
 def test_the_landing_modes_fly_in_base_and_stay_out_of_step_4s_matrix():
     assert report.applies("turn back", setup("V", ("V",)))
+    assert report.applies("planned mission", setup("mission", ("V", "P")))
+    assert not report.applies("planned mission", setup("V", ("V",)))
     assert not report.applies("turn back", setup("base"))
     for name in smart.LANDING:
         assert name in scenarios() and name not in report.SCENARIOS
@@ -59,6 +61,26 @@ def test_the_way_home_is_graded_against_the_flights_own_power():
 def test_the_gauge_energy_integrates_volts_times_amps():
     samples = [(t, 24.0, 10.0) for t in np.arange(100.0, 160.0, 0.5)]
     assert abs(smart.gauge_wh(samples, 100.0, 160.0) - 240.0 * 59.5 / 3600) < 1e-9
+
+
+def test_a_planned_mission_counts_each_waypoint_it_got_to():
+    from pcs14.smart import missions
+
+    plan = missions.Plan(name="made up", end="return", waypoints=[
+        missions.Waypoint(north_m=30, east_m=0, height_m=15),
+        missions.Waypoint(north_m=30, east_m=20, height_m=15)])  # fmt: skip
+    t = np.arange(0.0, 60.0, 0.1)
+    # out to the first point, across to the second, and home (east, north, up)
+    east = np.interp(t, [0, 10, 20, 30, 40, 50, 60], [0, 0, 0, 20, 20, 0, 0])
+    north = np.interp(t, [0, 10, 20, 30, 40, 50, 60], [0, 0, 30, 30, 30, 0, 0])
+    up = np.interp(t, [0, 10, 50, 58, 60], [0, 15, 15, 0.07, 0.07])
+    pos = np.stack([east, north, up], axis=1)
+    log = FlightLog(t=t, position=pos, velocity=np.gradient(pos, t, axis=0),
+                    rotor_speed=np.zeros((len(t), 4)), events=[(59.0, "landed")])  # fmt: skip
+    found = smart.grade_waypoints(log, plan)
+    assert [f.passed for f in found] == [True, True]
+    plan.waypoints[1].east_m = 35  # never went there
+    assert not smart.grade_waypoints(log, plan)[1].passed
 
 
 def test_a_landing_counts_where_it_was_asked_for():

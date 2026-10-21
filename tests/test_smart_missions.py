@@ -44,6 +44,42 @@ def test_the_planner_hands_whatever_the_model_writes_to_the_checker():
     assert found.waypoints[0].north_m == 120 and found.waypoints[0].hold_s == 10
 
 
+def test_a_checked_plan_is_saved_with_its_words_its_check_and_who_approved_it(tmp_path):
+    p = plan((100, 0, 40, 8))
+    checked = check(p)
+    path = missions.save(tmp_path / "plan.json", "fly north", p, checked, approved_by=None)
+    found = missions.load(path)
+    assert found.words == "fly north" and found.plan.waypoints[0].north_m == 100
+    assert found.ok and found.approved_by is None
+    assert not found.flyable  # nobody has approved it yet
+    approved = missions.approve(path, by="the test script")
+    assert approved.flyable and approved.approved_by == "the test script"
+
+
+def test_a_plan_the_checker_refused_can_never_be_approved(tmp_path):
+    p = plan((0, 0, 150, 5))
+    path = missions.save(tmp_path / "plan.json", "go high", p, check(p), approved_by=None)
+    with pytest.raises(missions.NotFlyable):
+        missions.approve(path, by="the test script")
+
+
+def test_the_drone_the_checker_sees_is_the_build_with_its_pack_and_reserve():
+    from pathlib import Path
+
+    from pcs14.catalog import load_catalog
+    from pcs14.design import load_build, load_targets
+
+    root = Path(__file__).resolve().parents[1] / "design"
+    build = load_build(root / "build.yaml", load_catalog(root / "catalog"))
+    targets = load_targets(root / "targets.yaml")
+    mission = next(s for s in targets.combinations() if s.name == "mission")
+    drone = missions.drone_for(build, targets, mission)
+    assert drone.chute  # mission carries P
+    assert 150 < drone.battery_wh < 250  # a 6S2P pack of 4.5 Ah cells: about 194 Wh
+    assert drone.reserve_wh == pytest.approx(drone.battery_wh * targets.reserve_fraction)
+    assert drone.power(10.0) >= drone.power(0.0)  # never cheaper than hovering
+
+
 def test_a_model_that_writes_nonsense_gets_no_plan():
     with pytest.raises(missions.NoPlan):
         missions.plan_from_words("fly", ask=lambda prompt: "sure! here's a plan: go north")
