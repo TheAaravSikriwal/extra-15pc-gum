@@ -87,6 +87,7 @@ def applies(scenario: str, setup) -> bool:
         "mapping run",
         "safe landing",
         "mapping run, box moved",
+        "flow run",
     ):
         return "V" in setup.modules
     # step 7's: the landing modes are the firmware's, not a module's, so base flies them

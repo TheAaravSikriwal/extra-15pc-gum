@@ -26,6 +26,11 @@ matrix: each runs when it's named.
 - safe landing (V): asked to land on the shed, it picks the nearest safe spot on the world's
   height map (pcs14.smart.safespots), flies there and lands. The grade also asks what the
   mapping run's orthomosaic would have picked, and whether that spot is truly clear
+- flow run (V): V's camera pointed straight down, 6 m up over a textured field (Gazebo's own
+  ground is one flat color), around three sides of a 40 by 20 m rectangle at 3 m/s. The
+  position comes from the frames alone (pcs14.smart.flow), with the true attitude tilted by an
+  estimate's error and the true height given the TF-Luna's, and it has to stay within 5% of
+  the distance flown of Gazebo's truth
 - planned mission (mission): the plan `pcs14 smart` wrote from plain English (a local model,
   then the checker), approved here by the test script, which says so in the log, since on the
   drone the approving is mine. A plan the checker refused never gets approved, so never flies
@@ -637,6 +642,184 @@ def grade_change(log, imu, c) -> list:
     return out
 
 
+# --- GPS-free flight's estimate -----------------------------------------------------------
+
+FLOW_HEIGHT_M = 6.0  # inside the TF-Luna's 8 m, which the estimate needs for its height
+FLOW_PATH = ((40.0, 0.0), (40.0, 20.0), (0.0, 20.0))  # (north, east) of each corner, in turn
+FLOW_SPEED_MS = 3.0  # slow, the way flow-only flight is: at 15 m/s the frames stopped matching
+FLOW_FIELD = (10.0, 20.0, 70.0)  # east and north of the textured field's middle, and its side
+FLOW_TEXTURE_PX = 4096
+FLOW_HEIGHT_NOISE = 0.02  # the TF-Luna's +-2% from 3 to 8 m, taken as one standard deviation
+FLOW_TILT_NOISE_DEG = 0.5  # an attitude estimate's error, added to the sim's true attitude
+FLOW_MAX_DRIFT = 0.05  # of the distance flown
+FLOW_FROM_M = 10.0  # the worst drift counts from here, once there's a distance to be 5% of
+LANDED_HEIGHT_M = 0.074  # the model's middle above the ground when it sits there
+
+
+def field_texture(path, size_px: int = FLOW_TEXTURE_PX, seed: int = 24):
+    """A field for the flow run to look at: noise with detail at every scale (its spectrum
+    falls off as one over the frequency), colored from bare soil through grass to dry grass.
+    Gazebo's default ground is one flat color, which gives the correlation nothing."""
+    import numpy as np
+    from PIL import Image
+
+    rng = np.random.default_rng(seed)
+    k = np.hypot(np.fft.fftfreq(size_px)[:, None], np.fft.rfftfreq(size_px)[None, :])
+    spectrum = np.fft.rfft2(rng.standard_normal((size_px, size_px)).astype(np.float32))
+    spectrum /= (k + 4.0 / size_px) ** 0.9
+    n = np.fft.irfft2(spectrum, s=(size_px, size_px))
+    lo, hi = np.percentile(n, (1, 99))
+    n = np.clip((n - lo) / (hi - lo), 0.0, 1.0)
+    palette = np.array([(58, 48, 34), (82, 104, 52), (160, 146, 98)], float)
+    x = n * (len(palette) - 1)
+    i = np.minimum(x.astype(int), len(palette) - 2)
+    f = (x - i)[..., None]
+    Image.fromarray((palette[i] * (1 - f) + palette[i + 1] * f).astype(np.uint8)).save(path)
+
+
+def field_sdf(texture) -> str:
+    """The textured field: a flat plane a centimeter over Gazebo's own ground, seen only."""
+    side = FLOW_FIELD[2]
+    return (
+        '<?xml version="1.0"?><sdf version="1.9"><model name="field"><static>true</static>'
+        '<link name="l"><visual name="v"><geometry><plane><normal>0 0 1</normal>'
+        f"<size>{side:g} {side:g}</size></plane></geometry><material>"
+        "<ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse><specular>0 0 0 1</specular>"
+        f"<pbr><metal><albedo_map>{Path(texture).as_posix()}</albedo_map>"
+        "<roughness>1</roughness><metalness>0</metalness></metal></pbr>"
+        "</material></visual></link></model></sdf>"
+    )
+
+
+async def fly_line(s, north: float, east: float, height: float, speed_ms: float):
+    """Flies straight to a point at `speed_ms`, its position setpoint carried along the line
+    the way the spiral's is, then settles there."""
+    from mavsdk.offboard import PositionNedYaw
+
+    heading = s.state.heading
+    n0, e0 = s.state.north, s.state.east
+    length = math.hypot(north - n0, east - e0)
+    start = s.clock.now
+    while (gone := (s.clock.now - start) * speed_ms) < length:
+        f = gone / length
+        await s.drone.offboard.set_position_ned(
+            PositionNedYaw(n0 + f * (north - n0), e0 + f * (east - e0), -height, heading)
+        )
+        await s.clock.sleep(SPIRAL_STEP_S)
+    await go_to(s, north, east, height, tolerance=0.5)
+
+
+async def flow_run(s):
+    from pcs14.flight.scenarios.modules import CAMERA_EVERY
+
+    field = s.folder / "field"
+    field.mkdir(parents=True, exist_ok=True)
+    field_texture(field / "field.png")
+    (field / "model.sdf").write_text(field_sdf(field / "field.png"), "utf-8")
+    await s.spawn(field / "model.sdf", "field", (FLOW_FIELD[0], FLOW_FIELD[1], 0.01))
+    if (pose := s.true_pose(s.entity)) is not None:
+        s.result.notes["landed height"] = pose[0][2]
+    folder = s.exports / "camera" / f"{s.model}-flow"
+    recorder = s.record_camera(folder, CAMERA_EVERY)
+    try:
+        await take_off(s, FLOW_HEIGHT_M)
+        await offboard_here(s)
+        s.mark("flow start")
+        for north, east in FLOW_PATH:
+            await fly_line(s, north, east, FLOW_HEIGHT_M, FLOW_SPEED_MS)
+        s.mark("flow end")
+        await go_to(s, 0.0, 0.0, FLOW_HEIGHT_M, tolerance=1.0)
+        await leave_offboard(s)
+        await s.drone.action.land()
+        await _down(s)
+    finally:
+        recorder.close()
+        s.result.notes["frames"] = list(recorder.saved)
+        s.result.notes["frames folder"] = folder.as_posix()
+
+
+def _quat_multiply(a, b):
+    """Hamilton product of two (x, y, z, w) quaternions."""
+    import numpy as np
+
+    ax, ay, az, aw = a
+    bx, by, bz, bw = b
+    return np.array([
+        aw * bx + ax * bw + ay * bz - az * by,
+        aw * by - ax * bz + ay * bw + az * bx,
+        aw * bz + ax * by - ay * bx + az * bw,
+        aw * bw - ax * bx - ay * by - az * bz,
+    ])  # fmt: skip
+
+
+def flow_sensors(log, times, landed_m: float, seed: int = 24):
+    """At each frame's time: the drone's true (east, north), and what its own sensors would
+    say, its attitude (the truth, tilted by an estimate's error) and the rangefinder's height
+    (the truth above the ground, with the TF-Luna's error)."""
+    import numpy as np
+
+    rng = np.random.default_rng(seed)
+    truth, attitudes, heights = [], [], []
+    sigma = np.radians(FLOW_TILT_NOISE_DEG)
+    for t in times:
+        i = int(np.clip(np.searchsorted(log.t, t), 1, len(log.t) - 1))
+        f = float(np.clip((t - log.t[i - 1]) / (log.t[i] - log.t[i - 1]), 0.0, 1.0))
+        position = log.position[i - 1] * (1 - f) + log.position[i] * f
+        q0, q1 = log.attitude[i - 1], log.attitude[i]
+        q = q0 * (1 - f) + (q1 if np.dot(q0, q1) >= 0 else -q1) * f
+        q = q / np.linalg.norm(q)
+        rx, ry = rng.normal(0.0, sigma, 2)
+        angle = np.hypot(rx, ry)
+        axis = np.array([rx, ry, 0.0]) / angle if angle else np.zeros(3)
+        tilt = np.append(axis * np.sin(angle / 2), np.cos(angle / 2))
+        truth.append(position[:2])
+        attitudes.append(_quat_multiply(q, tilt))
+        heights.append((position[2] + landed_m) * (1 + rng.normal(0.0, FLOW_HEIGHT_NOISE)))
+    return np.array(truth), attitudes, heights
+
+
+def grade_flow(log, imu, c) -> list:
+    import json
+
+    import numpy as np
+    from PIL import Image
+
+    from pcs14.flight.generate import CAMERA
+    from pcs14.smart import flow, ortho
+
+    folder, times = c.notes.get("frames folder"), c.notes.get("frames", [])
+    start, end = log.when("flow start"), log.when("flow end")
+    picked = [(k, t) for k, t in enumerate(times) if start is not None and start <= t <= end]
+    if len(picked) < 20:
+        words = "too few frames between the start and the end of the path"
+        return [grade.Finding("frames", False, len(picked), 20, "", words)]
+    camera = ortho.Camera(width=1280, height=720, hfov_rad=1.15192)
+    assert "<horizontal_fov>1.15192</horizontal_fov>" in CAMERA  # the same camera
+    landed = float(c.notes.get("landed height", LANDED_HEIGHT_M))
+    truth, attitudes, heights = flow_sensors(log, [t for _, t in picked], landed)
+    pictures = (np.asarray(Image.open(Path(folder) / f"frame-{k:04d}.png").convert("RGB"))
+                for k, _ in picked)  # fmt: skip
+    found = flow.track(pictures, attitudes, heights, camera, np.radians(90.0),
+                       offset=(0.18, 0.0, 0.0))  # fmt: skip
+    truth = truth - truth[0]
+    flown = np.concatenate([[0.0], np.cumsum(np.hypot(*np.diff(truth, axis=0).T))])
+    off = np.hypot(*(found - truth).T)
+    far = flown >= FLOW_FROM_M
+    worst = float((off[far] / flown[far]).max()) if far.any() else float("nan")
+    drift = float(off[-1] / flown[-1])
+    (Path(folder).parent / f"{Path(folder).name}-track.json").write_text(json.dumps({
+        "t": [t for _, t in picked], "truth": truth.round(3).tolist(),
+        "found": found.round(3).tolist(), "flown_m": flown.round(3).tolist(),
+    }), "utf-8")  # fmt: skip
+    return [
+        grade.Finding("drift at the end", drift < FLOW_MAX_DRIFT, drift, FLOW_MAX_DRIFT, "",
+                      f"{off[-1]:.2f} m off after {flown[-1]:.0f} m flown ({drift:.1%})"),
+        grade.Finding("worst drift", worst < FLOW_MAX_DRIFT, worst, FLOW_MAX_DRIFT, "",
+                      f"at worst {worst:.1%} of the distance flown, past the first "
+                      f"{FLOW_FROM_M:g} m"),
+    ]  # fmt: skip
+
+
 SCENARIOS = (
     Scenario("land now", land_now, grade_land_now, budget_s=180.0),
     Scenario("back to start", back_to_start, grade_back_to_start, budget_s=180.0),
@@ -654,6 +837,7 @@ SCENARIOS = (
         camera_pitch_deg=90.0,
     ),
     Scenario("safe landing", safe_landing, grade_safe_landing, budget_s=240.0),
+    Scenario("flow run", flow_run, grade_flow, budget_s=420.0, camera=True, camera_pitch_deg=90.0),
     Scenario(
         "mapping run",
         mapping_run,

@@ -441,34 +441,56 @@ class HalowLink:
 
 class CameraRecorder:
     """Saves a Gazebo camera's frames as PNGs, every `every`th one, with each one's sim time in
-    frames.txt: what the live video and the mapping runs start from."""
+    frames.txt: what the live video and the mapping runs start from.
+
+    The callback only copies the frame and hands it to a writer thread: a textured frame takes
+    about 0.2 s to compress, longer than the 0.1 s between kept frames, and frames left in
+    Gazebo's own queue when the run ends are lost (the flow run of 2026-10-21 lost the last
+    40 s of its frames that way). close() waits for every frame taken to be written."""
 
     def __init__(self, topics, topic: str, folder: Path, every: int = 3):
+        import queue
+
         self.folder = Path(folder)
         self.folder.mkdir(parents=True, exist_ok=True)
+        for old in self.folder.glob("frame-*.png"):
+            old.unlink()
         self.every, self.seen, self.saved = every, 0, []
         self._lock = threading.Lock()
+        self._queue: queue.Queue = queue.Queue()
+        self._writer = threading.Thread(target=self._drain, args=(self._queue,), daemon=True)
+        self._writer.start()
         topics.node.subscribe(topics._kind("gz.msgs.Image"), topic, self._on_image)
 
     def _on_image(self, message):
         import numpy as np
-        from PIL import Image
 
         with self._lock:
             self.seen += 1
-            if (self.seen - 1) % self.every:
+            if (self.seen - 1) % self.every or self._queue is None:
                 return
             t = message.header.stamp.sec + message.header.stamp.nsec * 1e-9
             k = len(self.saved)
-        pixels = np.frombuffer(message.data, dtype=np.uint8)
-        frame = pixels.reshape(message.height, message.width, -1)[:, :, :3]
-        Image.fromarray(frame).save(self.folder / f"frame-{k:04d}.png")
-        with self._lock:
             self.saved.append(t)
+            pixels = np.frombuffer(bytes(message.data), dtype=np.uint8)
+            frame = pixels.reshape(message.height, message.width, -1)[:, :, :3]
+            self._queue.put((self.folder / f"frame-{k:04d}.png", frame))
+
+    def _write(self, path: Path, frame):
+        from PIL import Image
+
+        Image.fromarray(frame).save(path, compress_level=1)
+
+    def _drain(self, queue):
+        while (item := queue.get()) is not None:
+            self._write(*item)
 
     def close(self):
         with self._lock:
             times = list(self.saved)
+            queue, self._queue = self._queue, None
+        queue.put(None)
+        self._writer.join()
         (self.folder / "frames.txt").write_text("".join(f"{t:.3f}\n" for t in times), "utf-8")
 
 
