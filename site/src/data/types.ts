@@ -441,11 +441,16 @@ export interface LibraryDoc {
   section: string;
   url: string;
   date?: string | null;
+  kind?: string | null; // a topic's "spec", "plan" or "log"
+  superseded?: string | null; // the doc's own line saying what replaced it
 }
 
 export interface LibrarySection {
   name: string;
   docs: LibraryDoc[];
+  group?: string; // the sections under one heading
+  step?: string | null; // a topic's step
+  about?: string;
 }
 
 export interface Library {
@@ -509,11 +514,24 @@ export interface RawFile {
   title: string;
   source: string;
   url: string;
+  about?: string;
+  holds?: string[]; // its top-level fields
+  size_bytes?: number;
+}
+
+// a file or folder the site itself reads
+export interface SiteFile {
+  name: string;
+  about: string;
+  size_bytes: number;
+  files?: number;
+  view?: string | null; // open as a tree at #/data/site/<view>
 }
 
 export interface RawIndex {
   schema_version: number;
   files: RawFile[];
+  site?: SiteFile[];
 }
 
 export interface RawData {
@@ -543,11 +561,13 @@ export interface MathPackage {
   name: string;
   key: string;
   modules: MathModule[];
+  step?: string;
 }
 
 export interface MathData {
   schema_version: number;
   packages: MathPackage[];
+  commit?: string | null; // the code's links are pinned to it
 }
 
 // the fields each shape has, for the check against the schema
@@ -666,8 +686,8 @@ export const FIELDS = {
   BuildTotal: ["setup", "usd", "unpriced", "printed", "printed_g"],
   BuildGuide: ["name", "url", "about"],
   Build: ["schema_version", "generated", "totals", "lines", "guides", "open"],
-  LibraryDoc: ["path", "title", "section", "url", "date"],
-  LibrarySection: ["name", "docs"],
+  LibraryDoc: ["path", "title", "section", "url", "date", "kind", "superseded"],
+  LibrarySection: ["name", "docs", "group", "step", "about"],
   Library: ["schema_version", "sections"],
   LibraryPage: ["schema_version", "path", "title", "url", "html"],
   CatalogPart: ["id", "type", "maker", "model", "mass_g", "price_usd", "link", "record"],
@@ -690,11 +710,12 @@ export const FIELDS = {
     "mass_g",
   ],
   PartsList: ["schema_version", "generated", "lines", "used", "alternatives"],
-  RawFile: ["name", "title", "source", "url"],
-  RawIndex: ["schema_version", "files"],
+  RawFile: ["name", "title", "source", "url", "about", "holds", "size_bytes"],
+  SiteFile: ["name", "about", "size_bytes", "files", "view"],
+  RawIndex: ["schema_version", "files", "site"],
   RawData: ["schema_version", "name", "source", "data"],
   MathItem: ["name", "kind", "signature", "doc", "line"],
   MathModule: ["path", "language", "doc", "url", "items"],
-  MathPackage: ["name", "key", "modules"],
-  Math: ["schema_version", "packages"],
+  MathPackage: ["name", "key", "modules", "step"],
+  Math: ["schema_version", "packages", "commit"],
 } as const;

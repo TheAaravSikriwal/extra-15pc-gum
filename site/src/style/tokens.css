@@ -580,6 +580,42 @@ ul.library a:hover,
   white-space: nowrap;
 }
 
+/* a library doc's kind and date beside it, and a mark on one something later replaced */
+ul.library .muted,
+ul.library .superseded {
+  margin-left: 12px;
+  font: 11px/1.6 var(--font-numbers);
+  letter-spacing: 0.06em;
+}
+
+ul.library .superseded {
+  color: var(--muted);
+  border: 1px solid var(--lines);
+  padding: 0 6px;
+}
+
+.library-section h3 .step-link {
+  margin-left: 12px;
+  font: 11px/1.6 var(--font-numbers);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+/* the data's sizes, in the mono face at the right */
+table.data-files td:last-child {
+  white-space: nowrap;
+  text-align: right;
+  font: 12.5px/1.6 var(--font-numbers);
+}
+
+table.data-files .holds {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font: 11.5px/1.6 var(--font-numbers);
+}
+
 /* a cell's links, under its words */
 td .links {
   margin-top: 4px;

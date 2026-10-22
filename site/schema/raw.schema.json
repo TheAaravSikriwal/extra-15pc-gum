@@ -18,6 +18,24 @@
     "url": {
      "title": "Url",
      "type": "string"
+    },
+    "about": {
+     "default": "",
+     "title": "About",
+     "type": "string"
+    },
+    "holds": {
+     "default": [],
+     "items": {
+      "type": "string"
+     },
+     "title": "Holds",
+     "type": "array"
+    },
+    "size_bytes": {
+     "default": 0,
+     "title": "Size Bytes",
+     "type": "integer"
     }
    },
    "required": [
@@ -28,10 +46,51 @@
    ],
    "title": "RawFile",
    "type": "object"
+  },
+  "SiteFile": {
+   "additionalProperties": false,
+   "properties": {
+    "name": {
+     "title": "Name",
+     "type": "string"
+    },
+    "about": {
+     "title": "About",
+     "type": "string"
+    },
+    "size_bytes": {
+     "title": "Size Bytes",
+     "type": "integer"
+    },
+    "files": {
+     "default": 1,
+     "title": "Files",
+     "type": "integer"
+    },
+    "view": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "View"
+    }
+   },
+   "required": [
+    "name",
+    "about",
+    "size_bytes"
+   ],
+   "title": "SiteFile",
+   "type": "object"
   }
  },
  "additionalProperties": false,
- "description": "raw.json: the reports' own data files, copied whole under raw/.",
+ "description": "raw.json: the reports' own data files, copied whole under raw/, and every file the site\nitself reads, with what it holds and its size.",
  "properties": {
   "schema_version": {
    "title": "Schema Version",
@@ -42,6 +101,14 @@
     "$ref": "#/$defs/RawFile"
    },
    "title": "Files",
+   "type": "array"
+  },
+  "site": {
+   "default": [],
+   "items": {
+    "$ref": "#/$defs/SiteFile"
+   },
+   "title": "Site",
    "type": "array"
   }
  },

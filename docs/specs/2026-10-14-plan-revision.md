@@ -1,6 +1,6 @@
 # Plan revision (2026-10-14)
 
-*Drafted by Claude from today's review, and confirmed by me the same day. It's been split back into the [roadmap](../roadmap.md), the [decisions](../decisions.md), the [targets](../../design/targets.yaml) and the [Phase 1 spec](2026-10-13-phase-1-simulation.md), which are the live versions now. This file stays as the record of what changed and why.*
+*Superseded by the live versions. Drafted by Claude from today's review, and confirmed by me the same day, it's been split back into the [roadmap](../roadmap.md), the [decisions](../decisions.md), the [targets](../../design/targets.yaml) and the [Phase 1 spec](2026-10-13-phase-1-simulation.md), which are the live versions now. This file stays as the record of what changed and why.*
 
 ## What changed, and why
 

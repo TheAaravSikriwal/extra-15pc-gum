@@ -214,32 +214,6 @@ def wiring(electrical: dict, reports, out) -> schema.Wiring:
                          harnesses=harnesses, schematic=schematic, kicad=kicad)  # fmt: skip
 
 
-def hero(view, out, margin_px: int = 48) -> Path:
-    """The home page's drone: the CAD's three-quarter view without its post header and footer,
-    trimmed to the drone with a margin of the background around it."""
-    import numpy as np
-    from PIL import Image
-
-    out = Path(out)
-    out.mkdir(parents=True, exist_ok=True)
-    with Image.open(view) as image:
-        picture = np.asarray(image.convert("RGB"))
-    h, w = picture.shape[:2]
-    background = picture[h // 2, 2].astype(int)  # the left edge, halfway down
-    top, bottom = int(h * 0.18), int(h * 0.92)  # under the title, over the footer
-    different = np.abs(picture[top:bottom].astype(int) - background).sum(axis=2) > 24
-    rows, cols = np.nonzero(different)
-    if rows.size == 0:
-        y0, y1, x0, x1 = top, bottom, 0, w
-    else:
-        y0, y1 = top + rows.min() - margin_px, top + rows.max() + margin_px
-        x0, x1 = cols.min() - margin_px, cols.max() + margin_px
-    y0, y1, x0, x1 = max(y0, top), min(y1, bottom), max(x0, 0), min(x1, w)
-    path = out / "hero.png"
-    Image.fromarray(picture[y0:y1, x0:x1]).save(path, optimize=True)
-    return path
-
-
 GUIDES = (
     ("The parts list", "parts", "Every part with its link, the day it was checked and a fallback, "
      "as a table and a CSV."),
@@ -336,11 +310,7 @@ def write_all(out, reports, commit: str | None = None, today: str | None = None)
         from pcs14.site.wires3d import wires3d
 
         written.append(_write(out, "wires3d", wires3d(design)))
-    # the home page's drone
-    view = reports / "cad" / "views" / "three-quarter.png"
-    if view.is_file():
-        written.append(hero(view, out))
-    # what the sims can't prove, front and center
+    # what the sims can't prove
     docs = reports.resolve().parent
     if (docs / "decisions.md").is_file():
         from pcs14.site.unproven import unproven_data
@@ -355,7 +325,7 @@ def write_all(out, reports, commit: str | None = None, today: str | None = None)
     # everything else: every doc, every part, every report's data, and the math
     from pcs14.site.library import write_everything
 
-    written += write_everything(docs.parent, out)
+    written += write_everything(docs.parent, out, commit)
     # the build package, when pcs14 package has written it
     package = docs / "build" / "package.json"
     if package.is_file():
@@ -388,7 +358,11 @@ def write_all(out, reports, commit: str | None = None, today: str | None = None)
         # the data, not the pictures, by their paths in the data folder
         files=[p.relative_to(out).as_posix() for p in written if p.suffix == ".json"],
     )
-    return [*written, _write(out, "index", index)]
+    written.append(_write(out, "index", index))
+    # last, the index of every data file, with its size
+    from pcs14.site.library import write_data_index
+
+    return [*written, write_data_index(docs.parent, out)]
 
 
 def load(path, shape):

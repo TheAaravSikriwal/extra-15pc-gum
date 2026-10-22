@@ -978,6 +978,11 @@ def run_site(args) -> int:
         from pcs14.site import tunnel
 
         written += tunnel.write_tunnel(args.out, args.tunnel)
+    if args.flights is not None or args.tunnel is not None:
+        from pcs14.site.library import write_data_index
+
+        # again, with the flights' and the tunnel's sizes in it
+        written.append(write_data_index(Path(args.reports).resolve().parent.parent, args.out))
     index = data.load(Path(args.out) / "index.json", data.schema.Index)
     missing = [name for name, r in index.reports.items() if not r.found]
     print(f"Wrote {len(written)} files to {Path(args.out).resolve()}")

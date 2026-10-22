@@ -130,7 +130,7 @@ class Piece(_Shape):
 
 
 class Parts(_Shape):
-    """parts.json: every piece of the full drone, for the 3D explorer's cards."""
+    """parts.json: every piece of the full drone, for the drone view's cards and the run pages."""
 
     schema_version: int
     glb: str  # the model the names belong to
@@ -434,7 +434,7 @@ class UnprovenGroup(_Shape):
 
 
 class Unproven(_Shape):
-    """unproven.json: what the sims can't prove, front and center."""
+    """unproven.json: what the sims can't prove, for its page."""
 
     schema_version: int
     groups: list[UnprovenGroup]
@@ -471,7 +471,8 @@ class BuildGuide(_Shape):
 
 
 class Build(_Shape):
-    """build.json: the build package's parts list, its totals and its guides."""
+    """build.json: the build package's totals, its guides and what's still open, with its parts
+    list's lines."""
 
     schema_version: int
     generated: str
@@ -487,15 +488,22 @@ class LibraryDoc(_Shape):
     section: str
     url: str  # on GitHub
     date: str | None = None  # from a dated file's name
+    kind: str | None = None  # a topic's "spec", "plan" or "log"
+    superseded: str | None = None  # the doc's own line saying what replaced it
 
 
 class LibrarySection(_Shape):
     name: str
     docs: list[LibraryDoc]
+    group: str = ""  # the sections under one heading: "The work, by topic"
+    step: str | None = None  # a topic's step, for #/steps/<id>
+    about: str = ""
 
 
 class Library(_Shape):
-    """library.json: every Markdown doc in the repo, by section."""
+    """library.json: every Markdown doc in the repo: the project's own, the reports, the build
+    package, then the work by topic (each step's specs, plans and log posts, newest first), the
+    repo's folders, and the notes behind the scenes."""
 
     schema_version: int
     sections: list[LibrarySection]
@@ -564,13 +572,26 @@ class RawFile(_Shape):
     title: str
     source: str  # the repo path
     url: str
+    about: str = ""
+    holds: list[str] = []  # its top-level fields, a list's with its length
+    size_bytes: int = 0
+
+
+class SiteFile(_Shape):
+    name: str  # "steps.json", or a folder, "flights/"
+    about: str
+    size_bytes: int
+    files: int = 1  # in a folder, how many
+    view: str | None = None  # a single file's name to open as a tree, #/data/site/<view>
 
 
 class RawIndex(_Shape):
-    """raw.json: the reports' own data files, copied whole under raw/."""
+    """raw.json: the reports' own data files, copied whole under raw/, and every file the site
+    itself reads, with what it holds and its size."""
 
     schema_version: int
     files: list[RawFile]
+    site: list[SiteFile] = []
 
 
 class RawData(_Shape):
@@ -602,13 +623,16 @@ class MathPackage(_Shape):
     name: str
     key: str
     modules: list[MathModule]
+    step: str = ""  # "1" to "8", or "side track"
 
 
 class Math(_Shape):
-    """math.json: how each number is worked out, from the code's own explanations."""
+    """math.json: how each number is worked out, from the code's own explanations, in step
+    order, each function that explains itself first."""
 
     schema_version: int
     packages: list[MathPackage]
+    commit: str | None = None  # the code's links are pinned to it
 
 
 # each data file's name (without .json) and its shape

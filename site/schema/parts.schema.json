@@ -134,7 +134,7 @@
   }
  },
  "additionalProperties": false,
- "description": "parts.json: every piece of the full drone, for the 3D explorer's cards.",
+ "description": "parts.json: every piece of the full drone, for the drone view's cards and the run pages.",
  "properties": {
   "schema_version": {
    "title": "Schema Version",

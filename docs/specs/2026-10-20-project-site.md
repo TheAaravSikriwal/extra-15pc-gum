@@ -1,5 +1,7 @@
 # The project site
 
+*Partly superseded: its home page and its pages' layout, by [the drone view](2026-10-21-the-drone-view.md) on 2026-10-21 (one 3D drone as the home), then by [the docs](2026-10-22-the-docs.md) on 2026-10-22 (the menu as the drone's manual). What it's built with, the data and the playback still stand.*
+
 *Written 2026-10-20. I asked for the open items to keep moving without stopping to ask, so I made these calls myself and wrote down why. The goal itself was set earlier, in my own words, in [decisions.md](../decisions.md) under "The project site".*
 
 ## What it has to be

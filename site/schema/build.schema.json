@@ -162,7 +162,7 @@
   }
  },
  "additionalProperties": false,
- "description": "build.json: the build package's parts list, its totals and its guides.",
+ "description": "build.json: the build package's totals, its guides and what's still open, with its parts\nlist's lines.",
  "properties": {
   "schema_version": {
    "title": "Schema Version",

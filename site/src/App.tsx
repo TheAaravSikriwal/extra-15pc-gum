@@ -50,7 +50,7 @@ export function pageFor(route: string[]): ReactNode {
     case "library":
       return <Library path={route.slice(1)} />;
     case "data":
-      return <Data name={route[1]} />;
+      return route[1] === "site" ? <Data view={route[2]} /> : <Data name={route[1]} />;
     case "math":
       return <MathPage />;
     case "wiring":

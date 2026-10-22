@@ -60,7 +60,7 @@
   }
  },
  "additionalProperties": false,
- "description": "unproven.json: what the sims can't prove, front and center.",
+ "description": "unproven.json: what the sims can't prove, for its page.",
  "properties": {
   "schema_version": {
    "title": "Schema Version",

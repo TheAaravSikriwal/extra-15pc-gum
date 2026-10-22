@@ -30,6 +30,30 @@
      ],
      "default": null,
      "title": "Date"
+    },
+    "kind": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Kind"
+    },
+    "superseded": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Superseded"
     }
    },
    "required": [
@@ -54,6 +78,28 @@
      },
      "title": "Docs",
      "type": "array"
+    },
+    "group": {
+     "default": "",
+     "title": "Group",
+     "type": "string"
+    },
+    "step": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Step"
+    },
+    "about": {
+     "default": "",
+     "title": "About",
+     "type": "string"
     }
    },
    "required": [
@@ -65,7 +111,7 @@
   }
  },
  "additionalProperties": false,
- "description": "library.json: every Markdown doc in the repo, by section.",
+ "description": "library.json: every Markdown doc in the repo: the project's own, the reports, the build\npackage, then the work by topic (each step's specs, plans and log posts, newest first), the\nrepo's folders, and the notes behind the scenes.",
  "properties": {
   "schema_version": {
    "title": "Schema Version",

@@ -1,5 +1,7 @@
 # The drone view: the site around one 3D drone
 
+*Partly superseded: the corner menu's pages, by [the docs](2026-10-22-the-docs.md) on 2026-10-22, which made them twelve pages in four groups with the catalog merged into Parts. The view itself still stands.*
+
 *Talked through and locked in on 2026-10-21. My answers are the design; the calls marked as mine were made while writing this, and written down why.*
 
 ## The idea

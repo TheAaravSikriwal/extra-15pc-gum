@@ -88,6 +88,11 @@
      },
      "title": "Modules",
      "type": "array"
+    },
+    "step": {
+     "default": "",
+     "title": "Step",
+     "type": "string"
     }
    },
    "required": [
@@ -100,7 +105,7 @@
   }
  },
  "additionalProperties": false,
- "description": "math.json: how each number is worked out, from the code's own explanations.",
+ "description": "math.json: how each number is worked out, from the code's own explanations, in step\norder, each function that explains itself first.",
  "properties": {
   "schema_version": {
    "title": "Schema Version",
@@ -112,6 +117,18 @@
    },
    "title": "Packages",
    "type": "array"
+  },
+  "commit": {
+   "anyOf": [
+    {
+     "type": "string"
+    },
+    {
+     "type": "null"
+    }
+   ],
+   "default": null,
+   "title": "Commit"
   }
  },
  "required": [

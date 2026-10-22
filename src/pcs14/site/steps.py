@@ -38,14 +38,14 @@ STEPS = (
         "electrical/electrical.json",
         "electrical/stills",
         "The verdict",
-    ),  # fmt: skip
+    ),
     Source(
         "flight-sim",
         r"Flight sim",
         "flight-sim/flight-sim.json",
         "flight-sim/stills",
         "The verdict",
-    ),  # fmt: skip
+    ),
     # my firmware flies the flight sim's scenarios, so its numbers are in that report
     Source(
         "firmware",
@@ -53,20 +53,23 @@ STEPS = (
         "flight-sim/flight-sim.json",
         None,
         "My firmware, the same scenarios",
-    ),  # fmt: skip
+    ),
     Source("modules", r"Modules in sim", "modules/modules.json", "modules/stills", "The verdict"),
     Source("smart", r"Smart features", "smart/smart.json", "smart/stills", "The verdict"),
     Source("build", r"Build package", "../build/package.json", None, None),
     Source(
         "structure", r"Structure", "structure/structure.json", "structure/stills", "The verdict"
-    ),  # fmt: skip
+    ),
     Source("aero", r"Aero", None, None, None),
     Source("design-hunt", r"Design hunt", None, None, None),
     Source("site", r"Project site", None, None, None),
 )
-# a log entry's step, by a word in its file name (the first that matches)
+# a log entry's step, or a spec's or a plan's, by a word in its file name (the first that matches)
 LOG_WORDS = (
-    ("planning", ("planning", "plan-review", "plan-revision", "research-project", "soar-mode")),
+    (
+        "planning",
+        ("planning", "plan-review", "plan-revision", "research-project", "soar-mode", "phase-1"),
+    ),  # fmt: skip
     ("setup", ("moving-to-the-pc",)),
     ("sizing", ("sizing", "sweep")),
     ("cad", ("cad",)),
@@ -499,6 +502,18 @@ def report_now(source: Source, docs: Path) -> schema.ReportRef | None:
     )  # fmt: skip
 
 
+def _source(name: str) -> Source:
+    """A plan row's step, by its name."""
+    found = next((s for s in STEPS if re.search(s.pattern, name)), None)
+    return found or Source(name.lower().replace(" ", "-"), "", None, None, None)
+
+
+def step_titles(readme: str) -> dict[str, str]:
+    """Each step's id and its title as the plan has it, "1. Sizing and parts"."""
+    return {_source(r.name).id: f"{r.number}. {r.name}" if r.number else r.name
+            for r in plan_rows(readme)}  # fmt: skip
+
+
 def steps_data(readme_path, docs, out) -> schema.Steps:
     docs, out = Path(docs), Path(out)
     from pcs14.site.library import _docs
@@ -512,8 +527,7 @@ def steps_data(readme_path, docs, out) -> schema.Steps:
     details = detail_rows(readme, library)
     made = []
     for row in plan_rows(readme, library):
-        source = next((s for s in STEPS if re.search(s.pattern, row.name)),
-                      Source(row.name.lower().replace(" ", "-"), "", None, None, None))  # fmt: skip
+        source = _source(row.name)
         made.append(schema.Step(
             id=source.id, number=row.number, name=row.name, purpose=row.purpose,
             status=row.status, outcome=row.outcome, links=row.links, side_track=row.side_track,

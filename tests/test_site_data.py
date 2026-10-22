@@ -22,7 +22,8 @@ def test_the_index_says_what_was_found_and_what_wasnt(tmp_path):
     assert index.schema_version == schema.SCHEMA_VERSION and index.commit == "abc1234"
     assert index.reports["sizing"].found and index.reports["sizing"].verdict == "pass"
     assert not index.reports["cad"].found  # missing is listed, not an error
-    assert sorted(p.name for p in written) == sorted(index.files + ["index.json"])
+    # the data's own index comes after, with every file's size in it
+    assert sorted(p.name for p in written) == sorted(index.files + ["index.json", "raw.json"])
 
 
 def test_the_spec_sheet_has_every_combination_with_the_reports_numbers():
@@ -140,25 +141,6 @@ def test_each_file_also_comes_as_a_script_for_pages_opened_from_disk(tmp_path):
         assert script.startswith(prefix) and script.rstrip().endswith(";")
         body = script[len(prefix) :].rstrip().rstrip(";")
         assert json.loads(body) == json.loads((tmp_path / name).read_text(encoding="utf-8"))
-
-
-def test_the_home_pages_drone_is_the_cads_view_without_its_post_header(tmp_path):
-    import numpy as np
-    from PIL import Image
-
-    # a made-up post: the header's words at the top, the footer at the bottom, the drone between
-    post = np.full((1350, 1080, 3), 11, dtype="uint8")
-    post[60:200, 64:700] = 240  # the header and title
-    post[1290:1305, 64:600] = 160  # the footer
-    post[460:810, 190:950] = (61, 220, 151)  # the drone
-    source = tmp_path / "three-quarter.png"
-    Image.fromarray(post).save(source)
-    path = data.hero(source, tmp_path / "out")
-    with Image.open(path) as found:
-        picture = np.asarray(found.convert("RGB"))
-    assert picture.shape[0] < 600 and picture.shape[1] < 1000  # the header and footer cut off
-    assert picture.shape[0] > 350 and picture.shape[1] > 760  # the drone, with room around it
-    assert (picture[:20] == 11).all()  # its margin is the background
 
 
 def test_the_wiring_page_has_every_boards_pins_and_the_harness_diagrams(tmp_path):

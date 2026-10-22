@@ -1,5 +1,7 @@
 # Implementation plan: the project site
 
+*Partly superseded: the home page it built, by [the drone view](2026-10-21-the-drone-view.md) on 2026-10-21, and the catalog page, merged into Parts by [the docs](2026-10-22-the-docs.md) on 2026-10-22.*
+
 *Written 2026-10-20, from the [project site spec](../specs/2026-10-20-project-site.md). Test-first, like every step. I asked for the open items to keep moving, so I made the calls below and wrote down why.*
 
 ## Where things go
