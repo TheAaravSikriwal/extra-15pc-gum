@@ -1,7 +1,7 @@
 # Status
 
 **Last updated:** 2026-10-22, on the PC (Windows and WSL2 Ubuntu)
-**Step:** every step is done, 1 to 8 (step 6 except C, the claws), with the structure side track's first pass and the project site. What's left is my review, and the calls below that are mine.
+**Step:** every step is done, 1 to 8 (step 6 except C, the claws), with the structure side track's first pass. The project site's menu is now the drone's documentation (2026-10-22). What's left is my review, and the calls below that are mine.
 **Main machine:** the PC, with WSL2 Ubuntu 24.04 for the Linux tools
 
 ## Right now
@@ -22,7 +22,7 @@ Where to look: the live plan in the [README](README.md#the-plan), the steps in t
 | 8. Build package | Done 2026-10-21. Parts with links, prices and fallbacks, the guides, PX4 first, the test plans and the legal checklist ([package](docs/build/README.md), [log](docs/log/2026-10-21-build-package.md)) |
 | Structure side track | First pass 2026-10-21: beam math. The arms are strong; they ring near the hover; the chute's mount needs a hang test ([report](docs/reports/structure/README.md), [log](docs/log/2026-10-21-structure-first-pass.md)) |
 | Aero side track | The visual half done: FluidX3D's air from all six ways and the hover, each recorded moving and played on the 3D drone in Fly it as particles and a live speed slice (2026-10-22, [log](docs/log/2026-10-22-the-wind-tunnel-in-fly-it.md)). The numbers wait for OpenFOAM |
-| Project site | Done 2026-10-20: the drone in 3D, the spec sheet, the wiring, every flight played back, a page per step, the tunnel, what the sims can't prove ([log](docs/log/2026-10-20-project-site.md)) Since 2026-10-21 it holds everything for the reskin: Build it, the library of every doc, the full catalog, every report's data, and the math. Since 2026-10-21 its home is the drone view: one 3D drone always on screen, Inside it (every wire pin to pin over a blueprint) and Fly it (all 198 runs as looping animations) ([log](docs/log/2026-10-21-the-drone-view.md)). |
+| Project site | Live on my machine since 2026-10-20 ([log](docs/log/2026-10-20-project-site.md)). Its home is the drone view: one 3D drone always on screen, Inside it (every wire pin to pin over a blueprint) and Fly it (all 198 runs as looping animations, and the wind tunnel's flow) ([log](docs/log/2026-10-21-the-drone-view.md)). Since 2026-10-22 its menu is the drone's documentation: twelve pages in four groups, every number held to its report by a test, each step's report shown as it stands now ([log](docs/log/2026-10-22-the-docs.md)) |
 
 **The design today (2026-10-20).** Mission is 2408 g in the sizing model (with the 200 g growth margin) and 2208 g in the CAD, and hovers 25.8 min (22.2 pessimistic, against the 21 target).
 
@@ -34,13 +34,13 @@ Where to look: the live plan in the [README](README.md#the-plan), the steps in t
 
 **Step 7.** The landing modes each come down within 0.1 m. The turn-back warning lands within 8% of the energy home, once it stopped counting on cheaper forward flight. Self-tuning finds the roll inertia within 0.3% in all eight combinations from three stick doublets, after step 4's big steps missed by up to 62%. A plain-English mission flies, but the local model misread "60 m west" into a plan that was safe and wrong, so plans get approved on a map. The spiral holds its helix within 0.3 m; soar mode finds a 4 m/s updraft over a minute's hover. Mapping, change detection and the safe-spot landing work over the flat-colored scenery. Flying without GPS, the camera and the rangefinder ended 0.17 m off after 103 m at 3 m/s; at 15 m/s they lost the ground. The vision model boxed 14 of 20 things: a describer, not a detector to land by.
 
-**Step 8 and the structure.** `pcs14 package` writes the build package to docs/build: $875 of parts for Base, $2,171 for Max, and $362 bought once, every bought part with a buy link, the day it was checked and a fallback. PX4 flies first; my firmware's register-level drivers and the safety monitor's Teensy image aren't built for a board yet. The structure's first pass, in beam math: the arms take about seven times full thrust, but their sideways mode (80 to 144 Hz) sits where an unbalanced prop shakes them in a hover (88 to 103 Hz), so props get balanced and the first gyro log gets checked; the chute's mount gets a hang test.
+**Step 8 and the structure.** `pcs14 package` writes the build package to docs/build: $876.78 of parts for Base, $2,172.29 for Max, and $361.99 bought once so far, every bought part with a buy link, the day it was checked and a fallback. PX4 flies first; my firmware's register-level drivers and the safety monitor's Teensy image aren't built for a board yet. The structure's first pass, in beam math: the arms take about seven times full thrust, but their sideways mode (80 to 144 Hz) sits where an unbalanced prop shakes them in a hover (88 to 103 Hz), so props get balanced and the first gyro log gets checked; the chute's mount gets a hang test.
 
-**Offline?** Study from [docs/learning.md](docs/learning.md) (topic 18 is new: system identification, optical flow and vision models).
+**Offline?** Study from [docs/learning.md](docs/learning.md) (topic 19 is the newest: seeing a flow, with streamlines, averaging and tracing).
 
 ## Up next
 
-1. **My review,** step by step, on the site (`pcs14 site --flights --tunnel`, then `npm --prefix site run build` and `npm --prefix site run preview`). The home page is the drone view now.
+1. **My review,** on the site (`pcs14 site --flights --tunnel`, then `npm --prefix site run build` and `npm --prefix site run preview`): the drone view, and the menu's twelve pages, which are the drone's documentation now.
 2. **The calls below that are mine,** the ESC's motor order first, since the routes' extra 8.7 g of wire goes into the catalog with it.
 3. **The makers' models in the site's drone** (the drone view's task 15): the ARK GPS, the ARK CANnode and the Pi 5 are on my machine, and the Teensy 4.1's is a download for me to approve.
 4. **The side tracks' real tools,** once installed: CalculiX for the cradle, the rail and the legs; OpenFOAM for the wind tunnel's numbers.
@@ -66,7 +66,7 @@ Where to look: the live plan in the [README](README.md#the-plan), the steps in t
 
 - The frame's two front standoffs sit at the full body's inset in my CAD, about 1 mm past the narrower nose's edge (found 2026-10-21, drawing the screw heads). They move with the next change that reruns the checks; until then the site leaves their screw heads off
 - Rotor drag in forward flight, so cruise numbers get believable (the honesty check's big miss, and now step 4's)
-- The weight: Mission passes with 1.2 min of pessimistic hover to spare; Max is 2623 g against its own 2500 g target (report-only)
+- The weight: Mission passes with 1.2 min of pessimistic hover to spare; Max is 2620 g against its own 2500 g target (report-only, so the sizing still passes)
 - My firmware's height estimate lets about 6 cm of the barometer's noise through (its hovers hold within 0.12 to 0.25 m, against PX4's 0.06 to 0.20 m with Gazebo's noiseless GPS height)
 - My firmware's current estimate comes from the thrust table (about 11% under the electrical report at Max's hover); on the drone the ESC's current sensor replaces it
 - The XT60's contact mass (a 2.5 g guess): the firmware's heat limit and the burst check both rest on it

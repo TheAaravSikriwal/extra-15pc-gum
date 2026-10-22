@@ -476,15 +476,26 @@ It's built from the data files every step writes, so it grows as the steps finis
 **What building it decided (2026-10-20).** I asked for it to be built without stopping to ask, so these were my calls, written down as I made them:
 
 - **It opens from a folder on disk, through scripts.** Browsers won't let a page opened as `file://` fetch anything, so `pcs14 site` writes every data file twice, as JSON and as a small script that hands the same data to the page. The 3D model goes the same way, as base64.
-- **The first load is held to 600 kB,** counting the page, what it names and the fonts. The fonts are Latin only, and the pages with three.js in them (the 3D drone and the flights, about 860 kB) load only when they're opened. It's 267 kB now.
+- **The first load is held to 600 kB,** counting the page, what it names and the fonts. The fonts are Latin only, and the pages with three.js in them (the 3D drone and the flights, about 860 kB) load only when they're opened. It was 267 kB then, and 344 kB on 2026-10-22.
 - **The model is thinned with gltfpack** at half the triangles, keeping every piece's name: the CAD's 11.9 MB GLB comes to 3.0 MB. The CAD's own GLB stays as the CAD makes it.
 - **Nothing is written twice.** A step's page comes from the README's plan, its report, the log and the learning file, matched by name. The unproven list is decisions.md's own table plus each report's "What it can't prove". The wiring page reads every board's pins from `electrical.json`, which the electrical report now writes.
 - **The flight pages fly the CAD's model,** in each run's color with only its combination's modules. A light stand-in shows until the model has loaded, so the page doesn't wait on 3 MB.
-- **The home page is quiet:** the CAD's three-quarter view without its post header, a line about what this is, one line per step with its status, and one line to what the sims can't prove.
+- **The home page is quiet:** the CAD's three-quarter view without its post header, a line about what this is, one line per step with its status, and one line to what the sims can't prove. (Replaced 2026-10-21 by the drone view.)
 - **The wind tunnel's flow plays on the drone in Fly it** (decided 2026-10-22, [spec](specs/2026-10-22-the-wind-tunnel-in-fly-it.md)). My FluidX3D fork writes 64 snapshots of each run's flow over its last half, in a box around the drone on 12 mm cells, with the speed on a plane through the drone at each. This repo loops them seamlessly and carries 2,400 particles through them. Fly it plays the particles as fading trails, with the slice's frames blended on the GPU, slowed 20 times, and the drone held still at the tilt it flies with. My first version traced lines through the flow averaged over time instead. I dropped it: it missed the air going round the drone and through its wake, the lines started out of nowhere, and the wake was a still picture. There are seven cases: the air from the front, behind, each side, above and below at 10 m/s on the body alone, and the hover with its disks. The flow files are FluidX3D output, so they stay local until the fork is public, and the force shown with them is said to be visual-grade.
 - **The wind tunnel plays its own frames.** My FluidX3D fork writes 40 frames along each run, of the air's speed and of the vortices, each with its time, and the page plays them in order on the clock at 0.02x. Its pictures stay on my machine until the fork is public: the page says so, and the build check warns when they're in a build.
 - **The 3D drone turns slowly with its props spinning,** each the way PX4's quad X turns it, until someone takes hold of it.
 
+
+**The docs (decided 2026-10-22, [spec](specs/2026-10-22-the-docs.md), [plan](plans/2026-10-22-the-docs.md)).** The menu is the drone's documentation, in depth, and holds everything the drone view shows as well:
+
+- **Twelve pages in four groups, one home per subject:** the drone (overview, spec sheet, parts, wiring), what was tested (flights, the wind tunnel, what the sims can't prove), the work (every step, Build it) and reference (the library, the data, the math). The catalog went into Parts. Other pages link to a subject's home instead of repeating it.
+- **One order and one name for everything.** The combinations always run base, V, P, C, mission, V+C, P+C, max, and the wind tunnel's cases go by the drone view's names.
+- **A number on a page is its report's,** formatted the way the report formats it (toward failing), and a test holds the page to the report.
+- **A step shows its report now, apart from what I wrote then.** The plan's outcome stays as I wrote it when the step finished, labeled that way. Above it, the report's verdict in its own words, its key numbers and its sections, as they stand today.
+- **Links stay on the site** wherever the doc is in the library.
+- **A replaced doc says so in its own first lines,** starting "Superseded" or "Partly superseded" and saying by what, and the library marks it from there. Nothing gets deleted.
+- **The math page is only the math,** in step order, the functions that explain themselves first, its links pinned to the commit the site was built from.
+- **The data page says what every file holds and how big it is,** the site's own files too.
 
 ### Learning (decided 2026-10-13)
 

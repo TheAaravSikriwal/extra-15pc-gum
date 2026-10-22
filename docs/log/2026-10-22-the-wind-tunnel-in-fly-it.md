@@ -1,4 +1,4 @@
-# The wind tunnel in Fly it
+# 2026-10-22: The wind tunnel in Fly it
 
 *2026-10-22, on the PC. The [spec](../specs/2026-10-22-the-wind-tunnel-in-fly-it.md) and the [plan](../plans/2026-10-22-the-wind-tunnel-in-fly-it.md).*
 
