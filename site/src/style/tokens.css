@@ -198,11 +198,6 @@ svg text {
   font: 11px var(--font-numbers);
 }
 
-svg.bars {
-  display: block;
-  max-width: 720px;
-}
-
 svg .chart-title {
   fill: var(--text);
   font-size: 11px;
@@ -932,6 +927,32 @@ ul.tree {
   background: var(--hud-bg);
   border: 1px solid var(--hud-line);
   backdrop-filter: blur(10px);
+}
+
+/* the menu's groups: a quiet name over each one's pages */
+.stage-menu ul ul {
+  position: static;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+  background: none;
+  border: 0;
+  backdrop-filter: none;
+}
+
+.stage-menu .menu-group + .menu-group {
+  margin-top: 4px;
+  padding-top: 6px;
+  border-top: 1px solid var(--hud-line);
+}
+
+.stage-menu .menu-group-name {
+  display: block;
+  padding: 6px 16px 2px;
+  font: 9px/1.4 var(--font-numbers);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--hud-dim);
 }
 
 .stage-menu li a {

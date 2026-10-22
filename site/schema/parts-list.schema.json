@@ -1,0 +1,244 @@
+{
+ "$defs": {
+  "CatalogPart": {
+   "additionalProperties": false,
+   "properties": {
+    "id": {
+     "title": "Id",
+     "type": "string"
+    },
+    "type": {
+     "title": "Type",
+     "type": "string"
+    },
+    "maker": {
+     "title": "Maker",
+     "type": "string"
+    },
+    "model": {
+     "title": "Model",
+     "type": "string"
+    },
+    "mass_g": {
+     "anyOf": [
+      {
+       "type": "number"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Mass G"
+    },
+    "price_usd": {
+     "anyOf": [
+      {
+       "type": "number"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Price Usd"
+    },
+    "link": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Link"
+    },
+    "record": {
+     "additionalProperties": true,
+     "title": "Record",
+     "type": "object"
+    }
+   },
+   "required": [
+    "id",
+    "type",
+    "maker",
+    "model",
+    "record"
+   ],
+   "title": "CatalogPart",
+   "type": "object"
+  },
+  "PartsLine": {
+   "additionalProperties": false,
+   "description": "One line of what goes on the drone, from the build package, with its catalog entry.",
+   "properties": {
+    "module": {
+     "title": "Module",
+     "type": "string"
+    },
+    "group": {
+     "title": "Group",
+     "type": "string"
+    },
+    "name": {
+     "title": "Name",
+     "type": "string"
+    },
+    "qty": {
+     "title": "Qty",
+     "type": "number"
+    },
+    "unit": {
+     "title": "Unit",
+     "type": "string"
+    },
+    "maker": {
+     "title": "Maker",
+     "type": "string"
+    },
+    "model": {
+     "title": "Model",
+     "type": "string"
+    },
+    "link": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Link"
+    },
+    "price_each_usd": {
+     "anyOf": [
+      {
+       "type": "number"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Price Each Usd"
+    },
+    "total_usd": {
+     "anyOf": [
+      {
+       "type": "number"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Total Usd"
+    },
+    "checked": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Checked"
+    },
+    "fallback": {
+     "default": "",
+     "title": "Fallback",
+     "type": "string"
+    },
+    "note": {
+     "default": "",
+     "title": "Note",
+     "type": "string"
+    },
+    "catalog_id": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Catalog Id"
+    },
+    "mass_g": {
+     "anyOf": [
+      {
+       "type": "number"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Mass G"
+    }
+   },
+   "required": [
+    "module",
+    "group",
+    "name",
+    "qty",
+    "unit",
+    "maker",
+    "model"
+   ],
+   "title": "PartsLine",
+   "type": "object"
+  }
+ },
+ "additionalProperties": false,
+ "description": "parts-list.json: everything on the drone, by module, then the rest of the catalog.",
+ "properties": {
+  "schema_version": {
+   "title": "Schema Version",
+   "type": "integer"
+  },
+  "generated": {
+   "title": "Generated",
+   "type": "string"
+  },
+  "lines": {
+   "items": {
+    "$ref": "#/$defs/PartsLine"
+   },
+   "title": "Lines",
+   "type": "array"
+  },
+  "used": {
+   "items": {
+    "$ref": "#/$defs/CatalogPart"
+   },
+   "title": "Used",
+   "type": "array"
+  },
+  "alternatives": {
+   "items": {
+    "$ref": "#/$defs/CatalogPart"
+   },
+   "title": "Alternatives",
+   "type": "array"
+  }
+ },
+ "required": [
+  "schema_version",
+  "generated",
+  "lines",
+  "used",
+  "alternatives"
+ ],
+ "title": "PartsList",
+ "type": "object"
+}

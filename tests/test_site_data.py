@@ -185,3 +185,44 @@ def test_the_wiring_page_has_every_boards_pins_and_the_harness_diagrams(tmp_path
     assert found.schematic == "wiring/schematic.svg"
     assert (tmp_path / "out" / "wiring" / "schematic.svg").is_file()
     assert found.kicad.endswith("docs/reports/electrical/kicad/electrical.kicad_sch")
+
+
+def test_the_spec_sheet_words_and_rounds_its_numbers_as_the_sizing_report_does():
+    sizing = json.loads((REPORTS / "sizing" / "sizing.json").read_text(encoding="utf-8"))
+    cad = json.loads((REPORTS / "cad" / "cad.json").read_text(encoding="utf-8"))
+    sheet = data.spec_sheet(sizing, cad)
+    report = (REPORTS / "sizing" / "README.md").read_text(encoding="utf-8")
+    for c in sheet.combinations:
+        hover = next(k for k in c.checks if k.name == "Hover time")
+        # the report's summary row has it as "nominal / pessimistic min", rounded toward failing
+        row = f"{hover.shown.split()[0]} / {hover.shown_pessimistic}"
+        assert row in report, (c.name, row)
+        # what its weight is made of adds up to it, the payload and the margin included
+        assert sum(line.grams for line in c.mass_lines) == pytest.approx(c.mass_g)
+        assert c.balance is not None and len(c.balance.inertia_kg_m2) == 3
+        assert [k for k, _ in c.numbers][:2] == ["Weight, sizing model", "Weight, CAD"]
+        numbers = dict(c.numbers)
+        assert f"- Top speed: {numbers['Top speed']}." in report, c.name
+        cheapest = numbers["Cheapest speed"].split(" (")[0]
+        assert f"- Cheapest speed: {cheapest}." in report, c.name
+    c = next(c for c in sheet.combinations if c.name == "C")
+    assert any(line.group == "payload" for line in c.mass_lines)  # C carries 250 g in its claws
+    assert any("Cheapest speed" == k and "the longest it can stay up" in v for k, v in c.numbers)
+    assert sheet.pack.series == 6 and sheet.pack.parallel == 2
+
+
+def test_the_parts_list_is_the_build_package_with_each_lines_catalog_entry():
+    from pcs14.catalog import load_catalog
+    from pcs14.site.library import catalog_data
+
+    package = json.loads((ROOT / "docs" / "build" / "package.json").read_text(encoding="utf-8"))
+    catalog = catalog_data(load_catalog(ROOT / "design" / "catalog"))
+    design = "\n".join((ROOT / "design" / n).read_text(encoding="utf-8") for n in data.DESIGN_FILES)
+    listed = data.parts_list(package, catalog, design)
+    assert len(listed.lines) == len(package["lines"])  # every line, the hardware and prints too
+    motor = next(x for x in listed.lines if x.name == "Motor")
+    assert motor.catalog_id == "emax-e3-2814-850kv" and motor.mass_g and motor.note
+    used, other = {p.id for p in listed.used}, {p.id for p in listed.alternatives}
+    assert not used & other and len(used | other) == len(catalog.parts)
+    assert "landing-legs" in used and "base-wiring" in used  # named in the design, not bought
+    assert "molicel-p42a" in other  # a cell I compared, not on the drone

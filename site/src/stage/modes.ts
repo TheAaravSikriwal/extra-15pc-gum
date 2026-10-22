@@ -16,10 +16,9 @@ export function modeOf(route: string[]): Mode {
 
 export const DEFAULT_SCENARIO = "hover";
 
-// a page's name for the bar along its top: the menu's, or the wiring's, which isn't in it
+// a page's name for the bar along its top: the menu's (the catalog's old address is the parts page now)
 export function pageName(route: string[]): string {
-  const first = route[0] ?? "";
-  if (first === "wiring") return "The wiring";
+  const first = route[0] === "catalog" ? "parts" : (route[0] ?? "");
   return MENU.find((p) => p.route === first)?.name ?? "";
 }
 
@@ -45,16 +44,41 @@ export function flyLink(scenario: string, setup?: string): string {
   return `#/fly/${encodeURIComponent(scenario)}${setup ? `/${encodeURIComponent(setup)}` : ""}`;
 }
 
-// the other pages, in the corner menu; the drone in 3D and the wiring are the view itself now
-export const MENU: { route: string; name: string }[] = [
-  { route: "spec", name: "Spec sheet" },
-  { route: "flights", name: "Every flight" },
-  { route: "steps", name: "Every step" },
-  { route: "tunnel", name: "The wind tunnel" },
-  { route: "unproven", name: "What it can't prove" },
-  { route: "build", name: "Build it" },
-  { route: "library", name: "The library" },
-  { route: "catalog", name: "The catalog" },
-  { route: "data", name: "The data" },
-  { route: "math", name: "The math" },
+// the docs, in the corner menu, grouped like a manual: the drone itself, how it was tested, the
+// work that made it, and the reference behind it all
+export const MENU_GROUPS: { name: string; pages: { route: string; name: string }[] }[] = [
+  {
+    name: "The drone",
+    pages: [
+      { route: "overview", name: "Overview" },
+      { route: "spec", name: "Spec sheet" },
+      { route: "parts", name: "Parts" },
+      { route: "wiring", name: "Wiring" },
+    ],
+  },
+  {
+    name: "Tested",
+    pages: [
+      { route: "flights", name: "Flights" },
+      { route: "tunnel", name: "Wind tunnel" },
+      { route: "unproven", name: "What it can't prove" },
+    ],
+  },
+  {
+    name: "The work",
+    pages: [
+      { route: "steps", name: "Steps" },
+      { route: "build", name: "Build it" },
+    ],
+  },
+  {
+    name: "Reference",
+    pages: [
+      { route: "library", name: "Library" },
+      { route: "data", name: "Data" },
+      { route: "math", name: "The math" },
+    ],
+  },
 ];
+
+export const MENU: { route: string; name: string }[] = MENU_GROUPS.flatMap((g) => g.pages);

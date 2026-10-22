@@ -12,12 +12,17 @@ const SPEC = {
       name: "max",
       modules: ["V", "P", "C"],
       verdict: "fail",
+      required: false,
       mass_g: 2620.4,
       growth_margin_g: 200,
-      checks: [{ name: "Hover time", unit: "min", nominal: 22.84, pessimistic: 19.71, higher_is_better: true, verdict: "pass", note: "" }],
+      checks: [
+        { name: "Hover time", unit: "min", nominal: 22.84, pessimistic: 19.71, higher_is_better: true, verdict: "pass", note: "", shown: "22.8 min" },
+      ],
       top_speed_kmh: {},
       least_power_speed_ms: 8,
       least_power_minutes: 25,
+      mass_lines: [],
+      numbers: [],
     },
   ],
 } as SpecSheet;

@@ -37,22 +37,75 @@ def _part(item: dict, role: str, module: str | None = None, count: int = 1) -> s
                        link=item.get("link"), count=count)  # fmt: skip
 
 
+def _shown(check: dict) -> dict:
+    """A check's numbers as the sizing report prints them, rounded toward failing."""
+    from pcs14.report.formatting import fmt_limit, fmt_value, with_unit
+
+    unit, high = check["unit"], check.get("higher_is_better", True)
+    out = {"shown": with_unit(fmt_value(check["nominal"], unit, high), unit)}
+    if check.get("pessimistic") is not None:
+        out["shown_pessimistic"] = with_unit(fmt_value(check["pessimistic"], unit, high), unit)
+    if check.get("limit") is not None:
+        side = "at least" if high else "at most"
+        out["shown_limit"] = f"{side} {with_unit(fmt_limit(check['limit'], unit), unit)}"
+    if check.get("margin") is not None:
+        out["shown_margin"] = f"{check['margin'] * 100:+.0f}%"
+    return out
+
+
+def _numbers(s: dict, c: dict | None) -> list[list[str]]:
+    """A combination's key numbers, worded and rounded as the sizing report has them."""
+    from pcs14.report.formatting import fmt_value
+
+    weight = f"{s['mass_g']:.0f} g"
+    if s["growth_margin_g"]:
+        weight += f", with {s['growth_margin_g']:.0f} g of growth margin"
+    rows = [["Weight, sizing model", weight]]
+    if c:
+        cad = f"{c['mass_g']:.0f} g"
+        rows.append(["Weight, CAD", cad + (", without the margin" if s["growth_margin_g"] else "")])
+    for check in s["checks"]:
+        shown = _shown(check)
+        value = shown["shown"]
+        if "shown_pessimistic" in shown:
+            value += f" ({shown['shown_pessimistic']} pessimistic)"
+        rows.append([check["name"], value])
+    top = s["top_speed_kmh"]
+    speed = {k: f"{v:.0f}" for k, v in top.items()}  # the report's own rounding, for these
+    rows.append(["Top speed", f"{speed.get('full')} km/h on a full pack, {speed.get('half')} at "
+                 f"half charge, {speed.get('reserve')} at the reserve"])  # fmt: skip
+    minutes = fmt_value(s["least_power_minutes"], "min", True)
+    rows.append(["Cheapest speed", f"{s['least_power_speed_ms']:.1f} m/s, for {minutes} min of "
+                 "cruise (the longest it can stay up)"])  # fmt: skip
+    return rows
+
+
 def spec_sheet(sizing: dict, cad: dict | None) -> schema.SpecSheet:
     """The spec sheet: each combination's weights, checks and speeds from the sizing report,
-    the CAD's own weight and balance next to them when the CAD report is there."""
+    worded and rounded as the report has them, what its weight is made of, and the CAD's own
+    weight and balance next to them when the CAD report is there."""
     by_setup = {c["setup"]: c for c in (cad or {}).get("combinations", [])}
     combinations = []
     for s in sizing["setups"]:
         c = by_setup.get(s["name"])
+        balance = None
+        if c:
+            balance = schema.Balance(passed=c["passed"], trim_x_mm=c["trim_x_mm"],
+                                     center_of_gravity_mm=c["center_of_gravity_mm"],
+                                     busiest_motor_extra=c["busiest_motor_extra"],
+                                     inertia_kg_m2=c["inertia_kg_m2"])  # fmt: skip
         combinations.append(schema.Combination(
-            name=s["name"], modules=s["modules"], verdict=s["verdict"], mass_g=s["mass_g"],
+            name=s["name"], modules=s["modules"], verdict=s["verdict"],
+            required=s.get("required", False), mass_g=s["mass_g"],
             growth_margin_g=s["growth_margin_g"],
             cad_mass_g=c["mass_g"] if c else None,
             center_of_gravity_mm=c["center_of_gravity_mm"] if c else None,
-            checks=[schema.Check(**{k: v for k, v in check.items() if k != "margin"})
-                    for check in s["checks"]],
+            checks=[schema.Check(**{k: v for k, v in check.items() if k != "margin"},
+                                 **_shown(check)) for check in s["checks"]],
             top_speed_kmh=s["top_speed_kmh"], least_power_speed_ms=s["least_power_speed_ms"],
             least_power_minutes=s["least_power_minutes"],
+            mass_lines=[schema.MassLine(**line) for line in s.get("mass_lines", [])],
+            balance=balance, numbers=_numbers(s, c),
         ))  # fmt: skip
     b = sizing["build"]
     pack = b["pack"]
@@ -66,10 +119,15 @@ def spec_sheet(sizing: dict, cad: dict | None) -> schema.SpecSheet:
     parts += [_part(item, item["id"]) for item in b.get("components", [])]
     for module, items in b.get("modules", {}).items():
         parts += [_part(item, item["id"], module) for item in items]
+    cell = pack["cell"]
     return schema.SpecSheet(
         schema_version=schema.SCHEMA_VERSION, sizing_case=sizing["sizing_case"],
         verdict=sizing["verdict"], targets=sizing["targets"], combinations=combinations,
         parts=parts,
+        pack=schema.Pack(cell=f"{cell['maker']} {cell['model']}", cell_id=cell["id"],
+                         series=pack["series"], parallel=pack["parallel"],
+                         capacity_mah=pack["capacity_mah"], resistance_mohm=pack["resistance_mohm"],
+                         mass_g=pack["mass_g"]),
     )  # fmt: skip
 
 
@@ -182,23 +240,67 @@ def hero(view, out, margin_px: int = 48) -> Path:
     return path
 
 
-GUIDES = (("The parts list", "parts.md"), ("The assembly guide", "assembly.md"),
-          ("The wiring guide", "wiring.md"), ("The firmware", "firmware.md"),
-          ("The test plans", "tests.md"), ("The legal checklist", "legal.md"))  # fmt: skip
+GUIDES = (
+    ("The parts list", "parts", "Every part with its link, the day it was checked and a fallback, "
+     "as a table and a CSV."),
+    ("The assembly guide", "assembly", "How it goes together, step by step, each step pictured "
+     "from the CAD with its new parts in spearmint."),
+    ("The wiring guide", "wiring", "Every wire once, under its harness, with its gauge and cut "
+     "length, and the checks with a meter before power."),
+    ("The firmware", "firmware", "PX4 on the ARK FPV first, then my firmware, and how each is "
+     "set up for this drone."),
+    ("The test plans", "tests", "Bench checks first, props off, then the first flights, tethered "
+     "first; each check says what passes."),
+    ("The legal checklist", "legal", "Each US rule, what it means for this drone, and where it "
+     "lives: the limits profile, a part, or me."),
+)  # fmt: skip
 
 
 def build_data(package: dict) -> schema.Build:
-    """build.json from the build package's own data file."""
-    from pcs14.site.steps import GITHUB
-
+    """build.json from the build package's own data file, its guides on the site's library."""
     return schema.Build(
         schema_version=schema.SCHEMA_VERSION,
         generated=package["generated"],
         totals=[schema.BuildTotal(**t) for t in package["totals"]],
         lines=[schema.BuildLine(**x) for x in package["lines"]],
-        guides=[schema.BuildGuide(name=n, url=GITHUB + f"docs/build/{f}") for n, f in GUIDES],
+        guides=[
+            schema.BuildGuide(name=n, url=f"#/library/docs/build/{f}", about=about)
+            for n, f, about in GUIDES
+        ],  # fmt: skip
         open=package.get("open", []),
     )
+
+
+# the design's own files, where the parts it uses are named by their catalog ids
+DESIGN_FILES = ("build.yaml", "cad.yaml", "electrical.yaml", "targets.yaml")
+
+
+def _key(maker: str, model: str) -> tuple[str, str]:
+    return maker.strip().lower(), model.strip().lower()
+
+
+def parts_list(package: dict, catalog: schema.Catalog, design: str = "") -> schema.PartsList:
+    """Everything that goes on the drone, from the build package, each line with its catalog
+    entry where it has one (matched by maker and model); the catalog entries the design uses
+    (a line's, or one the design files name); and the rest of the catalog, the alternatives."""
+    import re
+
+    by_key = {_key(p.maker, p.model): p for p in catalog.parts}
+    named = {p.id for p in catalog.parts
+             if re.search(rf"(?<![\w-]){re.escape(p.id)}(?![\w-])", design)}  # fmt: skip
+    lines, used = [], {p.id: p for p in catalog.parts if p.id in named}
+    for x in package["lines"]:
+        part = by_key.get(_key(x["maker"], x["model"]))
+        if part is not None:
+            used[part.id] = part
+        lines.append(schema.PartsLine(**{k: x.get(k) for k in schema.PartsLine.model_fields
+                                         if k in x and x.get(k) is not None},
+                                      catalog_id=part.id if part else None,
+                                      mass_g=part.mass_g if part else None))  # fmt: skip
+    alternatives = [p for p in catalog.parts if p.id not in used]
+    return schema.PartsList(schema_version=schema.SCHEMA_VERSION, generated=package["generated"],
+                            lines=lines, used=list(used.values()),
+                            alternatives=alternatives)  # fmt: skip
 
 
 def shape_of(name: str):
@@ -257,7 +359,19 @@ def write_all(out, reports, commit: str | None = None, today: str | None = None)
     # the build package, when pcs14 package has written it
     package = docs / "build" / "package.json"
     if package.is_file():
-        written.append(_write(out, "build", build_data(json.loads(package.read_text("utf-8")))))
+        built = json.loads(package.read_text("utf-8"))
+        written.append(_write(out, "build", build_data(built)))
+        # and what goes on the drone, with its catalog entries, for the parts page
+        catalog = docs.parent / "design" / "catalog"
+        if catalog.is_dir():
+            from pcs14.catalog import load_catalog
+            from pcs14.site.library import catalog_data
+
+            folder = docs.parent / "design"
+            design = "\n".join((folder / name).read_text(encoding="utf-8")
+                               for name in DESIGN_FILES if (folder / name).is_file())  # fmt: skip
+            listed = parts_list(built, catalog_data(load_catalog(catalog)), design)
+            written.append(_write(out, "parts-list", listed))
     index = schema.Index(
         schema_version=schema.SCHEMA_VERSION,
         generated=today or date.today().isoformat(),

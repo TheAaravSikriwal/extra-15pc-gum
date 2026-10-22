@@ -1,4 +1,4 @@
-import { flyLink, MENU, modeOf, pageName, scenarioOf, setupOf, tunnelLink, tunnelOf } from "./modes";
+import { flyLink, MENU, MENU_GROUPS, modeOf, pageName, scenarioOf, setupOf, tunnelLink, tunnelOf } from "./modes";
 
 test("the route picks the mode: the home is inside the drone, #/fly is flying, the rest are pages", () => {
   expect(modeOf([])).toBe("inside");
@@ -14,11 +14,13 @@ test("the scenario comes from the route, hover by default", () => {
   expect(scenarioOf(["fly", "parachute drop"])).toBe("parachute drop");
 });
 
-test("the corner menu has every other page, and not the two the view took over", () => {
+test("the corner menu is the docs, grouped like a manual, and each page has its name on top", () => {
+  expect(MENU_GROUPS.map((g) => g.name)).toEqual(["The drone", "Tested", "The work", "Reference"]);
   const routes = MENU.map((p) => p.route);
-  expect(routes).toEqual(["spec", "flights", "steps", "tunnel", "unproven", "build", "library", "catalog", "data", "math"]);
-  expect(routes).not.toContain("drone");
-  expect(routes).not.toContain("wiring");
+  expect(routes).toEqual(["overview", "spec", "parts", "wiring", "flights", "tunnel", "unproven", "steps", "build", "library", "data", "math"]);
+  expect(routes).not.toContain("drone"); // the drone in 3D is the view itself
+  expect(pageName(["wiring", "fc"])).toBe("Wiring");
+  expect(pageName(["catalog"])).toBe("Parts"); // its old address
 });
 
 test("a run's page links into Fly it with its own combination", () => {
@@ -30,9 +32,8 @@ test("a run's page links into Fly it with its own combination", () => {
 
 test("a page's bar names it, deep links included", () => {
   expect(pageName(["spec"])).toBe("Spec sheet");
-  expect(pageName(["flights", "max", "dead motor"])).toBe("Every flight");
-  expect(pageName(["library", "docs", "STATUS.md"])).toBe("The library");
-  expect(pageName(["wiring", "fc"])).toBe("The wiring");
+  expect(pageName(["flights", "max", "dead motor"])).toBe("Flights");
+  expect(pageName(["library", "docs", "STATUS.md"])).toBe("Library");
 });
 
 test("the wind tunnel opens in Fly it, from whichever way the air comes, and isn't a run", () => {

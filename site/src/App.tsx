@@ -2,11 +2,12 @@
 import { lazy, type ReactNode, Suspense } from "react";
 
 import { Build } from "./pages/Build";
-import { Catalog } from "./pages/Catalog";
 import { Data } from "./pages/Data";
 import { Flights } from "./pages/Flights";
 import { Library } from "./pages/Library";
 import { MathPage } from "./pages/MathPage";
+import { Overview } from "./pages/Overview";
+import { Parts } from "./pages/Parts";
 import { Spec } from "./pages/Spec";
 import { StepPage, Steps } from "./pages/Steps";
 import { Tunnel } from "./pages/Tunnel";
@@ -22,8 +23,13 @@ const FlightRun = lazy(() => import("./pages/FlightRun").then((m) => ({ default:
 
 export function pageFor(route: string[]): ReactNode {
   switch (route[0] ?? "") {
+    case "overview":
+      return <Overview />;
     case "spec":
       return <Spec />;
+    case "parts":
+    case "catalog": // its old address
+      return <Parts />;
     case "flights":
       if (route.length >= 3) {
         return (
@@ -43,8 +49,6 @@ export function pageFor(route: string[]): ReactNode {
       return <Build />;
     case "library":
       return <Library path={route.slice(1)} />;
-    case "catalog":
-      return <Catalog />;
     case "data":
       return <Data name={route[1]} />;
     case "math":

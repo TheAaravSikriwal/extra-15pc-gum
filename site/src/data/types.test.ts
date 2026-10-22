@@ -11,6 +11,7 @@ import index from "../../schema/index.schema.json";
 import parts from "../../schema/parts.schema.json";
 import playback from "../../schema/playback.schema.json";
 import spec from "../../schema/spec.schema.json";
+import partsList from "../../schema/parts-list.schema.json";
 import steps from "../../schema/steps.schema.json";
 import tunnelFlow from "../../schema/tunnel-flow.schema.json";
 import tunnel from "../../schema/tunnel.schema.json";
@@ -35,9 +36,14 @@ test("ReportFound has the schema's fields", () => {
 
 test("the spec sheet's shapes have the schema's fields", () => {
   expect(Object.keys(spec.properties).sort()).toEqual([...FIELDS.SpecSheet].sort());
-  for (const name of ["Check", "Combination", "Part"] as const) {
+  for (const name of ["Check", "Combination", "Part", "MassLine", "Balance", "Pack"] as const) {
     expect(Object.keys(spec.$defs[name].properties).sort()).toEqual([...FIELDS[name]].sort());
   }
+});
+
+test("the parts list's shapes have the schema's fields", () => {
+  expect(Object.keys(partsList.properties).sort()).toEqual([...FIELDS.PartsList].sort());
+  expect(Object.keys(partsList.$defs.PartsLine.properties).sort()).toEqual([...FIELDS.PartsLine].sort());
 });
 
 test("the parts' and wires' shapes have the schema's fields", () => {

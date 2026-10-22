@@ -1,5 +1,49 @@
 {
  "$defs": {
+  "Balance": {
+   "additionalProperties": false,
+   "description": "How the CAD balances a combination: where the pack slides to, the center of gravity\nthat leaves, how much harder the busiest motor works, and the inertia.",
+   "properties": {
+    "passed": {
+     "title": "Passed",
+     "type": "boolean"
+    },
+    "trim_x_mm": {
+     "title": "Trim X Mm",
+     "type": "number"
+    },
+    "center_of_gravity_mm": {
+     "items": {
+      "type": "number"
+     },
+     "title": "Center Of Gravity Mm",
+     "type": "array"
+    },
+    "busiest_motor_extra": {
+     "title": "Busiest Motor Extra",
+     "type": "number"
+    },
+    "inertia_kg_m2": {
+     "items": {
+      "items": {
+       "type": "number"
+      },
+      "type": "array"
+     },
+     "title": "Inertia Kg M2",
+     "type": "array"
+    }
+   },
+   "required": [
+    "passed",
+    "trim_x_mm",
+    "center_of_gravity_mm",
+    "busiest_motor_extra",
+    "inertia_kg_m2"
+   ],
+   "title": "Balance",
+   "type": "object"
+  },
   "Check": {
    "additionalProperties": false,
    "properties": {
@@ -52,6 +96,47 @@
      "default": "",
      "title": "Note",
      "type": "string"
+    },
+    "shown": {
+     "default": "",
+     "title": "Shown",
+     "type": "string"
+    },
+    "shown_pessimistic": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Shown Pessimistic"
+    },
+    "shown_limit": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Shown Limit"
+    },
+    "shown_margin": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Shown Margin"
     }
    },
    "required": [
@@ -80,6 +165,11 @@
     "verdict": {
      "title": "Verdict",
      "type": "string"
+    },
+    "required": {
+     "default": false,
+     "title": "Required",
+     "type": "boolean"
     },
     "mass_g": {
      "title": "Mass G",
@@ -137,6 +227,36 @@
     "least_power_minutes": {
      "title": "Least Power Minutes",
      "type": "number"
+    },
+    "mass_lines": {
+     "default": [],
+     "items": {
+      "$ref": "#/$defs/MassLine"
+     },
+     "title": "Mass Lines",
+     "type": "array"
+    },
+    "balance": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Balance"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
+    },
+    "numbers": {
+     "default": [],
+     "items": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array"
+     },
+     "title": "Numbers",
+     "type": "array"
     }
    },
    "required": [
@@ -151,6 +271,74 @@
     "least_power_minutes"
    ],
    "title": "Combination",
+   "type": "object"
+  },
+  "MassLine": {
+   "additionalProperties": false,
+   "properties": {
+    "name": {
+     "title": "Name",
+     "type": "string"
+    },
+    "grams": {
+     "title": "Grams",
+     "type": "number"
+    },
+    "group": {
+     "title": "Group",
+     "type": "string"
+    }
+   },
+   "required": [
+    "name",
+    "grams",
+    "group"
+   ],
+   "title": "MassLine",
+   "type": "object"
+  },
+  "Pack": {
+   "additionalProperties": false,
+   "properties": {
+    "cell": {
+     "title": "Cell",
+     "type": "string"
+    },
+    "cell_id": {
+     "title": "Cell Id",
+     "type": "string"
+    },
+    "series": {
+     "title": "Series",
+     "type": "integer"
+    },
+    "parallel": {
+     "title": "Parallel",
+     "type": "integer"
+    },
+    "capacity_mah": {
+     "title": "Capacity Mah",
+     "type": "number"
+    },
+    "resistance_mohm": {
+     "title": "Resistance Mohm",
+     "type": "number"
+    },
+    "mass_g": {
+     "title": "Mass G",
+     "type": "number"
+    }
+   },
+   "required": [
+    "cell",
+    "cell_id",
+    "series",
+    "parallel",
+    "capacity_mah",
+    "resistance_mohm",
+    "mass_g"
+   ],
+   "title": "Pack",
    "type": "object"
   },
   "Part": {
@@ -264,6 +452,17 @@
    },
    "title": "Parts",
    "type": "array"
+  },
+  "pack": {
+   "anyOf": [
+    {
+     "$ref": "#/$defs/Pack"
+    },
+    {
+     "type": "null"
+    }
+   ],
+   "default": null
   }
  },
  "required": [

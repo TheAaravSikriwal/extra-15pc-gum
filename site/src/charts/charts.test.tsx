@@ -1,6 +1,5 @@
 import { render, screen } from "@testing-library/react";
 
-import { Bars, passes } from "./Bars";
 import { Matrix } from "./Matrix";
 import { TimeChart, visibleSpan } from "./TimeChart";
 
@@ -37,40 +36,4 @@ test("the matrix shows each cell and links the flown ones", () => {
   const cells = screen.getAllByRole("cell");
   expect(cells.map((c) => c.textContent)).toEqual(["pass", "pass", "", "fail"]);
   expect(screen.getAllByRole("link")[0]).toHaveAttribute("href", "#/flights/base/hover");
-});
-
-test("a marginal check is a hollow bar, with a tick where the pessimistic number lands", () => {
-  const { container } = render(
-    <Bars
-      title="checks"
-      bars={[
-        { name: "Hover time", value: 22.8, limit: 21, unit: "min", higherIsBetter: true, pessimistic: 19.7, verdict: "marginal" },
-        { name: "Takeoff weight", value: 2620, limit: 2500, unit: "g", higherIsBetter: false, verdict: "fail" },
-      ]}
-    />,
-  );
-  const hover = container.querySelector('[data-bar="Hover time"]')!;
-  expect(hover.getAttribute("data-verdict")).toBe("marginal");
-  expect(hover.querySelector("rect")?.getAttribute("fill")).toBe("none");
-  expect(hover.querySelector(".pessimistic")).not.toBeNull();
-  const weight = container.querySelector('[data-bar="Takeoff weight"]')!;
-  expect(weight.querySelector("rect")?.getAttribute("fill")).toBe("var(--fail)");
-});
-
-test("a bar passes on the right side of its limit", () => {
-  expect(passes({ name: "hover", value: 33, limit: 21, unit: "min", higherIsBetter: true })).toBe(
-    true,
-  );
-  expect(passes({ name: "current", value: 95, limit: 90, unit: "A", higherIsBetter: false })).toBe(
-    false,
-  );
-  const { container } = render(
-    <Bars
-      title="checks"
-      bars={[{ name: "Hover time", value: 33, limit: 21, unit: "min", higherIsBetter: true }]}
-    />,
-  );
-  expect(container.querySelector('[data-bar="Hover time"]')?.getAttribute("data-passes")).toBe(
-    "yes",
-  );
 });

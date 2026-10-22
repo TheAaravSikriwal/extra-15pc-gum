@@ -27,12 +27,33 @@ export interface Check {
   higher_is_better: boolean;
   verdict: string;
   note: string;
+  // as the sizing report prints them, rounded toward failing
+  shown: string;
+  shown_pessimistic?: string | null;
+  shown_limit?: string | null; // "at least 25.0 min"
+  shown_margin?: string | null; // "+58%"
+}
+
+export interface MassLine {
+  name: string;
+  grams: number;
+  group: string; // base, a module, payload or margin
+}
+
+// how the CAD balances a combination
+export interface Balance {
+  passed: boolean;
+  trim_x_mm: number; // where the pack slides to
+  center_of_gravity_mm: number[];
+  busiest_motor_extra: number; // a share: 0.002 is 0.2% harder than the others
+  inertia_kg_m2: number[][];
 }
 
 export interface Combination {
   name: string;
   modules: string[];
   verdict: string;
+  required: boolean;
   mass_g: number;
   growth_margin_g: number;
   cad_mass_g?: number | null;
@@ -41,6 +62,19 @@ export interface Combination {
   top_speed_kmh: Record<string, number>;
   least_power_speed_ms: number;
   least_power_minutes: number;
+  mass_lines: MassLine[]; // what the sizing model's weight is made of
+  balance?: Balance | null;
+  numbers: string[][]; // [what, its value] as the sizing report words it
+}
+
+export interface Pack {
+  cell: string;
+  cell_id: string;
+  series: number;
+  parallel: number;
+  capacity_mah: number;
+  resistance_mohm: number;
+  mass_g: number;
 }
 
 export interface Part {
@@ -62,6 +96,7 @@ export interface SpecSheet {
   targets: Record<string, number>;
   combinations: Combination[];
   parts: Part[];
+  pack?: Pack | null;
 }
 
 export interface Piece {
@@ -365,7 +400,8 @@ export interface BuildTotal {
 
 export interface BuildGuide {
   name: string;
-  url: string;
+  url: string; // its page in the library
+  about: string;
 }
 
 export interface Build {
@@ -419,6 +455,33 @@ export interface Catalog {
   parts: CatalogPart[];
 }
 
+// what goes on the drone, from the build package, each line with its catalog entry
+export interface PartsLine {
+  module: string; // base, V, P, C, or "once"
+  group: string; // bought, wire, plug, hardware, printed, ground, supplies, tools, spares
+  name: string;
+  qty: number;
+  unit: string;
+  maker: string;
+  model: string;
+  link?: string | null;
+  price_each_usd?: number | null;
+  total_usd?: number | null;
+  checked?: string | null;
+  fallback: string; // Markdown, its links kept
+  note: string;
+  catalog_id?: string | null;
+  mass_g?: number | null; // each, from the catalog
+}
+
+export interface PartsList {
+  schema_version: number;
+  generated: string;
+  lines: PartsLine[];
+  used: CatalogPart[]; // the catalog entries the design uses
+  alternatives: CatalogPart[]; // the rest of the catalog
+}
+
 export interface RawFile {
   name: string;
   title: string;
@@ -469,11 +532,28 @@ export interface MathData {
 export const FIELDS = {
   ReportFound: ["file", "found", "generated", "verdict"],
   Index: ["schema_version", "generated", "commit", "reports", "files"],
-  Check: ["name", "unit", "nominal", "pessimistic", "limit", "higher_is_better", "verdict", "note"],
+  Check: [
+    "name",
+    "unit",
+    "nominal",
+    "pessimistic",
+    "limit",
+    "higher_is_better",
+    "verdict",
+    "note",
+    "shown",
+    "shown_pessimistic",
+    "shown_limit",
+    "shown_margin",
+  ],
+  MassLine: ["name", "grams", "group"],
+  Balance: ["passed", "trim_x_mm", "center_of_gravity_mm", "busiest_motor_extra", "inertia_kg_m2"],
+  Pack: ["cell", "cell_id", "series", "parallel", "capacity_mah", "resistance_mohm", "mass_g"],
   Combination: [
     "name",
     "modules",
     "verdict",
+    "required",
     "mass_g",
     "growth_margin_g",
     "cad_mass_g",
@@ -482,9 +562,12 @@ export const FIELDS = {
     "top_speed_kmh",
     "least_power_speed_ms",
     "least_power_minutes",
+    "mass_lines",
+    "balance",
+    "numbers",
   ],
   Part: ["role", "module", "id", "maker", "model", "mass_g", "price_usd", "link", "count"],
-  SpecSheet: ["schema_version", "sizing_case", "verdict", "targets", "combinations", "parts"],
+  SpecSheet: ["schema_version", "sizing_case", "verdict", "targets", "combinations", "parts", "pack"],
   Piece: ["name", "kind", "module", "mass_g", "part_id", "moving", "catalog"],
   Parts: ["schema_version", "glb", "pieces"],
   Wire: ["label", "ends"],
@@ -558,7 +641,7 @@ export const FIELDS = {
     "note",
   ],
   BuildTotal: ["setup", "usd", "unpriced", "printed", "printed_g"],
-  BuildGuide: ["name", "url"],
+  BuildGuide: ["name", "url", "about"],
   Build: ["schema_version", "generated", "totals", "lines", "guides", "open"],
   LibraryDoc: ["path", "title", "section", "url", "date"],
   LibrarySection: ["name", "docs"],
@@ -566,6 +649,24 @@ export const FIELDS = {
   LibraryPage: ["schema_version", "path", "title", "url", "html"],
   CatalogPart: ["id", "type", "maker", "model", "mass_g", "price_usd", "link", "record"],
   Catalog: ["schema_version", "parts"],
+  PartsLine: [
+    "module",
+    "group",
+    "name",
+    "qty",
+    "unit",
+    "maker",
+    "model",
+    "link",
+    "price_each_usd",
+    "total_usd",
+    "checked",
+    "fallback",
+    "note",
+    "catalog_id",
+    "mass_g",
+  ],
+  PartsList: ["schema_version", "generated", "lines", "used", "alternatives"],
   RawFile: ["name", "title", "source", "url"],
   RawIndex: ["schema_version", "files"],
   RawData: ["schema_version", "name", "source", "data"],

@@ -10,6 +10,11 @@
     "url": {
      "title": "Url",
      "type": "string"
+    },
+    "about": {
+     "default": "",
+     "title": "About",
+     "type": "string"
     }
    },
    "required": [

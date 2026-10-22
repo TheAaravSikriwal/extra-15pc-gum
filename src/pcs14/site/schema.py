@@ -43,12 +43,35 @@ class Check(_Shape):
     higher_is_better: bool = True
     verdict: str
     note: str = ""
+    # as the sizing report prints them, rounded toward failing (pcs14.report.formatting)
+    shown: str = ""
+    shown_pessimistic: str | None = None
+    shown_limit: str | None = None  # "at least 25.0 min"
+    shown_margin: str | None = None  # "+58%"
+
+
+class MassLine(_Shape):
+    name: str
+    grams: float
+    group: str  # base, a module, payload or margin
+
+
+class Balance(_Shape):
+    """How the CAD balances a combination: where the pack slides to, the center of gravity
+    that leaves, how much harder the busiest motor works, and the inertia."""
+
+    passed: bool
+    trim_x_mm: float
+    center_of_gravity_mm: list[float]
+    busiest_motor_extra: float  # a share: 0.002 is 0.2% harder than the others
+    inertia_kg_m2: list[list[float]]
 
 
 class Combination(_Shape):
     name: str
     modules: list[str]
     verdict: str
+    required: bool = False  # one the targets require, or an optional one
     mass_g: float  # the sizing model's, with its growth margin
     growth_margin_g: float
     cad_mass_g: float | None = None  # the CAD's, without the margin
@@ -57,6 +80,19 @@ class Combination(_Shape):
     top_speed_kmh: dict[str, float]  # at a full pack, half and the reserve
     least_power_speed_ms: float
     least_power_minutes: float
+    mass_lines: list[MassLine] = []  # what the sizing model's weight is made of
+    balance: Balance | None = None
+    numbers: list[list[str]] = []  # [what, its value] as the sizing report words it
+
+
+class Pack(_Shape):
+    cell: str  # maker and model
+    cell_id: str
+    series: int
+    parallel: int
+    capacity_mah: float
+    resistance_mohm: float
+    mass_g: float
 
 
 class Part(_Shape):
@@ -80,6 +116,7 @@ class SpecSheet(_Shape):
     targets: dict[str, float]
     combinations: list[Combination]
     parts: list[Part]
+    pack: Pack | None = None
 
 
 class Piece(_Shape):
@@ -412,7 +449,8 @@ class BuildTotal(_Shape):
 
 class BuildGuide(_Shape):
     name: str
-    url: str
+    url: str  # its page in the library
+    about: str = ""  # what it holds, in a line
 
 
 class Build(_Shape):
@@ -472,6 +510,36 @@ class Catalog(_Shape):
 
     schema_version: int
     parts: list[CatalogPart]
+
+
+class PartsLine(_Shape):
+    """One line of what goes on the drone, from the build package, with its catalog entry."""
+
+    module: str  # base, V, P, C, or "once"
+    group: str  # bought, wire, plug, hardware, printed, ground, supplies, tools, spares
+    name: str
+    qty: float
+    unit: str
+    maker: str
+    model: str
+    link: str | None = None
+    price_each_usd: float | None = None
+    total_usd: float | None = None
+    checked: str | None = None
+    fallback: str = ""  # Markdown: its links kept
+    note: str = ""
+    catalog_id: str | None = None
+    mass_g: float | None = None  # each, from the catalog
+
+
+class PartsList(_Shape):
+    """parts-list.json: everything on the drone, by module, then the rest of the catalog."""
+
+    schema_version: int
+    generated: str
+    lines: list[PartsLine]
+    used: list[CatalogPart]  # the catalog entries the lines are
+    alternatives: list[CatalogPart]  # the catalog's parts the design doesn't use
 
 
 class RawFile(_Shape):
@@ -536,6 +604,7 @@ FILES: dict[str, type[_Shape]] = {
     "flights": Flights,
     "playback": Playback,
     "steps": Steps,
+    "parts-list": PartsList,
     "tunnel": Tunnel,
     "tunnel-flow": TunnelFlow,
     "unproven": Unproven,

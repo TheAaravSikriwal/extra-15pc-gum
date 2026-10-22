@@ -1,6 +1,5 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 
-import { Catalog } from "./Catalog";
 import { Data } from "./Data";
 import { Library, splitPath } from "./Library";
 import { MathPage } from "./MathPage";
@@ -34,18 +33,6 @@ test("the library lists every doc by section, and a doc renders its own HTML", a
   render(<Library path={["docs", "log", "2026-10-21-x"]} load={load} />);
   expect(await screen.findByText("Words.")).toBeInTheDocument();
   expect(splitPath(["docs", "decisions~the-unproven-list"])).toEqual({ path: "docs/decisions", heading: "the-unproven-list" });
-});
-
-test("every catalog part opens to all its fields", async () => {
-  const catalog = {
-    schema_version: 1,
-    parts: [{ id: "m", type: "motor", maker: "Emax", model: "E3 2814", mass_g: 82, price_usd: 37.99, link: null,
-              record: { kv: 850, source: { kind: "manufacturer" } } }],
-  };
-  render(<Catalog load={{ fromDisk: false, fetcher: serving({ "catalog.json": catalog }) }} />);
-  const motors = await screen.findByRole("region", { name: "Motors" });
-  expect(within(motors).getByText("Emax")).toBeInTheDocument();
-  expect(within(motors).getByText("850")).toBeInTheDocument();
 });
 
 test("the data lists each report's file and shows one as a tree", async () => {

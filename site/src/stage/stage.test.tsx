@@ -62,7 +62,8 @@ test("the corner menu opens to every other page", () => {
   render(<Menu />);
   fireEvent.click(screen.getByRole("button", { name: "Menu" }));
   const pages = screen.getByRole("list", { name: "pages" });
-  expect(within(pages).getAllByRole("link")).toHaveLength(10);
+  expect(within(pages).getAllByRole("link")).toHaveLength(12);
+  expect(within(pages).getByRole("list", { name: "Tested" })).toBeInTheDocument();
   expect(within(pages).getByRole("link", { name: "Build it" })).toHaveAttribute("href", "#/build");
 });
 
