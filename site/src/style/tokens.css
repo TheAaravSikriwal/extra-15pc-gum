@@ -929,6 +929,27 @@ ul.tree {
   backdrop-filter: blur(10px);
 }
 
+/* Flights: each scenario with a drawing of its run */
+.scenario-list {
+  list-style: none;
+  padding: 0;
+}
+
+.scenario-list li {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 12px;
+  align-items: start;
+  margin: 0 0 12px;
+}
+
+.scenario-list .glyph {
+  width: 32px;
+  height: 20px;
+  margin-top: 3px;
+  color: var(--accent);
+}
+
 /* the menu's groups: a quiet name over each one's pages */
 .stage-menu ul ul {
   position: static;

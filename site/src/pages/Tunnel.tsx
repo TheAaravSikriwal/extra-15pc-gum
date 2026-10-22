@@ -1,10 +1,11 @@
-// The wind tunnel: each case's frames along the way, played on the clock in slow motion (half
-// a second of air takes half a minute), and the stills with what each one says. Pictures, not
-// measurements: the drag numbers come from OpenFOAM.
+// The wind tunnel: the seven cases in one table (the air from each way and the hover, as the drone
+// view names them, each with its tunnel, grid, seconds of air and force), how it was run, and each
+// case's frames played in slow motion with its stills beside it. Pictures, not measurements: the
+// drag numbers come from OpenFOAM.
 import { useEffect, useMemo, useState } from "react";
 
 import type { LoadOptions } from "../data/load";
-import type { Tunnel as TunnelData, TunnelCase, TunnelFrame } from "../data/types";
+import type { Tunnel as TunnelData, TunnelCase, TunnelFrame, TunnelStill } from "../data/types";
 import { useData } from "../data/useData";
 import { Clock, useClockTime } from "../play/clock";
 import { Controls } from "../play/Controls";
@@ -34,7 +35,7 @@ export function frameAt(frames: TunnelFrame[], t: number): number {
   return found;
 }
 
-export function CaseView({ run, now }: { run: TunnelCase; now?: () => number }) {
+export function CaseView({ run, stills = [], now }: { run: TunnelCase; stills?: TunnelStill[]; now?: () => number }) {
   const views = useMemo(() => Array.from(new Set(run.frames.flatMap((f) => Object.keys(f.files)))), [run]);
   const [view, setView] = useState(views[0]);
   const clock = useMemo(() => {
@@ -52,6 +53,7 @@ export function CaseView({ run, now }: { run: TunnelCase; now?: () => number }) 
   return (
     <section aria-label={run.label} className="tunnel-case">
       <h2>{run.label}</h2>
+      <p>{run.about}</p>
       <div className="views" role="group" aria-label="views">
         {views.map((v) => (
           <button key={v} type="button" aria-pressed={v === view} onClick={() => setView(v)}>
@@ -69,38 +71,112 @@ export function CaseView({ run, now }: { run: TunnelCase; now?: () => number }) 
         />
       )}
       <Controls clock={clock} speeds={TUNNEL_SPEEDS} format={formatMs} step={0.001} />
+      {stills.length > 0 && (
+        <div className="stills">
+          {stills.map((s) => (
+            <figure key={s.file}>
+              <img src={`./data/${s.file}`} alt={`${s.title}: ${s.subtitle}`} loading="lazy" />
+              <figcaption>
+                <strong>{s.title}.</strong> {s.caption}
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      )}
     </section>
   );
 }
+
+const m = (v: number) => (Number.isInteger(v) ? String(v) : v.toFixed(1));
 
 export function Tunnel({ load }: { load?: LoadOptions }) {
   const { data, problem } = useData<TunnelData>("tunnel.json", load);
   if (problem) return <p role="alert">{problem}</p>;
   if (!data) return <p>Loading</p>;
+  const stillsOf = (c: TunnelCase) => data.stills.filter((s) => s.case.toLowerCase() === c.name.toLowerCase());
   return (
     <main>
       <h1>The wind tunnel</h1>
-      <p className="note">{data.note}</p>
+      <p className="purpose">
+        FluidX3D, a lattice Boltzmann solver, on the PC's RTX 3060, with Max (every module on) in the air from six ways at
+        10 m/s and hovering in still air. {data.note} The same runs play on the 3D drone in{" "}
+        <a href="#/fly/tunnel/front">Fly it</a>, as particles carried through the flow and a speed slice that moves.
+      </p>
       {!data.fork_public && <p className="local-only">This page is a local preview for now.</p>}
       {data.cases.length === 0 && data.stills.length === 0 && (
         <p>No tunnel runs on this machine yet: pcs14 tunnel, then pcs14 site --tunnel.</p>
       )}
-      {data.cases.map((c) => (
-        <CaseView key={c.name} run={c} />
-      ))}
-      {data.stills.length > 0 && (
-        <section aria-label="the stills" className="stills">
-          <h2>The stills</h2>
-          {data.stills.map((s) => (
-            <figure key={s.file}>
-              <img src={`./data/${s.file}`} alt={`${s.title}: ${s.subtitle}`} loading="lazy" />
-              <figcaption>
-                <strong>{s.number}</strong> {s.caption}
-              </figcaption>
-            </figure>
-          ))}
+      {data.cases.length > 0 && (
+        <section aria-label="the cases">
+          <h2>The seven cases</h2>
+          <div className="scroll-x">
+            <table className="short-columns">
+              <thead>
+                <tr>
+                  <th scope="col">The air</th>
+                  <th scope="col">What it is</th>
+                  <th scope="col">Tunnel</th>
+                  <th scope="col">Grid</th>
+                  <th scope="col">Air simulated</th>
+                  <th scope="col">Force along the wind</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.cases.map((c) => (
+                  <tr key={c.name}>
+                    <td>{c.label}</td>
+                    <td>{c.about}</td>
+                    <td>{c.box_m ? `${c.box_m.map(m).join(" x ")} m` : ""}</td>
+                    <td>{c.grid ? `${c.grid}, ${c.cell_mm} mm` : ""}</td>
+                    <td>{c.air_s != null ? `${c.air_s} s` : ""}</td>
+                    <td>{c.force_n != null ? `${c.force_n.toFixed(1)} N` : "none, it's still air"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="muted">
+            The force is FluidX3D's own, averaged over each run's last 40%. It's a picture's number: without a wall model
+            FluidX3D runs 1.3 to 2 times high, and the tunnel is small next to the drone seen from above, which pushes
+            the two vertical cases up more.
+          </p>
         </section>
       )}
+      <section aria-label="how it was run">
+        <h2>How it was run</h2>
+        <ul>
+          <li>
+            The drone is the CAD's watertight body with every module on, props and wires left out, voxelized into the
+            grid. The air comes in along the tunnel at 10 m/s, and the drone is turned to meet it: nose first and pitched
+            3.3 degrees the way it cruises, tail first pitched back, each side, top first and belly first.
+          </li>
+          <li>
+            The hover is still air in a taller box, each prop an actuator disk: a disk of cells two thick pushing its
+            quarter of the weight down on the air. The blades themselves at this resolution came out as flat paddles that
+            pushed no air down.
+          </li>
+          <li>
+            The Smagorinsky subgrid model handles the eddies too small for the grid, at a Reynolds number around
+            260,000.
+          </li>
+          <li>
+            Colors are turbo, the project's color map for flow, from still air to 17 m/s in the wind and 15 m/s in the
+            hover.
+          </li>
+          <li>
+            For the 3D view, each run also writes 64 snapshots of the flow over its last half, around the drone on 12 mm
+            cells, and the averaged flow on 8 mm cells.
+          </li>
+        </ul>
+        <p className="muted">
+          The details are in the <a href="#/library/docs/log/2026-10-22-the-wind-tunnel-in-fly-it">wind tunnel log</a>,
+          the <a href="#/library/docs/specs/2026-10-22-the-wind-tunnel-in-fly-it">spec</a> and the{" "}
+          <a href="#/library/docs/decisions">decisions</a>. The drag numbers will come from OpenFOAM.
+        </p>
+      </section>
+      {data.cases.map((c) => (
+        <CaseView key={c.name} run={c} stills={stillsOf(c)} />
+      ))}
     </main>
   );
 }

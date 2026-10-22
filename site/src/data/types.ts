@@ -207,6 +207,7 @@ export interface Run {
   passed: boolean;
   file?: string | null;
   glyph?: Glyph | null;
+  missed?: string | null; // a failed run's first failed check, "check: detail"
 }
 
 export interface ScenarioAbout {
@@ -280,8 +281,16 @@ export interface TunnelFrame {
 
 export interface TunnelCase {
   name: string;
-  label: string;
+  label: string; // "From the front", as the drone view names it
   frames: TunnelFrame[];
+  direction: string;
+  about: string;
+  grid?: string | null; // FluidX3D's cells, "352 x 804 x 276"
+  cell_mm?: number | null;
+  steps?: number | null;
+  air_s?: number | null; // seconds of air simulated
+  box_m?: number[] | null; // across, along the wind, up
+  force_n?: number | null; // along the wind, visual-grade
 }
 
 // a case's flow moving, around the drone in its own frame (x forward, y left, z up, m): particles
@@ -365,8 +374,9 @@ export interface UnprovenItem {
 
 export interface UnprovenGroup {
   name: string;
-  url: string;
+  url: string; // where it's written, in the site's library
   items: UnprovenItem[];
+  step?: string | null; // its step's id
 }
 
 export interface Unproven {
@@ -591,7 +601,7 @@ export const FIELDS = {
     "events",
   ],
   Glyph: ["kind", "points"],
-  Run: ["scenario", "setup", "firmware", "flown", "passed", "file", "glyph"],
+  Run: ["scenario", "setup", "firmware", "flown", "passed", "file", "glyph", "missed"],
   ScenarioAbout: ["name", "step", "what"],
   Flights: ["schema_version", "scenarios", "about", "setups", "runs"],
   Step: [
@@ -612,14 +622,14 @@ export const FIELDS = {
   Steps: ["schema_version", "steps"],
   TunnelStill: ["case", "view", "title", "subtitle", "number", "caption", "file"],
   TunnelFrame: ["step", "t_s", "files"],
-  TunnelCase: ["name", "label", "frames"],
+  TunnelCase: ["name", "label", "frames", "direction", "about", "grid", "cell_mm", "steps", "air_s", "box_m", "force_n"],
   TunnelParticles: ["file", "count"],
   TunnelSlice: ["file", "width", "height", "corners"],
   TunnelFlow: ["schema_version", "name", "direction", "setup", "speed", "color_max", "force_n", "pitch_deg", "loop_s", "frames", "particles", "slice"],
   TunnelFlowEntry: ["name", "direction", "label", "about", "file"],
   Tunnel: ["schema_version", "fork_public", "note", "stills", "cases", "flows"],
   UnprovenItem: ["what", "measure"],
-  UnprovenGroup: ["name", "url", "items"],
+  UnprovenGroup: ["name", "url", "items", "step"],
   Unproven: ["schema_version", "groups"],
   PinRow: ["pin", "role", "functions", "to", "harness"],
   BoardPins: ["name", "part", "module", "pins"],

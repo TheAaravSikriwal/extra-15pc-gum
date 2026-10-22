@@ -47,8 +47,9 @@ def test_the_tunnel_page_gets_its_stills_and_its_frames_in_order(tmp_path):
     assert still.file == "tunnel/Max-cruise-side-streamlines.jpg"  # the wide one
     assert (out / still.file).is_file()
     case, crosswind = found.cases  # the hover has no frames yet
-    assert case.name == "Max-cruise" and case.label == "Cruise"
-    assert crosswind.label == "Crosswind"  # after the cruise, not before it
+    assert case.name == "Max-cruise" and case.label == "From the front"  # as the drone view says
+    assert crosswind.label == "From the right"  # after the cruise, not before it
+    assert case.direction == "front" and case.about
     assert [f.step for f in case.frames] == [100, 200, 300]
     assert [f.t_s for f in case.frames] == [0.01, 0.02, 0.03]
     first = out / case.frames[0].files["side-speed"]

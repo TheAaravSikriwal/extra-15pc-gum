@@ -15,7 +15,7 @@ const INDEX: FlightsData = {
   setups: ["base", "P"],
   runs: [
     { scenario: "hover", setup: "base", firmware: "px4", flown: true, passed: true, file: "f1" },
-    { scenario: "dead motor", setup: "base", firmware: "px4", flown: true, passed: false, file: "f2" },
+    { scenario: "dead motor", setup: "base", firmware: "px4", flown: true, passed: false, file: "f2", missed: "touchdown: 24 m/s" },
     { scenario: "hover", setup: "base", firmware: "mine", flown: true, passed: true, file: "f3" },
     { scenario: "spiral descent", setup: "base", firmware: "mine", flown: true, passed: true, file: "f4" },
   ],
@@ -35,6 +35,21 @@ test("both firmwares get a matrix, and a flown cell links to its run", async () 
   expect(within(mine).getByText("My firmware: 2 of 2 pass")).toBeInTheDocument();
   expect(within(mine).getByText("spiral descent")).toBeInTheDocument();
   expect(runLink("V+C", "dead motor")).toBe("#/flights/V%2BC/dead%20motor");
+});
+
+test("each scenario says what it tests and where it flew, by step, and each miss says why", async () => {
+  render(<Flights load={{ fromDisk: false, fetcher: answering(INDEX) }} />);
+  const tests = await screen.findByRole("region", { name: "what each scenario tests" });
+  const flight = within(tests).getByRole("region", { name: "Flight (step 4)" });
+  expect(within(flight).getByText("One motor stops.")).toBeInTheDocument();
+  expect(within(flight).getByText(/Flown by PX4 in base, and by mine in none yet/)).toBeInTheDocument();
+  expect(within(tests).getByRole("region", { name: "Smart features (step 7)" })).toHaveTextContent("Down on a helix.");
+  const misses = screen.getByRole("region", { name: "why the misses missed" });
+  expect(within(misses).getByText("touchdown: 24 m/s")).toBeInTheDocument();
+  // the matrices come per step, in the combinations' one order
+  const px4 = screen.getByRole("region", { name: "PX4 v1.17.0" });
+  expect(within(px4).getByRole("table", { name: "PX4 v1.17.0, Flight (step 4)" })).toBeInTheDocument();
+  expect(within(px4).getByText("Flight (step 4): 1 of 2 pass")).toBeInTheDocument(); // each step's own count
 });
 
 function run(firmware: string, passed: boolean): Playback {

@@ -265,9 +265,13 @@ def write_flights(out, results: dict, logs: Callable) -> list[Path]:
                 played = playback(log, marks, r, firmware)
                 shape = glyph(played)
                 written.append(_write(out / name, name, played))
+            missed = None
+            if r.flown and not r.passed:
+                failed = next((f for f in r.findings if not f.passed), None)
+                missed = f"{failed.check}: {failed.detail}" if failed else "failed"
             runs.append(schema.Run(scenario=r.scenario, setup=r.setup, firmware=firmware,
                                    flown=r.flown, passed=r.passed, file=name,
-                                   glyph=shape))  # fmt: skip
+                                   glyph=shape, missed=missed))  # fmt: skip
     index = schema.Flights(schema_version=schema.SCHEMA_VERSION, scenarios=list(ALL_SCENARIOS),
                            about=[about(name) for name in ALL_SCENARIOS], setups=setups,
                            runs=runs)  # fmt: skip

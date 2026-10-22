@@ -122,6 +122,14 @@ def test_a_run_that_goes_around_gets_its_path_from_above_and_one_that_doesnt_its
     assert len(still.points) == flights.GLYPH_POINTS
 
 
+def test_a_failed_run_says_which_check_it_missed(tmp_path):
+    slow = Finding("hover drift", False, 0.9, 0.5, "m", "drifted 0.9 m")
+    missed = ScenarioResult("hover", "base", True, (DRIFT, slow))  # flown, and failed
+    flights.write_flights(tmp_path, {"mine": [missed, RESULT]}, lambda *_: None)
+    index = schema.Flights.model_validate_json((tmp_path / "flights.json").read_text())
+    assert [r.missed for r in index.runs] == ["hover drift: drifted 0.9 m", None]
+
+
 def test_the_index_draws_each_run_it_has(tmp_path):
     flights.write_flights(tmp_path, {"mine": [RESULT]}, lambda *_: (made_up_log(), [], RESULT))
     index = schema.Flights.model_validate_json((tmp_path / "flights.json").read_text())

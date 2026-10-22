@@ -1,11 +1,19 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 
 import type { Tunnel as TunnelData, TunnelCase } from "../data/types";
 import { CaseView, frameAt, Tunnel } from "./Tunnel";
 
 const RUN: TunnelCase = {
   name: "Max-cruise",
-  label: "Cruise",
+  label: "From the front",
+  direction: "front",
+  about: "Flying nose first at 10 m/s.",
+  grid: "352 x 804 x 276",
+  cell_mm: 3.98,
+  steps: 21440,
+  air_s: 0.64,
+  box_m: [1.4, 3.2, 1.1],
+  force_n: 1.97,
   frames: [10, 20, 30].map((ms, k) => ({
     step: (k + 1) * 100,
     t_s: ms / 1000,
@@ -66,12 +74,18 @@ test("the frames play in order at their time step, in slow motion", async () => 
   expect(shown()).toBe("./data/tunnel/Max-cruise/quarter-vortices-2.jpg");
 });
 
-test("the page has the cases, the stills and what they can't be trusted for", async () => {
+test("the page has every case in one table with how it was run and its force, and each case its stills", async () => {
   render(<Tunnel load={{ fromDisk: false, fetcher: answering(TUNNEL) }} />);
-  expect(await screen.findByRole("region", { name: "Cruise" })).toBeInTheDocument();
-  expect(screen.getByText("Pictures, not measurements.")).toBeInTheDocument();
+  const table = await screen.findByRole("region", { name: "the cases" });
+  expect(within(table).getByText("352 x 804 x 276, 3.98 mm")).toBeInTheDocument();
+  expect(within(table).getByText("2.0 N")).toBeInTheDocument();
+  expect(within(table).getByText("1.4 x 3.2 x 1.1 m")).toBeInTheDocument();
+  expect(screen.getByText(/Pictures, not measurements\./)).toBeInTheDocument(); // said once, up top
   expect(screen.getByText(/local preview/)).toBeInTheDocument();
-  expect(screen.getByRole("img", { name: "The drag lines: 10 m/s" })).toHaveAttribute(
+  expect(screen.getByRole("region", { name: "how it was run" })).toHaveTextContent("actuator disk");
+  // the still sits with its own case
+  const front = screen.getByRole("region", { name: "From the front" });
+  expect(within(front).getByRole("img", { name: "The drag lines: 10 m/s" })).toHaveAttribute(
     "src",
     "./data/tunnel/Max-cruise-side-streamlines.jpg",
   );

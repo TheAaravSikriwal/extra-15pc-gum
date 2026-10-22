@@ -17,6 +17,91 @@
      },
      "title": "Frames",
      "type": "array"
+    },
+    "direction": {
+     "default": "",
+     "title": "Direction",
+     "type": "string"
+    },
+    "about": {
+     "default": "",
+     "title": "About",
+     "type": "string"
+    },
+    "grid": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Grid"
+    },
+    "cell_mm": {
+     "anyOf": [
+      {
+       "type": "number"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Cell Mm"
+    },
+    "steps": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Steps"
+    },
+    "air_s": {
+     "anyOf": [
+      {
+       "type": "number"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Air S"
+    },
+    "box_m": {
+     "anyOf": [
+      {
+       "items": {
+        "type": "number"
+       },
+       "type": "array"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Box M"
+    },
+    "force_n": {
+     "anyOf": [
+      {
+       "type": "number"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Force N"
     }
    },
    "required": [

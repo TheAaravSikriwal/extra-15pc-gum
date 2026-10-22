@@ -143,14 +143,18 @@ def tunnel_data(source, out) -> schema.Tunnel:
     stills = []
     listed = source / "stills" / "stills.json"
     said = json.loads(listed.read_text(encoding="utf-8")) if listed.is_file() else {}
+    from pcs14.aero.stills import VISUAL
+
     for name, s in said.items():
         wide = source / "stills" / f"{name}-wide.png"
         if not wide.is_file():
             continue
         file = f"tunnel/{name}.jpg"
         _jpeg(wide, out / file)
-        stills.append(schema.TunnelStill(file=file, **{k: s[k] for k in (
-            "case", "view", "title", "subtitle", "number", "caption")}))  # fmt: skip
+        # the page says once that these are pictures, not measurements
+        fields = {k: s[k] for k in ("case", "view", "title", "subtitle", "number", "caption")}
+        fields["caption"] = fields["caption"].replace(" " + VISUAL, "").replace(VISUAL, "").strip()
+        stills.append(schema.TunnelStill(file=file, **fields))
     cases, flows = [], []
     found = sorted(p for p in source.iterdir() if p.is_dir()) if source.is_dir() else []
     # the cruise first, then the other ways the air meets it, then the hover
@@ -164,12 +168,11 @@ def tunnel_data(source, out) -> schema.Tunnel:
                 _jpeg(path, out / file, FRAME_WIDTH)
                 files[view] = file
             frames.append(schema.TunnelFrame(step=f.step, t_s=f.seconds, files=files))
-        if frames:
-            cases.append(schema.TunnelCase(name=folder.name, label=_label(folder.name),
-                                           frames=frames))  # fmt: skip
         traced = flow_for(folder, out)
         if traced is not None:
             flows.append(traced)
+        if frames:
+            cases.append(_case(folder, frames, source))
     # every way the air comes, the ones not run yet too, so the drone view lists them all
     have = {f.direction for f in flows}
     for direction in tunnel.DIRECTIONS:
@@ -181,6 +184,31 @@ def tunnel_data(source, out) -> schema.Tunnel:
                if f.direction in tunnel.DIRECTIONS else 99)  # fmt: skip
     return schema.Tunnel(schema_version=schema.SCHEMA_VERSION, fork_public=FORK_PUBLIC,
                          note=NOTE, stills=stills, cases=cases, flows=flows)  # fmt: skip
+
+
+def _case(folder: Path, frames: list, source: Path) -> schema.TunnelCase:
+    """A case for the page: its frames, its name as the drone view has it, and how it was run:
+    the tunnel's size, FluidX3D's grid (from its log), the seconds of air and its force."""
+    import re
+
+    direction = direction_of(folder.name)
+    label, about = FLOW_WORDS.get(direction, (_label(folder.name), ""))
+    settings = _case_settings(folder)
+    grid = cell = steps = None
+    log = source / f"{folder.name}.log"
+    if log.is_file():
+        said = rf"{re.escape(folder.name)}: (\d+) x (\d+) x (\d+) cells of ([\d.]+) mm, (\d+) steps"
+        found = re.search(said, log.read_text(encoding="utf-8", errors="replace"))
+        if found:
+            grid = " x ".join(found.groups()[:3])
+            cell, steps = float(found.group(4)), int(found.group(5))
+    field = flow.read_field(folder)
+    force = round(float(field.force[1]), 2) if field is not None and field.speed > 0 else None
+    box = [float(settings[k]) for k in ("box_x", "box_y", "box_z") if k in settings] or None
+    return schema.TunnelCase(name=folder.name, label=label, frames=frames, direction=direction,
+                             about=about, grid=grid, cell_mm=cell, steps=steps,
+                             air_s=float(settings["time_s"]) if "time_s" in settings else None,
+                             box_m=box, force_n=force)  # fmt: skip
 
 
 def write_tunnel(out, source) -> list[Path]:

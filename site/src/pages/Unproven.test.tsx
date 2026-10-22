@@ -12,8 +12,9 @@ const LIST: UnprovenData = {
       items: [{ what: "Real thrust", measure: "One motor and prop on a thrust stand" }],
     },
     {
-      name: "Electrical",
-      url: "https://github.com/x/docs/reports/electrical/README.md",
+      name: "3. Electrical design",
+      url: "#/library/docs/reports/electrical/README",
+      step: "electrical",
       items: [
         { what: "A dead short in the battery leads", measure: "" },
         { what: "The XT60's contact mass", measure: "" },
@@ -30,7 +31,9 @@ test("every group of what the sims can't prove, with what to measure first where
   render(<Unproven load={{ fromDisk: false, fetcher: answering(LIST) }} />);
   const drone = await screen.findByRole("region", { name: "The whole drone" });
   expect(within(drone).getByRole("cell", { name: "One motor and prop on a thrust stand" })).toBeInTheDocument();
-  const electrical = screen.getByRole("region", { name: "Electrical" });
+  const electrical = screen.getByRole("region", { name: "3. Electrical design" });
   expect(within(electrical).getAllByRole("listitem")).toHaveLength(2);
+  expect(within(electrical).getByRole("link", { name: "the step" })).toHaveAttribute("href", "#/steps/electrical");
+  expect(within(electrical).getByRole("link", { name: "where it's written" })).toHaveAttribute("href", "#/library/docs/reports/electrical/README");
   expect(countUnproven(LIST)).toBe(3);
 });

@@ -11,6 +11,7 @@ import { loadData, type LoadOptions } from "../data/load";
 import type { Flights, Parts, Playback } from "../data/types";
 import { useData } from "../data/useData";
 import { useModel } from "../explorer/model";
+import { eventWords } from "../fly/captions";
 import { flyLink } from "../stage/modes";
 import { COLORS, type DroneModel, FlightScene } from "../flights/FlightScene";
 import { chapters, duration, eventsSoFar, indexAt, series, toThree } from "../flights/playback";
@@ -76,7 +77,8 @@ export function FlightView({ runs, view }: { runs: Playback[]; view: (time: numb
                 .slice(-8)
                 .map((e) => (
                   <li key={`${e.name}-${e.at}`}>
-                    <span className="at">{formatTime(e.at)}</span> {e.name}
+                    <span className="at">{formatTime(e.at)}</span> {eventWords(e.name)}{" "}
+                    <span className="muted">({e.name})</span>
                   </li>
                 ))}
             </ol>

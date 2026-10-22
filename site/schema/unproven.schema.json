@@ -17,6 +17,18 @@
      },
      "title": "Items",
      "type": "array"
+    },
+    "step": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Step"
     }
    },
    "required": [

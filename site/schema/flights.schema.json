@@ -71,6 +71,18 @@
       }
      ],
      "default": null
+    },
+    "missed": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Missed"
     }
    },
    "required": [

@@ -34,10 +34,19 @@ def test_the_projects_list_is_decisions_own_table():
 def test_the_real_list_has_the_projects_and_each_reports(tmp_path):
     found = unproven_data(ROOT / "docs")
     names = [g.name for g in found.groups]
-    assert names[0] == "The whole drone" and "Electrical" in names and "Flight sim" in names
-    electrical = next(g for g in found.groups if g.name == "Electrical")
+    # under the steps' own names, and STATUS's open items last
+    assert names[0] == "The whole drone" and names[-1] == "Still open"
+    assert "3. Electrical design" in names and "4. Flight sim (PX4)" in names
+    electrical = next(g for g in found.groups if g.name == "3. Electrical design")
     assert any("battery leads" in i.what for i in electrical.items)
-    assert electrical.url.endswith("docs/reports/electrical/README.md")
+    assert (
+        electrical.url == "#/library/docs/reports/electrical/README"
+        and electrical.step == "electrical"
+    )
+    assert found.groups[0].url == "#/library/docs/decisions"
+    # nothing points at a part of decisions.md that isn't on the page
+    assert not any("below)" in i.what for i in found.groups[0].items)
+    assert any("rotor drag" in i.what.lower() for i in found.groups[-1].items)
     assert found.schema_version == schema.SCHEMA_VERSION
 
 

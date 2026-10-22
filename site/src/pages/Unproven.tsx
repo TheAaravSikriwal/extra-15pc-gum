@@ -1,5 +1,5 @@
 // What the sims can't prove: the project's own list, each with the first thing to measure once
-// it's built, and each report's. Linked from the home page, so it's never more than a click away.
+// it's built; each step's own list from its report, under the step's name; and what's still open.
 import type { LoadOptions } from "../data/load";
 import type { Unproven as UnprovenData } from "../data/types";
 import { useData } from "../data/useData";
@@ -16,8 +16,10 @@ export function Unproven({ load }: { load?: LoadOptions }) {
     <main>
       <h1>What the sims can't prove</h1>
       <p className="purpose">
-        Everything here is simulated, and a simulation only knows what it's told. These are the things it can't settle,
-        and for the drone as a whole, the first thing to measure once one is built.
+        Everything here is simulated, and a simulation only knows what it's told. First the drone as a whole, with the
+        first thing to measure once one is built. Then each step's own list, from its report, about the parts of the
+        sim that step leaned on. Last, what's still open in the project. How each gets measured on the bench is in the{" "}
+        <a href="#/library/docs/build/tests">test plans</a>.
       </p>
       {data.groups.map((g) => (
         <section key={g.name} aria-label={g.name}>
@@ -47,9 +49,8 @@ export function Unproven({ load }: { load?: LoadOptions }) {
             </ul>
           )}
           <p className="links">
-            <a href={g.url} target="_blank" rel="noreferrer">
-              where it's written
-            </a>
+            <a href={g.url}>where it's written</a>
+            {g.step && <a href={`#/steps/${g.step}`}>the step</a>}
           </p>
         </section>
       ))}

@@ -237,6 +237,7 @@ class Run(_Shape):
     passed: bool
     file: str | None = None  # its playback file, when its log is there
     glyph: Glyph | None = None
+    missed: str | None = None  # a failed run's first failed check, "check: detail"
 
 
 class ScenarioAbout(_Shape):
@@ -320,8 +321,16 @@ class TunnelFrame(_Shape):
 
 class TunnelCase(_Shape):
     name: str
-    label: str  # "Cruise"
+    label: str  # "From the front", as the drone view names it
     frames: list[TunnelFrame]
+    direction: str = ""  # front, back, right, left, above, below or hover
+    about: str = ""
+    grid: str | None = None  # FluidX3D's cells, "352 x 804 x 276"
+    cell_mm: float | None = None
+    steps: int | None = None
+    air_s: float | None = None  # seconds of air simulated
+    box_m: list[float] | None = None  # the tunnel: across, along the wind, up
+    force_n: float | None = None  # along the wind, FluidX3D's own visual-grade number
 
 
 class TunnelParticles(_Shape):
@@ -411,9 +420,10 @@ class UnprovenItem(_Shape):
 
 
 class UnprovenGroup(_Shape):
-    name: str  # "The whole drone", or a report's step
-    url: str  # where it's written
+    name: str  # "The whole drone", a report's step, or "Still open"
+    url: str  # where it's written, in the site's library
     items: list[UnprovenItem]
+    step: str | None = None  # its step's id, for #/steps/<id>
 
 
 class Unproven(_Shape):
