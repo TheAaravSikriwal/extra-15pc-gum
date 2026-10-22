@@ -38,6 +38,8 @@ All free (Open Font License, on Google Fonts):
 | Body and captions | Inter, regular |
 | Numbers, units, data labels | JetBrains Mono |
 
+**The project site's interface (2026-10-21)** reads as one instrument, on every page and in the drone view: headings, labels, controls, navigation and numbers in JetBrains Mono, in small capitals with wide letter spacing where they label something; reading text in Inter; thin lines, square corners and spearmint as the one accent. Space Grotesk stays the headline face for pictures and posts.
+
 ## Sizes
 
 | Format | Pixels | Where |

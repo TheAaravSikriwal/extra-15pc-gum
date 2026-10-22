@@ -78,7 +78,7 @@ export function Spec({ load }: { load?: LoadOptions }) {
           }))}
       />
       <h2>The parts</h2>
-      <table className="parts">
+      <table className="parts short-columns">
         <thead>
           <tr>
             <th scope="col">Part</th>

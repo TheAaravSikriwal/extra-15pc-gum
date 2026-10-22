@@ -27,7 +27,12 @@ function addScript(src: string): Promise<void> {
 async function viaFetch(name: string, fetcher: typeof fetch): Promise<unknown> {
   const reply = await fetcher(`./data/${name}`);
   if (!reply.ok) throw new DataError(`no ${name}: run pcs14 site`);
-  return reply.json();
+  // a server that answers a missing file with the site's own page sends HTML, not data
+  try {
+    return await reply.json();
+  } catch {
+    throw new DataError(`no ${name}: run pcs14 site`);
+  }
 }
 
 // a data file's script version: spec.json comes as spec.js, drone.glb as drone.glb.js

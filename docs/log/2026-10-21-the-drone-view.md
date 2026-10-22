@@ -42,6 +42,12 @@ The rule that kept this safe: detail is a look, never the envelope. The checks, 
 
 It works on a phone too: the drone takes the screen and the controls sit in a drawer along the bottom.
 
+## After my first look
+
+I opened it on my own screen and three things were off. The blueprint was one drawing scaled to cover the window, so on a wide, short screen its labels fell off the bottom and its side view and title block sat under the panel. The panel painted over the menu's list. And the panel itself looked like a form.
+
+The blueprint is now a grid that fills any screen, with each drawing pinned to a corner of the space the panel leaves. The panel reads like an instrument now: what's switched on and whether it meets its targets at the top, the modules as three toggles, one labeled row per control, all in the mono face in small capitals, with thin lines and square corners. Then I took the same look through the rest of the site, so every page has the same bar along the top and the same headings, tables, buttons and lists. One site, one look.
+
 ## What's not done
 
 - **The makers' own models.** The ARK GPS and CANnode (BSD-3) and the Pi 5 (MIT) are on my machine; the Teensy 4.1's model (its author allows it with credit) is a download I haven't approved yet. None of them are in the site's model yet.

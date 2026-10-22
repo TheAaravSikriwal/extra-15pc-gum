@@ -11,6 +11,7 @@ import { loadData, type LoadOptions } from "../data/load";
 import type { Flights, Parts, Playback } from "../data/types";
 import { useData } from "../data/useData";
 import { useModel } from "../explorer/model";
+import { flyLink } from "../stage/modes";
 import { COLORS, type DroneModel, FlightScene } from "../flights/FlightScene";
 import { chapters, duration, eventsSoFar, indexAt, series, toThree } from "../flights/playback";
 import { Clock, useClockTime } from "../play/clock";
@@ -126,8 +127,9 @@ export function FlightRun({ setup, scenario, load }: { setup: string; scenario: 
   if (!runs) return <p>Loading the flight</p>;
   return (
     <main className="wide">
-      <p>
+      <p className="links">
         <a href="#/flights">Every flight</a>
+        <a href={flyLink(scenario, setup)}>Fly it in the drone view</a>
       </p>
       <h1>
         {scenario}, {setup}

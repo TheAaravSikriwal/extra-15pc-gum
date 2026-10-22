@@ -67,3 +67,8 @@ test("from disk, a script that isn't there says how to make it", async () => {
   };
   await expect(loadData("spec.json", { fromDisk: true, loader })).rejects.toThrow(/pcs14 site/);
 });
+
+test("a file the server answers with its own page instead says it isn't there", async () => {
+  const html = (async () => ({ ok: true, json: async () => JSON.parse("<!doctype html>") })) as unknown as typeof fetch;
+  await expect(loadData("library/x.json", { fromDisk: false, fetcher: html })).rejects.toThrow("no library/x.json");
+});

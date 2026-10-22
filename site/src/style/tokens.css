@@ -18,62 +18,118 @@
   box-sizing: border-box;
 }
 
+/* The site's interface (decided 2026-10-21, with the drone view): headings, labels, controls and
+   numbers in the mono face, in small capitals where they label something; reading text in the
+   body face; thin lines, square corners and the one accent everywhere. The pictures and posts
+   keep docs/style.md's headline face. */
 html,
 body {
   margin: 0;
   background: var(--background);
   color: var(--text);
-  font: 16px/1.5 var(--font-body);
+  font: 15px/1.6 var(--font-body);
+  -webkit-font-smoothing: antialiased;
 }
 
 h1,
 h2,
+h3,
+h4 {
+  font-family: var(--font-numbers);
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0 0 16px;
+  font-size: 20px;
+  line-height: 1.3;
+  letter-spacing: 0.14em;
+}
+
+h2 {
+  margin: 48px 0 16px;
+  padding-top: 20px;
+  font-size: 12.5px;
+  letter-spacing: 0.16em;
+  border-top: 1px solid var(--lines);
+}
+
 h3 {
-  font-family: var(--font-headline);
-  font-weight: 500;
+  margin: 28px 0 10px;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: var(--muted);
+}
+
+h4 {
+  margin: 20px 0 8px;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  color: var(--muted);
 }
 
 a {
   color: var(--accent);
+  text-decoration: underline;
+  text-decoration-color: rgba(61, 220, 151, 0.35);
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  text-decoration-color: currentColor;
+}
+
+p {
+  max-width: 72ch;
 }
 
 main {
   max-width: 960px;
   margin: 0 auto;
-  padding: 32px 16px;
+  padding: 40px 24px 96px;
 }
 
-nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 16px 16px 0;
-  font-size: 14px;
+main.wide {
+  max-width: 1280px;
 }
 
-nav a {
+main > h1 + p,
+.lede {
   color: var(--muted);
-  text-decoration: none;
-}
-
-nav a[aria-current="page"] {
-  color: var(--text);
 }
 
 button,
 select,
 input {
-  font: inherit;
+  font: 11px/1.4 var(--font-numbers);
+  letter-spacing: 0.08em;
   color: var(--text);
-  background: var(--lines);
-  border: 1px solid var(--lines);
-  border-radius: 4px;
-  padding: 4px 10px;
+  background: transparent;
+  border: 1px solid #3a3a37;
+  border-radius: 0;
+  padding: 6px 10px;
 }
 
-[role="tab"][aria-selected="true"] {
+button {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+}
+
+button:hover,
+select:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+select option {
+  color: var(--text);
+  background: #151514;
+}
+
+[role="tab"][aria-selected="true"],
+button[aria-pressed="true"] {
   border-color: var(--accent);
   color: var(--accent);
 }
@@ -81,13 +137,28 @@ input {
 table {
   border-collapse: collapse;
   width: 100%;
+  font-size: 14px;
+}
+
+th {
+  white-space: nowrap;
+  font: 10px/1.4 var(--font-numbers);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 400;
 }
 
 th,
 td {
   text-align: left;
-  padding: 4px 8px;
+  vertical-align: top;
+  padding: 8px 10px;
   border-bottom: 1px solid var(--lines);
+}
+
+tbody tr:hover td {
+  background: rgba(255, 255, 255, 0.025);
 }
 
 td.pass {
@@ -104,32 +175,129 @@ td.not-yet {
 
 .numbers {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 8px 24px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px 24px;
+  font-family: var(--font-numbers);
+  font-size: 13px;
 }
 
 .numbers dt {
+  font: 10px/1.4 var(--font-numbers);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--muted);
-  font-size: 14px;
 }
 
 .numbers dd {
-  margin: 0;
+  margin: 4px 0 0;
   font-family: var(--font-numbers);
 }
 
 svg text {
   fill: var(--muted);
-  font: 12px var(--font-body);
+  font: 11px var(--font-numbers);
+}
+
+svg.bars {
+  display: block;
+  max-width: 720px;
 }
 
 svg .chart-title {
   fill: var(--text);
-  font-size: 13px;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
-main.wide {
-  max-width: 1280px;
+/* the bar along the top of every page: the way back, the page's name, the menu */
+.page-back {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 52px;
+  padding: 0 24px;
+  background: rgba(11, 11, 11, 0.86);
+  border-bottom: 1px solid var(--lines);
+  backdrop-filter: blur(10px);
+}
+
+.page-back .page-home,
+.page-back .page-name {
+  font: 11px/1 var(--font-numbers);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.page-back .page-home {
+  color: var(--text);
+}
+
+.page-back .page-home:hover {
+  color: var(--accent);
+}
+
+.page-back .page-name {
+  color: var(--muted);
+}
+
+.page-back .page-name:not(:empty)::before {
+  content: "/";
+  margin-right: 16px;
+  color: var(--lines);
+}
+
+.page-back .stage-menu {
+  position: relative;
+  top: 0;
+  right: 0;
+  margin-left: auto;
+  --hud-fg: var(--text);
+  --hud-dim: var(--muted);
+  --hud-line: #3a3a37;
+  --hud-bg: rgba(11, 11, 11, 0.94);
+  --hud-hover: rgba(255, 255, 255, 0.05);
+  --hud-accent: var(--accent);
+}
+
+.page-back .stage-menu > button,
+.page-back .stage-menu li a {
+  font-family: var(--font-numbers);
+}
+
+.page-back .stage-menu > button {
+  padding: 9px 14px;
+  color: var(--text);
+  background: transparent;
+  border: 1px solid #3a3a37;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+}
+
+.page-back .page-home {
+  white-space: nowrap;
+}
+
+@media (max-width: 700px) {
+  .page-back {
+    padding: 0 16px;
+  }
+
+  .page-back .page-name {
+    display: none;
+  }
+
+  main {
+    padding: 28px 16px 72px;
+  }
+
+  th {
+    white-space: normal;
+  }
 }
 
 .explorer {
@@ -142,7 +310,6 @@ main.wide {
   height: 70vh;
   min-height: 360px;
   border: 1px solid var(--lines);
-  border-radius: 6px;
   overflow: hidden;
 }
 
@@ -154,7 +321,7 @@ main.wide {
 
 fieldset {
   border: 1px solid var(--lines);
-  border-radius: 6px;
+  border-radius: 0;
 }
 
 .card dl {
@@ -188,27 +355,33 @@ fieldset {
   }
 }
 
+/* the matrices: a pass or a fail per cell, each a link to its run */
 .matrix td,
 .matrix th {
-  font-size: 13px;
+  font: 11px/1.4 var(--font-numbers);
+  letter-spacing: 0.06em;
   white-space: nowrap;
 }
 
 .matrix td a {
   color: inherit;
+  text-decoration: none;
+}
+
+.matrix td a:hover {
+  text-decoration: underline;
 }
 
 .flight {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 
 .flight .view {
   height: 55vh;
   min-height: 320px;
   border: 1px solid var(--lines);
-  border-radius: 6px;
   overflow: hidden;
 }
 
@@ -221,6 +394,9 @@ fieldset {
 
 .controls input[type="range"] {
   flex: 1 1 240px;
+  padding: 0;
+  border: 0;
+  accent-color: var(--accent);
 }
 
 .controls .chapters {
@@ -231,11 +407,14 @@ fieldset {
 }
 
 .controls .chapters button {
-  font-size: 12px;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: none;
 }
 
 .controls .chapters button.now {
   border-color: var(--accent);
+  color: var(--accent);
 }
 
 .time,
@@ -247,13 +426,15 @@ fieldset {
 .legend {
   display: flex;
   gap: 16px;
-  font-family: var(--font-numbers);
+  font: 11px var(--font-numbers);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .columns {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 16px;
+  gap: 24px;
 }
 
 .events,
@@ -270,40 +451,145 @@ fieldset {
   color: var(--fail);
 }
 
-.status {
+.status,
+.purpose,
+.note,
+.local-only,
+.side-tracks,
+.made,
+.unproven-line,
+.muted,
+.tree-key {
   color: var(--muted);
+}
+
+.status,
+.side-tracks,
+.made,
+.unproven-line {
   font-size: 14px;
 }
 
-.purpose {
-  color: var(--muted);
+.note,
+.local-only {
+  max-width: 72ch;
 }
 
 .links {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 8px 20px;
+}
+
+.links a {
+  font: 11px/1.6 var(--font-numbers);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.links a:hover {
+  text-decoration: underline;
 }
 
 .stills {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 12px;
+  gap: 16px;
   margin: 16px 0;
 }
 
 .stills img {
   width: 100%;
   border: 1px solid var(--lines);
-  border-radius: 4px;
 }
 
+.stills figure {
+  margin: 0;
+}
+
+.stills figcaption {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+.stills figcaption strong {
+  font-family: var(--font-numbers);
+  font-weight: 400;
+  color: var(--accent);
+}
+
+.stills img.harness {
+  background: #f4f4f2;
+}
+
+/* lists of links (the steps, the library, the data): one quiet row each */
+.steps,
+.quiet-steps,
+ul.library {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid var(--lines);
+}
+
+.steps li,
+.quiet-steps li,
+ul.library li {
+  margin: 0;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--lines);
+}
+
+.steps a,
+.quiet-steps a,
+ul.library a,
+.side-tracks a {
+  color: var(--text);
+  text-decoration: none;
+}
+
+.steps a:hover,
+.quiet-steps a:hover,
+ul.library a:hover,
+.side-tracks a:hover,
+.quiet-steps a:focus-visible,
+.side-tracks a:focus-visible {
+  color: var(--accent);
+}
+
+/* a step in the list: its name, and its status at the right in the mono face */
 .steps li {
-  margin: 6px 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.steps .status {
+  font: 11px/1.9 var(--font-numbers);
+  letter-spacing: 0.06em;
+  text-align: right;
+}
+
+/* a page's own message while it loads, or when there's nothing there */
+.page-over > p {
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 24px;
+  color: var(--muted);
 }
 
 .parts-of-step td:nth-child(-n + 2) {
   white-space: nowrap;
+}
+
+/* the parts tables' counts, weights and prices stay on one line, in the mono face */
+table.parts td:nth-child(2),
+table.parts td:nth-child(3),
+table.short-columns td:not(:first-child) {
+  white-space: nowrap;
+  font: 12.5px/1.6 var(--font-numbers);
 }
 
 .tunnel-case {
@@ -319,44 +605,12 @@ fieldset {
   max-width: 960px;
   background: var(--background);
   border: 1px solid var(--lines);
-  border-radius: 6px;
 }
 
 .views {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-}
-
-button[aria-pressed="true"] {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.note,
-.local-only {
-  color: var(--muted);
-  max-width: 70ch;
-}
-
-.stills figure {
-  margin: 0;
-}
-
-.stills figcaption {
-  font-size: 14px;
-  color: var(--muted);
-  margin-top: 6px;
-}
-
-.stills figcaption strong {
-  font-family: var(--font-numbers);
-  color: var(--accent);
-}
-
-.home .lede {
-  max-width: 60ch;
-  color: var(--muted);
 }
 
 .hero img {
@@ -367,50 +621,14 @@ button[aria-pressed="true"] {
   margin: 12px 0;
 }
 
-.quiet-steps {
-  list-style: none;
-  padding-left: 0;
-  line-height: 1.7;
-}
-
-.quiet-steps a,
-.side-tracks a {
-  color: var(--text);
-  text-decoration: none;
-}
-
-.quiet-steps a:hover,
-.quiet-steps a:focus-visible,
-.side-tracks a:hover,
-.side-tracks a:focus-visible {
-  color: var(--accent);
-  text-decoration: underline;
-}
-
-.side-tracks,
-.made {
-  color: var(--muted);
-  font-size: 14px;
-}
-
 /* where the keyboard is: every link, button and control */
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 1px solid var(--accent);
   outline-offset: 2px;
-}
-
-.numbers {
-  font-family: var(--font-numbers);
-  font-size: 14px;
 }
 
 .unproven td:first-child {
   width: 55%;
-}
-
-.unproven-line {
-  font-size: 14px;
-  color: var(--muted);
 }
 
 .unproven-line a {
@@ -425,12 +643,8 @@ button[aria-pressed="true"] {
 
 .pins td {
   font-family: var(--font-numbers);
-  font-size: 13px;
+  font-size: 12px;
   white-space: nowrap;
-}
-
-.stills img.harness {
-  background: #f4f4f2;
 }
 
 .verdict.pass,
@@ -446,23 +660,21 @@ button[aria-pressed="true"] {
 .doc img {
   max-width: 100%;
   border: 1px solid var(--lines);
-  border-radius: 4px;
 }
 
 .doc table {
   display: block;
   overflow-x: auto;
-  font-size: 14px;
+  font-size: 13.5px;
 }
 
 .doc pre,
 pre.docstring {
   overflow-x: auto;
-  padding: 12px;
-  background: #151514;
+  padding: 14px 16px;
+  background: #121211;
   border: 1px solid var(--lines);
-  border-radius: 4px;
-  font: 13px/1.5 var(--font-numbers);
+  font: 12.5px/1.6 var(--font-numbers);
   white-space: pre-wrap;
 }
 
@@ -471,16 +683,22 @@ pre.docstring {
 .module code,
 .item code {
   font-family: var(--font-numbers);
-  font-size: 0.92em;
+  font-size: 0.88em;
 }
 
 .doc details,
 details.part,
 details.module {
-  margin: 8px 0;
-  padding: 6px 10px;
-  border: 1px solid var(--lines);
-  border-radius: 4px;
+  margin: 0;
+  padding: 10px 2px;
+  border: 0;
+  border-bottom: 1px solid var(--lines);
+}
+
+.doc details:first-of-type,
+details.part:first-of-type,
+details.module:first-of-type {
+  border-top: 1px solid var(--lines);
 }
 
 .doc summary,
@@ -488,13 +706,19 @@ details summary {
   cursor: pointer;
 }
 
-ul.library {
-  list-style: none;
-  padding: 0;
+details.part > summary,
+details.module > summary {
+  font: 12px/1.5 var(--font-numbers);
+  letter-spacing: 0.04em;
 }
 
-ul.library li {
-  padding: 3px 0;
+details.part > summary:hover,
+details.module > summary:hover {
+  color: var(--accent);
+}
+
+details[open] > summary {
+  margin-bottom: 10px;
 }
 
 ul.tree {
@@ -502,21 +726,44 @@ ul.tree {
   margin: 4px 0;
   padding-left: 16px;
   border-left: 1px solid var(--lines);
+  font: 12px/1.75 var(--font-numbers);
 }
 
 .tree-key {
-  color: var(--muted);
+  margin-right: 8px;
 }
 
-.muted {
-  color: var(--muted);
-}
-
-/* the stage: one drone, always in view; the blueprint inside it, white space when it flies */
+/* the stage: one drone, always in view; the blueprint inside it, white space when it flies.
+   Everything over it reads as one instrument: the mono face in small capitals for labels,
+   thin lines, square corners, and the one accent. */
 .stage {
+  --hud-fg: #e9eef4;
+  --hud-dim: rgba(233, 238, 244, 0.52);
+  --hud-line: rgba(255, 255, 255, 0.14);
+  --hud-bg: rgba(7, 22, 44, 0.78);
+  --hud-hover: rgba(255, 255, 255, 0.06);
+  --hud-accent: var(--accent);
+  --hud-pass: var(--pass);
+  --hud-fail: var(--fail);
+  --hud-panel: 300px;
+  --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23e9eef4' stroke-opacity='.6' stroke-width='1.2'/%3E%3C/svg%3E");
   position: fixed;
   inset: 0;
   overflow: hidden;
+  font: 12px/1.5 var(--font-numbers);
+  color: var(--hud-fg);
+}
+
+.stage.fly {
+  --hud-fg: #16191c;
+  --hud-dim: rgba(22, 25, 28, 0.5);
+  --hud-line: rgba(0, 0, 0, 0.12);
+  --hud-bg: rgba(255, 255, 255, 0.86);
+  --hud-hover: rgba(0, 0, 0, 0.04);
+  --hud-accent: #1f7a52;
+  --hud-pass: #1f7a52;
+  --hud-fail: #b8327a;
+  --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%2316191c' stroke-opacity='.6' stroke-width='1.2'/%3E%3C/svg%3E");
 }
 
 .stage.page {
@@ -534,12 +781,6 @@ ul.tree {
   transition: opacity 1.2s ease-in-out;
 }
 
-.blueprint {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
 .stage-white {
   background: #ffffff;
   opacity: 0;
@@ -553,89 +794,185 @@ ul.tree {
   opacity: 0;
 }
 
+/* the blueprint: a grid that fills any screen, the sheet's border, and each drawing pinned to
+   a corner of the space the panel leaves */
+.blueprint {
+  position: absolute;
+  inset: 0;
+  background-color: #163f73;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.13) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.13) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size:
+    100px 100px,
+    100px 100px,
+    20px 20px,
+    20px 20px;
+  background-position: center;
+}
+
+.bp-sheet {
+  position: absolute;
+  inset: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.26);
+}
+
+.bp-area {
+  position: absolute;
+  inset: 0;
+  /* the middle kept clear for the drone */
+  background: radial-gradient(ellipse 38% 42% at 50% 52%, rgba(22, 63, 115, 0.9), rgba(22, 63, 115, 0) 100%);
+}
+
+.bp-figure {
+  position: absolute;
+  display: block;
+  height: auto;
+  font-family: var(--font-numbers);
+  opacity: 0.8;
+}
+
+.bp-side {
+  top: 76px;
+  right: 32px;
+  width: clamp(220px, 22vw, 400px);
+}
+
+.bp-top {
+  left: 32px;
+  bottom: 32px;
+  width: clamp(150px, 16vw, 270px);
+}
+
+.bp-title {
+  right: 32px;
+  bottom: 32px;
+  width: clamp(220px, 18vw, 320px);
+}
+
+.bp-details {
+  right: 32px;
+  bottom: calc(56px + clamp(220px, 18vw, 320px) * 0.32);
+  width: clamp(150px, 13vw, 250px);
+}
+
+/* the bar along the top: the mode switch in the middle of the drone's space, the menu at the
+   right; both over the panel */
 .stage-top {
   position: absolute;
+  z-index: 20;
   top: 16px;
   left: 50%;
   transform: translateX(-50%);
-  display: flex;
-  gap: 16px;
-  align-items: center;
 }
 
 .stage-switch {
   display: flex;
-  gap: 4px;
-  padding: 4px;
-  border-radius: 999px;
-  background: rgba(11, 11, 11, 0.55);
-  backdrop-filter: blur(6px);
+  border: 1px solid var(--hud-line);
+  background: var(--hud-bg);
+  backdrop-filter: blur(10px);
+}
+
+.stage-switch a,
+.stage-menu > button,
+.stage-panel button,
+.drawer-handle {
+  font: 11px/1 var(--font-numbers);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 
 .stage-switch a {
-  padding: 6px 16px;
-  border-radius: 999px;
-  color: var(--muted);
+  padding: 9px 16px;
+  color: var(--hud-dim);
   text-decoration: none;
-  font-size: 14px;
+}
+
+.stage-switch a:hover {
+  color: var(--hud-fg);
 }
 
 .stage-switch a[aria-current="page"] {
-  background: var(--text);
-  color: #0b0b0b;
+  color: var(--hud-accent);
+  box-shadow: inset 0 -2px 0 var(--hud-accent);
 }
 
 .stage-menu {
   position: fixed;
+  z-index: 40;
   top: 16px;
-  right: 16px;
+  right: 24px;
+}
+
+.stage-menu > button {
+  padding: 9px 14px;
+  color: var(--hud-fg);
+  background: var(--hud-bg);
+  border: 1px solid var(--hud-line);
+  border-radius: 0;
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+}
+
+.stage-menu > button[aria-expanded="true"],
+.stage-menu > button:hover {
+  color: var(--hud-accent);
+  border-color: var(--hud-accent);
 }
 
 .stage-menu ul {
   position: absolute;
   right: 0;
-  margin: 8px 0 0;
-  padding: 8px 0;
+  margin: 6px 0 0;
+  padding: 6px 0;
   list-style: none;
-  min-width: 200px;
-  background: rgba(11, 11, 11, 0.92);
-  border: 1px solid var(--lines);
-  border-radius: 6px;
+  min-width: 220px;
+  background: var(--hud-bg);
+  border: 1px solid var(--hud-line);
+  backdrop-filter: blur(10px);
 }
 
 .stage-menu li a {
   display: block;
-  padding: 6px 16px;
-  color: var(--text);
+  padding: 7px 16px;
+  font: 11px/1.4 var(--font-numbers);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--hud-fg);
   text-decoration: none;
-  font-size: 14px;
+}
+
+.stage-menu li a:hover {
+  color: var(--hud-accent);
+  background: var(--hud-hover);
 }
 
 .stage-intro {
   position: absolute;
-  left: 24px;
-  top: 64px;
+  z-index: 5;
+  left: 32px;
+  top: 76px;
   max-width: 300px;
-  color: #f4f4f2;
   transition: color 1.2s ease-in-out;
 }
 
 .stage-intro h1 {
-  font-size: 22px;
-  margin: 0 0 6px;
+  margin: 0 0 8px;
+  font: 15px/1.3 var(--font-numbers);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--hud-fg);
 }
 
 .stage-intro p {
   margin: 0;
-  font-size: 14px;
-  opacity: 0.8;
+  font: 12px/1.65 var(--font-numbers);
+  color: var(--hud-dim);
 }
 
-.stage.fly .stage-intro,
-.stage.fly .stage-panel {
-  color: #1a1a19;
-}
-
+/* the panel */
 @keyframes panel-in {
   from {
     opacity: 0;
@@ -646,154 +983,390 @@ ul.tree {
 .stage-panel {
   animation: panel-in 0.6s ease 0.3s both;
   position: absolute;
+  z-index: 10;
   right: 24px;
-  top: 72px;
+  top: 64px;
   bottom: 24px;
-  width: 300px;
+  width: var(--hud-panel);
   overflow-y: auto;
-  padding: 12px 16px;
-  font-size: 14px;
-  color: #f4f4f2;
-  background: rgba(11, 30, 60, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 8px;
-  backdrop-filter: blur(6px);
+  color: var(--hud-fg);
+  background: var(--hud-bg);
+  border: 1px solid var(--hud-line);
+  border-top: 1px solid var(--hud-accent);
+  backdrop-filter: blur(10px);
+  scrollbar-width: thin;
+  scrollbar-color: var(--hud-line) transparent;
 }
 
-.stage.fly .stage-panel {
-  background: rgba(255, 255, 255, 0.7);
-  border-color: #e4e4e0;
+.stage-panel .hud-label,
+.stage-panel .readout dt,
+.stage-panel .card dt {
+  font-size: 9.5px;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--hud-dim);
 }
 
-.stage-panel label,
-.stage-panel fieldset {
-  display: block;
-  margin: 8px 0;
+.stage-panel .hud-section {
+  margin: 0;
+  padding: 14px 16px;
+  min-width: 0;
+  border: 0;
+  border-top: 1px solid var(--hud-line);
 }
 
-.stage-panel .numbers-line {
-  margin-top: 0;
-  font-family: var(--font-numbers);
+.stage-panel legend.hud-label {
+  float: left;
+  width: 100%;
+  padding: 0;
+  margin: 0 0 10px;
+}
+
+/* the head: what it's showing, its verdict, a few numbers */
+.readout {
+  padding: 14px 16px;
+}
+
+.readout-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
   font-size: 13px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 
-.stage-panel .about {
-  line-height: 1.45;
+.verdict {
+  padding: 3px 6px;
+  font: 9.5px/1.2 var(--font-numbers);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  border: 1px solid currentColor;
 }
 
-.stage-panel ul.sources {
-  margin: 4px 0 10px;
-  padding-left: 16px;
-  font-size: 12px;
-  line-height: 1.45;
+.stage .verdict.pass {
+  color: var(--hud-pass);
 }
 
-.stage-panel .card button {
-  font: inherit;
-  font-size: 13px;
-  padding: 4px 10px;
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  background: transparent;
-  color: inherit;
-  cursor: pointer;
+.stage .verdict.fail {
+  color: var(--hud-fail);
 }
 
-/* Fly it: the playing run's numbers, a bar per motor, the firmware that flew it */
-.stage-panel .playing {
-  margin: 10px 0 4px;
-  padding: 10px 0;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+.readout dl,
+.stage-panel .playing .numbers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 12px 0 0;
 }
 
 .stage-panel .playing .numbers {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 2px 12px;
-  margin: 0;
+  grid-template-columns: repeat(2, 1fr);
+  margin: 0 0 14px;
+}
+
+.readout dd,
+.stage-panel .playing .numbers dd {
+  margin: 3px 0 0;
   font-size: 13px;
 }
 
 .stage-panel .playing .numbers dt {
-  opacity: 0.6;
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--hud-dim);
 }
 
-.stage-panel .playing .numbers dd {
+/* the modules as three toggles */
+.chips {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  clear: both;
+}
+
+.chip {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 9px 10px;
+  border: 1px solid var(--hud-line);
+  cursor: pointer;
+}
+
+.chip:hover {
+  background: var(--hud-hover);
+}
+
+.chip input {
+  position: absolute;
+  inset: 0;
   margin: 0;
-  font-family: var(--font-numbers);
+  opacity: 0;
+  cursor: pointer;
+}
+
+.chip b {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.chip span {
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--hud-dim);
+}
+
+.chip.on {
+  border-color: var(--hud-accent);
+}
+
+.chip.on b {
+  color: var(--hud-accent);
+}
+
+.chip:focus-within {
+  outline: 1px solid var(--hud-accent);
+  outline-offset: 1px;
+}
+
+/* a row: its label, its control, and its value */
+.hud-row {
+  display: grid;
+  grid-template-columns: 62px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 10px;
+}
+
+.hud-row:last-child {
+  margin-bottom: 0;
+}
+
+.hud-row select {
+  grid-column: 2 / -1;
+}
+
+.hud-value {
+  min-width: 34px;
+  text-align: right;
+  font-size: 11px;
+}
+
+.stage-panel select {
+  appearance: none;
+  width: 100%;
+  min-width: 0;
+  padding: 6px 24px 6px 8px;
+  font: 11.5px var(--font-numbers);
+  color: var(--hud-fg);
+  background: transparent var(--chevron) no-repeat right 8px center / 9px 6px;
+  border: 1px solid var(--hud-line);
+  border-radius: 0;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.stage-panel select:hover,
+.stage-panel select:focus {
+  border-color: var(--hud-accent);
+  color: var(--hud-fg);
+  outline: none;
+}
+
+.stage-panel option {
+  color: #e9eef4;
+  background: #0b1f3b;
+}
+
+.stage.fly .stage-panel option {
+  color: #16191c;
+  background: #ffffff;
+}
+
+.stage-panel input[type="range"] {
+  appearance: none;
+  width: 100%;
+  height: 18px;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.stage-panel input[type="range"]::-webkit-slider-runnable-track {
+  height: 1px;
+  background: var(--hud-dim);
+}
+
+.stage-panel input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  width: 8px;
+  height: 14px;
+  margin-top: -7px;
+  background: var(--hud-accent);
+  border: 0;
+  border-radius: 0;
+}
+
+.stage-panel input[type="range"]::-moz-range-track {
+  height: 1px;
+  background: var(--hud-dim);
+}
+
+.stage-panel input[type="range"]::-moz-range-thumb {
+  width: 8px;
+  height: 14px;
+  background: var(--hud-accent);
+  border: 0;
+  border-radius: 0;
+}
+
+.stage-panel button {
+  padding: 8px 12px;
+  color: var(--hud-fg);
+  background: transparent;
+  border: 1px solid var(--hud-line);
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.stage-panel button:hover {
+  color: var(--hud-accent);
+  border-color: var(--hud-accent);
+}
+
+.stage-panel a {
+  color: var(--hud-accent);
+}
+
+/* the card for whatever's picked */
+.stage-panel .card {
+  margin: 0;
+}
+
+.stage-panel .card h3 {
+  margin: 0 0 10px;
+  font: 12.5px/1.45 var(--font-numbers);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.stage-panel .card dl {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 5px 10px;
+  margin: 0 0 12px;
+}
+
+.stage-panel .card dt {
+  align-self: center;
+}
+
+.stage-panel .card dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.stage-panel .card p,
+.stage-panel .card li {
+  margin: 0 0 8px;
+  line-height: 1.55;
+}
+
+.stage-panel .card a,
+.stage-panel .card .links a {
+  display: inline-block;
+  margin-right: 12px;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+}
+
+.stage-panel .card.hint {
+  color: var(--hud-dim);
+  letter-spacing: 0.06em;
+}
+
+.stage-panel .card ul {
+  padding-left: 14px;
+}
+
+.stage-panel ul.sources {
+  margin: 4px 0 12px;
+  font-size: 11px;
+  color: var(--hud-dim);
+}
+
+/* Fly it: what's playing, a bar per motor, the result, the firmware that flew it */
+.stage-panel .about {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.stage-panel .about strong {
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--hud-fg);
+}
+
+.stage-panel .firmware-switch {
+  display: inline-flex;
+  margin-top: 12px;
+  border: 1px solid var(--hud-line);
+}
+
+.stage-panel .firmware-switch button {
+  padding: 7px 12px;
+  border: 0;
+}
+
+.stage-panel .firmware-switch button[aria-pressed="true"] {
+  color: var(--hud-accent);
+  box-shadow: inset 0 -2px 0 var(--hud-accent);
 }
 
 .stage-panel .motor-bars {
   display: flex;
   gap: 6px;
-  height: 36px;
-  margin: 10px 0 6px;
+  height: 30px;
+  margin: 8px 0 12px;
 }
 
 .stage-panel .motor-bars span {
   position: relative;
   flex: 1;
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 3px;
+  border: 1px solid var(--hud-line);
 }
 
 .stage-panel .motor-bars i {
   position: absolute;
   inset: auto 0 0 0;
-  background: #1f7a52;
-  border-radius: 3px;
+  background: var(--hud-accent);
+  opacity: 0.85;
 }
 
 .stage-panel .result {
-  margin: 4px 0 0;
-  font-size: 13px;
+  margin: 0;
+  color: var(--hud-dim);
 }
 
-.stage-panel .firmware-switch {
-  display: inline-flex;
-  margin: 4px 0;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  border-radius: 999px;
-  overflow: hidden;
-}
-
-.stage-panel .firmware-switch button {
-  font: inherit;
-  font-size: 12px;
-  padding: 3px 10px;
-  border: 0;
-  background: transparent;
-  color: inherit;
-  cursor: pointer;
-}
-
-.stage-panel .firmware-switch button[aria-pressed="true"] {
-  background: #1a1a19;
-  color: #f4f4f2;
-}
-
-/* a picked pin's name, floating beside it in 3D */
-.pin-label {
-  display: inline-block;
-  padding: 1px 6px;
-  font-family: var(--font-numbers);
-  font-size: 11px;
-  white-space: nowrap;
-  color: #062a1c;
-  background: rgba(61, 220, 151, 0.92);
-  border-radius: 4px;
-  pointer-events: none;
-  transform: translateY(-14px);
+.stage-panel .scenarios section + section {
+  margin-top: 14px;
 }
 
 .stage-panel .scenarios h3 {
-  margin: 14px 0 4px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  opacity: 0.6;
+  margin: 0 0 6px;
 }
 
 .stage-panel .scenarios ul {
@@ -802,23 +1375,43 @@ ul.tree {
   padding: 0;
 }
 
-.stage-panel .scenarios li {
-  padding: 2px 0;
+.stage-panel .scenarios li a {
+  display: block;
+  padding: 4px 0 4px 10px;
+  color: var(--hud-fg);
+  text-decoration: none;
+  border-left: 1px solid var(--hud-line);
+}
+
+.stage-panel .scenarios li a:hover {
+  color: var(--hud-accent);
+  background: var(--hud-hover);
+}
+
+.stage-panel .scenarios li a[aria-current="true"] {
+  color: var(--hud-accent);
+  border-left: 2px solid var(--hud-accent);
 }
 
 .stage-panel .scenarios .muted {
-  margin: 4px 0 0;
-  font-size: 12px;
-  line-height: 1.4;
-  opacity: 0.55;
+  margin: 6px 0 0;
+  font-size: 10.5px;
+  line-height: 1.5;
+  color: var(--hud-dim);
 }
 
-.stage.fly .stage-panel a {
-  color: #1f7a52;
-}
-
-.stage.fly .stage-panel a[aria-current="true"] {
-  font-weight: 600;
+/* a picked pin's name, floating beside it in 3D */
+.pin-label {
+  display: inline-block;
+  padding: 2px 6px;
+  font: 10px/1.3 var(--font-numbers);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: #062a1c;
+  background: rgba(61, 220, 151, 0.92);
+  pointer-events: none;
+  transform: translateY(-14px);
 }
 
 /* a page opens over the stage, with the way back */
@@ -826,22 +1419,6 @@ ul.tree {
   position: relative;
   min-height: 100vh;
   background: var(--background);
-}
-
-.page-back {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 16px 16px 0;
-  font-size: 14px;
-}
-
-.page-back .stage-menu {
-  position: relative;
-  top: 0;
-  right: 0;
 }
 
 /* the panel's drawer: nothing on a wide screen, a sheet along the bottom on a phone */
@@ -856,25 +1433,44 @@ ul.tree {
 @media (max-width: 700px) {
   .stage-intro {
     left: 16px;
-    top: 60px;
+    top: 64px;
     max-width: 62%;
   }
 
   .stage-intro h1 {
-    font-size: 18px;
+    font-size: 13px;
   }
 
   .stage-intro p {
-    font-size: 12px;
+    font-size: 11px;
   }
 
   .stage-switch a {
-    padding: 6px 12px;
+    padding: 9px 12px;
+  }
+
+  .stage-menu {
+    right: 12px;
+  }
+
+  .bp-side,
+  .bp-details,
+  .bp-title {
+    display: none;
+  }
+
+  .bp-top {
+    left: auto;
+    right: 20px;
+    bottom: auto;
+    top: 64px;
+    width: 96px;
   }
 
   .stage-drawer {
     display: block;
     position: fixed;
+    z-index: 30;
     left: 0;
     right: 0;
     bottom: 0;
@@ -890,39 +1486,40 @@ ul.tree {
     display: block;
     width: 100%;
     height: 44px;
-    font: inherit;
-    font-size: 13px;
+    color: var(--hud-fg);
+    background: var(--hud-bg);
     border: 0;
-    border-radius: 12px 12px 0 0;
-    background: rgba(11, 30, 60, 0.85);
-    color: #f4f4f2;
-    backdrop-filter: blur(6px);
-  }
-
-  .stage.fly .drawer-handle {
-    background: rgba(255, 255, 255, 0.92);
-    color: #1a1a19;
-    border-top: 1px solid #e4e4e0;
+    border-top: 1px solid var(--hud-accent);
+    border-radius: 0;
+    backdrop-filter: blur(10px);
   }
 
   .stage-drawer .stage-panel {
     position: static;
     width: auto;
     max-height: 55vh;
-    border-radius: 0;
     border-left: 0;
     border-right: 0;
+    border-top: 0;
     animation: none;
   }
 }
 
-/* the drone centers in the space the panel leaves, on screens wide enough for both */
+/* the drone and the blueprint's drawings center in the space the panel leaves, on screens
+   wide enough for both */
 @media (min-width: 900px) {
+  .stage-canvas,
+  .bp-area {
+    right: calc(var(--hud-panel) + 40px);
+  }
+
+  /* the 3D ground grid fades out before the canvas ends, instead of stopping at a line */
   .stage-canvas {
-    right: 340px;
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 120px), transparent);
+    mask-image: linear-gradient(to right, #000 calc(100% - 120px), transparent);
   }
 
   .stage-top {
-    left: calc((100% - 340px) / 2);
+    left: calc((100% - var(--hud-panel) - 40px) / 2);
   }
 }

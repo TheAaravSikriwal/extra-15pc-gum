@@ -14,7 +14,7 @@ import { Unproven } from "./pages/Unproven";
 import { Wiring } from "./pages/Wiring";
 import { useRoute } from "./route";
 import { Menu } from "./stage/Menu";
-import { modeOf } from "./stage/modes";
+import { modeOf, pageName } from "./stage/modes";
 import { Stage } from "./stage/Stage";
 
 // the flight pages bring three.js, about a megabyte, so they load only when opened
@@ -70,7 +70,10 @@ export function App() {
       {mode === "page" && (
         <div className="page-over">
           <nav className="page-back" aria-label="back">
-            <a href="#/">Back to the drone</a>
+            <a className="page-home" href="#/" title="Back to the drone">
+              <span aria-hidden="true">&larr;</span> Extra 15pc Gum
+            </a>
+            <span className="page-name">{pageName(route)}</span>
             <Menu />
           </nav>
           {pageFor(route)}

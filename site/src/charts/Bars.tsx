@@ -1,7 +1,8 @@
 // Checks against their limits, as bars: each drawn as a share of its own limit, so minutes,
 // ratios and amps sit on one chart with every limit at the same line. Pass is spearmint, fail
 // magenta, and marginal (meets the limit, but not pessimistically) a hollow spearmint bar, with
-// a tick where the pessimistic number lands.
+// a tick where the pessimistic number lands. Thin lines on a faint track, like the rest of the
+// site.
 import { scaleLinear } from "d3-scale";
 
 export interface Bar {
@@ -38,11 +39,12 @@ export function Bars({ title, bars, width = 640 }: { title: string; bars: Bar[];
             <text x={0} y={y + 17} className="bar-name">
               {b.name}
             </text>
+            <line x1={left} x2={width - 90} y1={y + 14} y2={y + 14} stroke="var(--lines)" />
             <rect
               x={left}
-              y={y + 4}
+              y={y + 11}
               width={Math.max(0, x(share(b)) - left)}
-              height={rowHeight - 10}
+              height={6}
               fill={verdictOf(b) === "fail" ? "var(--fail)" : verdictOf(b) === "marginal" ? "none" : "var(--pass)"}
               stroke={verdictOf(b) === "marginal" ? "var(--pass)" : "none"}
               strokeWidth={2}
@@ -52,13 +54,13 @@ export function Bars({ title, bars, width = 640 }: { title: string; bars: Bar[];
                 className="pessimistic"
                 x1={x(b.pessimistic / b.limit)}
                 x2={x(b.pessimistic / b.limit)}
-                y1={y + 2}
-                y2={y + rowHeight - 4}
+                y1={y + 7}
+                y2={y + 21}
                 stroke="var(--muted)"
                 strokeWidth={2}
               />
             )}
-            <line x1={x(1)} x2={x(1)} y1={y} y2={y + rowHeight} stroke="var(--text)" />
+            <line x1={x(1)} x2={x(1)} y1={y + 4} y2={y + rowHeight - 4} stroke="var(--text)" />
             <text x={x(Math.max(share(b), 1)) + 6} y={y + 17} className="bar-value">
               {b.value.toFixed(1)} {b.unit} / {b.limit.toFixed(1)}
             </text>

@@ -5,6 +5,7 @@
 import { useMemo } from "react";
 
 import { firmwaresFor, resultLine, speedWords } from "../fly/fly";
+import { Readout } from "./Readout";
 import type { DroneState, FlyData, StageData } from "./Stage";
 
 export const STEPS: Record<number, string> = { 4: "Flight", 6: "Modules", 7: "Smart features" };
@@ -35,17 +36,26 @@ function Playing({ fly }: { fly: FlyData }) {
   const n = fly.playing;
   if (!fly.playback || !n) return null;
   return (
-    <section className="playing" aria-label="playing">
+    <section className="playing hud-section" aria-label="playing">
       <dl className="numbers">
-        <dt>Height</dt>
-        <dd>{n.height.toFixed(1)} m</dd>
-        <dt>Speed</dt>
-        <dd>{n.speed.toFixed(1)} m/s</dd>
-        <dt>Time</dt>
-        <dd>
-          {n.time.toFixed(0)} s, {speedWords(n.factor)}
-        </dd>
+        <div>
+          <dt>Height</dt>
+          <dd>{n.height.toFixed(1)} m</dd>
+        </div>
+        <div>
+          <dt>Speed</dt>
+          <dd>{n.speed.toFixed(1)} m/s</dd>
+        </div>
+        <div>
+          <dt>Time</dt>
+          <dd>{n.time.toFixed(0)} s</dd>
+        </div>
+        <div>
+          <dt>Playing</dt>
+          <dd>{speedWords(n.factor)}</dd>
+        </div>
       </dl>
+      <span className="hud-label">Motors</span>
       <div className="motor-bars" aria-label="motors">
         {n.motors.map((m, k) => (
           <span key={k} title={`motor ${k + 1}: ${m.toFixed(0)} rad/s`}>
@@ -65,32 +75,36 @@ export function FlyPanel({ state, data, fly }: { state: DroneState; data: StageD
   const steps = [...new Set(rows.map((r) => r.step))];
   return (
     <aside className="stage-panel fly" aria-label="fly it">
-      <p className="numbers-line">
-        {state.combination}, {state.firmware === "mine" ? "my firmware" : "PX4"}
-      </p>
-      {playing && (
-        <p className="about">
-          <strong>{playing.name}.</strong> {playing.what}
-          {!playing.flown && ` It wasn't flown in ${state.combination} on ${FIRMWARE[state.firmware].toLowerCase()}.`}
-        </p>
-      )}
-      {(firmwares.length > 1 || (firmwares.length === 1 && firmwares[0] !== state.firmware)) && (
-        <div className="firmware-switch" role="group" aria-label="firmware">
-          {firmwares.map((f) => (
-            <button key={f} type="button" aria-pressed={state.firmware === f} onClick={() => state.setFirmware(f)}>
-              {FIRMWARE[f]}
-            </button>
-          ))}
-        </div>
-      )}
+      <Readout
+        title={`${state.combination}, ${state.firmware === "mine" ? "my firmware" : "PX4"}`}
+        rows={[]}
+        verdict={fly?.playback ? (fly.playback.passed ? "pass" : "fail") : null}
+      />
+      <div className="hud-section">
+        {playing && (
+          <p className="about">
+            <strong>{playing.name}.</strong> {playing.what}
+            {!playing.flown && ` It wasn't flown in ${state.combination} on ${FIRMWARE[state.firmware].toLowerCase()}.`}
+          </p>
+        )}
+        {(firmwares.length > 1 || (firmwares.length === 1 && firmwares[0] !== state.firmware)) && (
+          <div className="firmware-switch" role="group" aria-label="firmware">
+            {firmwares.map((f) => (
+              <button key={f} type="button" aria-pressed={state.firmware === f} onClick={() => state.setFirmware(f)}>
+                {FIRMWARE[f]}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
       {fly && <Playing fly={fly} />}
-      <div className="scenarios" role="group" aria-label="scenarios">
+      <div className="scenarios hud-section" role="group" aria-label="scenarios">
         {steps.map((step) => {
           const flown = rows.filter((r) => r.step === step && r.flown);
           const not = rows.filter((r) => r.step === step && !r.flown);
           return (
             <section key={step} aria-label={STEPS[step] ?? `step ${step}`}>
-              <h3>{STEPS[step] ?? `Step ${step}`}</h3>
+              <h3 className="hud-label">{STEPS[step] ?? `Step ${step}`}</h3>
               {flown.length > 0 && (
                 <ul>
                   {flown.map((s) => (

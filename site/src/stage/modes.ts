@@ -15,8 +15,24 @@ export function modeOf(route: string[]): Mode {
 
 export const DEFAULT_SCENARIO = "hover";
 
+// a page's name for the bar along its top: the menu's, or the wiring's, which isn't in it
+export function pageName(route: string[]): string {
+  const first = route[0] ?? "";
+  if (first === "wiring") return "The wiring";
+  return MENU.find((p) => p.route === first)?.name ?? "";
+}
+
 export function scenarioOf(route: string[]): string {
   return route[0] === "fly" && route[1] ? route[1] : DEFAULT_SCENARIO;
+}
+
+// #/fly/<scenario>/<setup>, from a run's own page, says which combination to fly it in
+export function setupOf(route: string[]): string | null {
+  return route[0] === "fly" && route[2] ? route[2] : null;
+}
+
+export function flyLink(scenario: string, setup?: string): string {
+  return `#/fly/${encodeURIComponent(scenario)}${setup ? `/${encodeURIComponent(setup)}` : ""}`;
 }
 
 // the other pages, in the corner menu; the drone in 3D and the wiring are the view itself now

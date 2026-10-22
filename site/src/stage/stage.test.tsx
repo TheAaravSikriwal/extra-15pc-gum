@@ -32,7 +32,7 @@ const scene = () => <div data-testid="scene" />;
 test("inside the drone: the blueprint behind it, the switch at the top, the controls beside it", () => {
   render(<Stage route={[]} load={load} scene={scene} />);
   expect(screen.getByTestId("stage")).toHaveClass("inside");
-  expect(document.querySelector("svg.blueprint")).not.toBeNull();
+  expect(document.querySelectorAll(".blueprint svg.bp-figure")).toHaveLength(4); // each drawing on its own
   expect(screen.getByRole("link", { name: "Inside it" })).toHaveAttribute("aria-current", "page");
   expect(screen.getByRole("complementary", { name: "inside it" })).toBeInTheDocument();
 });
@@ -108,6 +108,11 @@ test("a scenario only PX4 flew offers PX4, and switching to it plays that run", 
   fireEvent.click(screen.getByRole("button", { name: "PX4" }));
   expect(screen.getByText("max, PX4")).toBeInTheDocument();
   expect(within(screen.getByRole("group", { name: "scenarios" })).getByRole("link", { name: "parachute drop" })).toBeInTheDocument();
+});
+
+test("a link that names a combination flies the run in it", async () => {
+  render(<Stage route={["fly", "hover", "base"]} load={load} scene={scene} />);
+  expect(await screen.findByText(/^base, my firmware$/)).toBeInTheDocument();
 });
 
 test("on a phone the controls sit in a drawer that opens and closes", () => {

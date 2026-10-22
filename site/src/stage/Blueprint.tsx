@@ -1,34 +1,36 @@
 // The blueprint behind the drone when you're inside it: a drawing sheet of a generic X quad (not
 // this drone), its top and side views, a prop and a motor in detail, dimension lines and a
-// title block, on a fine grid in blueprint blue. The drawings keep to the edges and the middle
-// stays clear, since the real drone sits there.
+// title block, on a fine grid in blueprint blue. The grid and the sheet's border fill the screen
+// whatever its shape; each drawing is its own small figure pinned to a corner of the space the
+// panel leaves, so none gets cropped or hidden, and the middle stays clear for the real drone.
+
+import type { ReactNode } from "react";
 
 const LINE = "rgba(255, 255, 255, 0.55)";
 const FAINT = "rgba(255, 255, 255, 0.28)";
 
-function Arrowheads() {
+// the dimension lines' arrowheads, one set per figure (each figure is its own SVG)
+function Arrowheads({ id }: { id: string }) {
   return (
     <defs>
-      <marker id="bp-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <marker id={id} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
         <path d="M0 0 L10 5 L0 10 z" fill={LINE} />
       </marker>
-      <pattern id="bp-minor" width="20" height="20" patternUnits="userSpaceOnUse">
-        <path d="M20 0 L0 0 0 20" fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="1" />
-      </pattern>
-      <pattern id="bp-major" width="100" height="100" patternUnits="userSpaceOnUse">
-        <rect width="100" height="100" fill="url(#bp-minor)" />
-        <path d="M100 0 L0 0 0 100" fill="none" stroke="rgba(255,255,255,0.14)" strokeWidth="1" />
-      </pattern>
-      <radialGradient id="bp-clear" cx="50%" cy="52%" r="42%">
-        <stop offset="0%" stopColor="#163f73" stopOpacity="0.85" />
-        <stop offset="100%" stopColor="#163f73" stopOpacity="0" />
-      </radialGradient>
     </defs>
   );
 }
 
+function Figure({ name, viewBox, children }: { name: string; viewBox: string; children: ReactNode }) {
+  return (
+    <svg className={`bp-figure bp-${name}`} viewBox={viewBox} preserveAspectRatio="xMidYMid meet">
+      <Arrowheads id={`bp-arrow-${name}`} />
+      {children}
+    </svg>
+  );
+}
+
 // a quad from above: a body, four arms at 45 degrees, motors and dashed prop discs
-function TopView({ x, y, s }: { x: number; y: number; s: number }) {
+function TopView({ x, y, s, arrow }: { x: number; y: number; s: number; arrow: string }) {
   const arm = 110 * s;
   const ends = [45, 135, 225, 315].map((d) => {
     const a = (d * Math.PI) / 180;
@@ -55,8 +57,8 @@ function TopView({ x, y, s }: { x: number; y: number; s: number }) {
         y1={y + arm * 0.71 + 40 * s}
         x2={ends[0][0] + 70 * s}
         y2={y + arm * 0.71 + 40 * s}
-        markerStart="url(#bp-arrow)"
-        markerEnd="url(#bp-arrow)"
+        markerStart={`url(#${arrow})`}
+        markerEnd={`url(#${arrow})`}
       />
       <text x={x} y={y + arm * 0.71 + 32 * s} fill={LINE} stroke="none" fontSize={11} textAnchor="middle">
         MOTOR TO MOTOR 420
@@ -69,7 +71,7 @@ function TopView({ x, y, s }: { x: number; y: number; s: number }) {
 }
 
 // from the side: three plates, standoffs, the stack, two motors and their props edge-on, legs
-function SideView({ x, y, s }: { x: number; y: number; s: number }) {
+function SideView({ x, y, s, arrow }: { x: number; y: number; s: number; arrow: string }) {
   const half = 150 * s;
   return (
     <g stroke={LINE} fill="none" strokeWidth="1.3">
@@ -90,7 +92,7 @@ function SideView({ x, y, s }: { x: number; y: number; s: number }) {
         </g>
       ))}
       <line x1={x - half - 80 * s} y1={y + 46 * s} x2={x + half + 80 * s} y2={y + 46 * s} stroke={FAINT} strokeDasharray="14 6" />
-      <line x1={x + half + 56 * s} y1={y - 50 * s} x2={x + half + 56 * s} y2={y + 46 * s} markerStart="url(#bp-arrow)" markerEnd="url(#bp-arrow)" />
+      <line x1={x + half + 56 * s} y1={y - 50 * s} x2={x + half + 56 * s} y2={y + 46 * s} markerStart={`url(#${arrow})`} markerEnd={`url(#${arrow})`} />
       <text x={x + half + 64 * s} y={y} fill={LINE} stroke="none" fontSize={11}>
         HEIGHT
       </text>
@@ -102,7 +104,7 @@ function SideView({ x, y, s }: { x: number; y: number; s: number }) {
 }
 
 // a three-blade prop and its disc, and a motor's bell from above, with their sizes
-function Details({ x, y }: { x: number; y: number }) {
+function Details({ x, y, arrow }: { x: number; y: number; arrow: string }) {
   const blades = [90, 210, 330].map((d) => (d * Math.PI) / 180);
   return (
     <g stroke={LINE} fill="none" strokeWidth="1.2">
@@ -114,7 +116,7 @@ function Details({ x, y }: { x: number; y: number }) {
         />
       ))}
       <circle cx={x} cy={y} r={7} />
-      <line x1={x - 70} y1={y + 92} x2={x + 70} y2={y + 92} markerStart="url(#bp-arrow)" markerEnd="url(#bp-arrow)" />
+      <line x1={x - 70} y1={y + 92} x2={x + 70} y2={y + 92} markerStart={`url(#${arrow})`} markerEnd={`url(#${arrow})`} />
       <text x={x} y={y + 86} fill={LINE} stroke="none" fontSize={11} textAnchor="middle">
         10 IN, 3 BLADES
       </text>
@@ -163,23 +165,22 @@ function TitleBlock({ x, y }: { x: number; y: number }) {
 
 export function Blueprint() {
   return (
-    <svg
-      className="blueprint"
-      viewBox="0 0 1600 1000"
-      preserveAspectRatio="xMidYMid slice"
-      aria-hidden="true"
-      fontFamily="JetBrains Mono, ui-monospace, monospace"
-    >
-      <Arrowheads />
-      <rect width="1600" height="1000" fill="#163f73" />
-      <rect width="1600" height="1000" fill="url(#bp-major)" />
-      <rect x="20" y="20" width="1560" height="960" fill="none" stroke={FAINT} strokeWidth="1.5" />
-      <TopView x={250} y={300} s={1} />
-      <SideView x={1290} y={260} s={0.95} />
-      <Details x={170} y={790} />
-      <TitleBlock x={1230} y={870} />
-      {/* the middle kept clear for the drone */}
-      <rect width="1600" height="1000" fill="url(#bp-clear)" />
-    </svg>
+    <div className="blueprint" aria-hidden="true">
+      <div className="bp-sheet" />
+      <div className="bp-area">
+        <Figure name="side" viewBox="-240 -72 530 160">
+          <SideView x={0} y={0} s={1} arrow="bp-arrow-side" />
+        </Figure>
+        <Figure name="top" viewBox="-162 -162 324 314">
+          <TopView x={0} y={0} s={1} arrow="bp-arrow-top" />
+        </Figure>
+        <Figure name="details" viewBox="-80 -122 352 226">
+          <Details x={0} y={0} arrow="bp-arrow-details" />
+        </Figure>
+        <Figure name="title" viewBox="-2 -2 334 108">
+          <TitleBlock x={0} y={0} />
+        </Figure>
+      </div>
+    </div>
   );
 }

@@ -16,7 +16,8 @@ import { Blueprint } from "./Blueprint";
 import { FlyPanel } from "./FlyPanel";
 import { InsidePanel } from "./InsidePanel";
 import { Menu } from "./Menu";
-import { type Mode, modeOf, scenarioOf } from "./modes";
+import { modulesOf } from "../explorer/logic";
+import { type Mode, modeOf, scenarioOf, setupOf } from "./modes";
 
 // three.js is about a megabyte, so the canvas loads after the page's first paint
 const StageCanvas = lazy(() => import("./StageCanvas").then((m) => ({ default: m.StageCanvas })));
@@ -73,6 +74,11 @@ export function useDroneState(route: string[]): DroneState {
   };
   const [kase, setKase] = useState("hover");
   const [heat, setHeat] = useState(false);
+  // a link that names a combination switches the modules to it
+  const setup = setupOf(route);
+  useEffect(() => {
+    if (setup) setModulesOn(new Set(modulesOf(setup)));
+  }, [setup]);
   const [firmware, setFirmware] = useState("mine");
   const toggle = (m: string) => {
     const next = new Set(modulesOn);
