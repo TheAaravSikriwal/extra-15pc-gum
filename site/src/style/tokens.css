@@ -575,8 +575,14 @@ ul.library a:hover,
   color: var(--muted);
 }
 
-.parts-of-step td:nth-child(-n + 2) {
+.parts-of-step td:first-child,
+.steps-table td:not(:nth-child(2)) {
   white-space: nowrap;
+}
+
+/* a cell's links, under its words */
+td .links {
+  margin-top: 4px;
 }
 
 /* the parts tables' counts, weights and prices stay on one line, in the mono face */

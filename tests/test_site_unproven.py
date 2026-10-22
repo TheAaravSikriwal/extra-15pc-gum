@@ -53,7 +53,8 @@ def test_the_real_list_has_the_projects_and_each_reports(tmp_path):
 def test_a_steps_learning_links_point_at_the_learning_files_headings(tmp_path):
     topics = learning_topics((ROOT / "docs" / "learning.md").read_text(encoding="utf-8"))
     assert topics[9].text == "Control systems and PID"
-    assert topics[4].url.endswith("docs/learning.md#4-cfd-the-virtual-wind-tunnel")
+    # in the site's library, at the heading
+    assert topics[4].url == "#/library/docs/learning~4-cfd-the-virtual-wind-tunnel"
     found = steps.steps_data(ROOT / "README.md", ROOT / "docs", tmp_path)
     by_id = {s.id: s for s in found.steps}
     assert [link.text for link in by_id["firmware"].learning][:2] == [

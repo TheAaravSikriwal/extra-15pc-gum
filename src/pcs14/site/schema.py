@@ -268,16 +268,22 @@ class LogEntry(_Shape):
 
 
 class ReportRef(_Shape):
+    """A step's report as it stands now."""
+
     verdict: str | None = None
     generated: str | None = None
-    url: str
+    url: str  # in the site's library
+    says: list[str] = []  # its verdict in its own words, a paragraph each
+    numbers: list[list[str]] = []  # [what, its value], its key numbers now
+    sections: list[Link] = []  # its sections, in the library
 
 
 class StepPart(_Shape):
     name: str  # "5c. Build"
     what: str
     status: str
-    outcome: str
+    outcome: str  # with its links as their own list
+    links: list[Link] = []
 
 
 class Step(_Shape):
@@ -286,9 +292,10 @@ class Step(_Shape):
     name: str
     purpose: str
     status: str
-    outcome: str  # the README's, with its links as plain words
+    outcome: str  # the README's, as written when the step finished, its links listed apart
     links: list[Link]
     side_track: bool
+    starts_after: str = ""  # a side track's
     report: ReportRef | None = None
     stills: list[str]  # under the data folder
     logs: list[LogEntry]

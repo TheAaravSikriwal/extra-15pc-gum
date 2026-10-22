@@ -45,6 +45,7 @@
   },
   "ReportRef": {
    "additionalProperties": false,
+   "description": "A step's report as it stands now.",
    "properties": {
     "verdict": {
      "anyOf": [
@@ -73,6 +74,33 @@
     "url": {
      "title": "Url",
      "type": "string"
+    },
+    "says": {
+     "default": [],
+     "items": {
+      "type": "string"
+     },
+     "title": "Says",
+     "type": "array"
+    },
+    "numbers": {
+     "default": [],
+     "items": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array"
+     },
+     "title": "Numbers",
+     "type": "array"
+    },
+    "sections": {
+     "default": [],
+     "items": {
+      "$ref": "#/$defs/Link"
+     },
+     "title": "Sections",
+     "type": "array"
     }
    },
    "required": [
@@ -118,6 +146,11 @@
     "side_track": {
      "title": "Side Track",
      "type": "boolean"
+    },
+    "starts_after": {
+     "default": "",
+     "title": "Starts After",
+     "type": "string"
     },
     "report": {
      "anyOf": [
@@ -194,6 +227,14 @@
     "outcome": {
      "title": "Outcome",
      "type": "string"
+    },
+    "links": {
+     "default": [],
+     "items": {
+      "$ref": "#/$defs/Link"
+     },
+     "title": "Links",
+     "type": "array"
     }
    },
    "required": [

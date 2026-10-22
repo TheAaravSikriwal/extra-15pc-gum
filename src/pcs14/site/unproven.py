@@ -10,7 +10,7 @@ from pathlib import Path
 
 from pcs14 import unproven
 from pcs14.site import schema
-from pcs14.site.steps import GITHUB
+from pcs14.site.markdown import anchor
 
 # the reports that carry their own list, by their step's name and id on the site
 REPORTS = (
@@ -82,11 +82,6 @@ def unproven_data(docs) -> schema.Unproven:
     return schema.Unproven(schema_version=schema.SCHEMA_VERSION, groups=groups)
 
 
-def _anchor(heading: str) -> str:
-    """GitHub's anchor for a heading: lower case, punctuation out, spaces to hyphens."""
-    return re.sub(r"[^a-z0-9 -]", "", heading.lower()).replace(" ", "-")
-
-
 def learning_topics(learning: str) -> dict[int, schema.Link]:
     """The learning file's numbered topics ("## 9. Control systems and PID"), by number."""
     found = {}
@@ -95,6 +90,6 @@ def learning_topics(learning: str) -> dict[int, schema.Link]:
         if m:
             found[int(m.group(1))] = schema.Link(
                 text=m.group(2).strip(),
-                url=GITHUB + "docs/learning.md#" + _anchor(line[3:].strip()),
+                url="#/library/docs/learning~" + anchor(line[3:].strip()),
             )
     return found

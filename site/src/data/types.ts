@@ -240,6 +240,17 @@ export interface StepPart {
   what: string;
   status: string;
   outcome: string;
+  links?: Link[];
+}
+
+// a step's report as it stands now
+export interface ReportRef {
+  verdict?: string | null;
+  generated?: string | null;
+  url: string; // in the site's library
+  says?: string[]; // its verdict in its own words, a paragraph each
+  numbers?: string[][]; // [what, its value]
+  sections?: Link[];
 }
 
 export interface Step {
@@ -248,10 +259,11 @@ export interface Step {
   name: string;
   purpose: string;
   status: string;
-  outcome: string;
+  outcome: string; // as written when the step finished
   links: Link[];
   side_track: boolean;
-  report?: { verdict?: string | null; generated?: string | null; url: string } | null;
+  starts_after?: string;
+  report?: ReportRef | null;
   stills: string[];
   logs: LogEntry[];
   parts: StepPart[];
@@ -613,6 +625,7 @@ export const FIELDS = {
     "outcome",
     "links",
     "side_track",
+    "starts_after",
     "report",
     "stills",
     "logs",
