@@ -14,8 +14,8 @@ import { Tunnel } from "./pages/Tunnel";
 import { Unproven } from "./pages/Unproven";
 import { Wiring } from "./pages/Wiring";
 import { useRoute } from "./route";
-import { Menu } from "./stage/Menu";
-import { modeOf, pageName } from "./stage/modes";
+import { Contents, Menu } from "./stage/Menu";
+import { modeOf, pageName, pageOf } from "./stage/modes";
 import { Stage } from "./stage/Stage";
 
 // the flight pages bring three.js, about a megabyte, so they load only when opened
@@ -78,9 +78,12 @@ export function App() {
               <span aria-hidden="true">&larr;</span> Extra 15pc Gum
             </a>
             <span className="page-name">{pageName(route)}</span>
-            <Menu />
+            <Menu current={pageOf(route)} />
           </nav>
-          {pageFor(route)}
+          <div className="page-body">
+            <Contents current={pageOf(route)} />
+            <div className="page-main">{pageFor(route)}</div>
+          </div>
         </div>
       )}
     </>

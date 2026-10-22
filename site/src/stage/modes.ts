@@ -16,9 +16,14 @@ export function modeOf(route: string[]): Mode {
 
 export const DEFAULT_SCENARIO = "hover";
 
-// a page's name for the bar along its top: the menu's (the catalog's old address is the parts page now)
+// the menu's page a route is on: its first part (the catalog's old address is the parts page now)
+export function pageOf(route: string[]): string {
+  return route[0] === "catalog" ? "parts" : (route[0] ?? "");
+}
+
+// a page's name for the bar along its top: the menu's
 export function pageName(route: string[]): string {
-  const first = route[0] === "catalog" ? "parts" : (route[0] ?? "");
+  const first = pageOf(route);
   return MENU.find((p) => p.route === first)?.name ?? "";
 }
 

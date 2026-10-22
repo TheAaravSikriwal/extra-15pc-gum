@@ -1,4 +1,4 @@
-import { flyLink, MENU, MENU_GROUPS, modeOf, pageName, scenarioOf, setupOf, tunnelLink, tunnelOf } from "./modes";
+import { flyLink, MENU, MENU_GROUPS, modeOf, pageName, pageOf, scenarioOf, setupOf, tunnelLink, tunnelOf } from "./modes";
 
 test("the route picks the mode: the home is inside the drone, #/fly is flying, the rest are pages", () => {
   expect(modeOf([])).toBe("inside");
@@ -21,6 +21,8 @@ test("the corner menu is the docs, grouped like a manual, and each page has its 
   expect(routes).not.toContain("drone"); // the drone in 3D is the view itself
   expect(pageName(["wiring", "fc"])).toBe("Wiring");
   expect(pageName(["catalog"])).toBe("Parts"); // its old address
+  expect(pageOf(["catalog"])).toBe("parts");
+  expect(pageOf(["steps", "sizing"])).toBe("steps"); // a step's page is under Steps
 });
 
 test("a run's page links into Fly it with its own combination", () => {

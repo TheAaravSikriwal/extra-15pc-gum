@@ -1,6 +1,6 @@
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 
-import { Menu } from "./Menu";
+import { Contents, Menu } from "./Menu";
 import { Stage } from "./Stage";
 
 function serving(files: Record<string, unknown>): typeof fetch {
@@ -65,6 +65,15 @@ test("the corner menu opens to every other page", () => {
   expect(within(pages).getAllByRole("link")).toHaveLength(12);
   expect(within(pages).getByRole("list", { name: "Tested" })).toBeInTheDocument();
   expect(within(pages).getByRole("link", { name: "Build it" })).toHaveAttribute("href", "#/build");
+});
+
+test("on a page, the contents are always there, with the page you're on marked", () => {
+  render(<Contents current="steps" />);
+  const contents = screen.getByRole("navigation", { name: "contents" });
+  expect(within(contents).getAllByRole("link")).toHaveLength(12);
+  expect(within(contents).getByRole("link", { name: "Steps" })).toHaveAttribute("aria-current", "page");
+  expect(within(contents).getByRole("link", { name: "Parts" })).not.toHaveAttribute("aria-current");
+  expect(screen.queryByRole("button", { name: "Menu" })).toBeNull(); // nothing to click open
 });
 
 const WIRES3D = {
