@@ -16,10 +16,11 @@ import { useModel } from "../explorer/model";
 import { DroneScene } from "../explorer/Scene";
 import type { Vec3 } from "../explorer/wires3d";
 import { Flight } from "../fly/Flight";
-import { flyFraming, MODE_S } from "../fly/framing";
+import { fitDistance, flyFraming, MODE_S } from "../fly/framing";
 import type { DroneState, FlyData, StageData } from "./Stage";
 
 const PROP_SHOW_SPIN = 12;
+const FOV = 35;
 const GLIDE_S = 0.9;
 const CLOSE_M = 0.12; // how far from a picked pin the camera stops
 
@@ -56,7 +57,7 @@ interface Pose {
 
 // every move the camera makes on its own, one at a time: easing in to a picked pin and back out
 // once it's let go, and from inside the drone out to Fly it's floating framing and back
-function CameraMoves({ focus, flying }: { focus: Vec3 | null; flying: boolean }) {
+function CameraMoves({ focus, flying, fitted }: { focus: Vec3 | null; flying: boolean; fitted?: number }) {
   const controls = useThree((s) => s.controls) as unknown as Controls | null;
   const camera = useThree((s) => s.camera);
   const job = useRef<Glide | null>(null);
@@ -91,17 +92,20 @@ function CameraMoves({ focus, flying }: { focus: Vec3 | null; flying: boolean })
   useEffect(() => {
     if (!controls) return;
     if (flying) {
-      // where it was inside the drone (before any pin), for coming back to
-      const was = beforePin.current ?? { target: controls.target.clone(), position: camera.position.clone() };
-      inside.current = { target: was.target.clone(), position: was.position.clone() };
-      beforePin.current = null;
-      const framed = flyFraming(was.position.toArray() as Vec3, [0, 0, 0]);
+      // where it was inside the drone (before any pin), for coming back to; the drone arriving
+      // after the camera's already flying only moves it to the right distance
+      if (!inside.current) {
+        const was = beforePin.current ?? { target: controls.target.clone(), position: camera.position.clone() };
+        inside.current = { target: was.target.clone(), position: was.position.clone() };
+        beforePin.current = null;
+      }
+      const framed = flyFraming(inside.current.position.toArray() as Vec3, [0, 0, 0], fitted);
       go(new THREE.Vector3(...framed.target), new THREE.Vector3(...framed.position), MODE_S);
     } else if (inside.current) {
       go(inside.current.target, inside.current.position, MODE_S);
       inside.current = null;
     }
-  }, [flying, controls, camera, go]);
+  }, [flying, controls, camera, go, fitted]);
   useFrame((_, delta) => {
     const j = job.current;
     if (!j || !controls) return;
@@ -136,24 +140,31 @@ export function StageCanvas({
   // phones get each wire as a thin line instead of a tube
   const light = useMemo(() => typeof window !== "undefined" && window.matchMedia?.("(max-width: 700px)").matches, []);
   // the fit frames the drone's height, so a screen taller than it is wide needs room for its width
-  const margin = useMemo(() => {
-    const aspect = typeof window === "undefined" ? 1.5 : window.innerWidth / window.innerHeight;
-    return aspect < 1 ? 1.25 / aspect : 1.25;
-  }, []);
+  const aspect = useMemo(() => (typeof window === "undefined" ? 1.5 : window.innerWidth / window.innerHeight), []);
+  const margin = aspect < 1 ? 1.25 / aspect : 1.25;
   // where the assembled drone's feet are, for its shadow
-  const floor = useMemo(() => (root ? new THREE.Box3().setFromObject(root).min.y : 0), [root]);
+  const box = useMemo(() => (root ? new THREE.Box3().setFromObject(root) : null), [root]);
+  const floor = box?.min.y ?? 0;
+  // how far back fits the whole drone, for Fly it to pull back from; without the inside view's
+  // extra room on a tall screen, since flying it already has the white space around it
+  const fitted = useMemo(() => {
+    if (!box) return undefined;
+    const size = box.getSize(new THREE.Vector3());
+    return fitDistance(Math.max(size.x, size.y, size.z), FOV, aspect, 1.25);
+  }, [box, aspect]);
   // a new focus only when the pin itself moves, so the glide runs once per pick
   const onFocus = useCallback((at: Vec3 | null) => {
     setFocus((was) => (at && was && at.every((v, i) => Math.abs(v - was[i]) < 1e-6) ? was : at));
     if (at) setTurning(false);
   }, []);
   return (
-    <Canvas camera={{ position: [0.55, 0.4, 0.65], fov: 35 }} dpr={[1, 2]} gl={{ alpha: true }}>
+    <Canvas camera={{ position: [0.55, 0.4, 0.65], fov: FOV }} dpr={[1, 2]} gl={{ alpha: true }}>
       <Room />
       <hemisphereLight args={["#f4f4f2", "#2c2c2a", 0.6]} />
       <directionalLight position={[1, 2, 1.5]} intensity={2.4} />
       <directionalLight position={[-1, 0.5, -1]} intensity={0.7} />
-      <Bounds fit clip observe margin={margin}>
+      {/* fitting the drone to the screen is for inside it; in Fly it the camera keeps its own framing */}
+      <Bounds fit={!flying} clip observe={!flying} margin={margin}>
         <group ref={drone}>
         {root && <DroneScene
           root={root}
@@ -178,7 +189,16 @@ export function StageCanvas({
         </group>
       </Bounds>
       {flying && fly && (
-        <Flight drone={drone} spins={spins} clip={fly.clip} playback={fly.playback} story={fly.story} onNumbers={fly.onNumbers} />
+        <Flight
+          drone={drone}
+          spins={spins}
+          clip={fly.clip}
+          playback={fly.playback}
+          story={fly.story}
+          onNumbers={fly.onNumbers}
+          live={fly.live}
+          seek={fly.seek}
+        />
       )}
       {root && !flying && (
         <ContactShadows
@@ -192,7 +212,7 @@ export function StageCanvas({
         />
       )}
       <OrbitControls makeDefault autoRotate={inside && turning} autoRotateSpeed={0.6} onStart={() => setTurning(false)} />
-      <CameraMoves focus={inside ? focus : null} flying={flying} />
+      <CameraMoves focus={inside ? focus : null} flying={flying} fitted={fitted} />
     </Canvas>
   );
 }

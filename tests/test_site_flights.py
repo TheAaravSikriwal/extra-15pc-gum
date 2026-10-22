@@ -90,3 +90,39 @@ def test_the_index_carries_the_later_steps_runs_and_what_each_tests(tmp_path):
     about = {a.name: a for a in index.about}
     assert about["spiral descent"].step == 7 and about["spiral descent"].what
     assert index.scenarios == list(flights.ALL_SCENARIOS)
+
+
+def flown(path):
+    t = np.arange(0, 60, 0.1)
+    n = len(t)
+    level = np.tile([0, 0, 0, 1.0], (n, 1))
+    log = FlightLog(t, path(t), np.zeros((n, 3)), np.full((n, 4), 560.0), [], level)
+    return flights.glyph(flights.playback(log, [], RESULT, "mine"))
+
+
+def test_a_run_that_goes_around_gets_its_path_from_above_and_one_that_doesnt_its_height():
+    def circle(t):  # 40 m across: its shape is its path, seen from above
+        return np.column_stack([20 * np.cos(t / 10), 20 * np.sin(t / 10), np.minimum(t, 10.0)])
+
+    def diagonal(t):  # 40 m out and back along a diagonal is only a line from above
+        out = np.minimum(t, 30) - np.maximum(t - 30, 0)
+        return np.column_stack([out, out, np.minimum(t, 10.0)])
+
+    around = flown(circle)
+    assert around.kind == "plan"
+    ys = [p[1] for p in around.points]
+    assert max(ys) - min(ys) > 0.9  # it spans the drawing
+    assert all(0 <= v <= 1 for p in around.points for v in p)
+    assert flown(diagonal).kind == "profile"
+    # a hover goes nowhere: its shape is its height over time, the climb, the hold, the landing
+    still = flights.glyph(flights.playback(made_up_log(), [], RESULT, "mine"))
+    assert still.kind == "profile"
+    heights = [p[1] for p in still.points]
+    assert heights[0] < 0.1 and max(heights) == pytest.approx(1.0)
+    assert len(still.points) == flights.GLYPH_POINTS
+
+
+def test_the_index_draws_each_run_it_has(tmp_path):
+    flights.write_flights(tmp_path, {"mine": [RESULT]}, lambda *_: (made_up_log(), [], RESULT))
+    index = schema.Flights.model_validate_json((tmp_path / "flights.json").read_text())
+    assert index.runs[0].glyph is not None and index.runs[0].glyph.kind == "profile"

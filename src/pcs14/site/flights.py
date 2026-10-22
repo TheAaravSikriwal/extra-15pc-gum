@@ -202,6 +202,36 @@ def playback(log, marks, result, firmware: str) -> schema.Playback:
     )
 
 
+GLYPH_POINTS = 40
+GOES_SOMEWHERE_M = 4.0  # farther than this across the ground, and its picture is its path
+NARROW = 0.25  # a path this narrow for its length is a line from above; its height says more
+
+
+def glyph(p: schema.Playback) -> schema.Glyph:
+    """The run's picture for the scenario list: where it went, seen from above, if it went more
+    than a few meters and not just along a line; otherwise its height over time (the climb,
+    whatever it did up there, the way down). Evenly spaced in time, scaled to fill a square
+    without stretching a path."""
+    t = np.asarray(p.t, dtype=float)
+    pos = np.asarray(p.position, dtype=float)
+    at = np.linspace(t[0], t[-1], GLYPH_POINTS)
+    xs, ys, zs = (np.interp(at, t, pos[:, k]) for k in range(3))
+    extent = max(np.ptp(xs), np.ptp(ys))
+    # how wide the path is against how long, along its own axes, so a diagonal line is a line too
+    narrow, wide = np.sqrt(np.clip(np.linalg.eigvalsh(np.cov(np.vstack([xs, ys]))), 0, None))
+    if extent > GOES_SOMEWHERE_M and narrow > NARROW * wide:
+        cx, cy = (xs.max() + xs.min()) / 2, (ys.max() + ys.min()) / 2
+        points = np.column_stack([(xs - cx) / extent + 0.5, (ys - cy) / extent + 0.5])
+        kind = "plan"
+    else:
+        low, high = zs.min(), zs.max()
+        points = np.column_stack(
+            [(at - at[0]) / ((at[-1] - at[0]) or 1), (zs - low) / ((high - low) or 1)]
+        )
+        kind = "profile"
+    return schema.Glyph(kind=kind, points=np.round(points, 3).tolist())
+
+
 def file_name(setup: str, scenario: str, firmware: str) -> str:
     scenario = scenario.replace(",", "").replace(" ", "-")
     return f"flights/{setup.lower().replace('+', '_')}-{scenario}-{firmware}.json"
@@ -229,11 +259,15 @@ def write_flights(out, results: dict, logs: Callable) -> list[Path]:
                 setups.append(r.setup)
             run = logs(firmware, r.setup, r.scenario) if r.flown else None
             name = file_name(r.setup, r.scenario, firmware) if run is not None else None
+            shape = None
             if run is not None:
                 log, marks, _ = run
-                written.append(_write(out / name, name, playback(log, marks, r, firmware)))
+                played = playback(log, marks, r, firmware)
+                shape = glyph(played)
+                written.append(_write(out / name, name, played))
             runs.append(schema.Run(scenario=r.scenario, setup=r.setup, firmware=firmware,
-                                   flown=r.flown, passed=r.passed, file=name))  # fmt: skip
+                                   flown=r.flown, passed=r.passed, file=name,
+                                   glyph=shape))  # fmt: skip
     index = schema.Flights(schema_version=schema.SCHEMA_VERSION, scenarios=list(ALL_SCENARIOS),
                            about=[about(name) for name in ALL_SCENARIOS], setups=setups,
                            runs=runs)  # fmt: skip

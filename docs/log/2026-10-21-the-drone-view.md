@@ -48,6 +48,16 @@ I opened it on my own screen and three things were off. The blueprint was one dr
 
 The blueprint is now a grid that fills any screen, with each drawing pinned to a corner of the space the panel leaves. The panel reads like an instrument now: what's switched on and whether it meets its targets at the top, the modules as three toggles, one labeled row per control, all in the mono face in small capitals, with thin lines and square corners. Then I took the same look through the rest of the site, so every page has the same bar along the top and the same headings, tables, buttons and lists. One site, one look.
 
+## Fly it, so you can see what's going on
+
+My next look was at Fly it, and it didn't say much. The list was just names, so "lost link" or "sagging pack" meant nothing unless you already knew. And the run did play, but the drone stays in the middle while the world moves, and the world was a plain grid. A plain grid sliding under you looks a lot like a plain grid sitting still.
+
+So now each scenario in the list has a tiny drawing of its own run and its first sentence under the name. The drawing is the path seen from above when the run really goes around something, and its height over time when it doesn't, because a straight out-and-back from above is just a line. In 3D the whole route hangs in the air as a thin gray line, with a curtain of faint lines from it down to the ground every few meters, so you can read its height from any angle. There's a pad with an H where it took off, the last 8 m behind it in spearmint, and a line from the drone down to the spot under it.
+
+Under the drone there's a strip now: what just happened in plain words ("The link to the ground is cut", "The chute fires"), a small map from above with a dot where the drone is, and its height from liftoff to touchdown with a tick at each moment, filling in as it plays. The strip runs along the loop as you watch it, not the run's own clock. The low battery run is 21 minutes of holding still with everything interesting at the two ends, so on the run's clock all the ticks pile up at the edges and the playhead races across the middle. You can click or drag along the strip to jump. On a phone, picking a run closes the drawer, since the drawer covers the drone.
+
+Two bugs turned up along the way. Resizing the window in Fly it, or opening a Fly it link directly, snapped the camera back to the close-up from inside the drone. The fit that frames the drone for Inside it was running in both modes. Now it only runs inside, and Fly it pulls back from the distance that fits the drone, so a link lands in the same framing as walking in. The trail also used to cover the last 4 s of the loop whatever that came to in meters, and at 28 times real time that's a long way. Seen from 2 m away, it fanned out past the camera in big green rays.
+
 ## What's not done
 
 - **The makers' own models.** The ARK GPS and CANnode (BSD-3) and the Pi 5 (MIT) are on my machine; the Teensy 4.1's model (its author allows it with credit) is a download I haven't approved yet. None of them are in the site's model yet.

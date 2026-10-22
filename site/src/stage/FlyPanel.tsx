@@ -1,9 +1,12 @@
 // Fly it: what the playing run tests, its numbers as it flies (height, speed, the run's time and
 // how fast it's playing, a bar per motor), its result in a line, the firmware that flew it, and
 // the scenarios down the side for the combination the modules make, grouped by the step that
-// flew them. Picking one changes the route, and the drone eases into it.
+// flew them, each with a little drawing of its run and what it tests in a line. Picking one
+// changes the route, and the drone eases into it.
 import { useMemo } from "react";
 
+import type { Glyph } from "../data/types";
+import { firstSentence } from "../fly/captions";
 import { firmwaresFor, resultLine, speedWords } from "../fly/fly";
 import { Readout } from "./Readout";
 import type { DroneState, FlyData, StageData } from "./Stage";
@@ -15,19 +18,39 @@ export interface ScenarioRow {
   step: number;
   what: string;
   flown: boolean;
+  glyph: Glyph | null; // its run's shape, from the combination's run or else any
 }
 
 // every scenario, in the flight sim's order, and whether a combination flew it on a firmware
 export function scenariosFor(data: StageData, combination: string, firmware: string): ScenarioRow[] {
   const runs = data.flights?.runs ?? [];
   const about = new Map((data.flights?.about ?? []).map((a) => [a.name, a]));
-  return (data.flights?.scenarios ?? []).map((name) => ({
-    name,
-    step: about.get(name)?.step ?? 4,
-    what: about.get(name)?.what ?? "",
-    flown: runs.some((r) => r.scenario === name && r.setup === combination && r.firmware === firmware && r.flown),
-  }));
+  return (data.flights?.scenarios ?? []).map((name) => {
+    const mine = runs.find((r) => r.scenario === name && r.setup === combination && r.firmware === firmware && r.flown);
+    return {
+      name,
+      step: about.get(name)?.step ?? 4,
+      what: about.get(name)?.what ?? "",
+      flown: mine !== undefined,
+      glyph: mine?.glyph ?? runs.find((r) => r.scenario === name && r.glyph)?.glyph ?? null,
+    };
+  });
 }
+
+// a run's shape in a line: its path from above, square, or its height across the whole box
+function RunGlyph({ glyph }: { glyph: Glyph | null }) {
+  const points = (glyph?.points ?? [])
+    .map(([x, y]) => (glyph?.kind === "plan" ? [6 + x * 14, 15 - y * 14] : [1 + x * 24, 15 - y * 14]))
+    .map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`)
+    .join(" ");
+  return (
+    <svg className="glyph" viewBox="0 0 26 16" aria-hidden="true">
+      {points && <polyline points={points} />}
+    </svg>
+  );
+}
+
+const slug = (name: string) => name.replace(/[^a-z0-9]+/gi, "-");
 
 const FIRMWARE: Record<string, string> = { mine: "My firmware", px4: "PX4" };
 
@@ -112,9 +135,15 @@ export function FlyPanel({ state, data, fly }: { state: DroneState; data: StageD
                       <a
                         href={`#/fly/${encodeURIComponent(s.name)}`}
                         title={s.what}
+                        aria-label={s.name}
+                        aria-describedby={`what-${slug(s.name)}`}
                         aria-current={s.name === state.scenario ? "true" : undefined}
                       >
-                        {s.name}
+                        <RunGlyph glyph={s.glyph} />
+                        <span className="scenario-name">{s.name}</span>
+                        <span className="scenario-what" id={`what-${slug(s.name)}`}>
+                          {firstSentence(s.what)}
+                        </span>
                       </a>
                     </li>
                   ))}

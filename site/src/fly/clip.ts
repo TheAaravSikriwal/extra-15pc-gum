@@ -4,7 +4,7 @@
 // up. A run that comes down hard, crashing or under its chute, plays to where it fell and
 // fades out there, then fades back in at the start. Where a run's moments alone would overflow
 // the loop, they play faster too, and the speed says so.
-import type { Playback } from "../data/types";
+import type { FlightEvent, Playback } from "../data/types";
 import { isWindowMark } from "../flights/playback";
 
 export type Quat = [number, number, number, number]; // x, y, z, w
@@ -24,6 +24,7 @@ export interface Clip {
   end: number;
   ground: number; // m, the height it took off from
   fell: boolean; // came down hard (a crash, or under the chute) rather than landing
+  moments: FlightEvent[]; // what happened in it, each kind once at its first, in order
   at(s: number): Frame; // s into the loop
   timeOf(t: number): number; // where in the loop the run's time t plays
 }
@@ -116,8 +117,9 @@ export function clipOf(p: Playback): Clip {
   // the run's key moments, each kind once (a flag raised over and over is one moment), and how
   // fast to play the rest
   const kinds = new Map<string, number>();
-  for (const e of p.events) if (isMoment(e.name) && !kinds.has(e.name)) kinds.set(e.name, e.at);
-  const moments = [...kinds.values()].filter((at) => at >= start && at <= end);
+  for (const e of [...p.events].sort((a, b) => a.at - b.at)) if (isMoment(e.name) && !kinds.has(e.name)) kinds.set(e.name, e.at);
+  const named = [...kinds].map(([name, at]) => ({ at, name })).filter((e) => e.at >= start && e.at <= end);
+  const moments = named.map((e) => e.at);
   // the run's time in steps, and each step's distance from the nearest moment
   const steps: number[] = [];
   for (let t = start; t < end; t += STEP_S) steps.push(Math.min(STEP_S, end - t));
@@ -182,6 +184,7 @@ export function clipOf(p: Playback): Clip {
     end,
     ground,
     fell,
+    moments: named,
     timeOf: (t) => lookup(runT, loopT, t),
     at(s) {
       const loopS = Math.min(Math.max(s, 0), duration);

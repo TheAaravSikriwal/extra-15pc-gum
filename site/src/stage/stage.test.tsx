@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 
 import { Menu } from "./Menu";
 import { Stage } from "./Stage";
@@ -55,7 +55,7 @@ test("flying keeps the same drone: only the mode and the interface around it cha
   // the later steps' runs in their own group, and what the playing one tests
   const smart = within(list).getByRole("region", { name: "Smart features" });
   expect(within(smart).getByRole("link", { name: "spiral descent" })).toBeInTheDocument();
-  expect(screen.getByText("Ten meters up, held for a minute.")).toBeInTheDocument();
+  expect(document.querySelector(".stage-panel .about")).toHaveTextContent("Ten meters up, held for a minute.");
 });
 
 test("the corner menu opens to every other page", () => {
@@ -110,6 +110,40 @@ test("a scenario only PX4 flew offers PX4, and switching to it plays that run", 
   expect(within(screen.getByRole("group", { name: "scenarios" })).getByRole("link", { name: "parachute drop" })).toBeInTheDocument();
 });
 
+// a made-up hover at 20 Hz: up to 10 m, held, and down
+function hover() {
+  const t: number[] = [];
+  const position: number[][] = [];
+  for (let k = 0; k <= 60 * 20; k++) {
+    const s = k / 20;
+    t.push(s);
+    position.push([0, 0, s < 2 ? 0 : s < 7 ? (s - 2) * 2 : s < 50 ? 10 : Math.max(0, 10 - (s - 50) * 2)]);
+  }
+  return {
+    schema_version: 1, scenario: "hover", setup: "max", firmware: "mine", passed: true, findings: [], t, position,
+    attitude: t.map(() => [0, 0, 0, 1]), motors: t.map(() => [560, 560, 560, 560]),
+    events: [{ at: 2.1, name: "took off" }, { at: 7, name: "hold" }, { at: 55, name: "landed" }],
+  }; // fmt: skip
+}
+
+test("each scenario says what it tests in a line, and the run plays out in a strip under the drone", async () => {
+  const flights = { ...FLIGHTS, runs: FLIGHTS.runs.map((r) => (r.scenario === "hover" ? { ...r, glyph: { kind: "profile", points: [[0, 0], [0.5, 1], [1, 0]] } } : r)) };
+  const files = { "flights.json": flights, "flights/max-hover-mine.json": hover() };
+  render(<Stage route={["fly", "hover"]} load={{ fromDisk: false, fetcher: serving(files) }} scene={scene} />);
+  const link = await screen.findByRole("link", { name: "hover" });
+  expect(link).toHaveAccessibleDescription("Ten meters up, held for a minute.");
+  expect(link.querySelector("svg.glyph polyline")).not.toBeNull(); // its run, drawn
+  const strip = await screen.findByRole("region", { name: "the run" });
+  expect(within(strip).getByRole("img", { name: /from above/ })).toBeInTheDocument();
+  expect(within(strip).getByRole("slider", { name: "the run's time" })).toHaveAttribute("aria-valuemax", "55");
+  expect(within(strip).getByText("Taking off")).toBeInTheDocument();
+  expect(within(strip).getByText("Height · top 10 m")).toBeInTheDocument();
+  // the strip is only for flying
+  cleanup();
+  render(<Stage route={[]} load={load} scene={scene} />);
+  expect(screen.queryByRole("region", { name: "the run" })).toBeNull();
+});
+
 test("a link that names a combination flies the run in it", async () => {
   render(<Stage route={["fly", "hover", "base"]} load={load} scene={scene} />);
   expect(await screen.findByText(/^base, my firmware$/)).toBeInTheDocument();
@@ -124,5 +158,13 @@ test("on a phone the controls sit in a drawer that opens and closes", () => {
   expect(document.querySelector(".stage-drawer")).toHaveClass("open");
   // the drawer stays open from one mode into the other
   fireEvent.click(screen.getByRole("button", { name: "Hide the controls" }));
+  expect(document.querySelector(".stage-drawer")).not.toHaveClass("open");
+});
+
+test("on a phone, picking a run closes the drawer, so the drone's there to watch", () => {
+  const { rerender } = render(<Stage route={["fly", "hover"]} load={load} scene={scene} />);
+  fireEvent.click(screen.getByRole("button", { name: "Show the controls" }));
+  expect(document.querySelector(".stage-drawer")).toHaveClass("open");
+  rerender(<Stage route={["fly", "spiral descent"]} load={load} scene={scene} />);
   expect(document.querySelector(".stage-drawer")).not.toHaveClass("open");
 });

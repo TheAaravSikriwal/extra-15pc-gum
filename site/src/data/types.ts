@@ -158,6 +158,12 @@ export interface Playback {
   events: FlightEvent[];
 }
 
+// a run's own shape for the scenario list: its path from above, or its height over time (0 to 1, y up)
+export interface Glyph {
+  kind: string; // plan or profile
+  points: number[][];
+}
+
 export interface Run {
   scenario: string;
   setup: string;
@@ -165,6 +171,7 @@ export interface Run {
   flown: boolean;
   passed: boolean;
   file?: string | null;
+  glyph?: Glyph | null;
 }
 
 export interface ScenarioAbout {
@@ -462,7 +469,8 @@ export const FIELDS = {
     "motors",
     "events",
   ],
-  Run: ["scenario", "setup", "firmware", "flown", "passed", "file"],
+  Glyph: ["kind", "points"],
+  Run: ["scenario", "setup", "firmware", "flown", "passed", "file", "glyph"],
   ScenarioAbout: ["name", "step", "what"],
   Flights: ["schema_version", "scenarios", "about", "setups", "runs"],
   Step: [

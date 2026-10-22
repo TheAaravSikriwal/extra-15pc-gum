@@ -72,6 +72,14 @@ test("a flag raised over and over is one moment, and too many moments play faste
   expect(clip.at(clip.timeOf(170)).speed).toBeGreaterThan(1); // a moment, but sped up to fit
 });
 
+test("the clip lists what happened in it, each kind once, and not a grader's window", () => {
+  const busy = run(300, { rollAt: 150 });
+  busy.events.push({ at: 160, name: "step" }, { at: 170, name: "landed" });
+  const clip = clipOf(busy);
+  // armed comes before liftoff, so it's not in the loop
+  expect(clip.moments).toEqual([{ at: 150, name: "step" }, { at: 170, name: "landed" }]);
+});
+
 test("a stick step is a moment; a grader's window isn't", () => {
   expect(isMoment("step 0 start")).toBe(true);
   expect(isMoment("wind start")).toBe(true);

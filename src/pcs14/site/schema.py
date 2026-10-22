@@ -184,6 +184,14 @@ class Playback(_Shape):
     events: list[Event]
 
 
+class Glyph(_Shape):
+    """A run's own shape, small, for the list of scenarios: its path seen from above when it
+    goes somewhere, its height over time when it doesn't. Points are 0 to 1, y up."""
+
+    kind: str  # plan or profile
+    points: list[list[float]]
+
+
 class Run(_Shape):
     scenario: str
     setup: str
@@ -191,6 +199,7 @@ class Run(_Shape):
     flown: bool
     passed: bool
     file: str | None = None  # its playback file, when its log is there
+    glyph: Glyph | None = None
 
 
 class ScenarioAbout(_Shape):

@@ -1,15 +1,22 @@
 // Where the camera sits for Fly it: farther back than inside the drone and lower, so the drone
 // floats with the ground grid below it and room above for a canopy, looking the same way it
-// already looked.
+// already looked. How far back is measured from the distance that fits the drone on the screen,
+// once the drone is there, so a link straight into Fly it frames it the same as walking in.
 type Vec3 = [number, number, number];
 
 export const FLY_PULL = 2.2; // times as far from the drone as inside it
 export const FLY_ELEVATION_DEG = 14; // how far above level it looks down from
 export const MODE_S = 1.2; // the change between the two, background, camera and interface together
 
-export function flyFraming(position: Vec3, target: Vec3): { position: Vec3; target: Vec3 } {
+// how far back a camera sits to fit something `size` across, as the fit inside the drone does
+export function fitDistance(size: number, fovDeg: number, aspect: number, margin: number): number {
+  const tall = size / (2 * Math.tan((fovDeg * Math.PI) / 360));
+  return margin * Math.max(tall, tall / aspect);
+}
+
+export function flyFraming(position: Vec3, target: Vec3, fitted?: number): { position: Vec3; target: Vec3 } {
   const d = position.map((v, i) => v - target[i]);
-  const distance = Math.hypot(...d) * FLY_PULL;
+  const distance = (fitted ?? Math.hypot(...d)) * FLY_PULL;
   const heading = Math.atan2(d[2], d[0]);
   const up = (FLY_ELEVATION_DEG * Math.PI) / 180;
   const flat = distance * Math.cos(up);

@@ -1,5 +1,31 @@
 {
  "$defs": {
+  "Glyph": {
+   "additionalProperties": false,
+   "description": "A run's own shape, small, for the list of scenarios: its path seen from above when it\ngoes somewhere, its height over time when it doesn't. Points are 0 to 1, y up.",
+   "properties": {
+    "kind": {
+     "title": "Kind",
+     "type": "string"
+    },
+    "points": {
+     "items": {
+      "items": {
+       "type": "number"
+      },
+      "type": "array"
+     },
+     "title": "Points",
+     "type": "array"
+    }
+   },
+   "required": [
+    "kind",
+    "points"
+   ],
+   "title": "Glyph",
+   "type": "object"
+  },
   "Run": {
    "additionalProperties": false,
    "properties": {
@@ -34,6 +60,17 @@
      ],
      "default": null,
      "title": "File"
+    },
+    "glyph": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/Glyph"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null
     }
    },
    "required": [

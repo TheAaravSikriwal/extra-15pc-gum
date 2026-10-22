@@ -2,17 +2,18 @@
 // route, the background behind it (the blueprint inside the drone, white space when it flies),
 // and the interface floating over it. The drone's state (which modules are on, how far it's
 // pulled apart, what's picked) lives here, so it carries from one mode into the other.
-import { lazy, type ReactNode, Suspense, useEffect, useMemo, useState } from "react";
+import { lazy, type MutableRefObject, type ReactNode, Suspense, useEffect, useMemo, useRef, useState } from "react";
 
 import type { LoadOptions } from "../data/load";
 import type { Flights, Parts, Piece, Playback, Route, SpecSheet, Wires, Wires3d, Wiring } from "../data/types";
 import { useData } from "../data/useData";
 import { clipOf } from "../fly/clip";
 import { runFor, storyProps } from "../fly/fly";
-import type { Playing } from "../fly/Flight";
+import type { Live, Playing } from "../fly/Flight";
 import { usePlayback } from "../fly/usePlayback";
 import { combinationFor } from "./combos";
 import { Blueprint } from "./Blueprint";
+import { FlyOverlay } from "./FlyOverlay";
 import { FlyPanel } from "./FlyPanel";
 import { InsidePanel } from "./InsidePanel";
 import { Menu } from "./Menu";
@@ -140,6 +141,8 @@ export interface FlyData {
   story: ReturnType<typeof storyProps> | null;
   playing: Playing | null;
   onNumbers: (n: Playing) => void;
+  live: MutableRefObject<Live | null>; // where it is this frame, for the drawings under it
+  seek: MutableRefObject<number | null>; // a loop time to jump to
 }
 
 function useFly(state: DroneState, data: StageData, load?: LoadOptions): FlyData {
@@ -149,7 +152,9 @@ function useFly(state: DroneState, data: StageData, load?: LoadOptions): FlyData
   const story = useMemo(() => (playback ? storyProps(playback) : null), [playback]);
   const [playing, setPlaying] = useState<Playing | null>(null);
   useEffect(() => setPlaying(null), [playback]);
-  return { playback, clip, story, playing, onNumbers: setPlaying };
+  const live = useRef<Live | null>(null);
+  const seek = useRef<number | null>(null);
+  return { playback, clip, story, playing, onNumbers: setPlaying, live, seek };
 }
 
 // the panel beside the drone, which on a phone becomes a drawer along the bottom: closed, it
@@ -177,6 +182,8 @@ export function Stage({ route, load, scene }: StageProps) {
   const data = useStageData(load);
   const fly = useFly(state, data, load);
   const [drawer, setDrawer] = useState(false);
+  // on a phone, picking a run closes the drawer so the drone's there to watch it fly
+  useEffect(() => setDrawer(false), [state.scenario, state.combination]);
   const flyTo = `#/fly/${encodeURIComponent(state.scenario)}`;
   return (
     <div className={`stage ${state.mode}`} aria-hidden={state.mode === "page"} data-testid="stage">
@@ -207,6 +214,7 @@ export function Stage({ route, load, scene }: StageProps) {
       </header>
       <Menu />
       <Intro />
+      {state.mode === "fly" && <FlyOverlay fly={fly} />}
       {state.mode !== "page" && (
         <Drawer open={drawer} onToggle={() => setDrawer(!drawer)}>
           {state.mode === "inside" && <InsidePanel state={state} data={data} />}
