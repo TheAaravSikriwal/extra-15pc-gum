@@ -9,10 +9,15 @@ import pytest
 from pcs14.flight.run import HalowLink
 
 
-def send(port: int, count: int):
+async def send(port: int, count: int, batch: int = 50):
+    """`count` datagrams, a batch at a time with the loop let in between: sent all at once,
+    they overflow the socket's buffer before the listener reads any, and the kernel drops
+    them, not the model."""
     out = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     for k in range(count):
         out.sendto(b"mavlink %d" % k, ("127.0.0.1", port))
+        if k % batch == batch - 1:
+            await asyncio.sleep(0.002)
     out.close()
 
 
@@ -20,7 +25,7 @@ async def through(loss: float, count: int = 2000) -> HalowLink:
     clock = {"t": 10.2}
     link = HalowLink(0, loss=lambda: loss, now=lambda: clock["t"], distance=lambda: 4321.0)
     await link.start()
-    send(link.port, count)
+    await send(link.port, count)
     await asyncio.sleep(0.3)
     link.close()
     return link
