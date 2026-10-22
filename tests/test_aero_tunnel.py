@@ -20,8 +20,8 @@ def test_the_props_turn_the_way_px4s_quad_x_does():
 
 
 def test_the_case_file_says_everything_fluidx3ds_setup_reads():
-    cruise, crosswind, hover = tunnel.cases("Max", 3.2, 607.0, 0.127, made_up_props(), 0.16,
-                                            hover_thrust_n=5.8)  # fmt: skip
+    found = tunnel.cases("Max", 3.2, 607.0, 0.127, made_up_props(), 0.16, hover_thrust_n=5.8)
+    cruise, crosswind, hover = found[0], found[2], found[-1]
     text = cruise.text()
     for line in ("name = Max-cruise", "mode = tunnel", "body = max-body.stl", "speed = 10",
                  "yaw_deg = -90", "pitch_deg = 3.200", "props = 0"):  # fmt: skip
@@ -42,6 +42,28 @@ def test_the_case_file_says_everything_fluidx3ds_setup_reads():
     assert "rotor = disk" not in cruise.text().splitlines()
     # and frames along the way, for the project site to play the flow back
     assert f"frames = {tunnel.PLAY_FRAMES}" in lines
+    # and the averaged flow, over the last 40% of the run
+    assert "field = 1" in lines and "field_from_s = 0.24" in lines and "field_coarsen = 2" in lines
+    # and the flow moving, in a box reaching down into the downwash, over the run's last half
+    assert "snap_count = 64" in lines and "snap_from_s = 0.2" in lines
+    assert "snap_z0 = -1.6" in lines and "snap_y1 = 0.5" in lines
+    assert "snap_y1 = 1.6" in cruise.text().splitlines()  # well behind it, for the wake
+
+
+def test_the_air_meets_it_from_six_ways_and_in_the_hover():
+    found = tunnel.cases("Max", 3.2, 607.0, 0.127, made_up_props(), 0.16, hover_thrust_n=5.8)
+    by = {c.direction: c for c in found}
+    assert list(by) == list(tunnel.DIRECTIONS)
+    assert len({c.name for c in found}) == 7
+    # the nose into the wind pitched forward, the tail into it pitched back, each side, and the
+    # top and the belly into it; the side, back and vertical cases are the body alone
+    turned = {d: (c.yaw_deg, c.pitch_deg) for d, c in by.items()}
+    assert turned["front"] == (-90.0, 3.2) and turned["back"] == (90.0, -3.2)
+    assert turned["right"] == (0.0, 0.0) and turned["left"] == (180.0, 0.0)
+    assert turned["above"] == (-90.0, 90.0) and turned["below"] == (-90.0, -90.0)
+    assert all(c.mode == "tunnel" and not c.props for d, c in by.items() if d != "hover")
+    # only the cruise, the crosswind and the hover make stills for posts
+    assert [d for d, c in by.items() if stills.stills_for(c)] == ["front", "right", "hover"]
 
 
 def test_the_frames_along_the_way_come_in_order_with_their_times(tmp_path):

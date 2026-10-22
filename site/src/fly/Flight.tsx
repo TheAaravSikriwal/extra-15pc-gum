@@ -4,17 +4,21 @@
 // the trail of where it's just been, a line down to the spot under it, and only what tells the
 // story (the canopy once the chute fires, the wind streaking past, the column of rising air).
 // Changing scenario eases from wherever the drone is into the next run's calm start. The loop's
-// seam fades the whole canvas, when a run fell.
+// seam fades the whole canvas, when a run fell. In the wind tunnel the drone flies the other way
+// to the air streaming past it, at the same slowed pace: the ground slides by under it (up and
+// down it doesn't, the air alone shows that), it's tilted the way it flies into that air and
+// sways a little, and its props turn, though the tunnel's body had none.
 import { Grid } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { type RefObject, useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 
-import type { Playback } from "../data/types";
+import type { Playback, TunnelFlow } from "../data/types";
 import { attitudeIn3 } from "../flights/FlightScene";
 import { toThree } from "../flights/playback";
 import type { Clip, Frame } from "./clip";
 import { handoff, type Numbers, numbersAt, propSpeeds, type StoryProps } from "./fly";
+import { SLOW_MOTION } from "./particles";
 
 const HANDOFF_S = 1.0; // how long the drone takes to ease from one scenario into the next
 const NUMBERS_EVERY_S = 0.15;
@@ -31,6 +35,43 @@ const CANOPY_M = 1.1;
 
 // the drone at rest when nothing's playing: level, its motors at an idle hover
 const CALM: Frame = { t: 0, position: [0, 0, 0], attitude: [0, 0, 0, 1], motors: [300, 300, 300, 300], speed: 1, fade: 1 };
+const TUNNEL_UP_M = 4; // in the tunnel the drone flies this far over the grid
+const HOVER_RAD_S = 600; // about the props' hover speed
+const SECTION_M = 10; // the grid's sections: the ground wraps on them without a seam
+const SWAY_RAD = 0.012; // about two thirds of a degree
+
+// which way the air goes past the drone in each case, in its own frame (forward, left, up); the
+// drone flies the other way
+export const AIR_GOES: Record<string, [number, number, number]> = {
+  front: [-1, 0, 0],
+  back: [1, 0, 0],
+  right: [0, 1, 0],
+  left: [0, -1, 0],
+  above: [0, 0, -1],
+  below: [0, 0, 1],
+  hover: [0, 0, 0],
+};
+
+// the drone in the tunnel, `seconds` into watching it: flying the other way to the air at the
+// particles' slowed pace, the ground wrapped on the grid's sections, pitched by the flow's tilt
+// and swaying a little, its props at a hover's speed
+export function tunnelFrame(flow: TunnelFlow, seconds = 0): Frame {
+  const [ax, ay] = AIR_GOES[flow.direction] ?? [0, 0, 0];
+  const pace = flow.speed / SLOW_MOTION;
+  const wrap = (v: number) => ((v % SECTION_M) + SECTION_M) % SECTION_M;
+  const pitch = ((flow.pitch_deg ?? 0) * Math.PI) / 180 + SWAY_RAD * Math.sin(seconds * 1.3);
+  const roll = SWAY_RAD * Math.sin(seconds * 0.9 + 1);
+  // pitch about its left after roll about its nose, heading east
+  const [sy, cy, sx, cx] = [Math.sin(pitch / 2), Math.cos(pitch / 2), Math.sin(roll / 2), Math.cos(roll / 2)];
+  return {
+    t: seconds,
+    position: [wrap(-ax * pace * seconds), wrap(-ay * pace * seconds), TUNNEL_UP_M],
+    attitude: [cy * sx, cx * sy, -sy * sx, cy * cx],
+    motors: [HOVER_RAD_S, HOVER_RAD_S, HOVER_RAD_S, HOVER_RAD_S],
+    speed: 1,
+    fade: 1,
+  };
+}
 
 export interface Playing extends Numbers {
   motors: number[];
@@ -51,6 +92,7 @@ export interface FlightProps {
   onNumbers: (n: Playing) => void;
   live?: { current: Live | null };
   seek?: { current: number | null }; // a loop time to jump to, set from the timeline
+  tunnel?: TunnelFlow | null; // the wind tunnel's flow showing, instead of a run
 }
 
 // a dome of light gray lines over the drone, and its lines down to it
@@ -142,7 +184,7 @@ function route(p: Playback, clip: Clip): THREE.Group {
   return group;
 }
 
-export function Flight({ drone, spins, clip, playback, story, onNumbers, live, seek }: FlightProps) {
+export function Flight({ drone, spins, clip, playback, story, onNumbers, live, seek, tunnel }: FlightProps) {
   const gl = useThree((s) => s.gl);
   const world = useRef<THREE.Group>(null);
   const loop = useRef(0);
@@ -188,7 +230,7 @@ export function Flight({ drone, spins, clip, playback, story, onNumbers, live, s
     from.current = last.current;
     since.current = 0;
     loop.current = 0;
-  }, [clip]);
+  }, [clip, tunnel]);
 
   // leaving Fly it puts the drone back as it was
   useEffect(() => {
@@ -210,7 +252,8 @@ export function Flight({ drone, spins, clip, playback, story, onNumbers, live, s
       since.current = 0;
     }
     if (clip) loop.current = (loop.current + delta) % clip.duration;
-    let frame = clip ? clip.at(loop.current) : CALM;
+    else if (tunnel) loop.current += delta;
+    let frame = clip ? clip.at(loop.current) : tunnel ? tunnelFrame(tunnel, loop.current) : CALM;
     if (from.current && since.current < HANDOFF_S) {
       frame = handoff(from.current, frame, since.current / HANDOFF_S);
       since.current += delta;

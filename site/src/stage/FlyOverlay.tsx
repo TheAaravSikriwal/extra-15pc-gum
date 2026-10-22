@@ -5,12 +5,48 @@
 import { type KeyboardEvent, type PointerEvent, useEffect, useMemo, useRef } from "react";
 
 import { captionAt, eventWords } from "../fly/captions";
+import { SLOW_MOTION } from "../fly/particles";
+import { TURBO_GRADIENT } from "../fly/turbo";
 import { planOf, profileOf, roundMeters } from "../fly/maps";
 import type { FlyData } from "./Stage";
 
 const KEY_STEP = 0.05; // how far an arrow key moves along the loop
 
+// in the wind tunnel: which way the air comes, and what its colors mean
+function TunnelStrip({ fly }: { fly: FlyData }) {
+  const entry = fly.flowEntry;
+  if (!entry) return null;
+  const top = fly.flow?.color_max ?? 17;
+  return (
+    <section className="fly-overlay tunnel" aria-label="the air">
+      <div className="fly-story">
+        <p className="fly-caption">
+          <span className="at">{fly.flow ? `${fly.flow.speed} m/s` : "..."}</span>
+          <span className="what" key={entry.direction}>
+            {entry.label}
+          </span>
+        </p>
+        <div className="turbo-scale wide" aria-hidden="true">
+          <i style={{ background: TURBO_GRADIENT }} />
+          <span>0</span>
+          <span>{Math.round(top / 2)}</span>
+          <span>{top} m/s</span>
+        </div>
+        <div className="fly-ends">
+          <span>Blue is slow, red is fast</span>
+          <span>Slowed down {SLOW_MOTION} times</span>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function FlyOverlay({ fly }: { fly: FlyData }) {
+  if (fly.flowEntry) return <TunnelStrip fly={fly} />;
+  return <RunStrip fly={fly} />;
+}
+
+function RunStrip({ fly }: { fly: FlyData }) {
   const { playback, clip, playing, live, seek } = fly;
   const plan = useMemo(() => (playback && clip ? planOf(playback, clip) : null), [playback, clip]);
   const profile = useMemo(() => (playback && clip ? profileOf(playback, clip) : null), [playback, clip]);

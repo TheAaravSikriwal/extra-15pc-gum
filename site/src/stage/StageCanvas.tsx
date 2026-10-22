@@ -15,6 +15,7 @@ import { easeInOut } from "../explorer/explore";
 import { useModel } from "../explorer/model";
 import { DroneScene } from "../explorer/Scene";
 import type { Vec3 } from "../explorer/wires3d";
+import { Airflow } from "../fly/Airflow";
 import { Flight } from "../fly/Flight";
 import { fitDistance, flyFraming, MODE_S } from "../fly/framing";
 import type { DroneState, FlyData, StageData } from "./Stage";
@@ -187,6 +188,13 @@ export function StageCanvas({
           spin={PROP_SHOW_SPIN}
           spins={flying ? spins : undefined}
         />}
+        {/* the wind tunnel's flow, in the drone's own frame: the CAD's, turned z up to three's y up the
+            way the model's own top node is */}
+        {flying && fly?.flow && (
+          <group rotation={[-Math.PI / 2, 0, 0]}>
+            <Airflow flow={fly.flow} slice={state.slice} load={load} />
+          </group>
+        )}
         </group>
       </Bounds>
       {flying && fly && (
@@ -199,6 +207,7 @@ export function StageCanvas({
           onNumbers={fly.onNumbers}
           live={fly.live}
           seek={fly.seek}
+          tunnel={fly.flow}
         />
       )}
       {root && !flying && (

@@ -27,6 +27,47 @@
    "title": "TunnelCase",
    "type": "object"
   },
+  "TunnelFlowEntry": {
+   "additionalProperties": false,
+   "properties": {
+    "name": {
+     "title": "Name",
+     "type": "string"
+    },
+    "direction": {
+     "title": "Direction",
+     "type": "string"
+    },
+    "label": {
+     "title": "Label",
+     "type": "string"
+    },
+    "about": {
+     "title": "About",
+     "type": "string"
+    },
+    "file": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "File"
+    }
+   },
+   "required": [
+    "name",
+    "direction",
+    "label",
+    "about"
+   ],
+   "title": "TunnelFlowEntry",
+   "type": "object"
+  },
   "TunnelFrame": {
    "additionalProperties": false,
    "properties": {
@@ -100,7 +141,7 @@
   }
  },
  "additionalProperties": false,
- "description": "tunnel.json: the wind tunnel's stills and each case's frames along the way.",
+ "description": "tunnel.json: the wind tunnel's stills, each case's frames along the way, and each case's\nflow traced for the drone view.",
  "properties": {
   "schema_version": {
    "title": "Schema Version",
@@ -126,6 +167,14 @@
     "$ref": "#/$defs/TunnelCase"
    },
    "title": "Cases",
+   "type": "array"
+  },
+  "flows": {
+   "default": [],
+   "items": {
+    "$ref": "#/$defs/TunnelFlowEntry"
+   },
+   "title": "Flows",
    "type": "array"
   }
  },

@@ -12,6 +12,7 @@ import parts from "../../schema/parts.schema.json";
 import playback from "../../schema/playback.schema.json";
 import spec from "../../schema/spec.schema.json";
 import steps from "../../schema/steps.schema.json";
+import tunnelFlow from "../../schema/tunnel-flow.schema.json";
 import tunnel from "../../schema/tunnel.schema.json";
 import unproven from "../../schema/unproven.schema.json";
 import wiring from "../../schema/wiring.schema.json";
@@ -67,8 +68,13 @@ test("the steps' shapes have the schema's fields", () => {
 
 test("the wind tunnel's shapes have the schema's fields", () => {
   expect(Object.keys(tunnel.properties).sort()).toEqual([...FIELDS.Tunnel].sort());
-  for (const name of ["TunnelStill", "TunnelFrame", "TunnelCase"] as const) {
+  for (const name of ["TunnelStill", "TunnelFrame", "TunnelCase", "TunnelFlowEntry"] as const) {
     expect(Object.keys(tunnel.$defs[name].properties).sort()).toEqual([...FIELDS[name]].sort());
+  }
+  // and each case's traced flow, a file of its own
+  expect(Object.keys(tunnelFlow.properties).sort()).toEqual([...FIELDS.TunnelFlow].sort());
+  for (const name of ["TunnelSlice", "TunnelParticles"] as const) {
+    expect(Object.keys(tunnelFlow.$defs[name].properties).sort()).toEqual([...FIELDS[name]].sort());
   }
 });
 

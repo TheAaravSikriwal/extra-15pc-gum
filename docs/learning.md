@@ -270,6 +270,17 @@ Three things step 7 leaned on. System identification: poking a system on purpose
 - [ ] **Do:** scikit-image's `phase_cross_correlation` example ([scikit-image.org](https://scikit-image.org)), the same method on pictures you can shift yourself.
 - [ ] **Read:** Dominik Honegger, Lorenz Meier, Petri Tanskanen and Marc Pollefeys, "An open source and open hardware embedded metric optical flow CMOS camera for indoor and outdoor applications" (ICRA 2013). PX4Flow: optical flow and a distance sensor turned into a speed over the ground, the idea the estimate copies.
 
+## 19. Seeing a flow: streamlines, averaging and tracing
+
+*Came up putting the wind tunnel on the drone in Fly it (2026-10-22).*
+
+A streamline follows the air's velocity at one instant, a pathline follows one bit of air over time, and a streakline is what you see when smoke comes out of one spot. In a steady flow all three are the same line. A drone's wake isn't steady, though: it sheds eddies, and averaging the flow over time smooths them away, the same trade a RANS model makes. My first try traced streamlines through the averaged flow, and the wake came out dead. The particles in Fly it follow pathlines through the flow as it was recorded moving, so they swirl the way the air did. Carrying a particle is solving a small differential equation: step along the velocity, read it between grid points by trilinear interpolation (and between snapshots in time), and take midpoint or Runge-Kutta steps so it doesn't drift. Making a recorded stretch loop without a jump is a crossfade: ease the end of the stretch into its start.
+
+- [ ] **Look through:** Milton Van Dyke, *An Album of Fluid Motion* (Parabolic Press, 1982). Photographs of real flows: wakes, separation, vortices, smoke lines.
+- [ ] **Watch:** "Flow Visualization" with Stephen J. Kline, one of the National Committee for Fluid Mechanics Films (MIT). It shows streamlines, pathlines and streaklines side by side, and why they differ in unsteady flow.
+- [ ] **Read:** W. H. Press, S. A. Teukolsky, W. T. Vetterling and B. P. Flannery, *Numerical Recipes* (Cambridge University Press), the chapter on Runge-Kutta for ordinary differential equations.
+- [ ] **Do:** ParaView's Stream Tracer filter ([docs.paraview.org](https://docs.paraview.org)) on any flow, for the same tracing with knobs to turn.
+
 ## Coming up later
 
 These get filled in properly when I get close to them.

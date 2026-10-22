@@ -5,20 +5,34 @@
 import { lazy, type MutableRefObject, type ReactNode, Suspense, useEffect, useMemo, useRef, useState } from "react";
 
 import type { LoadOptions } from "../data/load";
-import type { Flights, Parts, Piece, Playback, Route, SpecSheet, Wires, Wires3d, Wiring } from "../data/types";
-import { useData } from "../data/useData";
+import type {
+  Flights,
+  Parts,
+  Piece,
+  Playback,
+  Route,
+  SpecSheet,
+  Tunnel,
+  TunnelFlow,
+  TunnelFlowEntry,
+  Wires,
+  Wires3d,
+  Wiring,
+} from "../data/types";
+import { useData, useOptionalData } from "../data/useData";
 import { clipOf } from "../fly/clip";
 import { runFor, storyProps } from "../fly/fly";
 import type { Live, Playing } from "../fly/Flight";
 import { usePlayback } from "../fly/usePlayback";
 import { combinationFor } from "./combos";
 import { Blueprint } from "./Blueprint";
+import { ControlsHint } from "./ControlsHint";
 import { FlyOverlay } from "./FlyOverlay";
 import { FlyPanel } from "./FlyPanel";
 import { InsidePanel } from "./InsidePanel";
 import { Menu } from "./Menu";
 import { modulesOf } from "../explorer/logic";
-import { type Mode, modeOf, scenarioOf, setupOf } from "./modes";
+import { type Mode, modeOf, scenarioOf, setupOf, tunnelOf } from "./modes";
 
 // three.js is about a megabyte, so the canvas loads after the page's first paint
 const StageCanvas = lazy(() => import("./StageCanvas").then((m) => ({ default: m.StageCanvas })));
@@ -45,6 +59,10 @@ export interface DroneState {
   combination: string;
   firmware: string;
   setFirmware: (f: string) => void;
+  tunnel: string | null; // where the air comes from, when the wind tunnel's flow is showing
+  slice: boolean; // the tunnel's speed slice through the drone, shown
+  setSlice: (s: boolean) => void;
+  setModules: (modules: string[]) => void;
 }
 
 export interface StageData {
@@ -54,6 +72,7 @@ export interface StageData {
   wiring: Wiring | null;
   flights: Flights | null;
   wires3d: Wires3d | null;
+  tunnel: Tunnel | null;
   pieces: Map<string, Piece>;
   routes: Map<string, Route>;
 }
@@ -81,6 +100,7 @@ export function useDroneState(route: string[]): DroneState {
     if (setup) setModulesOn(new Set(modulesOf(setup)));
   }, [setup]);
   const [firmware, setFirmware] = useState("mine");
+  const [slice, setSlice] = useState(true);
   const toggle = (m: string) => {
     const next = new Set(modulesOn);
     if (next.has(m)) next.delete(m);
@@ -107,6 +127,10 @@ export function useDroneState(route: string[]): DroneState {
     combination: combinationFor(modulesOn),
     firmware,
     setFirmware,
+    tunnel: tunnelOf(route),
+    slice,
+    setSlice,
+    setModules: (modules) => setModulesOn(new Set(modules)),
   };
 }
 
@@ -117,12 +141,13 @@ function useStageData(load?: LoadOptions): StageData {
   const wiring = useData<Wiring>("wiring.json", load).data;
   const flights = useData<Flights>("flights.json", load).data;
   const wires3d = useData<Wires3d>("wires3d.json", load).data;
+  const tunnel = useData<Tunnel>("tunnel.json", load).data;
   const pieces = useMemo(() => new Map((parts?.pieces ?? []).map((p) => [p.name, p])), [parts]);
   const routes = useMemo(() => new Map((wires?.routes ?? []).map((r) => [r.node, r])), [wires]);
-  return { parts, wires, spec, wiring, flights, wires3d, pieces, routes };
+  return { parts, wires, spec, wiring, flights, wires3d, tunnel, pieces, routes };
 }
 
-function Intro() {
+function Intro({ flying }: { flying: boolean }) {
   return (
     <section className="stage-intro" aria-label="about">
       <h1>Extra 15pc Gum</h1>
@@ -130,6 +155,7 @@ function Intro() {
         My long-range quadcopter, with my own flight firmware. Every real part modeled, wired and flown in simulation,
         in public, before anything gets bought.
       </p>
+      {flying && <ControlsHint />}
     </section>
   );
 }
@@ -143,10 +169,18 @@ export interface FlyData {
   onNumbers: (n: Playing) => void;
   live: MutableRefObject<Live | null>; // where it is this frame, for the drawings under it
   seek: MutableRefObject<number | null>; // a loop time to jump to
+  flows: TunnelFlowEntry[]; // the wind tunnel's cases, one for each way the air comes from
+  flowEntry: TunnelFlowEntry | null; // the one showing
+  flow: TunnelFlow | null;
 }
 
 function useFly(state: DroneState, data: StageData, load?: LoadOptions): FlyData {
-  const run = state.mode === "fly" ? runFor(data.flights, state.combination, state.scenario, state.firmware) : null;
+  const flows = data.tunnel?.flows ?? [];
+  const flowEntry = state.mode === "fly" && state.tunnel ? (flows.find((f) => f.direction === state.tunnel) ?? null) : null;
+  const flow = useOptionalData<TunnelFlow>(flowEntry?.file ?? null, load); // none if it's not run yet
+  // the wind tunnel holds the drone still in the air, so no run plays while it shows
+  const run =
+    state.mode === "fly" && !state.tunnel ? runFor(data.flights, state.combination, state.scenario, state.firmware) : null;
   const playback = usePlayback(run?.file ?? null, load);
   const clip = useMemo(() => (playback ? clipOf(playback) : null), [playback]);
   const story = useMemo(() => (playback ? storyProps(playback) : null), [playback]);
@@ -154,7 +188,7 @@ function useFly(state: DroneState, data: StageData, load?: LoadOptions): FlyData
   useEffect(() => setPlaying(null), [playback]);
   const live = useRef<Live | null>(null);
   const seek = useRef<number | null>(null);
-  return { playback, clip, story, playing, onNumbers: setPlaying, live, seek };
+  return { playback, clip, story, playing, onNumbers: setPlaying, live, seek, flows, flowEntry, flow };
 }
 
 // the panel beside the drone, which on a phone becomes a drawer along the bottom: closed, it
@@ -183,7 +217,14 @@ export function Stage({ route, load, scene }: StageProps) {
   const fly = useFly(state, data, load);
   const [drawer, setDrawer] = useState(false);
   // on a phone, picking a run closes the drawer so the drone's there to watch it fly
-  useEffect(() => setDrawer(false), [state.scenario, state.combination]);
+  useEffect(() => setDrawer(false), [state.scenario, state.combination, state.tunnel]);
+  // the tunnel ran around one combination, so the drone shows that one while its flow does
+  // (on the combination's name only: setModules is new each render)
+  const flowSetup = fly.flow?.setup.toLowerCase();
+  const setModules = state.setModules;
+  useEffect(() => {
+    if (flowSetup && modulesOf(flowSetup).length) setModules(modulesOf(flowSetup));
+  }, [flowSetup]);
   const flyTo = `#/fly/${encodeURIComponent(state.scenario)}`;
   return (
     <div className={`stage ${state.mode}`} aria-hidden={state.mode === "page"} data-testid="stage">
@@ -213,7 +254,7 @@ export function Stage({ route, load, scene }: StageProps) {
         </nav>
       </header>
       <Menu />
-      <Intro />
+      <Intro flying={state.mode === "fly"} />
       {state.mode === "fly" && <FlyOverlay fly={fly} />}
       {state.mode !== "page" && (
         <Drawer open={drawer} onToggle={() => setDrawer(!drawer)}>

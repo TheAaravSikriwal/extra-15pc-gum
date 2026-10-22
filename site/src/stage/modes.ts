@@ -1,5 +1,6 @@
 // Which view the route asks for. The home is inside the drone (the blueprint), #/fly/<scenario>
-// is the drone flying in white space, and everything else is a page that opens over the view.
+// is the drone flying in white space, #/fly/tunnel/<direction> the wind tunnel's flow around it
+// there, and everything else is a page that opens over the view.
 
 export type Mode = "inside" | "fly" | "page";
 
@@ -23,12 +24,21 @@ export function pageName(route: string[]): string {
 }
 
 export function scenarioOf(route: string[]): string {
-  return route[0] === "fly" && route[1] ? route[1] : DEFAULT_SCENARIO;
+  return route[0] === "fly" && route[1] && route[1] !== "tunnel" ? route[1] : DEFAULT_SCENARIO;
 }
 
 // #/fly/<scenario>/<setup>, from a run's own page, says which combination to fly it in
 export function setupOf(route: string[]): string | null {
-  return route[0] === "fly" && route[2] ? route[2] : null;
+  return route[0] === "fly" && route[1] !== "tunnel" && route[2] ? route[2] : null;
+}
+
+// where the air comes from, when the wind tunnel's flow is showing: #/fly/tunnel/<direction>
+export function tunnelOf(route: string[]): string | null {
+  return route[0] === "fly" && route[1] === "tunnel" ? (route[2] ?? "front") : null;
+}
+
+export function tunnelLink(direction: string): string {
+  return `#/fly/tunnel/${encodeURIComponent(direction)}`;
 }
 
 export function flyLink(scenario: string, setup?: string): string {

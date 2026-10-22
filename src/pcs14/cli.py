@@ -198,8 +198,8 @@ def build_parser() -> argparse.ArgumentParser:
     tunnel.add_argument(
         "--case",
         action="append",
-        choices=("cruise", "crosswind", "hover"),
-        help="a case to run (repeat for more; default: all three)",
+        choices=("cruise", "back", "crosswind", "left", "above", "below", "hover"),
+        help="a case to run (repeat for more; default: all seven)",
     )
     tunnel.add_argument(
         "--out", type=Path, default=Path("outputs/tunnel"), help="frames, meshes and stills"
@@ -756,7 +756,7 @@ def run_tunnel(args) -> int:
     out = Path(args.out)
     meshes = out / "meshes"
     found = tunnel.case_for(drone, build, targets, setup, meshes)
-    wanted = set(args.case or ("cruise", "crosswind", "hover"))
+    wanted = set(args.case or ("cruise", "back", "crosswind", "left", "above", "below", "hover"))
     chosen = [c for c in found if c.name.rsplit("-", 1)[1] in wanted]
     home = tunnel.fluidx3d_dir()
     if not args.stills_only and not (home / "bin" / "FluidX3D.exe").exists():

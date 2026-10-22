@@ -6,12 +6,23 @@ bin/case.txt, which this module writes, with the drone's meshes in meters in its
 forward, y left, z up) so the body and the props land together:
 
 - cruise: the drone nose-first into its 10 m/s cruise, pitched forward the way it flies
+- back: tail-first at 10 m/s, pitched back the way it flies backward
 - crosswind: the 10 m/s wind the hover holds against, from the drone's right
+- left: the same wind from its left
+- above and below: 10 m/s straight down onto its top, the way the air meets it climbing, and
+  straight up into its belly, the way it meets it coming down. These and the side and back
+  cases are the body alone, so all six show its air resistance from each way it can meet the air
 - hover: still air, and each prop an actuator disk pushing its share of the weight down. The
   first hover runs spun the real blades as moving boundaries, but at 3.4 mm cells a 10x5
   blade's pitch rises about one cell across its chord, so the blades came out as flat paddles
   that flung the air sideways and pushed none down. A disk of cells, each given its share of
   the thrust as a force on the air, makes the downwash the momentum says it should
+
+Each case also writes the flow itself, by the fork's setup: the air's velocity averaged over
+the end of the run on a grid twice as coarse (field.bin, solid.bin and field.txt), and the flow
+moving, 64 snapshots over the run's last half in a box around the drone with the speed on a
+plane through it at each (snaps/). pcs14.aero.flow carries particles through those for the
+project site to play around the 3D drone.
 
 Nothing FluidX3D makes goes into this repo until its public fork is up (its license wants the
 altered source published with any results), so the frames and the stills land in
@@ -35,6 +46,18 @@ VIEWS = ("side-streamlines", "quarter-streamlines", "side-speed", "quarter-vorti
 # and of which views (FluidX3D names them play-<view>-<time step>.png)
 PLAY_FRAMES = 40
 PLAY_VIEWS = ("side-speed", "quarter-vortices")
+# where the air comes from in each case, seen from the drone, in the order the site lists them
+DIRECTIONS = ("front", "back", "right", "left", "above", "below", "hover")
+FIELD_SHARE = 0.4  # the averaged flow is over the last 40% of the run, once the wake has formed
+FIELD_SAMPLES = 16
+FIELD_COARSEN = 2  # 8 mm cells from 4 mm: plenty for flow lines, and an eighth of the file
+SNAPS = 64  # snapshots of the flow moving, over the run's last half
+SNAP_COARSEN = 3  # 12 mm cells: fine enough for particles in a wake
+SNAP_U_MAX = 40.0  # m/s, the most a snapshot's int16s hold
+# the box each snapshot keeps, m from the drone along the tunnel's axes: across, along the wind
+# (well behind it, for the wake) and up; the hover's reaches down into the downwash
+SNAP_BOX = {"tunnel": ((-0.5, 0.5), (-0.6, 1.6), (-0.45, 0.45)),
+            "hover": ((-0.5, 0.5), (-0.5, 0.5), (-1.6, 0.5))}  # fmt: skip
 G = 9.80665
 
 
@@ -56,7 +79,7 @@ class Case:
     pitch_deg: float = 0.0  # nose down
     box: tuple[float, float, float] = (1.4, 3.2, 1.1)  # m: across, along the wind, up
     at: tuple[float, float, float] = (0.5, 0.33, 0.5)  # the drone's origin, as a box share
-    time_s: float = 0.48
+    time_s: float = 0.64  # long enough for the wake to form and then half again to watch it
     # MB of the GPU for the lattice. The 3060 has 12 GB, but its OpenCL driver caps any one
     # buffer at a quarter of that, and the biggest (the 19 populations, 2 bytes each) has to
     # fit: 6000 MB asked for a 3.4 GB buffer. 5000 is about 78 million cells
@@ -72,6 +95,8 @@ class Case:
     rotor: str = "geometry"  # the props as spinning blades, or "disk": actuator disks
     thrust_n: float = 0.0  # N, each prop's push, for the disks
     frames: int = PLAY_FRAMES  # along the way, of PLAY_VIEWS
+    direction: str = "front"  # where the air comes from, seen from the drone (DIRECTIONS)
+    field: bool = True  # and the averaged flow itself, for the site's 3D
 
     def text(self) -> str:
         """The case file FluidX3D's setup reads: one key = value per line."""
@@ -99,8 +124,19 @@ class Case:
             f"rotor = {self.rotor}",
             f"thrust_n = {self.thrust_n:g}",
             f"frames = {self.frames}",
+            f"field = {int(self.field)}",
+            f"field_from_s = {self.time_s * (1 - FIELD_SHARE):g}",
+            f"field_samples = {FIELD_SAMPLES}",
+            f"field_coarsen = {FIELD_COARSEN}",
+            f"snap_count = {SNAPS if self.field else 0}",
+            f"snap_from_s = {self.time_s / 2:g}",
+            f"snap_coarsen = {SNAP_COARSEN}",
+            f"snap_u_max = {SNAP_U_MAX:g}",
             f"props = {len(self.props)}",
         ]
+        box = SNAP_BOX["hover" if self.mode == "hover" else "tunnel"]
+        for axis, (low, high) in zip("xyz", box, strict=True):
+            lines += [f"snap_{axis}0 = {low:g}", f"snap_{axis}1 = {high:g}"]
         for k, p in enumerate(self.props):
             lines += [f"prop_{k} = {p.stl}", f"prop_{k}_x = {p.hub[0]:.5f}",
                       f"prop_{k}_y = {p.hub[1]:.5f}", f"prop_{k}_z = {p.hub[2]:.5f}",
@@ -120,19 +156,31 @@ def spin_at(x: float, y: float) -> int:
 def cases(setup_name: str, cruise_pitch_deg: float, hover_omega: float, radius: float,
           props: tuple[Prop, ...], slice_x_m: float,
           hover_thrust_n: float = 0.0) -> list[Case]:  # fmt: skip
-    """The three visual cases for one combination."""
+    """The visual cases for one combination: the air from each of six ways, and the hover.
+
+    The wind blows along the box's y, and FluidX3D turns the drone by yaw (about up), after
+    pitch (about its left, nose down), so: yaw -90 puts the nose into the wind, 90 the tail, 0
+    its right side and 180 its left; and with the nose into the wind, a pitch of 90 tips its
+    top into it and -90 its belly."""
     body = f"{setup_name.lower().replace('+', '_')}-body.stl"
     cruise = Case(f"{setup_name}-cruise", "tunnel", setup_name, body,
                   pitch_deg=cruise_pitch_deg)  # fmt: skip
-    crosswind = replace(cruise, name=f"{setup_name}-crosswind", yaw_deg=0.0, pitch_deg=0.0)
+    back = replace(cruise, name=f"{setup_name}-back", yaw_deg=90.0, pitch_deg=-cruise_pitch_deg,
+                   direction="back")  # fmt: skip
+    crosswind = replace(cruise, name=f"{setup_name}-crosswind", yaw_deg=0.0, pitch_deg=0.0,
+                        direction="right")  # fmt: skip
+    left = replace(crosswind, name=f"{setup_name}-left", yaw_deg=180.0, direction="left")
+    above = replace(cruise, name=f"{setup_name}-above", pitch_deg=90.0, direction="above")
+    below = replace(above, name=f"{setup_name}-below", pitch_deg=-90.0, direction="below")
     # still air and spinning props: a tall box with the drone a little above its middle, where
     # the side views center, so the downwash has room below it in the picture; 0.3 s (about 30
     # turns of the props) for it to reach down past a meter
     hover = Case(f"{setup_name}-hover", "hover", setup_name, body, speed=0.0, yaw_deg=0.0,
-                 box=(1.2, 1.2, 2.2), at=(0.5, 0.5, 0.6), time_s=0.3, omega=hover_omega,
+                 box=(1.2, 1.2, 2.2), at=(0.5, 0.5, 0.6), time_s=0.4, omega=hover_omega,
                  radius=radius, props=props, slice_x_m=slice_x_m, zoom=1.6,
-                 color_max_m_s=15.0, rotor="disk", thrust_n=hover_thrust_n)  # fmt: skip
-    return [cruise, crosswind, hover]
+                 color_max_m_s=15.0, rotor="disk", thrust_n=hover_thrust_n,
+                 direction="hover")  # fmt: skip
+    return [cruise, back, crosswind, left, above, below, hover]
 
 
 def fluidx3d_dir(environ=None) -> Path:

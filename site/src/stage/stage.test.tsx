@@ -168,3 +168,65 @@ test("on a phone, picking a run closes the drawer, so the drone's there to watch
   rerender(<Stage route={["fly", "spiral descent"]} load={load} scene={scene} />);
   expect(document.querySelector(".stage-drawer")).not.toHaveClass("open");
 });
+
+const TUNNEL = {
+  schema_version: 1,
+  fork_public: false,
+  note: "pictures",
+  stills: [],
+  cases: [],
+  flows: [
+    { name: "Max-cruise", direction: "front", label: "From the front", about: "10 m/s nose first.", file: "tunnel/flow/Max-cruise.json" },
+    { name: "Max-above", direction: "above", label: "From above", about: "10 m/s down onto its top.", file: "tunnel/flow/Max-above.json" },
+    { name: "left", direction: "left", label: "From the left", about: "10 m/s on its left side.", file: null },
+  ],
+};
+const CRUISE_FLOW = {
+  schema_version: 1,
+  name: "Max-cruise",
+  direction: "front",
+  setup: "Max",
+  speed: 10,
+  color_max: 17,
+  force_n: 1.84,
+  pitch_deg: 3.3,
+  loop_s: 0.25,
+  frames: 64,
+  particles: { file: "tunnel/flow/Max-cruise-particles.bin", count: 2400 },
+  slice: { file: "tunnel/flow/Max-cruise-slice.bin", width: 256, height: 144, corners: [[0, 0, 0], [1, 0, 0], [1, 0, -1], [0, 0, -1]] },
+};
+
+test("the wind tunnel in Fly it: each way the air comes, and the one picked with its colors and force", async () => {
+  const files = { "flights.json": FLIGHTS, "tunnel.json": TUNNEL, "tunnel/flow/Max-cruise.json": CRUISE_FLOW };
+  const fetcher = serving(files);
+  const { rerender } = render(<Stage route={["fly", "hover"]} load={{ fromDisk: false, fetcher }} scene={scene} />);
+  const tunnel = await screen.findByRole("region", { name: "Wind tunnel" });
+  const front = within(tunnel).getByRole("link", { name: "From the front" });
+  expect(front).toHaveAttribute("href", "#/fly/tunnel/front");
+  expect(front).toHaveAccessibleDescription("10 m/s nose first.");
+  expect(within(tunnel).getByRole("link", { name: "From above" })).toBeInTheDocument();
+  // one not run yet is listed, but not as a link
+  expect(within(tunnel).queryByRole("link", { name: "From the left" })).toBeNull();
+  expect(within(tunnel).getByLabelText("From the left, not run yet")).toBeInTheDocument();
+  rerender(<Stage route={["fly", "tunnel", "front"]} load={{ fromDisk: false, fetcher }} scene={scene} />);
+  const now = await screen.findByRole("region", { name: "the wind tunnel" });
+  expect(await within(now).findByText(/FluidX3D says 1\.8 N along the wind/)).toBeInTheDocument();
+  expect(within(now).getByRole("checkbox", { name: "speed slice" })).toBeChecked();
+  expect(screen.getByText(/max, wind tunnel/i)).toBeInTheDocument(); // the tunnel ran around Max
+  expect(screen.getByRole("link", { name: "From the front" })).toHaveAttribute("aria-current", "true");
+  expect(screen.getByRole("link", { name: "hover" })).not.toHaveAttribute("aria-current"); // no run plays
+  const strip = screen.getByRole("region", { name: "the air" });
+  expect(within(strip).getByText("From the front")).toBeInTheDocument();
+  expect(within(strip).getByText("10 m/s")).toBeInTheDocument();
+});
+
+test("flying, a quiet line under the intro says how to look around, with a mouse for each", async () => {
+  const { rerender } = render(<Stage route={[]} load={load} scene={scene} />);
+  expect(screen.queryByRole("list", { name: "looking around" })).toBeNull(); // only in Fly it
+  rerender(<Stage route={["fly", "hover"]} load={load} scene={scene} />);
+  const hint = screen.getByRole("list", { name: "looking around" });
+  expect(within(hint).getAllByText("Drag")).toHaveLength(2); // the mouse's and the finger's
+  expect(within(hint).getByText("Scroll")).toBeInTheDocument();
+  expect(within(hint).getByText("Right-drag")).toBeInTheDocument();
+  expect(within(hint).getByText("Pinch")).toBeInTheDocument();
+});

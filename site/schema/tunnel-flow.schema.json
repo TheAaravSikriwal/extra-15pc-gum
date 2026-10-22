@@ -1,0 +1,131 @@
+{
+ "$defs": {
+  "TunnelParticles": {
+   "additionalProperties": false,
+   "properties": {
+    "file": {
+     "title": "File",
+     "type": "string"
+    },
+    "count": {
+     "title": "Count",
+     "type": "integer"
+    }
+   },
+   "required": [
+    "file",
+    "count"
+   ],
+   "title": "TunnelParticles",
+   "type": "object"
+  },
+  "TunnelSlice": {
+   "additionalProperties": false,
+   "properties": {
+    "file": {
+     "title": "File",
+     "type": "string"
+    },
+    "width": {
+     "title": "Width",
+     "type": "integer"
+    },
+    "height": {
+     "title": "Height",
+     "type": "integer"
+    },
+    "corners": {
+     "items": {
+      "items": {
+       "type": "number"
+      },
+      "type": "array"
+     },
+     "title": "Corners",
+     "type": "array"
+    }
+   },
+   "required": [
+    "file",
+    "width",
+    "height",
+    "corners"
+   ],
+   "title": "TunnelSlice",
+   "type": "object"
+  }
+ },
+ "additionalProperties": false,
+ "description": "tunnel/flow/<case>.json: a case's flow moving, for the site to play around the drone: the\nparticles carried through it and the speed on a slice through the drone, a loop's frames of\neach, in the drone's own frame (x forward, y left, z up, in m).",
+ "properties": {
+  "schema_version": {
+   "title": "Schema Version",
+   "type": "integer"
+  },
+  "name": {
+   "title": "Name",
+   "type": "string"
+  },
+  "direction": {
+   "title": "Direction",
+   "type": "string"
+  },
+  "setup": {
+   "title": "Setup",
+   "type": "string"
+  },
+  "speed": {
+   "title": "Speed",
+   "type": "number"
+  },
+  "color_max": {
+   "title": "Color Max",
+   "type": "number"
+  },
+  "force_n": {
+   "anyOf": [
+    {
+     "type": "number"
+    },
+    {
+     "type": "null"
+    }
+   ],
+   "title": "Force N"
+  },
+  "pitch_deg": {
+   "default": 0.0,
+   "title": "Pitch Deg",
+   "type": "number"
+  },
+  "loop_s": {
+   "title": "Loop S",
+   "type": "number"
+  },
+  "frames": {
+   "title": "Frames",
+   "type": "integer"
+  },
+  "particles": {
+   "$ref": "#/$defs/TunnelParticles"
+  },
+  "slice": {
+   "$ref": "#/$defs/TunnelSlice"
+  }
+ },
+ "required": [
+  "schema_version",
+  "name",
+  "direction",
+  "setup",
+  "speed",
+  "color_max",
+  "force_n",
+  "loop_s",
+  "frames",
+  "particles",
+  "slice"
+ ],
+ "title": "TunnelFlow",
+ "type": "object"
+}

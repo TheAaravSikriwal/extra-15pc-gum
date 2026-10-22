@@ -1,4 +1,4 @@
-import { flyLink, MENU, modeOf, pageName, scenarioOf, setupOf } from "./modes";
+import { flyLink, MENU, modeOf, pageName, scenarioOf, setupOf, tunnelLink, tunnelOf } from "./modes";
 
 test("the route picks the mode: the home is inside the drone, #/fly is flying, the rest are pages", () => {
   expect(modeOf([])).toBe("inside");
@@ -33,4 +33,14 @@ test("a page's bar names it, deep links included", () => {
   expect(pageName(["flights", "max", "dead motor"])).toBe("Every flight");
   expect(pageName(["library", "docs", "STATUS.md"])).toBe("The library");
   expect(pageName(["wiring", "fc"])).toBe("The wiring");
+});
+
+test("the wind tunnel opens in Fly it, from whichever way the air comes, and isn't a run", () => {
+  expect(modeOf(["fly", "tunnel", "above"])).toBe("fly");
+  expect(tunnelOf(["fly", "tunnel", "above"])).toBe("above");
+  expect(tunnelOf(["fly", "tunnel"])).toBe("front");
+  expect(tunnelOf(["fly", "hover"])).toBeNull();
+  expect(scenarioOf(["fly", "tunnel", "above"])).toBe("hover"); // no run plays
+  expect(setupOf(["fly", "tunnel", "above"])).toBeNull(); // the direction isn't a combination
+  expect(tunnelLink("from behind")).toBe("#/fly/tunnel/from%20behind");
 });

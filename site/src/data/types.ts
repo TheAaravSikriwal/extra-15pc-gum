@@ -249,12 +249,50 @@ export interface TunnelCase {
   frames: TunnelFrame[];
 }
 
+// a case's flow moving, around the drone in its own frame (x forward, y left, z up, m): particles
+// carried through it, and the speed on a slice through the drone, a loop's frames of each
+export interface TunnelParticles {
+  file: string; // bytes, as pcs14.aero.motion.particle_bytes packs them
+  count: number;
+}
+
+export interface TunnelSlice {
+  file: string; // bytes: each frame's speed, a share of color_max, a pixel, the first row on top
+  width: number;
+  height: number;
+  corners: number[][]; // m in the drone's frame: top left, top right, bottom right, bottom left
+}
+
+export interface TunnelFlow {
+  schema_version: number;
+  name: string;
+  direction: string; // where the air comes from: front, back, right, left, above, below or hover
+  setup: string;
+  speed: number; // m/s, the wind (0 in the hover)
+  color_max: number; // m/s at the top of the colors
+  force_n: number | null; // N along the wind: FluidX3D's own number, visual-grade
+  pitch_deg: number; // nose down, the way it flies into this air
+  loop_s: number; // s of the air's time a loop plays
+  frames: number; // a loop's frames
+  particles: TunnelParticles;
+  slice: TunnelSlice;
+}
+
+export interface TunnelFlowEntry {
+  name: string;
+  direction: string;
+  label: string; // "From the front"
+  about: string;
+  file?: string | null; // its TunnelFlow, under the data folder; none while it's not run yet
+}
+
 export interface Tunnel {
   schema_version: number;
   fork_public: boolean;
   note: string;
   stills: TunnelStill[];
   cases: TunnelCase[];
+  flows?: TunnelFlowEntry[];
 }
 
 export interface PinRow {
@@ -492,7 +530,11 @@ export const FIELDS = {
   TunnelStill: ["case", "view", "title", "subtitle", "number", "caption", "file"],
   TunnelFrame: ["step", "t_s", "files"],
   TunnelCase: ["name", "label", "frames"],
-  Tunnel: ["schema_version", "fork_public", "note", "stills", "cases"],
+  TunnelParticles: ["file", "count"],
+  TunnelSlice: ["file", "width", "height", "corners"],
+  TunnelFlow: ["schema_version", "name", "direction", "setup", "speed", "color_max", "force_n", "pitch_deg", "loop_s", "frames", "particles", "slice"],
+  TunnelFlowEntry: ["name", "direction", "label", "about", "file"],
+  Tunnel: ["schema_version", "fork_public", "note", "stills", "cases", "flows"],
   UnprovenItem: ["what", "measure"],
   UnprovenGroup: ["name", "url", "items"],
   Unproven: ["schema_version", "groups"],

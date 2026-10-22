@@ -3,6 +3,25 @@ import { useEffect, useState } from "react";
 
 import { loadData, type LoadOptions } from "./load";
 
+// a data file that's only sometimes wanted: nothing while there's no name, and nothing if it fails
+export function useOptionalData<T extends { schema_version: number }>(name: string | null, options?: LoadOptions): T | null {
+  const [data, setData] = useState<T | null>(null);
+  useEffect(() => {
+    if (!name) {
+      setData(null);
+      return;
+    }
+    let live = true;
+    loadData<T>(name, options)
+      .then((d) => live && setData(d))
+      .catch(() => live && setData(null));
+    return () => {
+      live = false;
+    };
+  }, [name, options]);
+  return data;
+}
+
 export function useData<T extends { schema_version: number }>(
   name: string,
   options?: LoadOptions,

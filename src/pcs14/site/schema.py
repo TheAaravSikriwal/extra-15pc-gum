@@ -287,14 +287,55 @@ class TunnelCase(_Shape):
     frames: list[TunnelFrame]
 
 
+class TunnelParticles(_Shape):
+    file: str  # bytes under the data folder, as pcs14.aero.motion.particle_bytes packs them
+    count: int
+
+
+class TunnelSlice(_Shape):
+    file: str  # bytes under the data folder: each frame's speed (a share of color_max) a pixel
+    width: int
+    height: int
+    corners: list[list[float]]  # m, the drone's frame: top left, top right, bottom right, left
+
+
+class TunnelFlow(_Shape):
+    """tunnel/flow/<case>.json: a case's flow moving, for the site to play around the drone: the
+    particles carried through it and the speed on a slice through the drone, a loop's frames of
+    each, in the drone's own frame (x forward, y left, z up, in m)."""
+
+    schema_version: int
+    name: str  # "Max-cruise"
+    direction: str  # where the air comes from: front, back, right, left, above, below or hover
+    setup: str
+    speed: float  # m/s, the wind (0 in the hover)
+    color_max: float  # m/s at the top of the colors
+    force_n: float | None  # N along the wind: FluidX3D's own number, visual-grade
+    pitch_deg: float = 0.0  # nose down, the way it flies into this air (the cruise's tilt)
+    loop_s: float  # s of the air's time a loop plays
+    frames: int  # a loop's frames
+    particles: TunnelParticles
+    slice: TunnelSlice
+
+
+class TunnelFlowEntry(_Shape):
+    name: str
+    direction: str
+    label: str  # "From the front"
+    about: str  # what the case is, in a line
+    file: str | None = None  # its TunnelFlow, under the data folder; none while it's not run yet
+
+
 class Tunnel(_Shape):
-    """tunnel.json: the wind tunnel's stills and each case's frames along the way."""
+    """tunnel.json: the wind tunnel's stills, each case's frames along the way, and each case's
+    flow traced for the drone view."""
 
     schema_version: int
     fork_public: bool  # until FluidX3D's fork is public, these stay off the public site
     note: str
     stills: list[TunnelStill]
     cases: list[TunnelCase]
+    flows: list[TunnelFlowEntry] = []
 
 
 class PinRow(_Shape):
@@ -496,6 +537,7 @@ FILES: dict[str, type[_Shape]] = {
     "playback": Playback,
     "steps": Steps,
     "tunnel": Tunnel,
+    "tunnel-flow": TunnelFlow,
     "unproven": Unproven,
     "wiring": Wiring,
     "build": Build,

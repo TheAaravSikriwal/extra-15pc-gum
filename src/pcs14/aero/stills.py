@@ -52,7 +52,9 @@ def stills_for(case, rpm: float | None = None) -> list[Still]:
                   turning, "Every blade tip sheds a vortex, and they spiral down with the "
                   "downwash. " + VISUAL, (0.5, 0.45)),
         ]  # fmt: skip
-    if case.yaw_deg == 0.0:
+    if case.direction != "front" and case.direction != "right":
+        return []  # the other ways the air meets it are for the site's 3D, not for posts
+    if case.direction == "right":
         return [
             Still("side-streamlines", "Wind from the side", f"{who}, holding still in a "
                   f"{case.speed:g} m/s crosswind", f"{case.speed:g} m/s", "The wind it has to "
