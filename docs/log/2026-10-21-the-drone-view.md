@@ -58,8 +58,21 @@ Under the drone there's a strip now: what just happened in plain words ("The lin
 
 Two bugs turned up along the way. Resizing the window in Fly it, or opening a Fly it link directly, snapped the camera back to the close-up from inside the drone. The fit that frames the drone for Inside it was running in both modes. Now it only runs inside, and Fly it pulls back from the distance that fits the drone, so a link lands in the same framing as walking in. The trail also used to cover the last 4 s of the loop whatever that came to in meters, and at 28 times real time that's a long way. Seen from 2 m away, it fanned out past the camera in big green rays.
 
+## Finer detail
+
+Then I wanted more detail in the drone itself. Task 14 gave the boards their chips and plugs and the motors their bells, but about a dozen parts were still the plain boxes and tubes the checks use. Each of them has a look of its own now, drawn inside the same envelope, so no check moves.
+
+The chute's launcher gets a base flange, a dark band, a neck and a cap. That's my own guess at its shape, since Fruity Chutes publishes no drawing. The HaLow whip gets a nut, a hinge and a taper, and the Remote ID module a two-part case with a seam, a label and an LED. The lidar gets its mounting ears and its two round windows, one it sends from and one it sees with. The camera gets its lens barrel and the ribbon's socket, the HaLow HAT its mini PCIe card, shield can and header, and the Pi's cooler its fins and blower. Each module coupler is an XT30 beside a JST-GH, open toward the half it mates with, and the fuses get their violet body and black heat shrink. The pack gets nickel strips across its cell ends. The frame gets its screw heads, sunk flush into the carbon in the pictures, because a head standing proud would poke outside the frame's envelope.
+
+Drawing the screws turned up a small mistake in my CAD. The two front standoffs sit at the full body's inset, but the plates narrow at the nose, so those standoffs hang about 1 mm past the edge. A real frame wouldn't do that. Moving them changes the solid the checks use, so I left them alone for now and left their screw heads off.
+
+I ran the whole CAD again afterward, and every check and every line of its report came out the same. The biggest change in any number was in the 13th decimal place, which is just rounding. My printed parts don't get looks, since their solid is the part I'd actually print. The site's model is 3.7 MB thinned now, up from 3.2.
+
+One more bug turned up while I looked: on a fresh page load, the view inside the drone fitted the camera to the empty scene before the model had arrived, so the drone came up at about half the size it should be until the window was resized. It fits again once the model is there.
+
 ## What's not done
 
+- **The front standoffs,** about 1 mm past the nose's edge in my CAD. They move with the next change that reruns the checks anyway.
 - **The makers' own models.** The ARK GPS and CANnode (BSD-3) and the Pi 5 (MIT) are on my machine; the Teensy 4.1's model (its author allows it with credit) is a download I haven't approved yet. None of them are in the site's model yet.
 - **The scenery.** The camera and mapping runs fly over the grid alone; the shed, box and trees aren't drawn.
 - **The motor order and the 8.7 g,** waiting on me.

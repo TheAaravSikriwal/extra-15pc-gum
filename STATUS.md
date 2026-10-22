@@ -64,6 +64,7 @@ Where to look: the live plan in the [README](README.md#the-plan), the steps in t
 
 - The wire routes now start and end at the researched plugs (redrawn 2026-10-21), and the wiring guide cuts each wire to its whole run, plug to plug. That's 1.18 m more wire in Base than the old routes said, about 8.7 g (7.6 g in Max, since P and C got a little shorter). It isn't in the catalog yet: most of it (5.5 g) is the motors' own leads, longer mainly because of the ESC's motor order (below), so it goes in with that decision, followed by `pcs14 report`. Until then the catalog's wiring is 59.9 g and the routes say 68.6 g. Spreading the same 59.9 g over the new routes already moved the CAD's inertia down about 0.2% (and the center of gravity under 0.4 mm), so the flight models, made before, are 0.2% off the CAD until they're regenerated with it.
 
+- The frame's two front standoffs sit at the full body's inset in my CAD, about 1 mm past the narrower nose's edge (found 2026-10-21, drawing the screw heads). They move with the next change that reruns the checks; until then the site leaves their screw heads off
 - Rotor drag in forward flight, so cruise numbers get believable (the honesty check's big miss, and now step 4's)
 - The weight: Mission passes with 1.2 min of pessimistic hover to spare; Max is 2623 g against its own 2500 g target (report-only)
 - My firmware's height estimate lets about 6 cm of the barometer's noise through (its hovers hold within 0.12 to 0.25 m, against PX4's 0.06 to 0.20 m with Gazebo's noiseless GPS height)

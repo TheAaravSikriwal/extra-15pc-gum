@@ -74,7 +74,9 @@ function wireColor(name: string): string {
 }
 
 // the named parts of a piece's look (pcs14.cad.looks): the chips, plugs and pins on a board,
-// a motor's gap over its windings and its shaft. The board and the bell keep the piece's own look
+// a motor's gap over its windings and its shaft, a lens's glass, the chute's anodized cap, the
+// pack's nickel, a shield can, the cooler's fan, heat shrink, the frame's screws and standoffs.
+// The board, the bell and anything else (a look's "body") keep the piece's own look
 const SUBPARTS: Record<string, Omit<Look, "key">> = {
   chips: { color: "#141414", metalness: 0.1, roughness: 0.55, texture: null }, // black epoxy
   plugs: { color: "#e6dfcc", metalness: 0, roughness: 0.6, texture: null }, // JST's off-white nylon
@@ -83,6 +85,14 @@ const SUBPARTS: Record<string, Omit<Look, "key">> = {
   gap: { color: "#a8642a", metalness: 0.6, roughness: 0.4, texture: null }, // copper windings
   shaft: { color: "#b8b8b4", metalness: 0.9, roughness: 0.25, texture: null }, // steel
   base: { color: "#2a2b2e", metalness: 0.7, roughness: 0.4, texture: null },
+  lens: { color: "#0b0d10", metalness: 0.3, roughness: 0.06, clearcoat: 1, texture: null }, // glass
+  cap: { color: "#1b1b1c", metalness: 0.55, roughness: 0.38, texture: null }, // black anodized
+  nickel: { color: "#c9c8c1", metalness: 0.9, roughness: 0.32, texture: null },
+  shield: { color: "#b9b9b3", metalness: 0.85, roughness: 0.3, texture: null }, // a tin-plated can
+  fan: { color: "#161616", metalness: 0, roughness: 0.55, texture: null },
+  sleeve: { color: "#121212", metalness: 0, roughness: 0.75, texture: null }, // heat shrink
+  screws: { color: "#2b2b2e", metalness: 0.8, roughness: 0.35, texture: null }, // black oxide
+  standoff: { color: "#3a3b3f", metalness: 0.8, roughness: 0.35, texture: null }, // aluminum
 };
 
 export const SUBPART_NAMES = new Set([...Object.keys(SUBPARTS), "board", "bell"]);

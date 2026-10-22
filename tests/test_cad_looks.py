@@ -63,10 +63,62 @@ def test_a_breakout_gets_a_header_pin_at_each_of_its_pins(catalog):
     assert within(look_for(imu), build_part(imu))
 
 
-def test_a_part_that_isnt_a_board_keeps_its_plain_shape(catalog):
+def test_a_placeholder_keeps_its_plain_shape(catalog):
     from pcs14.cad.looks import look_for
 
-    assert look_for(catalog.component("ruko-r111")) is None
+    assert look_for(catalog.component("claws-placeholder")) is None  # no claw picked yet
+
+
+def test_the_plain_boxes_and_tubes_get_looks_of_their_own(catalog):
+    from pcs14.cad.looks import OWN_LOOKS, look_for
+    from pcs14.cad.parts import build_part
+
+    parts = {p.id: p for p in catalog.all_parts()}
+    for part_id in OWN_LOOKS:
+        look = look_for(parts[part_id])
+        assert look is not None and within(look, build_part(parts[part_id])), part_id
+    chute = children(look_for(parts["fruity-chutes-harrier-40-42"]))
+    assert {"cap", "body"} <= set(chute)
+    lidar = children(look_for(parts["benewake-tf-luna"]))
+    assert len(lidar["lens"].solids()) == 2  # one window to send from, one to see with
+    assert "fan" in children(look_for(parts["rpi-active-cooler"]))
+    assert "shield" in children(look_for(parts["heltec-ht-hc01p"]))
+    assert {"lens", "plugs"} <= set(children(look_for(parts["rpi-camera-module-3"])))
+    assert {"nickel", "sleeve"} <= set(children(look_for(parts["branch-fuses"])))
+
+
+def test_a_coupler_opens_toward_the_half_it_mates_with(catalog):
+    from pcs14.cad.looks import look_for
+
+    socket = children(look_for(catalog.component("module-socket")))["pins"].bounding_box()
+    plug = children(look_for(catalog.component("module-plug")))["pins"].bounding_box()
+    height = catalog.component("module-plug").cad.height_mm * MM
+    # the socket's contacts sit just inside its bottom face, the plug's just inside its top
+    assert socket.min.Z == pytest.approx(0.4 * MM, abs=1e-6)
+    assert plug.max.Z == pytest.approx(height - 0.4 * MM, abs=1e-6)
+
+
+def test_the_pack_is_welded_with_nickel_across_its_cell_ends(catalog):
+    from pcs14.cad.parts import pack_layout, pack_look, pack_solid
+
+    cell = catalog.cell("molicel-p45b")
+    layout = pack_layout(cell, cells=12, max_length=0.150, max_width=0.090)
+    look = pack_look(cell, layout)
+    assert within(look, pack_solid(cell, layout), slack=1e-6)
+    parts = children(look)
+    assert len(parts["body"].solids()) == 12
+    assert len(parts["nickel"].solids()) == (layout.along + 1) * layout.layers
+
+
+def test_the_frames_screws_sit_flush_inside_it(catalog):
+    from pcs14.cad.frame import build_frame
+
+    model = build_frame(catalog.frame("iflight-nazgul-xl10-v6"))
+    screws = children(model.look)["screws"]
+    # the back standoffs' two each and each motor's four; the front standoffs stand past the
+    # nose's edge, so a head there would hang off the plate
+    assert len(screws.solids()) == 2 * 2 + 4 * 4
+    assert within(model.look, model.solid, slack=1e-6)
 
 
 def test_a_motor_has_its_base_the_gap_and_a_bell_with_cooling_holes(catalog):
@@ -139,4 +191,4 @@ def test_every_look_stays_inside_its_envelope(catalog):
             continue
         looked += 1
         assert within(look, build_part(part)), part.id
-    assert looked >= 15  # the boards, the breakouts and the motor
+    assert looked >= 25  # the boards, the breakouts, the motor and the plain parts' own

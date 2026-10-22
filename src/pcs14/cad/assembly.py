@@ -18,7 +18,15 @@ from build123d import Align, Compound, Cylinder, Plane, Pos, Sphere
 from pcs14.cad.frame import FrameModel, build_frame
 from pcs14.cad.locate import placed
 from pcs14.cad.looks import look_for
-from pcs14.cad.parts import build_part, pack_layout, pack_solid, prop_disk, prop_look, prop_solid
+from pcs14.cad.parts import (
+    build_part,
+    pack_layout,
+    pack_look,
+    pack_solid,
+    prop_disk,
+    prop_look,
+    prop_solid,
+)
 from pcs14.cad.printed import build_printed
 from pcs14.cad.settings import WIRING_PARTS, CadSettings, Wire
 from pcs14.design import Build
@@ -141,6 +149,9 @@ class Drone:
         self.home_x = pack.x_mm * MM
         tray_t = pack.tray_thickness_mm * MM
         self._pack_shape = Pos(0, 0, -tray_t - self.layout.height) * pack_solid(
+            build.pack.cell, self.layout
+        )
+        self._pack_look = Pos(0, 0, -tray_t - self.layout.height) * pack_look(
             build.pack.cell, self.layout
         )
         self._pieces, self._disks = self._build_pieces()
@@ -283,6 +294,7 @@ class Drone:
                 pack.mass,
                 pack.mass,
                 part_id=pack.cell.id,
+                look=Pos(x, 0, 0) * self._pack_look,
             )
         )
         lengths = {wire.name: wire_length(wire) for wire in self.settings.wires}

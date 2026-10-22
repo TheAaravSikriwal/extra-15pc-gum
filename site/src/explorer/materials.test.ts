@@ -39,6 +39,9 @@ test("a board's chips, plugs and pins each look like themselves, and the board k
   expect(lookFor(teensy, "plugs").color).not.toBe(lookFor(teensy, "chips").color);
   expect(lookFor(teensy, "board").color).toBe(lookFor(teensy).color); // the solder mask
   expect(lookFor(piece("motor", "emax-e3-2814-850kv"), "gap").color).toBe("#a8642a"); // copper
+  expect(lookFor(piece("bought", "benewake-tf-luna"), "lens").roughness).toBeLessThan(0.1); // glass
+  expect(lookFor(piece("pack", "molicel-p45b"), "nickel").metalness).toBeGreaterThan(0.8);
+  expect(lookFor(piece("frame", "iflight-nazgul-xl10-v6"), "screws").texture).toBeNull(); // not carbon
 });
 
 test("one material per look, made once", () => {

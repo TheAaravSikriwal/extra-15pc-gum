@@ -229,3 +229,38 @@ def pack_solid(cell: Cell, layout: PackLayout) -> Compound:
     pack = Compound(cells)
     pack.label = f"{layout.along * layout.across * layout.layers} x {cell.id}"
     return pack
+
+
+NICKEL_M = 0.0003  # a nickel strip's thickness, welded across the cell ends
+NICKEL_WIDTH_M = 0.007
+
+
+def pack_look(cell: Cell, layout: PackLayout) -> Compound:
+    """The pack as it's built, for the pictures: the cells a hair shorter, and a nickel strip
+    across each layer's cell ends at both ends of the pack and between cells end to end, the way
+    a pack's cells are welded together."""
+    d, cell_len = layout.cell_diameter, layout.cell_length
+    lying = Rot(0, 90, 0) * Cylinder(
+        d / 2, cell_len - 2 * NICKEL_M, align=(Align.CENTER, Align.CENTER, Align.CENTER)
+    )
+    cells, strips = [], []
+    for i in range(layout.along):
+        for j in range(layout.across):
+            for k in range(layout.layers):
+                x = (i + 0.5) * cell_len - layout.length / 2
+                y = (j + 0.5) * d - layout.width / 2
+                cells.append(Pos(x, y, (k + 0.5) * d) * lying)
+    strip = Box(NICKEL_M, layout.width - 0.002, NICKEL_WIDTH_M)
+    for i in range(layout.along + 1):
+        x = i * cell_len - layout.length / 2
+        # the outside ends sit just inside the pack, the joints between cells straddle them
+        x = min(max(x, -layout.length / 2 + NICKEL_M / 2), layout.length / 2 - NICKEL_M / 2)
+        for k in range(layout.layers):
+            strips.append(Pos(x, 0, (k + 0.5) * d) * strip)
+    body = Compound(cells)
+    body.label = "body"
+    nickel = Compound(strips)
+    nickel.label = "nickel"
+    look = Compound(children=[body, nickel])
+    look.label = f"{cell.id} pack look"
+    return look

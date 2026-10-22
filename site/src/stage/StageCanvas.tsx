@@ -163,8 +163,9 @@ export function StageCanvas({
       <hemisphereLight args={["#f4f4f2", "#2c2c2a", 0.6]} />
       <directionalLight position={[1, 2, 1.5]} intensity={2.4} />
       <directionalLight position={[-1, 0.5, -1]} intensity={0.7} />
-      {/* fitting the drone to the screen is for inside it; in Fly it the camera keeps its own framing */}
-      <Bounds fit={!flying} clip observe={!flying} margin={margin}>
+      {/* fitting the drone to the screen is for inside it; in Fly it the camera keeps its own
+          framing. It fits again once the drone's model arrives, not just the empty space before */}
+      <Bounds key={root ? "drone" : "waiting"} fit={!flying} clip observe={!flying} margin={margin}>
         <group ref={drone}>
         {root && <DroneScene
           root={root}
