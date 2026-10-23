@@ -10,7 +10,8 @@
     "glb": "node scripts/thin-glb.mjs",
     "build": "tsc --noEmit && vite build && node scripts/licenses.mjs && node scripts/check-build.mjs",
     "test": "vitest run",
-    "preview": "vite preview --port 4173 --strictPort"
+    "preview": "vite preview --port 4173 --strictPort",
+    "export-site": "npm run build && node scripts/export-site.mjs"
   },
   "dependencies": {
     "@fontsource/inter": "5.1.0",

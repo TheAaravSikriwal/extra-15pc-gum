@@ -11,10 +11,26 @@ export function parseHash(hash: string): string[] {
     .map(decodeURIComponent);
 }
 
+// Framed on the portfolio (wearechintu.com/drone, from the same origin), the page around it
+// follows the route, so the address there is the one to share. Nothing is said to a page
+// that isn't this site's own.
+export function tellParent(hash: string, parent: Window = window.parent, self: Window = window): void {
+  if (parent === self) return;
+  try {
+    parent.postMessage({ type: "drone:route", hash }, self.location.origin);
+  } catch {
+    // a frame from somewhere else: it hears nothing
+  }
+}
+
 export function useRoute(): string[] {
   const [route, setRoute] = useState(() => parseHash(window.location.hash));
   useEffect(() => {
-    const follow = () => setRoute(parseHash(window.location.hash));
+    tellParent(window.location.hash);
+    const follow = () => {
+      setRoute(parseHash(window.location.hash));
+      tellParent(window.location.hash);
+    };
     window.addEventListener("hashchange", follow);
     return () => window.removeEventListener("hashchange", follow);
   }, []);
