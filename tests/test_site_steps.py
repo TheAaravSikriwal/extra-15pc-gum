@@ -102,7 +102,8 @@ def test_the_real_steps_have_their_reports_stills_and_logs(tmp_path):
     # every link that's a doc in the library stays on the site
     for s in found.steps:
         for link in s.links + [link for p in s.parts for link in p.links]:
-            assert link.url.startswith(("#/library/", "https://github.com/")), link.url
+            # into the library, or out to the web (GitHub, the live site), never a repo path
+            assert link.url.startswith(("#/library/", "https://")), link.url
             if link.url.startswith("https://github.com/"):
                 assert not link.url.endswith(".md"), link.url
         assert len({link.text for link in s.links}) == len(s.links), s.id
