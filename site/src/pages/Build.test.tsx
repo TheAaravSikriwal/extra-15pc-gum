@@ -27,6 +27,9 @@ test("what each combination costs, in the one order, what's bought once, and the
   const rows = within(costs).getAllByRole("row").slice(1);
   expect(rows.map((r) => r.firstChild?.textContent)).toEqual(["base", "max"]); // base first, whatever came first
   expect(within(costs).getByRole("cell", { name: "$876.78" })).toBeInTheDocument();
+  // the total, simply: the drone and what's bought once
+  expect(within(costs).getByRole("cell", { name: "$1,238.77" })).toBeInTheDocument();
+  expect(within(costs).getByText(/One drone from nothing/)).toHaveTextContent("$1,238.77 for Base, up to $2,534.28 for Max");
   expect(within(costs).getByText(/\$361\.99/)).toBeInTheDocument();
   const guides = screen.getByRole("region", { name: "the guides" });
   expect(within(guides).getByRole("link", { name: "The wiring guide" })).toHaveAttribute("href", "#/library/docs/build/wiring");

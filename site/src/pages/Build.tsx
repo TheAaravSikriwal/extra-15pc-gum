@@ -12,6 +12,13 @@ export function Build({ load }: { load?: LoadOptions }) {
   if (problem) return <p role="alert">{problem}</p>;
   if (!data) return <p>Loading</p>;
   const once = data.totals.find((t) => t.setup === "once");
+  const drones = byCombination(
+    data.totals.filter((t) => t.setup !== "once"),
+    (t) => t.setup,
+  );
+  const allIn = (usd: number) => usd + (once?.usd ?? 0);
+  const base = drones.find((t) => t.setup === "base");
+  const max = drones.find((t) => t.setup === "max");
   return (
     <main>
       <h1>Build it</h1>
@@ -22,24 +29,30 @@ export function Build({ load }: { load?: LoadOptions }) {
       </p>
       <section aria-label="What it costs">
         <h2>What it costs</h2>
+        {base && max && (
+          <p className="total">
+            One drone from nothing, with what's bought once:{" "}
+            <strong>{money(allIn(base.usd))}</strong> for Base, up to <strong>{money(allIn(max.usd))}</strong> for Max,
+            every module on.
+          </p>
+        )}
         <table className="short-columns">
           <thead>
             <tr>
               <th scope="col">Combination</th>
               <th scope="col">Parts, wire and plugs</th>
+              <th scope="col">All in, with what's bought once</th>
               <th scope="col">Not priced yet</th>
               <th scope="col">Printed</th>
             </tr>
           </thead>
           <tbody>
-            {byCombination(
-              data.totals.filter((t) => t.setup !== "once"),
-              (t) => t.setup,
-            ).map((t) => (
+            {drones.map((t) => (
               <tr key={t.setup}>
                 <td>{t.setup}</td>
                 <td>{money(t.usd)}</td>
-                <td>{t.unpriced}</td>
+                <td>{once ? money(allIn(t.usd)) : ""}</td>
+                <td>{t.unpriced + (once?.unpriced ?? 0)}</td>
                 <td>
                   {t.printed} parts, {Math.round(t.printed_g)} g
                 </td>
@@ -50,7 +63,8 @@ export function Build({ load }: { load?: LoadOptions }) {
         {once ? (
           <p>
             Bought once, whatever's fitted (the transmitter, the charger, tools and spares): {money(once.usd)}, with{" "}
-            {once.unpriced} not priced yet.
+            {once.unpriced} not priced yet, which the all-in column and its count include. The screws and the printed
+            parts aren't in any of it: they're cheap, and the printed ones are filament.
           </p>
         ) : null}
         <p className="muted">Prices are what the shops showed on the day each part was checked, and they drift.</p>

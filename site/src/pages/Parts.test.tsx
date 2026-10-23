@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 
 import type { PartsList } from "../data/types";
-import { linked, Parts } from "./Parts";
+import { linked, Parts, totalOf } from "./Parts";
 
 const motor = { id: "emax-e3-2814-850kv", type: "motor", maker: "Emax", model: "E3 2814 850KV", mass_g: 82, price_usd: 37.99, link: null, record: { kv: 850 } };
 const LIST: PartsList = {
@@ -14,6 +14,11 @@ const LIST: PartsList = {
     { module: "base", group: "hardware", name: "M3 x 10 screw, nylon", qty: 8, unit: "", maker: "Any", model: "M3 x 10 screw",
       fallback: "", note: "" },
     { module: "V", group: "printed", name: "v housing", qty: 1, unit: "", maker: "Printed", model: "PETG-CF", fallback: "", note: "" },
+    { module: "V", group: "bought", name: "Camera", qty: 1, unit: "", maker: "Arducam", model: "IMX519", price_each_usd: 30, total_usd: 30,
+      fallback: "", note: "" },
+    { module: "V", group: "bought", name: "Mast tube", qty: 1, unit: "", maker: "Any", model: "carbon tube", fallback: "", note: "" },
+    { module: "once", group: "tools", name: "Multimeter", qty: 1, unit: "", maker: "Any", model: "meter", price_each_usd: 20.5,
+      total_usd: 20.5, fallback: "", note: "" },
   ],
   used: [motor],
   alternatives: [{ id: "molicel-p42a", type: "cell", maker: "Molicel", model: "INR-21700-P42A", mass_g: 66.5, price_usd: 5.99, link: null, record: {} }],
@@ -31,6 +36,20 @@ test("everything on the drone, by module and kind, the screws and the prints too
   expect(screen.getByRole("table", { name: "V: vision and navigation: Printed" })).toHaveTextContent("v housing");
   expect(within(base).getByText("$37.99")).toBeInTheDocument();
   expect(within(base).getByText("82 g")).toBeInTheDocument();
+});
+
+test("the whole drone's total, each module's, and each line's", async () => {
+  render(<Parts load={{ fromDisk: false, fetcher: answering(LIST) }} />);
+  const base = await screen.findByRole("region", { name: "Base" });
+  expect(within(base).getByText(/In all:/)).toHaveTextContent("In all: $151.96.");
+  expect(within(base).getByRole("cell", { name: "$151.96" })).toBeInTheDocument(); // four motors' worth
+  const v = screen.getByRole("region", { name: "V: vision and navigation" });
+  expect(within(v).getByText(/In all:/)).toHaveTextContent("In all: $30.00, and 1 line not priced yet.");
+  expect(screen.getByText(/The whole drone, every module on/)).toHaveTextContent(
+    "$181.96 in parts, wire and plugs, plus $20.50 bought once, so $202.46 in all, and 1 line not priced yet.",
+  );
+  // the screws and the prints aren't priced, so they aren't counted as missing either
+  expect(totalOf(LIST.lines.filter((x) => x.module === "base"))).toEqual({ usd: 151.96, unpriced: 0 });
 });
 
 test("a line opens to its note, its fallback with its links, and its catalog entry", async () => {

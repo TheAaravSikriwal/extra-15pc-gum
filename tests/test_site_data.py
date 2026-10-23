@@ -208,3 +208,15 @@ def test_the_parts_list_is_the_build_package_with_each_lines_catalog_entry():
     assert not used & other and len(used | other) == len(catalog.parts)
     assert "landing-legs" in used and "base-wiring" in used  # named in the design, not bought
     assert "molicel-p42a" in other  # a cell I compared, not on the drone
+    # the parts page adds its own totals up from the lines: they're the package's, to the cent
+    fitted = {"base": [], "V": ["V"], "P": ["P"], "C": ["C"], "mission": ["V", "P"],
+              "V+C": ["V", "C"], "P+C": ["P", "C"], "max": ["V", "P", "C"],
+              "once": None}  # fmt: skip
+    for total in package["totals"]:
+        modules = fitted[total["setup"]]
+        picked = {"once"} if modules is None else {"base", *modules}
+        priced = [
+            x for x in listed.lines if x.module in picked and x.group not in ("printed", "hardware")
+        ]
+        assert round(sum(x.total_usd or 0 for x in priced), 2) == total["usd"], total["setup"]
+        assert sum(1 for x in priced if x.total_usd is None) == total["unpriced"], total["setup"]

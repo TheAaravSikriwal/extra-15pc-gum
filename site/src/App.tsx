@@ -81,7 +81,7 @@ export function App() {
             <Menu current={pageOf(route)} />
           </nav>
           <div className="page-body">
-            <Contents current={pageOf(route)} />
+            <Contents current={pageOf(route)} at={route.join("/")} />
             <div className="page-main">{pageFor(route)}</div>
           </div>
         </div>

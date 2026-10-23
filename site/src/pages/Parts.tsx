@@ -63,6 +63,21 @@ export function linked(text: string): ReactNode[] {
   return out;
 }
 
+// what the build package prices: the bought parts, the wire and the plugs, not the screws or what's printed
+const UNPRICED_GROUPS = new Set(["printed", "hardware"]);
+
+export function totalOf(lines: PartsLine[]): { usd: number; unpriced: number } {
+  const priced = lines.filter((x) => !UNPRICED_GROUPS.has(x.group));
+  return {
+    usd: priced.reduce((sum, x) => sum + (x.total_usd ?? 0), 0),
+    unpriced: priced.filter((x) => x.total_usd == null).length,
+  };
+}
+
+function notYet(n: number): string {
+  return n ? `, and ${n} ${n === 1 ? "line" : "lines"} not priced yet` : "";
+}
+
 function amount(line: PartsLine): string {
   const qty = Number.isInteger(line.qty) ? String(line.qty) : line.qty.toFixed(2);
   return `${qty}${line.unit ? ` ${line.unit}` : ""}`;
@@ -115,6 +130,7 @@ function Line({ line, record }: { line: PartsLine; record?: CatalogPart }) {
         {money(line.price_each_usd)}
         {line.unit && line.price_each_usd != null ? ` a ${line.unit}` : ""}
       </td>
+      <td>{line.total_usd != null ? money(line.total_usd) : ""}</td>
       <td>{line.checked ?? ""}</td>
     </tr>
   );
@@ -125,6 +141,8 @@ export function Parts({ load }: { load?: LoadOptions }) {
   if (problem) return <p role="alert">{problem}</p>;
   if (!data) return <p>Loading</p>;
   const records = new Map(data.used.map((p) => [p.id, p]));
+  const drone = totalOf(data.lines.filter((x) => x.module !== "once"));
+  const once = totalOf(data.lines.filter((x) => x.module === "once"));
   return (
     <main>
       <h1>Parts</h1>
@@ -135,12 +153,22 @@ export function Parts({ load }: { load?: LoadOptions }) {
         the last column. What each combination costs is on <a href="#/build">Build it</a>, and what the parts weigh in
         each combination on the <a href="#/spec">spec sheet</a>.
       </p>
+      <p className="total">
+        The whole drone, every module on: <strong>{money(drone.usd)}</strong> in parts, wire and plugs, plus{" "}
+        {money(once.usd)} bought once, so <strong>{money(drone.usd + once.usd)}</strong> in all
+        {notYet(drone.unpriced + once.unpriced)}. The screws and the printed parts aren't in it: they're cheap, and the
+        printed ones are filament. Each combination's total is on <a href="#/build">Build it</a>.
+      </p>
       {MODULES.map(([module, name]) => {
         const lines = data.lines.filter((x) => x.module === module);
         if (!lines.length) return null;
         return (
           <section key={module} aria-label={name}>
             <h2>{name}</h2>
+            <p className="total">
+              In all: <strong>{money(totalOf(lines).usd)}</strong>
+              {notYet(totalOf(lines).unpriced)}.
+            </p>
             {GROUPS.map(([group, label]) => {
               const here = lines.filter((x) => x.group === group);
               if (!here.length) return null;
@@ -154,6 +182,7 @@ export function Parts({ load }: { load?: LoadOptions }) {
                         <th scope="col">How many</th>
                         <th scope="col">Each weighs</th>
                         <th scope="col">Each costs</th>
+                        <th scope="col">In all</th>
                         <th scope="col">Checked</th>
                       </tr>
                     </thead>

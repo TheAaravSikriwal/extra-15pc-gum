@@ -616,6 +616,12 @@ table.data-files .holds {
   font: 11.5px/1.6 var(--font-numbers);
 }
 
+/* a page's total, said plainly, its sums in the mono face */
+p.total strong {
+  font: 500 15px/1.6 var(--font-numbers);
+  color: var(--accent);
+}
+
 /* a cell's links, under its words */
 td .links {
   margin-top: 4px;
@@ -1882,6 +1888,29 @@ ul.tree {
 .stage-menu li a[aria-current="page"] {
   color: var(--accent);
   box-shadow: inset 2px 0 0 var(--accent);
+}
+
+/* the open page's sections, under its name: quieter, in reading case, the one being read lit */
+.page-contents .page-sections {
+  margin: 2px 0 8px;
+}
+
+.page-contents .page-sections li a {
+  padding: 4px 24px 4px 36px;
+  font: 12.5px/1.4 var(--font-body);
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--muted);
+}
+
+.page-contents .page-sections li.sub a {
+  padding-left: 48px;
+  font-size: 12px;
+}
+
+.page-contents .page-sections li a[aria-current="location"] {
+  color: var(--text);
+  box-shadow: inset 2px 0 0 var(--lines);
 }
 
 @media (min-width: 1000px) {

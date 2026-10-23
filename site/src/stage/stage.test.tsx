@@ -1,6 +1,7 @@
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 
 import { Contents, Menu } from "./Menu";
+import { readSections, sectionAt } from "./sections";
 import { Stage } from "./Stage";
 
 function serving(files: Record<string, unknown>): typeof fetch {
@@ -74,6 +75,38 @@ test("on a page, the contents are always there, with the page you're on marked",
   expect(within(contents).getByRole("link", { name: "Steps" })).toHaveAttribute("aria-current", "page");
   expect(within(contents).getByRole("link", { name: "Parts" })).not.toHaveAttribute("aria-current");
   expect(screen.queryByRole("button", { name: "Menu" })).toBeNull(); // nothing to click open
+});
+
+test("the page you're on lists its own sections under it, and only that page", async () => {
+  render(
+    <>
+      <Contents current="build" at="build" />
+      <div className="page-main">
+        <main>
+          <h1>Build it</h1>
+          <h2>What it costs</h2>
+          <h2>The guides</h2>
+        </main>
+      </div>
+    </>,
+  );
+  const sections = await screen.findByRole("list", { name: "this page's sections" });
+  expect(within(sections).getAllByRole("link").map((a) => a.textContent)).toEqual(["What it costs", "The guides"]);
+  // one of them is the one being read (where, the layout decides; the test's page has none)
+  expect(within(sections).getAllByRole("link").filter((a) => a.getAttribute("aria-current") === "location")).toHaveLength(1);
+  expect(screen.getAllByRole("list", { name: "this page's sections" })).toHaveLength(1);
+  expect(screen.getByRole("heading", { name: "The guides" })).toHaveAttribute("id", "section-the-guides");
+});
+
+test("a page with few sections brings their sub-sections, and the one passed under the bar is the one read", () => {
+  const few = document.createElement("div");
+  few.innerHTML = "<main><h2>base</h2><h3>The checks</h3><h3>What it weighs</h3><h2>The pack</h2></main>";
+  expect(readSections(few).map((s) => `${s.level} ${s.text}`)).toEqual(["2 base", "3 The checks", "3 What it weighs", "2 The pack"]);
+  const many = document.createElement("div");
+  many.innerHTML = "<main><h2 id='a'>A</h2><h3>a1</h3><h2>B</h2><h2>C</h2><h2>D</h2></main>";
+  expect(readSections(many).map((s) => s.id)).toEqual(["a", "section-b", "section-c", "section-d"]); // its own id kept
+  expect(sectionAt([30, 400, 900])).toBe(0);
+  expect(sectionAt([-300, 90, 900])).toBe(1);
 });
 
 const WIRES3D = {

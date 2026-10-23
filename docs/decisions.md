@@ -476,7 +476,7 @@ It's built from the data files every step writes, so it grows as the steps finis
 **What building it decided (2026-10-20).** I asked for it to be built without stopping to ask, so these were my calls, written down as I made them:
 
 - **It opens from a folder on disk, through scripts.** Browsers won't let a page opened as `file://` fetch anything, so `pcs14 site` writes every data file twice, as JSON and as a small script that hands the same data to the page. The 3D model goes the same way, as base64.
-- **The first load is held to 600 kB,** counting the page, what it names and the fonts. The fonts are Latin only, and the pages with three.js in them (the 3D drone and the flights, about 860 kB) load only when they're opened. It was 267 kB then, and 346 kB on 2026-10-22.
+- **The first load is held to 600 kB,** counting the page, what it names and the fonts. The fonts are Latin only, and the pages with three.js in them (the 3D drone and the flights, about 860 kB) load only when they're opened. It was 267 kB then, and 350 kB on 2026-10-22.
 - **The model is thinned with gltfpack** at half the triangles, keeping every piece's name: the CAD's 11.9 MB GLB comes to 3.0 MB. The CAD's own GLB stays as the CAD makes it.
 - **Nothing is written twice.** A step's page comes from the README's plan, its report, the log and the learning file, matched by name. The unproven list is decisions.md's own table plus each report's "What it can't prove". The wiring page reads every board's pins from `electrical.json`, which the electrical report now writes.
 - **The flight pages fly the CAD's model,** in each run's color with only its combination's modules. A light stand-in shows until the model has loaded, so the page doesn't wait on 3 MB.
@@ -496,7 +496,8 @@ It's built from the data files every step writes, so it grows as the steps finis
 - **A replaced doc says so in its own first lines,** starting "Superseded" or "Partly superseded" and saying by what, and the library marks it from there. Nothing gets deleted.
 - **The math page is only the math,** in step order, the functions that explain themselves first, its links pinned to the commit the site was built from.
 - **The data page says what every file holds and how big it is,** the site's own files too.
-- **The contents stay on screen** (after my first look): on any docs page, the twelve pages run down the left side, pinned as it scrolls, with the one I'm on marked, so moving between them is one click. On a screen too narrow for both, the menu button in the bar stands in for it.
+- **The contents stay on screen** (after my first look): on any docs page, the twelve pages run down the left side, pinned as it scrolls, with the one I'm on marked, so moving between them is one click. On a screen too narrow for both, the menu button in the bar stands in for it. Under the page I'm on, and only that one, its sections are listed from its own headings (its sub-headings too when it has only a few main ones): a click scrolls there, and the one I'm reading is marked.
+- **The costs say their total plainly** (after my first look): Build it gives each combination all in, the drone plus what's bought once (Base $1,238.77, Max $2,534.28 on 2026-10-22), and Parts gives each line's total, each module's and the whole drone's. They add up from the same lines the package does, and a test holds them to its totals to the cent. The screws and printed parts stay out of the sums, as they do in the package.
 
 ### Learning (decided 2026-10-13)
 
