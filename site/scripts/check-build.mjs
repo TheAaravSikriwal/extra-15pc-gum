@@ -34,6 +34,8 @@ function main() {
   const dist = fileURLToPath(new URL("../dist/", import.meta.url));
   const html = readFileSync(join(dist, "index.html"), "utf8");
   const problems = absoluteLinks(html).map((link) => `not relative: ${link}`);
+  // the bundled packages' licenses travel with the site (scripts/licenses.mjs)
+  if (!existsSync(join(dist, "licenses.txt"))) problems.push("no licenses.txt beside the site");
   const assets = readdirSync(join(dist, "assets"));
   const size = (name) => statSync(join(dist, name)).size;
   // a browser takes the woff2 of each font it needs; the woff files are for old ones

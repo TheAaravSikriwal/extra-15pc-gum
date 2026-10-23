@@ -9,6 +9,7 @@ from PIL import Image
 
 from pcs14.aero import motion, tunnel
 from pcs14.site import schema
+from pcs14.site import tunnel as tunnel_site
 from pcs14.site.tunnel import tunnel_data, write_tunnel
 
 
@@ -56,8 +57,11 @@ def test_the_tunnel_page_gets_its_stills_and_its_frames_in_order(tmp_path):
     assert first.is_file() and first.suffix == ".jpg"
     with Image.open(first) as image:
         assert image.width == 960  # thinned for the page
-    # FluidX3D's license wants the altered source published before any results are
-    assert found.fork_public is False and "fork" in found.note
+    # FluidX3D's license wants the altered source published with any results: it is, and said where
+    assert found.fork_public is tunnel_site.FORK_PUBLIC
+    if found.fork_public:
+        assert found.fork_url.startswith("https://github.com/") and "fork" not in found.note
+    assert found.origin_url == "https://github.com/ProjectPhysX/FluidX3D"  # its origin, credited
 
 
 def test_the_tunnel_data_passes_the_schema(tmp_path):

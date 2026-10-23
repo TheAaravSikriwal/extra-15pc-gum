@@ -138,6 +138,22 @@ export function Overview({ load }: { load?: LoadOptions }) {
           pin, and Fly it, every run and the wind tunnel as animations.
         </p>
       </section>
+      <section aria-label="credits">
+        <h2>Credits</h2>
+        <p>
+          The code and the docs are mine, under GPL-3.0. The flights are PX4 and my own firmware in Gazebo. The wind
+          tunnel ran in{" "}
+          <a href="https://github.com/TheAaravSikriwal/FluidX3D-extra-15pc-gum" target="_blank" rel="noreferrer">
+            my altered version
+          </a>{" "}
+          of{" "}
+          <a href="https://github.com/ProjectPhysX/FluidX3D" target="_blank" rel="noreferrer">
+            FluidX3D
+          </a>
+          , Dr. Moritz Lehmann's, under its license: no commercial or military use. The turbo colors are Google's. Every
+          package bundled into this site, and its license, is in <a href="./licenses.txt">licenses.txt</a>.
+        </p>
+      </section>
     </main>
   );
 }

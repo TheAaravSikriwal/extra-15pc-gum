@@ -1643,6 +1643,17 @@ ul.tree {
   margin: 0 0 12px;
 }
 
+/* who made the solver the tunnel ran in: small, at the end */
+.stage-panel .tunnel-now .credit {
+  margin: 12px 0 0;
+  font-size: 11px;
+  color: var(--hud-dim);
+}
+
+.stage-panel .tunnel-now .credit a {
+  color: inherit;
+}
+
 .hud-row.toggle {
   grid-template-columns: 62px minmax(0, 1fr) auto;
 }

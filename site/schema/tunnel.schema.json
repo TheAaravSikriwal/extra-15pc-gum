@@ -261,6 +261,23 @@
    },
    "title": "Flows",
    "type": "array"
+  },
+  "fork_url": {
+   "anyOf": [
+    {
+     "type": "string"
+    },
+    {
+     "type": "null"
+    }
+   ],
+   "default": null,
+   "title": "Fork Url"
+  },
+  "origin_url": {
+   "default": "https://github.com/ProjectPhysX/FluidX3D",
+   "title": "Origin Url",
+   "type": "string"
   }
  },
  "required": [

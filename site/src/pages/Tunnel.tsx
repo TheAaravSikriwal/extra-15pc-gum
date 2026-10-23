@@ -102,7 +102,21 @@ export function Tunnel({ load }: { load?: LoadOptions }) {
         10 m/s and hovering in still air. {data.note} The same runs play on the 3D drone in{" "}
         <a href="#/fly/tunnel/front">Fly it</a>, as particles carried through the flow and a speed slice that moves.
       </p>
-      {!data.fork_public && <p className="local-only">This page is a local preview for now.</p>}
+      {data.fork_public && data.fork_url ? (
+        <p className="muted credit">
+          FluidX3D is Dr. Moritz Lehmann's:{" "}
+          <a href={data.origin_url} target="_blank" rel="noreferrer">
+            the original
+          </a>
+          . These runs come from my altered version of it,{" "}
+          <a href={data.fork_url} target="_blank" rel="noreferrer">
+            published here
+          </a>{" "}
+          as its license asks, and under the same license: no commercial or military use.
+        </p>
+      ) : (
+        <p className="local-only">This page is a local preview for now.</p>
+      )}
       {data.cases.length === 0 && data.stills.length === 0 && (
         <p>No tunnel runs on this machine yet: pcs14 tunnel, then pcs14 site --tunnel.</p>
       )}

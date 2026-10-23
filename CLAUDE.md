@@ -41,7 +41,7 @@ I'm learning a lot of this as I go: CFD, control, sensor fusion, embedded. I stu
 - No videos in the repo. They go wherever I'm posting.
 - Generated meshes and STEP files don't get committed. They're build outputs of the CAD code. Curated ones (the baseline, a v2 winner) go through Git LFS (see `.gitattributes`), and hero STEP files go on a GitHub Release.
 - Respect the licenses of any code we reuse. This repo is GPL-3.0.
-- FluidX3D code never goes in this repo. Its license isn't GPL compatible, and it requires publishing any modified source whose results we post. My FluidX3D setup lives in its own public fork, marked as modified.
+- FluidX3D code never goes in this repo. Its license isn't GPL compatible, and it requires publishing any modified source whose results we post. My FluidX3D setup lives in its own public fork, marked as modified: github.com/TheAaravSikriwal/FluidX3D-extra-15pc-gum (public since 2026-10-22, its default branch `extra-15pc-gum`). A FluidX3D change goes there, marked `ALTERED`, and gets pushed before any result from it is posted.
 
 ## Visuals
 

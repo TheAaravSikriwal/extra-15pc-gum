@@ -120,6 +120,19 @@ function TunnelNow({ state, fly }: { state: DroneState; fly: FlyData }) {
         </>
       )}
       {!flow && <p className="result">{entry.file ? "Loading the flow." : "This one isn't run in the tunnel yet."}</p>}
+      {fly.credit && (
+        <p className="credit">
+          Run in{" "}
+          <a href={fly.credit.fork} target="_blank" rel="noreferrer">
+            my altered FluidX3D
+          </a>
+          . FluidX3D is{" "}
+          <a href={fly.credit.origin} target="_blank" rel="noreferrer">
+            Dr. Moritz Lehmann's
+          </a>
+          .
+        </p>
+      )}
     </section>
   );
 }

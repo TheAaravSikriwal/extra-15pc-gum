@@ -3,9 +3,10 @@ the way, thinned to JPEGs the page can play on its clock. And for the drone view
 flow moving (pcs14.aero.motion): particles carried through it, and the speed on a slice through
 the drone, a loop's frames of each.
 
-FluidX3D's license wants the altered source published with any results, so until my fork of it
-is public (FORK_PUBLIC), this data is for the site on my own machine: the page says so, and
-the build check warns when the pictures are in a build.
+FluidX3D's license wants the altered source published with any results. My altered version is
+public (FORK_URL, since 2026-10-22), so the site can carry them, crediting FluidX3D's origin. With
+FORK_PUBLIC off, the data is for the site on my own machine: the page says so, and the build
+check warns when the pictures are in a build.
 """
 
 import json
@@ -17,12 +18,17 @@ import numpy as np
 from pcs14.aero import flow, motion, tunnel
 from pcs14.site import schema
 
-FORK_PUBLIC = False  # flip once my fork of FluidX3D is up on GitHub, in public
+FORK_PUBLIC = True  # my altered FluidX3D is on GitHub, in public, since 2026-10-22
+FORK_URL = "https://github.com/TheAaravSikriwal/FluidX3D-extra-15pc-gum"
+ORIGIN_URL = "https://github.com/ProjectPhysX/FluidX3D"  # FluidX3D itself, Dr. Moritz Lehmann's
 FRAME_WIDTH = 960  # px: the page's frames, thinned from FluidX3D's 1920
 NOTE = (
     "These are pictures, not measurements: FluidX3D runs high on force without a wall model, so "
-    "the drag numbers will come from OpenFOAM. And they stay on my machine until my fork of "
-    "FluidX3D is public, since its license wants the changed source out first."
+    "the drag numbers will come from OpenFOAM."
+)
+LOCAL = (
+    " And they stay on my machine until my fork of FluidX3D is public, since its license wants "
+    "the changed source out first."
 )
 
 
@@ -183,7 +189,9 @@ def tunnel_data(source, out) -> schema.Tunnel:
     flows.sort(key=lambda f: tunnel.DIRECTIONS.index(f.direction)
                if f.direction in tunnel.DIRECTIONS else 99)  # fmt: skip
     return schema.Tunnel(schema_version=schema.SCHEMA_VERSION, fork_public=FORK_PUBLIC,
-                         note=NOTE, stills=stills, cases=cases, flows=flows)  # fmt: skip
+                         note=NOTE + ("" if FORK_PUBLIC else LOCAL), stills=stills, cases=cases,
+                         flows=flows, fork_url=FORK_URL if FORK_PUBLIC else None,
+                         origin_url=ORIGIN_URL)  # fmt: skip
 
 
 def _case(folder: Path, frames: list, source: Path) -> schema.TunnelCase:

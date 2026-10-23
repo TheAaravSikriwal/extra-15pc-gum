@@ -389,6 +389,8 @@ class Tunnel(_Shape):
     stills: list[TunnelStill]
     cases: list[TunnelCase]
     flows: list[TunnelFlowEntry] = []
+    fork_url: str | None = None  # my altered FluidX3D, once it's public
+    origin_url: str = "https://github.com/ProjectPhysX/FluidX3D"  # FluidX3D itself
 
 
 class PinRow(_Shape):

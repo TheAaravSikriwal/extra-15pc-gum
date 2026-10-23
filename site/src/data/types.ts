@@ -349,6 +349,8 @@ export interface Tunnel {
   stills: TunnelStill[];
   cases: TunnelCase[];
   flows?: TunnelFlowEntry[];
+  fork_url?: string | null; // my altered FluidX3D, once it's public
+  origin_url?: string; // FluidX3D itself
 }
 
 export interface PinRow {
@@ -660,7 +662,7 @@ export const FIELDS = {
   TunnelSlice: ["file", "width", "height", "corners"],
   TunnelFlow: ["schema_version", "name", "direction", "setup", "speed", "color_max", "force_n", "pitch_deg", "loop_s", "frames", "particles", "slice"],
   TunnelFlowEntry: ["name", "direction", "label", "about", "file"],
-  Tunnel: ["schema_version", "fork_public", "note", "stills", "cases", "flows"],
+  Tunnel: ["schema_version", "fork_public", "note", "stills", "cases", "flows", "fork_url", "origin_url"],
   UnprovenItem: ["what", "measure"],
   UnprovenGroup: ["name", "url", "items", "step"],
   Unproven: ["schema_version", "groups"],

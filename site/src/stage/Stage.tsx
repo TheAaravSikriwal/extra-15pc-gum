@@ -172,6 +172,7 @@ export interface FlyData {
   flows: TunnelFlowEntry[]; // the wind tunnel's cases, one for each way the air comes from
   flowEntry: TunnelFlowEntry | null; // the one showing
   flow: TunnelFlow | null;
+  credit: { origin: string; fork: string } | null; // FluidX3D's, and my altered version's
 }
 
 function useFly(state: DroneState, data: StageData, load?: LoadOptions): FlyData {
@@ -188,7 +189,12 @@ function useFly(state: DroneState, data: StageData, load?: LoadOptions): FlyData
   useEffect(() => setPlaying(null), [playback]);
   const live = useRef<Live | null>(null);
   const seek = useRef<number | null>(null);
-  return { playback, clip, story, playing, onNumbers: setPlaying, live, seek, flows, flowEntry, flow };
+  const tunnel = data.tunnel;
+  const credit =
+    tunnel?.fork_public && tunnel.fork_url
+      ? { origin: tunnel.origin_url ?? "https://github.com/ProjectPhysX/FluidX3D", fork: tunnel.fork_url }
+      : null;
+  return { playback, clip, story, playing, onNumbers: setPlaying, live, seek, flows, flowEntry, flow, credit };
 }
 
 // the panel beside the drone, which on a phone becomes a drawer along the bottom: closed, it

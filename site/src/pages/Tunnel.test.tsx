@@ -90,3 +90,13 @@ test("the page has every case in one table with how it was run and its force, an
     "./data/tunnel/Max-cruise-side-streamlines.jpg",
   );
 });
+
+test("once my altered FluidX3D is public, the page credits the original and links both", async () => {
+  const fork = "https://github.com/TheAaravSikriwal/FluidX3D-extra-15pc-gum";
+  const published = { ...TUNNEL, fork_public: true, fork_url: fork, origin_url: "https://github.com/ProjectPhysX/FluidX3D" };
+  render(<Tunnel load={{ fromDisk: false, fetcher: answering(published) }} />);
+  expect(await screen.findByText(/Dr\. Moritz Lehmann's/)).toBeInTheDocument();
+  expect(screen.getByRole("link", { name: "the original" })).toHaveAttribute("href", "https://github.com/ProjectPhysX/FluidX3D");
+  expect(screen.getByRole("link", { name: "published here" })).toHaveAttribute("href", fork);
+  expect(screen.queryByText(/local preview/)).toBeNull();
+});
